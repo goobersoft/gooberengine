@@ -1,0 +1,3 @@
+clear
+bmk makeapp -r app.bmx
+echo ""

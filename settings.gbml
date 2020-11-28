@@ -1,0 +1,7 @@
+visual {
+  windowscale : #3.00000000;
+  fullscreen : @0;
+  use-scanlines : @0;
+  scanlines-thick : @2;
+  scanlines-style : @0;
+}
