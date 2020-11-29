@@ -6,7 +6,7 @@ endtype
 
 function new_image:t_image ( p:string )
   local r:t_image = new t_image
-  r.image = loadimage(p)
+  r.image = loadimage(p,DYNAMICIMAGE)
   r.path  = p
   return  r
 endfunction
@@ -21,4 +21,8 @@ endfunction
 
 function image_path:string ( u:t_image )
   return u.path
+endfunction
+
+function image_draw( u:t_image, x:float, y:float )
+  gb_graph_draw_image( x, y, u.image )
 endfunction

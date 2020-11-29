@@ -1,9 +1,15 @@
 
+''  depth:
+''    if 0, colors in the bitmap are not rounded.
+''    if 2 or more, colors are rounded based on intervals
+''      (4 = 4-tone color, 16 'bits' total) 
+
 type t_bitmap
 	field width		:int
 	field height	:int
 	field data		:t_color[,]
-	field depth		:float[,]
+  field depth   :int
+  field palette :t_palette
 	field image		:timage
 endtype
 
@@ -12,13 +18,14 @@ function new_bitmap:t_bitmap(x:int, y:int, rr:float=0, gg:float=0, bb:float=0, a
 	r.width 		= low(x,10)
 	r.height 		= low(y,10)
 	r.data 			= new t_color[r.width, r.height]
-	r.depth			= new float[r.width, r.height]
 	for local i:int = 0 to r.width-1
 		for local j:int = 0 to r.height-1
 			r.data[i,j] = new_color(rr,gg,bb,aa)
 		next
 	next
-	r.image = createimage(r.width, r.height, 1, DYNAMICIMAGE)
+	r.image     = createimage(r.width, r.height, 1, DYNAMICIMAGE)
+  r.palette   = new_palette()
+  r.depth     = 0
 	return r
 endfunction
 
@@ -43,11 +50,14 @@ function new_bitmap_from_image:t_bitmap( u:t_image )
       r.data[i,j] = new_color(rr,gg,bb,aa)
 		next
 	next
-	
+	r.image     = createimage(r.width, r.height, 1, DYNAMICIMAGE)
+  r.palette   = new_palette()
+  bitmap_sync(r)
 	return r
 endfunction
 
 function new_bitmap_from_path:t_bitmap ( p:string )
+  return new_bitmap_from_image(new_image(p))
 endfunction
 
 '''''''''''''''
@@ -73,25 +83,25 @@ function bitmap_cls(c:t_bitmap)
 	next
 endfunction
 
+'''''''''''''''''''''''
+'' drawing functions ''
+'''''''''''''''''''''''
+
 function bitmap_draw_dot(c:t_bitmap, x:int, y:int, rr:float, gg:float, bb:float, aa:float=3)
-	x = iclamp(x,0,c.width-1)
-	y = iclamp(y,0,c.height-1)
-	rr = clamp(rr,0,3)
-	gg = clamp(gg,0,3)
-	bb = clamp(bb,0,3)
-	aa = clamp(aa,0,3)
+	x = iwrap(x,0,c.width-1)
+	y = iwrap(y,0,c.height-1)
 	color_set(c.data[x,y], rr, gg, bb, aa)
 endfunction
 
-function bitmap_draw_dot(c:t_bitmap, x:int, y:int, d:t_color)
-	x = iclamp(x,0,c.width-1)
-	y = iclamp(y,0,c.height-1)
+function bitmap_draw_dot_c(c:t_bitmap, x:int, y:int, d:t_color)
+	x = iwrap(x,0,c.width-1)
+	y = iwrap(y,0,c.height-1)
 	color_set_c(c.data[x,y], d)
 endfunction
 
-function bitmap_draw_rect( c:t_bitmap, x:int, y:int, w:int, h:int, d:t_color)
-	x = iclamp(x,0,c.width-1)
-	y = iclamp(y,0,c.height-1)
+function bitmap_draw_rect_c( c:t_bitmap, x:int, y:int, w:int, h:int, d:t_color)
+	x = iwrap(x,0,c.width-1)
+	y = iwrap(y,0,c.height-1)
 	w = iclamp(w,0,c.width-x)
 	h = iclamp(h,0,c.height-y)
 	for local i:int = 0 to w-1
@@ -127,6 +137,10 @@ dx:int, dy:int, dw:int, dh:int )
 		next
 	next
 endfunction
+
+''''''''''''''''''''''''
+'' blending commands) ''
+''''''''''''''''''''''''
 
 function bitmap_blend_alpha( c:t_bitmap, x:int, y:int, d:t_bitmap )
 	local ux:int = d.width

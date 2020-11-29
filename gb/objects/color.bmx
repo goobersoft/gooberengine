@@ -10,6 +10,8 @@ type t_color
 	field a:float
 endtype
 
+'' Creates a new color.
+'' If no params are given, creates an opaque white color.
 function new_color:t_color(r:float=3, g:float=3, b:float=3, a:float=3)
 	local u:t_color = new t_color
 	u.r = r
@@ -19,8 +21,24 @@ function new_color:t_color(r:float=3, g:float=3, b:float=3, a:float=3)
 	return u
 endfunction
 
-function new_color_from_argb()
+'' Creates a color based on a 32-bit ARGB value.
+'' Because RGBA 
+function new_color_from_argb:t_color (ii:int)
   local r:t_color = new t_color
+  r.a = argb_a(ii)
+  r.r = argb_r(ii)
+  r.g = argb_g(ii)
+  r.b = argb_b(ii)
+  return r
+endfunction
+
+function new_color_from_rgba:t_color (ii:int)
+  local r:t_color = new t_color
+  r.r = rgba_r(ii)
+  r.g = rgba_g(ii)
+  r.b = rgba_b(ii)
+  r.a = rgba_a(ii)
+  return r
 endfunction
 
 function clone_color:t_color(c:t_color)
@@ -45,15 +63,19 @@ function color_set_c(c:t_color, d:t_color)
 	c.a = d.a
 endfunction
 
+'' use this if you only want to set RGB values and not alpha.
 function color_set_rgb(c:t_color, r:float, g:float, b:float)
 	c.r = clamp(r,0,3)
 	c.g = clamp(g,0,3)
 	c.b = clamp(b,0,3)
 endfunction
 
+'' use this if you only want to set the alpha value of the color.
 function color_set_alpha(c:t_color, a:float)
 	c.a = clamp(a,0,3)
 endfunction
+
+''
 
 function color_add(c:t_color, r:float, g:float, b:float, a:float=3)
 	c.r = clamp(c.r + r, 0, 3)
@@ -72,6 +94,8 @@ function color_add_alpha(c:t_color, a:float)
 	c.a = clamp(c.a+a,0,3)
 endfunction
 
+''
+
 function color_mul(c:t_color, r:float, g:float, b:float, a:float=3)
 	c.r = clamp(c.r * r, 0, 3)
 	c.g = clamp(c.g * g, 0, 3)
@@ -88,6 +112,8 @@ endfunction
 function color_mul_alpha(c:t_color, a:float)
 	c.a = clamp(c.a*a,0,3)
 endfunction
+
+''
 
 function color_div(c:t_color, r:float, g:float, b:float, a:float=3)
 	if (r<>0) and (g<>0) and (b<>0) and (a<>0)
@@ -111,6 +137,8 @@ function color_div_alpha(c:t_color, a:float=3)
 		c.a = clamp(c.a / a, 0, 3)
 	endif
 endfunction
+
+''
 
 function color_to_argb:int(c:t_color)
 	return argb( ..

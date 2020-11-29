@@ -9,8 +9,10 @@ const palette_size :int = 256
 '' type ''
 ''''''''''
 
+''  a depth of 0 indicates that the palette is using a pre-defined array of colors.
 type t_palette
-	field data    :t_color[]
+	field data      :t_color[]
+  field depth     :int
 endtype
 
 function new_palette:t_palette()
@@ -19,8 +21,8 @@ function new_palette:t_palette()
 	for local i:int = 0 to palette_size-1
 		r.data[i] = new_color(3,3,3,3)
 	next
-	
   color_set(r.data[255], 0,0,0,0)
+  r.depth = 0
   return r
 endfunction
 
