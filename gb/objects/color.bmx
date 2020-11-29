@@ -19,6 +19,10 @@ function new_color:t_color(r:float=3, g:float=3, b:float=3, a:float=3)
 	return u
 endfunction
 
+function new_color_from_argb()
+  local r:t_color = new t_color
+endfunction
+
 function clone_color:t_color(c:t_color)
 	return new_color(c.r, c.g, c.b, c.a)
 endfunction
@@ -34,7 +38,7 @@ function color_set(c:t_color, r:float, g:float, b:float, a:float=3)
 	c.a = clamp(a,0,3)
 endfunction
 
-function color_set(c:t_color, d:t_color)
+function color_set_c(c:t_color, d:t_color)
 	c.r = d.r
 	c.g = d.g
 	c.b = d.b
@@ -129,7 +133,7 @@ endfunction
 '' special blending modes ''
 ''''''''''''''''''''''''''''
 
-function color_blend_alpha( c:t_color, r:float, g:float, b:float, a:float=3)
+function color_blend_alpha( c:t_color, r:float, g:float, b:float, a:float=3 )
 	local u:float = high(c.a+a,3)
 	local v:float = a/3
 	c.r = c.r + ((r - c.r) * v)

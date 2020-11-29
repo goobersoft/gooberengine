@@ -1,10 +1,10 @@
 
 type t_image
-	field image 	:timage
-	field path 		:string
+	field image 	  :timage
+	field path 		  :string
 endtype
 
-function new_image(p:string)
+function new_image:t_image ( p:string )
   local r:t_image = new t_image
   r.image = loadimage(p)
   r.path  = p

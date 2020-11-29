@@ -7,49 +7,49 @@ EndFunction
 '''''''''''''''''''''''''''''''''''''''''''''''
 ''	These functions will
 
-function def :byte(i:byte=0, o:byte=0, c:byte=-1)
+function def:byte(i:byte=0, o:byte=0, c:byte=-1)
 	if (i = c)
 		return o
 	endif
 	return i
 endfunction
 
-function def :short(i:short=0, o:short=0, c:short=-1)
+function def:short(i:short=0, o:short=0, c:short=-1)
 	if (i = c)
 		return o
 	endif
 	return i
 endfunction
 
-function def :int(i:int=0, o:int=0, c:int=-1)
+function def:int(i:int=0, o:int=0, c:int=-1)
 	if (i = c)
 		return o
 	endif
 	return i
 endfunction
 
-function def :long(i:long=0, o:long=0, c:long=-1)
+function def:long(i:long=0, o:long=0, c:long=-1)
 	if (i = c)
 		return o
 	endif
 	return i
 endfunction
 
-function def :float(i:float=0, o:float=0, c:float=-1)
+function def:float(i:float=0, o:float=0, c:float=-1)
 	if (i = c)
 		return o
 	endif
 	return i
 endfunction
 
-function def :double(i:double=0, o:double=0, c:double=-1)
+function def:double(i:double=0, o:double=0, c:double=-1)
 	if (i = c)
 		return o
 	endif
 	return i
 endfunction
 
-function def :string(i:string="", o:string="", c:string=null)
+function def:string(i:string="", o:string="", c:string=null)
 	if (i = c)
 		return o
 	endif
@@ -60,7 +60,7 @@ endfunction
 '' finding stuff in arrays ''
 '''''''''''''''''''''''''''''
 
-Function find :Int ( a:Byte[], d:Byte=0 )
+Function find:Int ( a:Byte[], d:Byte=0 )
 	If (a)
 		If (a.length > 0)
 			For Local i:Int = 0 To a.length
@@ -73,7 +73,7 @@ Function find :Int ( a:Byte[], d:Byte=0 )
 	Return -1
 EndFunction
 
-Function find :Int ( a:Short[], d:Short=0 )
+Function find:Int ( a:Short[], d:Short=0 )
 	If (a)
 		If (a.length > 0)
 			For Local i:Int = 0 To a.length
@@ -86,7 +86,7 @@ Function find :Int ( a:Short[], d:Short=0 )
 	Return -1
 EndFunction
 
-Function find :Int ( a:Int[], d:Int=0 )
+Function find:Int ( a:Int[], d:Int=0 )
 	If (a)
 		If (a.length > 0)
 			For Local i:Int = 0 To a.length
@@ -99,7 +99,7 @@ Function find :Int ( a:Int[], d:Int=0 )
 	Return -1
 EndFunction
 
-Function find :Int ( a:Long[], d:Long=0 )
+Function find:Int ( a:Long[], d:Long=0 )
 	If (a)
 		If (a.length > 0)
 			For Local i:Int = 0 To a.length
@@ -112,7 +112,7 @@ Function find :Int ( a:Long[], d:Long=0 )
 	Return -1
 EndFunction
 
-Function find :Int ( a:Float[], d:Float=0.0 )
+Function find:Int ( a:Float[], d:Float=0.0 )
 	If (a)
 		If (a.length > 0)
 			For Local i:Int = 0 To a.length
@@ -125,7 +125,7 @@ Function find :Int ( a:Float[], d:Float=0.0 )
 	Return -1
 EndFunction
 
-Function find :Int ( a:Double[], d:Double=0.0 )
+Function find:Int ( a:Double[], d:Double=0.0 )
 	If (a)
 		If (a.length > 0)
 			For Local i:Int = 0 To a.length
@@ -138,7 +138,7 @@ Function find :Int ( a:Double[], d:Double=0.0 )
 	Return -1
 EndFunction
 
-Function find :Int ( a:String[], d:String="" )
+Function find:Int ( a:String[], d:String="" )
 	If (a)
 		If (a.length > 0)
 			For Local i:Int = 0 To a.length
@@ -152,7 +152,7 @@ Function find :Int ( a:String[], d:String="" )
 EndFunction
 
 '' generic object finding function to check memory addresses
-Function find :Int ( a:Object[], d:Object=Null )
+Function find:Int ( a:Object[], d:Object=Null )
 	If (a)
 		If (a.length > 0)
 			For Local i:Int = 0 To a.length
@@ -208,27 +208,27 @@ function iaddr:float(a:int, m:int)
 	return 0
 endfunction
 
-function low :float( a:float, b:float )
+function low:float( a:float, b:float )
 	if (a < b) then return b
 	return a
 endfunction
 
-function ilow :int( a:int, b:int )
+function ilow:int( a:int, b:int )
 	if (a < b) then return b
 	return a
 endfunction
 
-function high :float( a:float, b:float )
+function high:float( a:float, b:float )
 	if (a > b) then return b
 	return a
 endfunction
 
-function ihigh :int( a:int, b:int )
+function ihigh:int( a:int, b:int )
 	if (a > b) then return b
 	return a
 endfunction
 
-Function tokenize :String[] ( s:String="", d:String=" ", qt:Byte=True )
+Function tokenize:String[] ( s:String="", d:String=" ", qt:Byte=True )
 	Local r:String[] = New String[0]
 	
 	Local c:String	= ""
@@ -266,7 +266,7 @@ Function tokenize :String[] ( s:String="", d:String=" ", qt:Byte=True )
 	Return r
 EndFunction
 
-Function prob :Int (r:Float)
+Function prob:Int (r:Float)
 	r = clamp(r,0,100)
 	If ((RndFloat()*100) <= r)
 		Return True
@@ -274,18 +274,18 @@ Function prob :Int (r:Float)
 	Return False
 EndFunction
 
-Function icmp :Int (a:Int, b:Int)
+Function icmp:Int (a:Int, b:Int)
 	If (a = b)
 		Return True
 	EndIf
 	Return False
 EndFunction
 
-Function ffloor :Float(n:Float)
+Function ffloor:Float(n:Float)
 	Return Float(Floor(n))
 EndFunction
 
-Function fceil :Float(n:Float)
+Function fceil:Float(n:Float)
 	Return Float(Ceil(n))
 EndFunction
 
@@ -299,11 +299,32 @@ Function argb:Int (a:Byte, r:Byte, g:Byte, b:Byte)
 EndFunction
 Global rgba:Int(r:Byte,g:Byte,b:Byte,a:Byte) = argb
 
+function argb_a:byte (a:int)
+  return ($ff000000 & a) shr 24
+endfunction 
+
+function argb_r:byte (a:int)
+  return ($00ff0000 & a) shr 16
+endfunction 
+
+function argb_g:byte (a:int)
+  return ($0000ff00 & a) shr 8
+endfunction 
+
+function argb_b:byte (a:int)
+  return ($000000ff & a)
+endfunction 
+
+global rgba_r:byte(a:int) = argb_a
+global rgba_g:byte(a:int) = argb_r
+global rgba_b:byte(a:int) = argb_g
+global rgba_a:byte(a:int) = argb_b
+
 Function bool :Int (n:Int)
 	Return Not Not n
 EndFunction
 
-Function rep :String(t:String, n:Int)
+Function rep:String(t:String, n:Int)
 	Local r:String = ""
 	For Local i:Int = 0 To n-1
 		r = r + t
@@ -311,7 +332,7 @@ Function rep :String(t:String, n:Int)
 	Return r
 EndFunction
 
-Function lpad :String(t:String, n:Int, p:String=" ")
+Function lpad:String(t:String, n:Int, p:String=" ")
 	Local l:Int = Len(t)
 	If (l < n)
 		Return t + rep(p,n-l)
@@ -322,7 +343,7 @@ Function lpad :String(t:String, n:Int, p:String=" ")
 	EndIf
 EndFunction
 
-Function rpad :String(t:String, n:Int, p:String=" ")
+Function rpad:String(t:String, n:Int, p:String=" ")
 	Local l:Int = Len(t)
 	If (l < n)
 		Return rep(p,n-l) + t
@@ -351,16 +372,16 @@ Function frand :Float( l:Float, h:Float )
 	Return l + ((h-l)*RndFloat())
 EndFunction
 
-Function fclamp :Float (n:Float, l:Float, h:Float)
+Function fclamp:Float (n:Float, l:Float, h:Float)
 	Return Max(Min(n,h),l)
 EndFunction
 Global clamp :Float (n:Float, l:Float, h:Float) = fclamp
 
-Function iclamp :Int (n:Int, l:Int, h:Int)
+Function iclamp:Int (n:Int, l:Int, h:Int)
 	Return Max(Min(n,h),l)
 EndFunction
 
-Function fwrap :Float (n:Float, l:Float, h:Float)
+Function fwrap:Float (n:Float, l:Float, h:Float)
 	If (l > h)
 		fswap(l,h)
 	ElseIf ((h-l) = 0)
@@ -375,9 +396,9 @@ Function fwrap :Float (n:Float, l:Float, h:Float)
 	EndWhile
 	Return n
 EndFunction
-Global wrap :Float (n:Float, l:Float, h:Float) = fwrap
+Global wrap:Float (n:Float, l:Float, h:Float) = fwrap
 
-Function iwrap :Int(n:Int, l:Int, h:Int)
+Function iwrap:Int(n:Int, l:Int, h:Int)
 	If (l > h)
 		iswap(l,h)
 	ElseIf ((h-l) = 0)
@@ -393,35 +414,35 @@ Function iwrap :Int(n:Int, l:Int, h:Int)
 	Return n
 EndFunction
 
-Function in_range :int ( n:Float, l:Float, h:Float )
+Function in_range:int ( n:Float, l:Float, h:Float )
 	If (n >= l) And (n < h)
 		Return True
 	EndIf
 	Return False
 EndFunction
 
-Function in_range_x :int ( n:Float, l:Float, h:Float )
+Function in_range_x:int ( n:Float, l:Float, h:Float )
 	If (n > l) And (n < h)
 		Return True
 	EndIf
 	Return False
 EndFunction
 
-Function in_irange :int ( n:Int, l:Int, h:Int )
+Function in_irange:int ( n:Int, l:Int, h:Int )
 	If (n >= l) And (n < h)
 		Return True
 	EndIf
 	Return False
 EndFunction
 
-Function in_irange_x :int ( n:Int, l:Int, h:Int )
+Function in_irange_x:int ( n:Int, l:Int, h:Int )
 	If (n > l) And (n < h)
 		Return True
 	EndIf
 	Return False
 EndFunction
 
-Function line_in_range :int (a1:Float, a2:Float, b1:Float, b2:Float)
+Function line_in_range:int (a1:Float, a2:Float, b1:Float, b2:Float)
 	Local u:Int = 0
 	
 	u = in_range(a1, b1, b2)
@@ -432,7 +453,7 @@ Function line_in_range :int (a1:Float, a2:Float, b1:Float, b2:Float)
 	Return u
 EndFunction
 
-Function iline_in_irange :int (a1:Int, a2:Int, b1:Int, b2:Int)
+Function iline_in_irange:int (a1:Int, a2:Int, b1:Int, b2:Int)
 	Local u:Int = 0
 	
 	u = in_irange(a1, b1, b2)
@@ -443,37 +464,37 @@ Function iline_in_irange :int (a1:Int, a2:Int, b1:Int, b2:Int)
 	Return u
 EndFunction
 
-Function point_in_rect :int( x:Float, y:Float, rx:Float, ry:Float, rw:Float, rh:Float)
+Function point_in_rect:int( x:Float, y:Float, rx:Float, ry:Float, rw:Float, rh:Float)
 	Return in_range(x,rx,rx+rw) And in_range(y,ry,ry+rh)
 EndFunction
 
-Function ipoint_in_irect :int( x:Int, y:Int, rx:Int, ry:Int, rw:Int, rh:Int)
+Function ipoint_in_irect:int( x:Int, y:Int, rx:Int, ry:Int, rw:Int, rh:Int)
 	Return in_irange(x,rx,rx+rw) And in_irange(y,ry,ry+rh)
 EndFunction
 
-Function rect_in_rect :int( x1:Float, y1:Float, w1:Float, h1:Float, x2:Float, y2:Float, w2:Float, h2:Float)
+Function rect_in_rect:int( x1:Float, y1:Float, w1:Float, h1:Float, x2:Float, y2:Float, w2:Float, h2:Float)
 	Return line_in_range( x1, x1+w1, x2, x2+w2 ) And line_in_range( y1, y1+h1, y2, y2+h2 )
 EndFunction
 
-Function irect_in_irect :int( x1:Int, y1:Int, w1:Int, h1:Int, x2:Int, y2:Int, w2:Int, h2:Int)
+Function irect_in_irect:int( x1:Int, y1:Int, w1:Int, h1:Int, x2:Int, y2:Int, w2:Int, h2:Int)
 	Return iline_in_irange( x1, x1+w1, x2, x2+w2 ) And iline_in_irange( y1, y1+h1, y2, y2+h2 )
 EndFunction
 
-Function point_in_cube :int( x:Float, y:Float, z:Float, cx:Float, cy:Float, cz:Float, sx:Float, sy:Float, sz:Float )
+Function point_in_cube:int( x:Float, y:Float, z:Float, cx:Float, cy:Float, cz:Float, sx:Float, sy:Float, sz:Float )
 	If (x >= cx) And (y >= cy) And (z >= cz) And (x < cx+sx) And (y < cy+sy) And (z < cz+sz)
 		Return True
 	EndIf
 	Return False
 EndFunction
 
-Function ipoint_in_icube :int( x:Int, y:Int, z:Int, cx:Int, cy:Int, cz:Int, sx:Int, sy:Int, sz:Int )
+Function ipoint_in_icube:int( x:Int, y:Int, z:Int, cx:Int, cy:Int, cz:Int, sx:Int, sy:Int, sz:Int )
 	If (x >= cx) And (y >= cy) And (z >= cz) And (x < cx+sx) And (y < cy+sy) And (z < cz+sz)
 		Return True
 	EndIf
 	Return False
 EndFunction
 
-Function cube_in_cube :int( x1:Float, y1:Float, z1:Float, sx1:Float, sy1:Float, sz1:Float, ..
+Function cube_in_cube:int( x1:Float, y1:Float, z1:Float, sx1:Float, sy1:Float, sz1:Float, ..
 	x2:Float, y2:Float, z2:Float, sx2:Float, sy2:Float, sz2:Float )
 	
 	Local u:Int = 0
@@ -486,7 +507,7 @@ Function cube_in_cube :int( x1:Float, y1:Float, z1:Float, sx1:Float, sy1:Float, 
 EndFunction
 
 
-Function icube_in_icube :int( x1:Int, y1:Int, z1:Int, sx1:Int, sy1:Int, sz1:Int, ..
+Function icube_in_icube:int( x1:Int, y1:Int, z1:Int, sx1:Int, sy1:Int, sz1:Int, ..
 	x2:Int, y2:Int, z2:Int, sx2:Int, sy2:Int, sz2:Int )
 	
 	Local u:Int = 0
@@ -498,16 +519,16 @@ Function icube_in_icube :int( x1:Int, y1:Int, z1:Int, sx1:Int, sy1:Int, sz1:Int,
 	Return u
 EndFunction
 
-Function dist2d :Float( x1:Float, y1:Float, x2:Float=0, y2:Float=0 )
+Function dist2d:Float( x1:Float, y1:Float, x2:Float=0, y2:Float=0 )
 	Return Sqr( pow( x1+x2, 2 ) + pow( y1+y2, 2 ) )
 EndFunction
-Global dist :Float( x1:Float, y1:Float, x2:Float=0, y2:Float=0 ) = dist2d
+Global dist:Float( x1:Float, y1:Float, x2:Float=0, y2:Float=0 ) = dist2d
 
-Function dist3d :Float( x1:Float, y1:Float, z1:Float, x2:Float=0, y2:Float=0, z2:Float=0)
+Function dist3d:Float( x1:Float, y1:Float, z1:Float, x2:Float=0, y2:Float=0, z2:Float=0)
 	Return Sqr( pow(x1+x2,2) + pow(y1+y2,2) + pow(z1+z2,2) )
 EndFunction
 
-function idist2d :int( x1:int, y1:int, x2:int, y2:int )
+function idist2d:int( x1:int, y1:int, x2:int, y2:int )
 	return abs(x2-x1) + abs(y2-y1)
 endfunction
 
@@ -515,85 +536,85 @@ function idist3d :int( x1:int, y1:int, z1:int, x2:int, y2:int, z2:int )
 	return abs(x2-x1) + abs(y2-y1) + abs(z2-z1)
 endfunction
 
-Function pow :Float(x:Float, n:Float)
+Function pow:Float(x:Float, n:Float)
 	Return x ^ n
 EndFunction
-Global fpow :Float(x:Float,y:Float) = pow
+Global fpow:Float(x:Float,y:Float) = pow
 
-Function ipow :Int(x:Int, n:Int)
+Function ipow:Int(x:Int, n:Int)
 	Return x ^ n
 EndFunction
 
 '' 3D functions for perspective space
 
-Function sinf :Float(f:Float)
+Function sinf:Float(f:Float)
 	Return Float(Sin(f/1000*360))
 EndFunction
 
-Function cosf :Float(f:Float)
+Function cosf:Float(f:Float)
 	Return Float(Cos(f/1000*360))
 EndFunction
 
-function asinf :float( f:float )
+function asinf:float( f:float )
 	return float(asin(f))/180*500
 endfunction
 
-function acosf :float( f:float )
+function acosf:float( f:float )
 	return float(acos(f))/180*500
 endfunction
 
 '' ---------------------
 
-Function rot_x :Float(f:Float)
+Function rot_x:Float(f:Float)
 	Return sinf(f)
 EndFunction
 
-Function rot_y :Float(f:Float)
+Function rot_y:Float(f:Float)
 	Return -cosf(f)
 EndFunction
 
 '' -------------------------------------------------------------------------------
 
-function rot_xx :float( r:float, m:float=1.0 )
+function rot_xx:float( r:float, m:float=1.0 )
 	return 1.0 * m
 endfunction
 
-function rot_xy :float( r:float, m:float=1.0 )
+function rot_xy:float( r:float, m:float=1.0 )
 	return -cosf( r ) * m
 endfunction
 
-function rot_xz :float( r:float, m:float=1.0 )
+function rot_xz:float( r:float, m:float=1.0 )
 	return -sinf( r ) * m
 endfunction
 
-function rot_yx :float( r:float, m:float=1.0 )
+function rot_yx:float( r:float, m:float=1.0 )
 	return cosf(r) * m
 endfunction
 
-function rot_yy :float( r:float, m:float=1.0 )
+function rot_yy:float( r:float, m:float=1.0 )
 	return 1.0 * m
 endfunction
 
-function rot_yz :float( r:float, m:float=1.0 )
+function rot_yz:float( r:float, m:float=1.0 )
 	return sinf(r) * m
 endfunction
 
-function rot_zx :float( r:float, m:float=1.0 )
+function rot_zx:float( r:float, m:float=1.0 )
 	return sinf(r) * m
 endfunction
 
-function rot_zy :float( r:float, m:float=1.0 )
+function rot_zy:float( r:float, m:float=1.0 )
 	return -cosf(r) * m
 endfunction
 
-function rot_zz :float( r:float, m:float=1.0 )
+function rot_zz:float( r:float, m:float=1.0 )
 	return 1.0 * m
 endfunction
 
 '' -------------------------------------------------------------------------------
 
-global angle_x_d :float[] = new float[2]
-function angle_x :float( y:float, z:float )
+global angle_x_d:float[] = new float[2]
+function angle_x:float( y:float, z:float )
 	local ay:float = asinf(y)
 	local az:float = asinf(z)
 	local r:float = 0
@@ -613,8 +634,8 @@ function angle_x :float( y:float, z:float )
 	return r
 endfunction
 
-global angle_y_d :float[] = new float[2]
-function angle_y :float( x:float, z:float )
+global angle_y_d:float[] = new float[2]
+function angle_y:float( x:float, z:float )
 	local ax:float = asinf(x)
 	local az:float = asinf(z)
 	local r:float = 0
@@ -634,8 +655,8 @@ function angle_y :float( x:float, z:float )
 	return r
 endfunction
 
-global angle_z_d :float[] = new float[2]
-function angle_z :float( x:float, y:float )
+global angle_z_d:float[] = new float[2]
+function angle_z:float( x:float, y:float )
 	local ax:float = asinf(x)
 	local ay:float = asinf(y)
 	local r:float = 0
@@ -654,14 +675,14 @@ function angle_z :float( x:float, y:float )
 	angle_z_d[1] = ay
 	return r
 endfunction
-global angle :float(x:float,y:float) = angle_z
+global angle:float(x:float,y:float) = angle_z
 
 '' -------------------------------------------------------------------------------
 
 
 
 ''	returns 3-cell array (unit vector x,y and magnitude)
-Function unit2 :Float[](x:Float, y:Float)
+Function unit2:Float[](x:Float, y:Float)
 	Local m:Float = dist(x,y)
 	Local r:Float[] = New Float[3]
 	If (m = 0)
@@ -676,11 +697,11 @@ Function unit2 :Float[](x:Float, y:Float)
 	Return r
 EndFunction
 
-function unit :float[]( x:float, y:float )
+function unit:float[]( x:float, y:float )
 	return unit2(x,y)
 endfunction
 
-function unit2 :float[]( f:float )
+function unit2:float[]( f:float )
 	local r :float[] = new float[3]
 	r[0] = sinf( f )
 	r[1] = -cosf( f )
@@ -688,13 +709,13 @@ function unit2 :float[]( f:float )
 	return r
 endfunction
 
-function unit :float[]( f:float )
+function unit:float[]( f:float )
 	return unit2( f )
 endfunction
 
 ''	returns 4-cell array (unit vector x,y,z and magnitude)
-global unit3_d :float[] = new float[4]
-Function unit3 :Float[](x:Float, y:Float, z:Float)
+global unit3_d:float[] = new float[4]
+Function unit3:Float[](x:Float, y:Float, z:Float)
 	Local m:Float = dist3d(x,y,z)
 	Local r:Float[] = New Float[4]
 	If (m = 0)
@@ -721,7 +742,7 @@ EndFunction
 '' Array Creation ''
 ''''''''''''''''''''
 
-function barray :byte[] (n:int, v:byte)
+function barray:byte[] (n:int, v:byte)
 	local r:byte[] = new byte[n]
 	for local i:int = 0 to n-1
 		r[i] = v
@@ -729,7 +750,7 @@ function barray :byte[] (n:int, v:byte)
 	return r
 endfunction
 
-function barray2 :byte[,] (x:int, y:int, v:byte)
+function barray2:byte[,] (x:int, y:int, v:byte)
 	local r:byte[,] = new byte[x,y]
 	for local i:int = 0 to x-1
 		for local j:int = 0 to y-1
@@ -739,7 +760,7 @@ function barray2 :byte[,] (x:int, y:int, v:byte)
 	return r
 endfunction
 
-function barray3 :byte[,,] (x:int, y:int, z:int, v:byte)
+function barray3:byte[,,] (x:int, y:int, z:int, v:byte)
 	local r:byte[,,] = new byte[x,y,z]
 	for local i:int = 0 to x-1
 		for local j:int = 0 to y-1
@@ -753,7 +774,7 @@ endfunction
 
 '''''''''''''''''
 
-function warray :short[] (n:int, v:short)
+function warray:short[] (n:int, v:short)
 	local r:short[] = new short[n]
 	for local i:int = 0 to n-1
 		r[i] = v
@@ -761,7 +782,7 @@ function warray :short[] (n:int, v:short)
 	return r
 endfunction
 
-function warray2 :short[,] (x:int, y:int, v:short)
+function warray2:short[,] (x:int, y:int, v:short)
 	local r:short[,] = new short[x,y]
 	for local i:int = 0 to x-1
 		for local j:int = 0 to y-1
@@ -771,7 +792,7 @@ function warray2 :short[,] (x:int, y:int, v:short)
 	return r
 endfunction
 
-function warray3 :short[,,] (x:int, y:int, z:int, v:short)
+function warray3:short[,,] (x:int, y:int, z:int, v:short)
 	local r:short[,,] = new short[x,y,z]
 	for local i:int = 0 to x-1
 		for local j:int = 0 to y-1
@@ -785,7 +806,7 @@ endfunction
 
 ''''''''''''
 
-function iarray :int[] (n:int, v:int)
+function iarray:int[] (n:int, v:int)
 	local r:int[] = new int[n]
 	for local i:int = 0 to n-1
 		r[i] = v
@@ -793,7 +814,7 @@ function iarray :int[] (n:int, v:int)
 	return r
 endfunction
 
-function iarray2 :int[,] (x:int, y:int, v:int)
+function iarray2:int[,] (x:int, y:int, v:int)
 	local r:int[,] = new int[x,y]
 	for local i:int = 0 to x-1
 		for local j:int = 0 to y-1
@@ -803,7 +824,7 @@ function iarray2 :int[,] (x:int, y:int, v:int)
 	return r
 endfunction
 
-function iarray3 :int[,,] (x:int, y:int, z:int, v:int)
+function iarray3:int[,,] (x:int, y:int, z:int, v:int)
 	local r:int[,,] = new int[x,y,z]
 	for local i:int = 0 to x-1
 		for local j:int = 0 to y-1
@@ -817,7 +838,7 @@ endfunction
 
 '''''''''''''''''''''''
 
-function larray :long[] (n:int, v:long)
+function larray:long[] (n:int, v:long)
 	local r:long[] = new long[n]
 	for local i:int = 0 to n-1
 		r[i] = v
@@ -825,7 +846,7 @@ function larray :long[] (n:int, v:long)
 	return r
 endfunction
 
-function larray2 :long[,] (x:int, y:int, v:long)
+function larray2:long[,] (x:int, y:int, v:long)
 	local r:long[,] = new long[x,y]
 	for local i:int = 0 to x-1
 		for local j:int = 0 to y-1
@@ -835,7 +856,7 @@ function larray2 :long[,] (x:int, y:int, v:long)
 	return r
 endfunction
 
-function larray3 :long[,,] (x:int, y:int, z:int, v:long)
+function larray3:long[,,] (x:int, y:int, z:int, v:long)
 	local r:long[,,] = new long[x,y,z]
 	for local i:int = 0 to x-1
 		for local j:int = 0 to y-1
@@ -849,7 +870,7 @@ endfunction
 
 '''''''''''''''''''''''''''''''''''
 
-function farray :float[] (n:int, v:float)
+function farray:float[] (n:int, v:float)
 	local r:float[] = new float[n]
 	for local i:int = 0 to n-1
 		r[i] = v
@@ -857,7 +878,7 @@ function farray :float[] (n:int, v:float)
 	return r
 endfunction
 
-function farray2 :float[,] (x:int, y:int, v:float)
+function farray2:float[,] (x:int, y:int, v:float)
 	local r:float[,] = new float[x,y]
 	for local i:int = 0 to x-1
 		for local j:int = 0 to y-1
@@ -867,7 +888,7 @@ function farray2 :float[,] (x:int, y:int, v:float)
 	return r
 endfunction
 
-function farray3 :float[,,] (x:int, y:int, z:int, v:float)
+function farray3:float[,,] (x:int, y:int, z:int, v:float)
 	local r:float[,,] = new float[x,y,z]
 	for local i:int = 0 to x-1
 		for local j:int = 0 to y-1
@@ -881,7 +902,7 @@ endfunction
 
 '''''''''''''''''''''''''''''
 
-function darray :double[] (n:int, v:double)
+function darray:double[] (n:int, v:double)
 	local r:double[] = new double[n]
 	for local i:int = 0 to n-1
 		r[i] = v
@@ -889,7 +910,7 @@ function darray :double[] (n:int, v:double)
 	return r
 endfunction
 
-function darray2 :double[,] (x:int, y:int, v:double)
+function darray2:double[,] (x:int, y:int, v:double)
 	local r:double[,] = new double[x,y]
 	for local i:int = 0 to x-1
 		for local j:int = 0 to y-1
@@ -899,7 +920,7 @@ function darray2 :double[,] (x:int, y:int, v:double)
 	return r
 endfunction
 
-function darray3 :double[,,] (x:int, y:int, z:int, v:double)
+function darray3:double[,,] (x:int, y:int, z:int, v:double)
 	local r:double[,,] = new double[x,y,z]
 	for local i:int = 0 to x-1
 		for local j:int = 0 to y-1
@@ -913,7 +934,7 @@ endfunction
 
 '''''''''''''''''''''''''
 
-function sarray :string[] (n:int, v:string)
+function sarray:string[] (n:int, v:string)
 	local r:string[] = new string[n]
 	for local i:int = 0 to n-1
 		r[i] = v
@@ -921,7 +942,7 @@ function sarray :string[] (n:int, v:string)
 	return r
 endfunction
 
-function sarray2 :string[,] (x:int, y:int, v:string)
+function sarray2:string[,] (x:int, y:int, v:string)
 	local r:string[,] = new string[x,y]
 	for local i:int = 0 to x-1
 		for local j:int = 0 to y-1
@@ -931,7 +952,7 @@ function sarray2 :string[,] (x:int, y:int, v:string)
 	return r
 endfunction
 
-function sarray3 :string[,,] (x:int, y:int, z:int, v:string)
+function sarray3:string[,,] (x:int, y:int, z:int, v:string)
 	local r:string[,,] = new string[x,y,z]
 	for local i:int = 0 to x-1
 		for local j:int = 0 to y-1
@@ -945,7 +966,7 @@ endfunction
 
 ''''''''''''''''''''''''''''''''''''''''''''
 
-function strdec :string( f:float=0.0, d:int=2 )
+function strdec:string( f:float=0.0, d:int=2 )
 	d = iclamp(d,0,10)
 	if abs(f) < 1.0 * (10.0 ^ -d) then f = 0.0
 	local r:string
@@ -958,7 +979,7 @@ function strdec :string( f:float=0.0, d:int=2 )
 	return r
 endfunction
 
-function roundint :int( f:float )
+function roundint:int( f:float )
 	local n:float
 	if (f < 0) then n = -1.0 else n = 1.0 
 	local u:float = abs(f)
@@ -970,7 +991,7 @@ function roundint :int( f:float )
 	endif
 endfunction
 
-function fround :float( f:float, d:float=1.0 )
+function fround:float( f:float, d:float=1.0 )
 	return float(round(f))
 endfunction
 

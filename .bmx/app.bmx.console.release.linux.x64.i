@@ -515,6 +515,10 @@ string_length%(s:t_string)="_m_app_string_length"
 point3_set(p:t_point3,x#,y#,z#)="_m_app_point3_set"
 sprite_move(s:t_sprite,x#,y#,z#=0.00000000#)="_m_app_sprite_move"
 argb%(a@,r@,g@,b@)="_m_app_argb"
+argb_a@(a%)="_m_app_argb_a"
+argb_r@(a%)="_m_app_argb_r"
+argb_g@(a%)="_m_app_argb_g"
+argb_b@(a%)="_m_app_argb_b"
 fswap(a# Var,b# Var)="_m_app_fswap"
 fclamp#(n#,l#,h#)="_m_app_fclamp"
 fwrap#(n#,l#,h#)="_m_app_fwrap"
@@ -674,7 +678,6 @@ gb_visual_set_window_scale(n#)="_m_app_gb_visual_set_window_scale"
 number_set(n:t_number,v#)="_m_app_number_set"
 gb_visual_load()="_m_app_gb_visual_load"
 color_set(c:t_color,r#,g#,b#,a#=3.00000000#)="_m_app_color_set"
-color_set(c:t_color,d:t_color)="_m_app_color_set2"
 new_palette:t_palette()="_m_app_new_palette"
 palette_set(p:t_palette,n%,r#,g#,b#,a#)="_m_app_palette_set"
 gb_load_default_palettes()="_m_app_gb_load_default_palettes"
@@ -994,7 +997,9 @@ animation_pause(a:t_animation)="_m_app_animation_pause"
 animation_stop(a:t_animation)="_m_app_animation_stop"
 animation_update(a:t_animation,d#)="_m_app_animation_update"
 stopwatch_reset(s:t_stopwatch)="_m_app_stopwatch_reset"
+new_color_from_argb()="_m_app_new_color_from_argb"
 clone_color:t_color(c:t_color)="_m_app_clone_color"
+color_set_c(c:t_color,d:t_color)="_m_app_color_set_c"
 color_set_rgb(c:t_color,r#,g#,b#)="_m_app_color_set_rgb"
 color_add(c:t_color,r#,g#,b#,a#=3.00000000#)="_m_app_color_add"
 color_add_rgb(c:t_color,r#,g#,b#)="_m_app_color_add_rgb"
@@ -1112,7 +1117,10 @@ button_update(b:t_button,d#)="_m_app_button_update"
 gb_graph_draw_tile_window(x#,y#,im%,ix#,iy#,wx%=2,wy%=2,b@=0)="_m_app_gb_graph_draw_tile_window"
 button_draw(b:t_button,x#=0.00000000#,y#=0.00000000#)="_m_app_button_draw"
 new_bitmap:t_bitmap(x%,y%,rr#=0.00000000#,gg#=0.00000000#,bb#=0.00000000#,aa#=0.00000000#)="_m_app_new_bitmap"
-bitmap_from_image:t_bitmap(u:t_image)="_m_app_bitmap_from_image"
+image_width%(u:t_image)="_m_app_image_width"
+image_height%(u:t_image)="_m_app_image_height"
+new_bitmap_from_image:t_bitmap(u:t_image)="_m_app_new_bitmap_from_image"
+new_bitmap_from_path:t_bitmap(p$)="_m_app_new_bitmap_from_path"
 bitmap_sync(c:t_bitmap)="_m_app_bitmap_sync"
 bitmap_cls(c:t_bitmap)="_m_app_bitmap_cls"
 bitmap_draw_dot(c:t_bitmap,x%,y%,rr#,gg#,bb#,aa#=3.00000000#)="_m_app_bitmap_draw_dot"
@@ -1191,7 +1199,8 @@ drawcmd_draw(d:t_drawcmd,x#=0.00000000#,y#=0.00000000#,z#=0.00000000#,p%=1)="_m_
 drawstack_draw3d(d:t_drawstack,x#=0.00000000#,y#=0.00000000#,z#=0.00000000#)="_m_app_drawstack_draw3d"
 lightcube_draw3d(a:t_lightcube,x#=0.00000000#,y#=0.00000000#,z#=0.00000000#)="_m_app_lightcube_draw3d"
 lightcube_draw(a:t_lightcube,x#=0.00000000#,y#=0.00000000#)="_m_app_lightcube_draw"
-new_image(p$)="_m_app_new_image"
+new_image:t_image(p$)="_m_app_new_image"
+image_path$(u:t_image)="_m_app_image_path"
 drawcmd_set_pos(d:t_drawcmd,x#,y#,z#)="_m_app_drawcmd_set_pos"
 drawcmd_set_rotation(d:t_drawcmd,r#)="_m_app_drawcmd_set_rotation"
 drawcmd_set_scale(d:t_drawcmd,x#,y#)="_m_app_drawcmd_set_scale"
@@ -1364,6 +1373,10 @@ sadd(b:t_string,v$)&=mem:p("_m_app_sadd")
 slen%(b:t_string)&=mem:p("_m_app_slen")
 sprite_set_pos(s:t_sprite,x#,y#,z#)&=mem:p("_m_app_sprite_set_pos")
 rgba%(r@,g@,b@,a@)&=mem:p("_m_app_rgba")
+rgba_r@(a%)&=mem:p("_m_app_rgba_r")
+rgba_g@(a%)&=mem:p("_m_app_rgba_g")
+rgba_b@(a%)&=mem:p("_m_app_rgba_b")
+rgba_a@(a%)&=mem:p("_m_app_rgba_a")
 swap(l# Var,h# Var)&=mem:p("_m_app_swap")
 clamp#(n#,l#,h#)&=mem:p("_m_app_clamp")
 wrap#(n#,l#,h#)&=mem:p("_m_app_wrap")

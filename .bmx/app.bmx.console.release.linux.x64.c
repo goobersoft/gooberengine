@@ -1516,6 +1516,22 @@ BBINT _m_app_argb(BBBYTE bbt_a,BBBYTE bbt_r,BBBYTE bbt_g,BBBYTE bbt_b){
 	bbt_m=((unsigned int)(bbt_m)|(unsigned int)(((BBINT)bbt_b)));
 	return bbt_m;
 }
+BBBYTE(* _m_app_rgba_r)(BBINT);
+BBBYTE _m_app_argb_a(BBINT bbt_a){
+	return ((BBBYTE)((unsigned int)(((unsigned int)(-16777216)&(unsigned int)(bbt_a)))>>(unsigned int)(24)));
+}
+BBBYTE(* _m_app_rgba_g)(BBINT);
+BBBYTE _m_app_argb_r(BBINT bbt_a){
+	return ((BBBYTE)((unsigned int)(((unsigned int)(16711680)&(unsigned int)(bbt_a)))>>(unsigned int)(16)));
+}
+BBBYTE(* _m_app_rgba_b)(BBINT);
+BBBYTE _m_app_argb_g(BBINT bbt_a){
+	return ((BBBYTE)((unsigned int)(((unsigned int)(65280)&(unsigned int)(bbt_a)))>>(unsigned int)(8)));
+}
+BBBYTE(* _m_app_rgba_a)(BBINT);
+BBBYTE _m_app_argb_b(BBINT bbt_a){
+	return ((BBBYTE)((unsigned int)(255)&(unsigned int)(bbt_a)));
+}
 void(* _m_app_swap)(BBFLOAT*,BBFLOAT*);
 void _m_app_fswap(BBFLOAT* bbt_a,BBFLOAT* bbt_b){
 	BBFLOAT bbt_u=*bbt_a;
@@ -4118,12 +4134,6 @@ void _m_app_color_set(struct _m_app_t_color_obj* bbt_c,BBFLOAT bbt_r,BBFLOAT bbt
 	bbt_c->__m_app_t_color_g =_m_app_clamp(bbt_g,0.00000000f,3.00000000f);
 	bbt_c->__m_app_t_color_b =_m_app_clamp(bbt_b,0.00000000f,3.00000000f);
 	bbt_c->__m_app_t_color_a =_m_app_clamp(bbt_a,0.00000000f,3.00000000f);
-}
-void _m_app_color_set2(struct _m_app_t_color_obj* bbt_c,struct _m_app_t_color_obj* bbt_d){
-	bbt_c->__m_app_t_color_r =bbt_d->__m_app_t_color_r ;
-	bbt_c->__m_app_t_color_g =bbt_d->__m_app_t_color_g ;
-	bbt_c->__m_app_t_color_b =bbt_d->__m_app_t_color_b ;
-	bbt_c->__m_app_t_color_a =bbt_d->__m_app_t_color_a ;
 }
 struct _m_app_t_palette_obj* _m_app_new_palette(){
 	struct _m_app_t_palette_obj* bbt_r=(struct _m_app_t_palette_obj*)(struct _m_app_t_palette_obj*)bbObjectNew((BBClass *)&_m_app_t_palette);
@@ -8125,8 +8135,17 @@ void _m_app_stopwatch_reset(struct _m_app_t_stopwatch_obj* bbt_s){
 	bbt_s->__m_app_t_stopwatch_seconds =0;
 	bbt_s->__m_app_t_stopwatch_millis =0;
 }
+void _m_app_new_color_from_argb(){
+	struct _m_app_t_color_obj* bbt_r=(struct _m_app_t_color_obj*)(struct _m_app_t_color_obj*)bbObjectAtomicNew((BBClass *)&_m_app_t_color);
+}
 struct _m_app_t_color_obj* _m_app_clone_color(struct _m_app_t_color_obj* bbt_c){
 	return (struct _m_app_t_color_obj*)_m_app_new_color(bbt_c->__m_app_t_color_r ,bbt_c->__m_app_t_color_g ,bbt_c->__m_app_t_color_b ,bbt_c->__m_app_t_color_a );
+}
+void _m_app_color_set_c(struct _m_app_t_color_obj* bbt_c,struct _m_app_t_color_obj* bbt_d){
+	bbt_c->__m_app_t_color_r =bbt_d->__m_app_t_color_r ;
+	bbt_c->__m_app_t_color_g =bbt_d->__m_app_t_color_g ;
+	bbt_c->__m_app_t_color_b =bbt_d->__m_app_t_color_b ;
+	bbt_c->__m_app_t_color_a =bbt_d->__m_app_t_color_a ;
 }
 void _m_app_color_set_rgb(struct _m_app_t_color_obj* bbt_c,BBFLOAT bbt_r,BBFLOAT bbt_g,BBFLOAT bbt_b){
 	bbt_c->__m_app_t_color_r =_m_app_clamp(bbt_r,0.00000000f,3.00000000f);
@@ -9192,9 +9211,21 @@ struct _m_app_t_bitmap_obj* _m_app_new_bitmap(BBINT bbt_x,BBINT bbt_y,BBFLOAT bb
 	bbt_r->__m_app_t_bitmap_image =(struct brl_max2d_image_TImage_obj*)brl_max2d_CreateImage(bbt_r->__m_app_t_bitmap_width ,bbt_r->__m_app_t_bitmap_height ,1,8);
 	return (struct _m_app_t_bitmap_obj*)bbt_r;
 }
-struct _m_app_t_bitmap_obj* _m_app_bitmap_from_image(struct _m_app_t_image_obj* bbt_u){
-	BBINT bbt_px=brl_max2d_ImageWidth((struct brl_max2d_image_TImage_obj*)bbt_u->__m_app_t_image_image );
-	BBINT bbt_py=brl_max2d_ImageHeight((struct brl_max2d_image_TImage_obj*)bbt_u->__m_app_t_image_image );
+BBINT _m_app_image_width(struct _m_app_t_image_obj* bbt_u){
+	return brl_max2d_ImageWidth((struct brl_max2d_image_TImage_obj*)bbt_u->__m_app_t_image_image );
+}
+BBINT _m_app_image_height(struct _m_app_t_image_obj* bbt_u){
+	return brl_max2d_ImageHeight((struct brl_max2d_image_TImage_obj*)bbt_u->__m_app_t_image_image );
+}
+struct _m_app_t_bitmap_obj* _m_app_new_bitmap_from_image(struct _m_app_t_image_obj* bbt_u){
+	BBINT bbt_px=_m_app_image_width((struct _m_app_t_image_obj*)bbt_u);
+	BBINT bbt_py=_m_app_image_height((struct _m_app_t_image_obj*)bbt_u);
+	struct brl_pixmap_TPixmap_obj* bbt_pp=(struct brl_pixmap_TPixmap_obj*)brl_max2d_LockImage((struct brl_max2d_image_TImage_obj*)bbt_u->__m_app_t_image_image ,0,1,1);
+	BBINT bbt_ii=0;
+	BBFLOAT bbt_aa=0.00000000f;
+	BBFLOAT bbt_rr=0.00000000f;
+	BBFLOAT bbt_gg=0.00000000f;
+	BBFLOAT bbt_bb=0.00000000f;
 	struct _m_app_t_bitmap_obj* bbt_r=(struct _m_app_t_bitmap_obj*)_m_app_new_bitmap(bbt_px,bbt_py,0.00000000f,0.00000000f,0.00000000f,0.00000000f);
 	{
 		BBINT bbt_i=0;
@@ -9204,11 +9235,21 @@ struct _m_app_t_bitmap_obj* _m_app_bitmap_from_image(struct _m_app_t_image_obj* 
 				BBINT bbt_j=0;
 				BBINT bbt_2=(bbt_py-1);
 				for(;(bbt_j<=bbt_2);bbt_j=(bbt_j+1)){
+					bbt_ii=brl_pixmap_ReadPixel((struct brl_pixmap_TPixmap_obj*)bbt_pp,bbt_i,bbt_j);
+					bbt_aa=((((BBFLOAT)_m_app_argb_a(bbt_ii))/255.000000f)*3.00000000f);
+					bbt_rr=((((BBFLOAT)_m_app_argb_r(bbt_ii))/255.000000f)*3.00000000f);
+					bbt_gg=((((BBFLOAT)_m_app_argb_g(bbt_ii))/255.000000f)*3.00000000f);
+					bbt_bb=((((BBFLOAT)_m_app_argb_b(bbt_ii))/255.000000f)*3.00000000f);
+					BBUINT* bbt_3=((BBARRAY)bbt_r->__m_app_t_bitmap_data )->scales + 1;
+					((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_r->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)bbt_i) + ((BBUINT)bbt_j)]=(struct _m_app_t_color_obj*)_m_app_new_color(bbt_rr,bbt_gg,bbt_bb,bbt_aa);
 				}
 			}
 		}
 	}
 	return (struct _m_app_t_bitmap_obj*)bbt_r;
+}
+struct _m_app_t_bitmap_obj* _m_app_new_bitmap_from_path(BBSTRING bbt_p){
+	return (struct _m_app_t_bitmap_obj*)(&bbNullObject);
 }
 void _m_app_bitmap_sync(struct _m_app_t_bitmap_obj* bbt_c){
 	struct brl_pixmap_TPixmap_obj* bbt_u=(struct brl_pixmap_TPixmap_obj*)brl_max2d_LockImage((struct brl_max2d_image_TImage_obj*)bbt_c->__m_app_t_bitmap_image ,0,1,1);
@@ -9259,7 +9300,7 @@ void _m_app_bitmap_draw_dot2(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT
 	bbt_x=_m_app_iclamp(bbt_x,0,(bbt_c->__m_app_t_bitmap_width -1));
 	bbt_y=_m_app_iclamp(bbt_y,0,(bbt_c->__m_app_t_bitmap_height -1));
 	BBUINT* bbt_=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
-	_m_app_color_set2((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_)) * ((BBUINT)bbt_x) + ((BBUINT)bbt_y)],(struct _m_app_t_color_obj*)bbt_d);
+	_m_app_color_set_c((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_)) * ((BBUINT)bbt_x) + ((BBUINT)bbt_y)],(struct _m_app_t_color_obj*)bbt_d);
 }
 void _m_app_bitmap_draw_rect(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt_y,BBINT bbt_w,BBINT bbt_h,struct _m_app_t_color_obj* bbt_d){
 	bbt_x=_m_app_iclamp(bbt_x,0,(bbt_c->__m_app_t_bitmap_width -1));
@@ -9275,7 +9316,7 @@ void _m_app_bitmap_draw_rect(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT
 				BBINT bbt_2=(bbt_h-1);
 				for(;(bbt_j<=bbt_2);bbt_j=(bbt_j+1)){
 					BBUINT* bbt_3=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
-					_m_app_color_set2((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)bbt_i) + ((BBUINT)bbt_j)],(struct _m_app_t_color_obj*)bbt_d);
+					_m_app_color_set_c((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)bbt_i) + ((BBUINT)bbt_j)],(struct _m_app_t_color_obj*)bbt_d);
 				}
 			}
 		}
@@ -9298,7 +9339,7 @@ void _m_app_bitmap_paste(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt
 					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ,bbt_c->__m_app_t_bitmap_height )!=0){
 						BBUINT* bbt_3=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
 						BBUINT* bbt_4=((BBARRAY)bbt_d->__m_app_t_bitmap_data )->scales + 1;
-						_m_app_color_set2((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)(bbt_x+bbt_i)) + ((BBUINT)(bbt_y+bbt_j))],(struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_d->__m_app_t_bitmap_data ,1))[(*(bbt_4)) * ((BBUINT)bbt_i) + ((BBUINT)bbt_j)]);
+						_m_app_color_set_c((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)(bbt_x+bbt_i)) + ((BBUINT)(bbt_y+bbt_j))],(struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_d->__m_app_t_bitmap_data ,1))[(*(bbt_4)) * ((BBUINT)bbt_i) + ((BBUINT)bbt_j)]);
 					}
 				}
 			}
@@ -9321,7 +9362,7 @@ void _m_app_bitmap_paste_part(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBIN
 					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ,bbt_c->__m_app_t_bitmap_height )!=0){
 						BBUINT* bbt_3=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
 						BBUINT* bbt_4=((BBARRAY)bbt_d->__m_app_t_bitmap_data )->scales + 1;
-						_m_app_color_set2((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)(bbt_x+bbt_i)) + ((BBUINT)(bbt_y+bbt_j))],(struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_d->__m_app_t_bitmap_data ,1))[(*(bbt_4)) * ((BBUINT)(bbt_i+bbt_dx)) + ((BBUINT)(bbt_j+bbt_dy))]);
+						_m_app_color_set_c((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)(bbt_x+bbt_i)) + ((BBUINT)(bbt_y+bbt_j))],(struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_d->__m_app_t_bitmap_data ,1))[(*(bbt_4)) * ((BBUINT)(bbt_i+bbt_dx)) + ((BBUINT)(bbt_j+bbt_dy))]);
 					}
 				}
 			}
@@ -10244,7 +10285,14 @@ void _m_app_lightcube_draw3d(struct _m_app_t_lightcube_obj* bbt_a,BBFLOAT bbt_x,
 void _m_app_lightcube_draw(struct _m_app_t_lightcube_obj* bbt_a,BBFLOAT bbt_x,BBFLOAT bbt_y){
 	_m_app_lightcube_draw3d((struct _m_app_t_lightcube_obj*)bbt_a,bbt_x,bbt_y,0.00000000f);
 }
-void _m_app_new_image(BBSTRING bbt_p){
+struct _m_app_t_image_obj* _m_app_new_image(BBSTRING bbt_p){
+	struct _m_app_t_image_obj* bbt_r=(struct _m_app_t_image_obj*)(struct _m_app_t_image_obj*)bbObjectNew((BBClass *)&_m_app_t_image);
+	bbt_r->__m_app_t_image_image =(struct brl_max2d_image_TImage_obj*)brl_max2d_LoadImage((BBOBJECT)bbt_p,-1);
+	bbt_r->__m_app_t_image_path =bbt_p;
+	return (struct _m_app_t_image_obj*)bbt_r;
+}
+BBSTRING _m_app_image_path(struct _m_app_t_image_obj* bbt_u){
+	return bbt_u->__m_app_t_image_path ;
 }
 void _m_app_drawcmd_set_pos(struct _m_app_t_drawcmd_obj* bbt_d,BBFLOAT bbt_x,BBFLOAT bbt_y,BBFLOAT bbt_z){
 	((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]=bbt_x;
@@ -11494,6 +11542,10 @@ int _bb_main(){
 		_m_app_slen=_m_app_string_length;
 		_m_app_sprite_set_pos=_m_app_sprite_move;
 		_m_app_rgba=_m_app_argb;
+		_m_app_rgba_r=_m_app_argb_a;
+		_m_app_rgba_g=_m_app_argb_r;
+		_m_app_rgba_b=_m_app_argb_g;
+		_m_app_rgba_a=_m_app_argb_b;
 		_m_app_swap=_m_app_fswap;
 		_m_app_clamp=_m_app_fclamp;
 		_m_app_wrap=_m_app_fwrap;

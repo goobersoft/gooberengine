@@ -22,18 +22,32 @@ function new_bitmap:t_bitmap(x:int, y:int, rr:float=0, gg:float=0, bb:float=0, a
 	return r
 endfunction
 
-function bitmap_from_image:t_bitmap( u:t_image )
-	local px :int = u.size.x
-	local py :int = u.size.y
+function new_bitmap_from_image:t_bitmap( u:t_image )
+	local px :int     = image_width(u)
+	local py :int     = image_height(u)
+  local pp :tpixmap = lockimage(u.image)
+  local ii :int = 0
+  local aa :float = 0
+  local rr :float = 0
+  local gg :float = 0
+  local bb :float = 0
 	
 	local r:t_bitmap = new_bitmap(px,py)
 	for local i:int = 0 to px-1
 		for local j:int = 0 to py-1
-      r.data[i,j] = new_color()
+      ii = readpixel(pp,i,j)
+      aa = float(argb_a(ii)) / 255 * 3
+      rr = float(argb_r(ii)) / 255 * 3
+      gg = float(argb_g(ii)) / 255 * 3
+      bb = float(argb_b(ii)) / 255 * 3
+      r.data[i,j] = new_color(rr,gg,bb,aa)
 		next
 	next
 	
 	return r
+endfunction
+
+function new_bitmap_from_path:t_bitmap ( p:string )
 endfunction
 
 '''''''''''''''
@@ -72,7 +86,7 @@ endfunction
 function bitmap_draw_dot(c:t_bitmap, x:int, y:int, d:t_color)
 	x = iclamp(x,0,c.width-1)
 	y = iclamp(y,0,c.height-1)
-	color_set(c.data[x,y], d)
+	color_set_c(c.data[x,y], d)
 endfunction
 
 function bitmap_draw_rect( c:t_bitmap, x:int, y:int, w:int, h:int, d:t_color)
@@ -82,7 +96,7 @@ function bitmap_draw_rect( c:t_bitmap, x:int, y:int, w:int, h:int, d:t_color)
 	h = iclamp(h,0,c.height-y)
 	for local i:int = 0 to w-1
 		for local j:int = 0 to h-1
-			color_set( c.data[i,j], d )
+			color_set_c( c.data[i,j], d )
 		next
 	next
 endfunction
@@ -93,7 +107,7 @@ function bitmap_paste( c:t_bitmap, x:int, y:int, d:t_bitmap )
 	for local i:int = 0 to ux-1
 		for local j:int = 0 to uy-1
 			if ipoint_in_irect(x+i, y+j, 0, 0, c.width, c.height)
-				color_set( c.data[x+i, y+j], d.data[i,j])
+				color_set_c( c.data[x+i, y+j], d.data[i,j])
 			endif
 		next
 	next
@@ -108,7 +122,7 @@ dx:int, dy:int, dw:int, dh:int )
 	for local i:int = 0 to dw-1
 		for local j:int = 0 to dh-1
 			if ipoint_in_irect( x+i, y+j, 0, 0, c.width, c.height )
-				color_set( c.data[x+i, y+j], d.data[i+dx, j+dy] )
+				color_set_c( c.data[x+i, y+j], d.data[i+dx, j+dy] )
 			endif
 		next
 	next
