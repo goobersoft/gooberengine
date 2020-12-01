@@ -8,16 +8,18 @@ type t_color
 	field g:float
 	field b:float
 	field a:float
+  field depth:int
 endtype
 
 '' Creates a new color.
 '' If no params are given, creates an opaque white color.
-function new_color:t_color(r:float=3, g:float=3, b:float=3, a:float=3)
+function new_color:t_color(r:float=3, g:float=3, b:float=3, a:float=3, d:int=0)
 	local u:t_color = new t_color
-	u.r = r
-	u.g = g
-	u.b = b
-	u.a = a
+	u.r     = r
+	u.g     = g
+	u.b     = b
+	u.a     = a
+  u.depth = d
 	return u
 endfunction
 
@@ -25,29 +27,45 @@ endfunction
 '' Because RGBA 
 function new_color_from_argb:t_color (ii:int)
   local r:t_color = new t_color
-  r.a = argb_a(ii)
-  r.r = argb_r(ii)
-  r.g = argb_g(ii)
-  r.b = argb_b(ii)
+  r.a     = argb_a(ii)
+  r.r     = argb_r(ii)
+  r.g     = argb_g(ii)
+  r.b     = argb_b(ii)
+  r.depth = 0
   return r
 endfunction
 
 function new_color_from_rgba:t_color (ii:int)
   local r:t_color = new t_color
-  r.r = rgba_r(ii)
-  r.g = rgba_g(ii)
-  r.b = rgba_b(ii)
-  r.a = rgba_a(ii)
+  r.r       = rgba_r(ii)
+  r.g       = rgba_g(ii)
+  r.b       = rgba_b(ii)
+  r.a       = rgba_a(ii)
+  r.depth   = 0
   return r
 endfunction
 
 function clone_color:t_color(c:t_color)
-	return new_color(c.r, c.g, c.b, c.a)
+	return new_color(c.r, c.g, c.b, c.a, c.depth)
 endfunction
 
 '''''''''''''''
 '' functions ''
 '''''''''''''''
+
+function color_fit_to_depth(c:t_color)
+  if c.depth >= 2
+    local q:float = 3 / (c.depth-1)
+  endif
+endfunction
+
+function color_set_depth(c:t_color, d:int=0)
+  if d <= 0
+    c.depth = 0
+  elseif d >= 2
+    c.depth = d
+  endif
+endfunction
 
 function color_set(c:t_color, r:float, g:float, b:float, a:float=3)
 	c.r = clamp(r,0,3)

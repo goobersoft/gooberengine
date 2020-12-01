@@ -11,13 +11,13 @@ static BBString _s21={
 	1,
 	{32}
 };
-static BBString _s60={
+static BBString _s64={
 	&bbStringClass,
 	0xd080db24ebb0e205,
 	2,
 	{32,32}
 };
-static BBString _s132={
+static BBString _s135={
 	&bbStringClass,
 	0x9dfc4b1a7ff6e236,
 	95,
@@ -28,49 +28,49 @@ static BBString _s132={
 	,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112
 	,113,114,115,116,117,118,119,120,121,122,123,124,125,126}
 };
-static BBString _s67={
+static BBString _s71={
 	&bbStringClass,
 	0x37282ba3781b0ea9,
 	4,
 	{32,58,32,33}
 };
-static BBString _s66={
+static BBString _s70={
 	&bbStringClass,
 	0x8bbc990201c7c485,
 	4,
 	{32,58,32,35}
 };
-static BBString _s68={
+static BBString _s72={
 	&bbStringClass,
 	0xa8b0ca5434e125ae,
 	4,
 	{32,58,32,36}
 };
-static BBString _s64={
+static BBString _s68={
 	&bbStringClass,
 	0xd2dfcab4ae7a78e1,
 	4,
 	{32,58,32,37}
 };
-static BBString _s63={
+static BBString _s67={
 	&bbStringClass,
 	0x753bd7a881c30250,
 	4,
 	{32,58,32,38}
 };
-static BBString _s61={
+static BBString _s65={
 	&bbStringClass,
 	0x285aed8e0eaa3db4,
 	4,
 	{32,58,32,64}
 };
-static BBString _s65={
+static BBString _s69={
 	&bbStringClass,
 	0x47f5c13580c51bb3,
 	4,
 	{32,58,32,94}
 };
-static BBString _s69={
+static BBString _s73={
 	&bbStringClass,
 	0xad2a4e127dc15a83,
 	3,
@@ -112,7 +112,7 @@ static BBString _s25={
 	1,
 	{38}
 };
-static BBString _s57={
+static BBString _s61={
 	&bbStringClass,
 	0xbea2784021cfe3ff,
 	1,
@@ -130,11 +130,23 @@ static BBString _s42={
 	1,
 	{46}
 };
-static BBString _s56={
+static BBString _s43={
+	&bbStringClass,
+	0xc2475a087e862e7e,
+	14,
+	{46,47,115,99,114,101,101,110,115,104,111,116,115,47}
+};
+static BBString _s60={
 	&bbStringClass,
 	0x6a2b7f7c5d27d56a,
 	5,
 	{46,103,98,109,108}
+};
+static BBString _s44={
+	&bbStringClass,
+	0xa244bb45f7b43a74,
+	4,
+	{46,112,110,103}
 };
 static BBString _s17={
 	&bbStringClass,
@@ -154,61 +166,61 @@ static BBString _s20={
 	1,
 	{58}
 };
-static BBString _s123={
+static BBString _s127={
 	&bbStringClass,
 	0xa51cb897e9712eca,
 	2,
 	{58,32}
 };
-static BBString _s76={
+static BBString _s80={
 	&bbStringClass,
 	0xc3771816531f89c,
 	2,
 	{58,33}
 };
-static BBString _s75={
+static BBString _s79={
 	&bbStringClass,
 	0xcbbe3ddee46731e2,
 	2,
 	{58,35}
 };
-static BBString _s77={
+static BBString _s81={
 	&bbStringClass,
 	0x2f61b60e83e1e4ea,
 	2,
 	{58,36}
 };
-static BBString _s73={
+static BBString _s77={
 	&bbStringClass,
 	0x46a9d618e1d402ea,
 	2,
 	{58,37}
 };
-static BBString _s72={
+static BBString _s76={
 	&bbStringClass,
 	0x40e784aa208786f4,
 	2,
 	{58,38}
 };
-static BBString _s71={
+static BBString _s75={
 	&bbStringClass,
 	0xecd219ce60396e46,
 	2,
 	{58,64}
 };
-static BBString _s74={
+static BBString _s78={
 	&bbStringClass,
 	0xf5c5f19eb32d60ce,
 	2,
 	{58,94}
 };
-static BBString _s58={
+static BBString _s62={
 	&bbStringClass,
 	0xd772c6ce2dfe0c0b,
 	1,
 	{59}
 };
-static BBString _s62={
+static BBString _s66={
 	&bbStringClass,
 	0xd90e34a38133a5cc,
 	2,
@@ -220,7 +232,7 @@ static BBString _s16={
 	2,
 	{60,61}
 };
-static BBString _s120={
+static BBString _s124={
 	&bbStringClass,
 	0x3f550a910185016f,
 	1,
@@ -250,26 +262,26 @@ static BBString _s2={
 	,97,100,121,32,101,120,105,115,116,115,32,105,110,32,116,104
 	,101,32,109,97,112}
 };
-static BBString _s131={
+static BBString _s134={
 	&bbStringClass,
 	0xd4aa834fc269f4b3,
 	2,
 	{70,58}
 };
-static BBString _s142={
+static BBString _s145={
 	&bbStringClass,
 	0x8d752a74e41cb76,
 	19,
 	{71,111,111,98,101,114,69,110,103,105,110,101,32,48,46,50,46
 	,48,48}
 };
-static BBString _s128={
+static BBString _s131={
 	&bbStringClass,
 	0x1077bc78f36ae96,
 	2,
 	{77,58}
 };
-static BBString _s81={
+static BBString _s85={
 	&bbStringClass,
 	0xcdcbb2e8e53f23d3,
 	8,
@@ -281,25 +293,25 @@ static BBString _s41={
 	8,
 	{78,111,32,84,101,120,116,46}
 };
-static BBString _s55={
+static BBString _s59={
 	&bbStringClass,
 	0x54ea21d1943c6155,
 	6,
 	{79,112,101,110,65,76}
 };
-static BBString _s129={
+static BBString _s132={
 	&bbStringClass,
 	0x2f8b4ed5bc862464,
 	2,
 	{80,58}
 };
-static BBString _s124={
+static BBString _s128={
 	&bbStringClass,
 	0xf0a62d9eb2156487,
 	9,
 	{80,76,65,89,73,78,71,32,91}
 };
-static BBString _s134={
+static BBString _s137={
 	&bbStringClass,
 	0x9b23f3d5fe40262c,
 	10,
@@ -319,7 +331,7 @@ static BBString _s4={
 	{84,104,101,32,115,116,97,99,107,32,105,115,32,101,109,112,116
 	,121}
 };
-static BBString _s130={
+static BBString _s133={
 	&bbStringClass,
 	0x7d2a0922a3d0de87,
 	2,
@@ -337,13 +349,13 @@ static BBString _s22={
 	1,
 	{93}
 };
-static BBString _s125={
+static BBString _s129={
 	&bbStringClass,
 	0xa7cc0f0822044ec7,
 	4,
 	{93,32,45,32}
 };
-static BBString _s135={
+static BBString _s138={
 	&bbStringClass,
 	0xd29df61f0ed5039f,
 	2,
@@ -355,19 +367,19 @@ static BBString _s27={
 	1,
 	{94}
 };
-static BBString _s83={
+static BBString _s87={
 	&bbStringClass,
 	0xa02ae626104adb0c,
 	12,
 	{97,99,104,105,101,118,101,109,101,110,116,115}
 };
-static BBString _s86={
+static BBString _s90={
 	&bbStringClass,
 	0xf638697e577d2f30,
 	3,
 	{97,100,100}
 };
-static BBString _s87={
+static BBString _s91={
 	&bbStringClass,
 	0x7446205d165df135,
 	18,
@@ -380,13 +392,13 @@ static BBString _s32={
 	4,
 	{98,121,116,101}
 };
-static BBString _s112={
+static BBString _s116={
 	&bbStringClass,
 	0xe75dd4ade996cffb,
 	4,
 	{100,97,116,97}
 };
-static BBString _s80={
+static BBString _s84={
 	&bbStringClass,
 	0x50a99cdc3f00f5af,
 	4,
@@ -398,13 +410,13 @@ static BBString _s39={
 	3,
 	{100,105,114}
 };
-static BBString _s90={
+static BBString _s94={
 	&bbStringClass,
 	0x2d608db093df5f8,
 	3,
 	{100,105,118}
 };
-static BBString _s91={
+static BBString _s95={
 	&bbStringClass,
 	0xe58090a38d516e03,
 	21,
@@ -429,73 +441,66 @@ static BBString _s36={
 	5,
 	{102,108,111,97,116}
 };
-static BBString _s82={
+static BBString _s86={
 	&bbStringClass,
 	0x531b7d3ef505dcb6,
 	9,
 	{102,117,108,102,105,108,108,101,100}
 };
-static BBString _s50={
+static BBString _s53={
 	&bbStringClass,
 	0xc01dc1502d516870,
 	10,
 	{102,117,108,108,115,99,114,101,101,110}
 };
-static BBString _s137={
+static BBString _s140={
 	&bbStringClass,
 	0xdaeae2ebbd58d8c5,
 	24,
 	{103,98,47,109,101,100,105,97,47,105,109,97,103,101,115,47,103
 	,98,45,48,46,112,110,103}
 };
-static BBString _s127={
-	&bbStringClass,
-	0x7d2f9980fd3a6448,
-	24,
-	{103,98,47,109,101,100,105,97,47,105,109,97,103,101,115,47,116
-	,101,115,116,46,112,110,103}
-};
-static BBString _s138={
+static BBString _s141={
 	&bbStringClass,
 	0xb7d1490c9dbe664d,
 	26,
 	{103,98,47,109,101,100,105,97,47,115,111,117,110,100,115,47,106
 	,97,107,101,45,49,46,111,103,103}
 };
-static BBString _s139={
+static BBString _s142={
 	&bbStringClass,
 	0xa2d9319fca017093,
 	26,
 	{103,98,47,109,101,100,105,97,47,115,111,117,110,100,115,47,106
 	,97,107,101,45,50,46,111,103,103}
 };
-static BBString _s140={
+static BBString _s143={
 	&bbStringClass,
 	0xa01a227825f18573,
 	26,
 	{103,98,47,109,101,100,105,97,47,115,111,117,110,100,115,47,106
 	,97,107,101,45,51,46,111,103,103}
 };
-static BBString _s141={
+static BBString _s144={
 	&bbStringClass,
 	0xa8391a95d32fcc2b,
 	26,
 	{103,98,47,109,101,100,105,97,47,115,111,117,110,100,115,47,106
 	,97,107,101,45,52,46,111,103,103}
 };
-static BBString _s122={
+static BBString _s126={
 	&bbStringClass,
 	0x87ec4dc54c60c9a0,
 	3,
 	{103,98,115}
 };
-static BBString _s119={
+static BBString _s123={
 	&bbStringClass,
 	0x1dcdead19e062155,
 	4,
 	{104,101,108,112}
 };
-static BBString _s78={
+static BBString _s82={
 	&bbStringClass,
 	0x4ce197065112922c,
 	2,
@@ -507,13 +512,13 @@ static BBString _s34={
 	3,
 	{105,110,116}
 };
-static BBString _s107={
+static BBString _s111={
 	&bbStringClass,
 	0xe14c57e078ac7ff2,
 	2,
 	{108,105}
 };
-static BBString _s121={
+static BBString _s125={
 	&bbStringClass,
 	0xd1a764cff1742bb1,
 	24,
@@ -526,39 +531,39 @@ static BBString _s5={
 	13,
 	{108,105,115,116,32,105,115,32,101,109,112,116,121}
 };
-static BBString _s108={
+static BBString _s112={
 	&bbStringClass,
 	0xb149ee9f078b6f39,
 	27,
 	{108,105,115,116,32,108,111,97,100,101,100,32,105,109,97,103,101
 	,115,32,98,121,32,105,110,100,101,120}
 };
-static BBString _s111={
+static BBString _s115={
 	&bbStringClass,
 	0xecb584862c1c6cf5,
 	27,
 	{108,105,115,116,32,108,111,97,100,101,100,32,115,111,117,110,100
 	,115,32,98,121,32,105,110,100,101,120}
 };
-static BBString _s106={
+static BBString _s110={
 	&bbStringClass,
 	0xfd529bc32e0b9a7b,
 	10,
 	{108,105,115,116,105,109,97,103,101,115}
 };
-static BBString _s109={
+static BBString _s113={
 	&bbStringClass,
 	0xe88dce661e56d7a1,
 	10,
 	{108,105,115,116,115,111,117,110,100,115}
 };
-static BBString _s98={
+static BBString _s102={
 	&bbStringClass,
 	0xf91755e0de62549d,
 	4,
 	{108,111,97,100}
 };
-static BBString _s99={
+static BBString _s103={
 	&bbStringClass,
 	0xbf6aa7fb90b626e2,
 	21,
@@ -579,32 +584,32 @@ static BBString _s10={
 	,97,116,101,114,32,116,104,97,110,32,117,112,112,101,114,86
 	,97,108,117,101}
 };
-static BBString _s110={
+static BBString _s114={
 	&bbStringClass,
 	0x8f1504dd1a5d3a88,
 	2,
 	{108,115}
 };
-static BBString _s126={
+static BBString _s130={
 	&bbStringClass,
 	0xdee3714151e65fb4,
 	13,
 	{109,114,45,103,111,111,98,101,114,46,99,111,109}
 };
-static BBString _s88={
+static BBString _s92={
 	&bbStringClass,
 	0xc9e617a10fddb6bb,
 	3,
 	{109,117,108}
 };
-static BBString _s89={
+static BBString _s93={
 	&bbStringClass,
 	0x8823f46720c85a67,
 	23,
 	{109,117,108,116,105,112,108,121,32,118,97,114,32,91,48,93,32
 	,98,121,32,91,49,93}
 };
-static BBString _s79={
+static BBString _s83={
 	&bbStringClass,
 	0x2c1599df1bab3baf,
 	4,
@@ -642,7 +647,7 @@ static BBString _s9={
 	5,
 	{111,116,104,101,114}
 };
-static BBString _s113={
+static BBString _s117={
 	&bbStringClass,
 	0x71ed90c870aaba11,
 	34,
@@ -650,7 +655,7 @@ static BBString _s113={
 	,116,116,101,100,32,115,101,115,115,105,111,110,32,100,97,116
 	,97}
 };
-static BBString _s115={
+static BBString _s119={
 	&bbStringClass,
 	0x95b5dcec7bad8863,
 	35,
@@ -658,114 +663,120 @@ static BBString _s115={
 	,116,116,101,100,32,115,101,116,116,105,110,103,115,32,100,97
 	,116,97}
 };
-static BBString _s118={
+static BBString _s122={
 	&bbStringClass,
 	0xff861fec61cf3f1a,
 	14,
 	{112,108,97,121,32,115,111,117,110,100,32,91,48,93}
 };
-static BBString _s116={
+static BBString _s120={
 	&bbStringClass,
 	0x775a30698627de0e,
 	9,
 	{112,108,97,121,115,111,117,110,100}
 };
-static BBString _s94={
+static BBString _s98={
 	&bbStringClass,
 	0x6be55727bcac13b2,
 	4,
 	{114,101,97,100}
 };
-static BBString _s95={
+static BBString _s99={
 	&bbStringClass,
 	0xdab9d7ac74d7a5b5,
 	27,
 	{114,101,97,100,32,102,114,111,109,32,112,97,116,104,32,91,48
 	,93,32,105,110,116,111,32,91,49,93}
 };
-static BBString _s102={
+static BBString _s106={
 	&bbStringClass,
 	0xe4e48a2c04fec5ba,
 	24,
 	{114,101,108,111,97,100,32,105,109,97,103,101,115,32,102,114,111
 	,109,32,102,105,108,101,115}
 };
-static BBString _s105={
+static BBString _s109={
 	&bbStringClass,
 	0x6497eac939569603,
 	24,
 	{114,101,108,111,97,100,32,115,111,117,110,100,115,32,102,114,111
 	,109,32,102,105,108,101,115}
 };
-static BBString _s100={
+static BBString _s104={
 	&bbStringClass,
 	0x9b6f8f76466dec77,
 	12,
 	{114,101,108,111,97,100,105,109,97,103,101,115}
 };
-static BBString _s103={
+static BBString _s107={
 	&bbStringClass,
 	0xb06c0a64e6692242,
 	12,
 	{114,101,108,111,97,100,115,111,117,110,100,115}
 };
-static BBString _s101={
+static BBString _s105={
 	&bbStringClass,
 	0xa725778fcc1f6580,
 	3,
 	{114,108,105}
 };
-static BBString _s104={
+static BBString _s108={
 	&bbStringClass,
 	0xf5e9da692742e056,
 	3,
 	{114,108,115}
 };
-static BBString _s96={
+static BBString _s100={
 	&bbStringClass,
 	0xa06877c16216f837,
 	4,
 	{115,97,118,101}
 };
-static BBString _s97={
+static BBString _s101={
 	&bbStringClass,
 	0x7fd9b72d207e05a0,
 	21,
 	{115,97,118,101,32,103,98,115,32,115,101,115,115,105,111,110,32
 	,100,97,116,97}
 };
-static BBString _s53={
+static BBString _s56={
 	&bbStringClass,
 	0x62cbf46c594dd18c,
 	15,
 	{115,99,97,110,108,105,110,101,115,45,115,116,121,108,101}
 };
-static BBString _s52={
+static BBString _s55={
 	&bbStringClass,
 	0xf87756a771a39736,
 	15,
 	{115,99,97,110,108,105,110,101,115,45,116,104,105,99,107}
 };
-static BBString _s114={
+static BBString _s57={
+	&bbStringClass,
+	0xc9a3b2552ba8cb9,
+	13,
+	{115,99,114,101,101,110,115,104,111,116,45,105,100}
+};
+static BBString _s118={
 	&bbStringClass,
 	0x3a393d2ffd346100,
 	5,
 	{115,100,97,116,97}
 };
-static BBString _s84={
+static BBString _s88={
 	&bbStringClass,
 	0x40b60d3d6e1bfb8c,
 	3,
 	{115,101,116}
 };
-static BBString _s85={
+static BBString _s89={
 	&bbStringClass,
 	0x631cba77df44b38b,
 	18,
 	{115,101,116,32,118,97,114,32,91,48,93,32,116,111,32,91,49
 	,93}
 };
-static BBString _s136={
+static BBString _s139={
 	&bbStringClass,
 	0xe553d5c0b64ea175,
 	8,
@@ -777,7 +788,7 @@ static BBString _s33={
 	5,
 	{115,104,111,114,116}
 };
-static BBString _s117={
+static BBString _s121={
 	&bbStringClass,
 	0x255bf5f4c447dc00,
 	3,
@@ -789,7 +800,7 @@ static BBString _s38={
 	6,
 	{115,116,114,105,110,103}
 };
-static BBString _s59={
+static BBString _s63={
 	&bbStringClass,
 	0x4630ec0d0f8d94bb,
 	3,
@@ -801,66 +812,73 @@ static BBString _s11={
 	4,
 	{116,114,117,101}
 };
-static BBString _s51={
+static BBString _s54={
 	&bbStringClass,
 	0x9118ea7fe5a8915e,
 	13,
 	{117,115,101,45,115,99,97,110,108,105,110,101,115}
 };
-static BBString _s54={
+static BBString _s58={
 	&bbStringClass,
 	0x55c33a4fda7d6de1,
 	6,
 	{118,105,115,117,97,108}
 };
-static BBString _s44={
+static BBString _s46={
 	&bbStringClass,
 	0xb78eadcea82118e8,
 	17,
 	{118,105,115,117,97,108,47,102,117,108,108,115,99,114,101,101,110
 }
 };
-static BBString _s47={
+static BBString _s49={
 	&bbStringClass,
 	0x655052a83ea71206,
 	22,
 	{118,105,115,117,97,108,47,115,99,97,110,108,105,110,101,115,45
 	,115,116,121,108,101}
 };
-static BBString _s48={
+static BBString _s50={
 	&bbStringClass,
 	0x96b84bcff9e7cd48,
 	22,
 	{118,105,115,117,97,108,47,115,99,97,110,108,105,110,101,115,45
 	,116,104,105,99,107}
 };
-static BBString _s46={
+static BBString _s51={
+	&bbStringClass,
+	0x71ff72f45e35da84,
+	20,
+	{118,105,115,117,97,108,47,115,99,114,101,101,110,115,104,111,116
+	,45,105,100}
+};
+static BBString _s48={
 	&bbStringClass,
 	0xdea8cb5fa46cac4b,
 	20,
 	{118,105,115,117,97,108,47,117,115,101,45,115,99,97,110,108,105
 	,110,101,115}
 };
-static BBString _s45={
+static BBString _s47={
 	&bbStringClass,
 	0x2c675f2a9334835f,
 	18,
 	{118,105,115,117,97,108,47,119,105,110,100,111,119,115,99,97,108
 	,101}
 };
-static BBString _s49={
+static BBString _s52={
 	&bbStringClass,
 	0xcbfb33a17503f706,
 	11,
 	{119,105,110,100,111,119,115,99,97,108,101}
 };
-static BBString _s92={
+static BBString _s96={
 	&bbStringClass,
 	0x884c68e9668c9cca,
 	5,
 	{119,114,105,116,101}
 };
-static BBString _s93={
+static BBString _s97={
 	&bbStringClass,
 	0x8144b37c4dca7bed,
 	21,
@@ -885,7 +903,7 @@ static BBString _s15={
 	1,
 	{125}
 };
-static BBString _s70={
+static BBString _s74={
 	&bbStringClass,
 	0xce05553e9b3fcfcd,
 	2,
@@ -1851,6 +1869,7 @@ struct BBClass__m_app_t_number _m_app_t_number={
 
 struct _m_app_t_number_obj* _m_app_gb_visual_scanlines_style=(struct _m_app_t_number_obj*)(&bbNullObject);
 struct _m_app_t_number_obj* _m_app_gb_visual_scanlines_thick=(struct _m_app_t_number_obj*)(&bbNullObject);
+struct _m_app_t_int_obj* _m_app_gb_visual_screenshot_id=(struct _m_app_t_int_obj*)(&bbNullObject);
 BBARRAY _m_app_gb_audio_channels=(&bbEmptyArray);
 BBUINT _m_app_gb_timing_curr=0U;
 BBUINT _m_app_gb_timing_old=0U;
@@ -1994,8 +2013,9 @@ void __m_app_t_color_New(struct _m_app_t_color_obj* o) {
 	o->__m_app_t_color_g = .00000000f;
 	o->__m_app_t_color_b = .00000000f;
 	o->__m_app_t_color_a = .00000000f;
+	o->__m_app_t_color_depth = 0;
 }
-struct BBDebugScope_5 _m_app_t_color_scope ={
+struct BBDebugScope_6 _m_app_t_color_scope ={
 	BBDEBUGSCOPE_USERTYPE,
 	"t_color",
 	{
@@ -2024,6 +2044,12 @@ struct BBDebugScope_5 _m_app_t_color_scope ={
 			.field_offset=offsetof(struct _m_app_t_color_obj,__m_app_t_color_a)
 		},
 		{
+			BBDEBUGDECL_FIELD,
+			"depth",
+			"i",
+			.field_offset=offsetof(struct _m_app_t_color_obj,__m_app_t_color_depth)
+		},
+		{
 			BBDEBUGDECL_TYPEMETHOD,
 			"New",
 			"()",
@@ -2044,7 +2070,7 @@ struct BBClass__m_app_t_color _m_app_t_color={
 	bbObjectSendMessage,
 	0,
 	0,
-	offsetof(struct _m_app_t_color_obj,__m_app_t_color_a) - offsetof(struct _m_app_t_color_obj,__m_app_t_color_r) + sizeof(BBFLOAT)
+	offsetof(struct _m_app_t_color_obj,__m_app_t_color_depth) - offsetof(struct _m_app_t_color_obj,__m_app_t_color_r) + sizeof(BBINT)
 	,0
 	,offsetof(struct _m_app_t_color_obj,__m_app_t_color_r)
 };
@@ -2176,6 +2202,62 @@ struct BBClass__m_app_t_dict _m_app_t_dict={
 };
 
 struct _m_app_t_dict_obj* _m_app_gb_console_data=(struct _m_app_t_dict_obj*)(&bbNullObject);
+void __m_app_t_logchain_New(struct _m_app_t_logchain_obj* o) {
+	bbObjectCtor((BBOBJECT)o);
+	o->clas = &_m_app_t_logchain;
+	o->__m_app_t_logchain_length = (struct _m_app_t_int_obj*)(&bbNullObject);
+	o->__m_app_t_logchain_chain_curr = (struct _m_app_t_logchain_node_obj*)(&bbNullObject);
+	o->__m_app_t_logchain_chain_seek = (struct _m_app_t_logchain_node_obj*)(&bbNullObject);
+}
+struct BBDebugScope_4 _m_app_t_logchain_scope ={
+	BBDEBUGSCOPE_USERTYPE,
+	"t_logchain",
+	{
+		{
+			BBDEBUGDECL_FIELD,
+			"length",
+			":t_int",
+			.field_offset=offsetof(struct _m_app_t_logchain_obj,__m_app_t_logchain_length)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"chain_curr",
+			":t_logchain_node",
+			.field_offset=offsetof(struct _m_app_t_logchain_obj,__m_app_t_logchain_chain_curr)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"chain_seek",
+			":t_logchain_node",
+			.field_offset=offsetof(struct _m_app_t_logchain_obj,__m_app_t_logchain_chain_seek)
+		},
+		{
+			BBDEBUGDECL_TYPEMETHOD,
+			"New",
+			"()",
+			.var_address=(void*)&__m_app_t_logchain_New
+		},
+		BBDEBUGDECL_END
+	}
+};
+struct BBClass__m_app_t_logchain _m_app_t_logchain={
+	&bbObjectClass,
+	bbObjectFree,
+	(BBDebugScope*)&_m_app_t_logchain_scope,
+	sizeof(struct _m_app_t_logchain_obj),
+	(void (*)(BBOBJECT))__m_app_t_logchain_New,
+	bbObjectDtor,
+	bbObjectToString,
+	bbObjectCompare,
+	bbObjectSendMessage,
+	0,
+	0,
+	offsetof(struct _m_app_t_logchain_obj,__m_app_t_logchain_chain_seek) - offsetof(struct _m_app_t_logchain_obj,__m_app_t_logchain_length) + sizeof(struct _m_app_t_logchain_node_obj*)
+	,0
+	,offsetof(struct _m_app_t_logchain_obj,__m_app_t_logchain_length)
+};
+
+struct _m_app_t_logchain_obj* _m_app_gb_console_logchain=(struct _m_app_t_logchain_obj*)(&bbNullObject);
 struct _m_app_t_dict_obj* _m_app_gb_achievements=(struct _m_app_t_dict_obj*)(&bbNullObject);
 struct _m_app_t_int_obj* _m_app_gb_mouse_click=(struct _m_app_t_int_obj*)(&bbNullObject);
 struct _m_app_t_number_obj* _m_app_gb_mouse_clicktime=(struct _m_app_t_number_obj*)(&bbNullObject);
@@ -2270,24 +2352,17 @@ struct _m_app_t_bool_obj* _m_app_gb_transition_fade=(struct _m_app_t_bool_obj*)(
 void __m_app_t_gb_testing_New(struct _m_app_t_gb_testing_obj* o) {
 	bbObjectCtor((BBOBJECT)o);
 	o->clas = &_m_app_t_gb_testing;
-	o->__m_app_t_gb_testing_bitmap = (struct _m_app_t_bitmap_obj*)(&bbNullObject);
-	o->__m_app_t_gb_testing_image = (struct _m_app_t_image_obj*)(&bbNullObject);
+	o->__m_app_t_gb_testing_logchain = (struct _m_app_t_logchain_obj*)(&bbNullObject);
 }
-struct BBDebugScope_3 _m_app_t_gb_testing_scope ={
+struct BBDebugScope_2 _m_app_t_gb_testing_scope ={
 	BBDEBUGSCOPE_USERTYPE,
 	"t_gb_testing",
 	{
 		{
 			BBDEBUGDECL_FIELD,
-			"bitmap",
-			":t_bitmap",
-			.field_offset=offsetof(struct _m_app_t_gb_testing_obj,__m_app_t_gb_testing_bitmap)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"image",
-			":t_image",
-			.field_offset=offsetof(struct _m_app_t_gb_testing_obj,__m_app_t_gb_testing_image)
+			"logchain",
+			":t_logchain",
+			.field_offset=offsetof(struct _m_app_t_gb_testing_obj,__m_app_t_gb_testing_logchain)
 		},
 		{
 			BBDEBUGDECL_TYPEMETHOD,
@@ -2310,9 +2385,9 @@ struct BBClass__m_app_t_gb_testing _m_app_t_gb_testing={
 	bbObjectSendMessage,
 	0,
 	0,
-	offsetof(struct _m_app_t_gb_testing_obj,__m_app_t_gb_testing_image) - offsetof(struct _m_app_t_gb_testing_obj,__m_app_t_gb_testing_bitmap) + sizeof(struct _m_app_t_image_obj*)
+	sizeof(struct _m_app_t_logchain_obj*)
 	,0
-	,offsetof(struct _m_app_t_gb_testing_obj,__m_app_t_gb_testing_bitmap)
+	,offsetof(struct _m_app_t_gb_testing_obj,__m_app_t_gb_testing_logchain)
 };
 
 struct _m_app_t_gb_testing_obj* _m_app_gb_testing=(struct _m_app_t_gb_testing_obj*)(&bbNullObject);
@@ -2400,6 +2475,83 @@ struct BBClass__m_app_t_font _m_app_t_font={
 };
 
 BBARRAY _m_app_gb_fonts=(&bbEmptyArray);
+void __m_app_t_bitmap_New(struct _m_app_t_bitmap_obj* o) {
+	bbObjectCtor((BBOBJECT)o);
+	o->clas = &_m_app_t_bitmap;
+	o->__m_app_t_bitmap_width = (struct _m_app_t_int_obj*)(&bbNullObject);
+	o->__m_app_t_bitmap_height = (struct _m_app_t_int_obj*)(&bbNullObject);
+	o->__m_app_t_bitmap_data = (&bbEmptyArray);
+	o->__m_app_t_bitmap_coldepth = (struct _m_app_t_int_obj*)(&bbNullObject);
+	o->__m_app_t_bitmap_palette = (struct _m_app_t_palette_obj*)(&bbNullObject);
+	o->__m_app_t_bitmap_image = (struct brl_max2d_image_TImage_obj*)(&bbNullObject);
+}
+struct BBDebugScope_7 _m_app_t_bitmap_scope ={
+	BBDEBUGSCOPE_USERTYPE,
+	"t_bitmap",
+	{
+		{
+			BBDEBUGDECL_FIELD,
+			"width",
+			":t_int",
+			.field_offset=offsetof(struct _m_app_t_bitmap_obj,__m_app_t_bitmap_width)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"height",
+			":t_int",
+			.field_offset=offsetof(struct _m_app_t_bitmap_obj,__m_app_t_bitmap_height)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"data",
+			"[,]:t_color",
+			.field_offset=offsetof(struct _m_app_t_bitmap_obj,__m_app_t_bitmap_data)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"coldepth",
+			":t_int",
+			.field_offset=offsetof(struct _m_app_t_bitmap_obj,__m_app_t_bitmap_coldepth)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"palette",
+			":t_palette",
+			.field_offset=offsetof(struct _m_app_t_bitmap_obj,__m_app_t_bitmap_palette)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"image",
+			":TImage",
+			.field_offset=offsetof(struct _m_app_t_bitmap_obj,__m_app_t_bitmap_image)
+		},
+		{
+			BBDEBUGDECL_TYPEMETHOD,
+			"New",
+			"()",
+			.var_address=(void*)&__m_app_t_bitmap_New
+		},
+		BBDEBUGDECL_END
+	}
+};
+struct BBClass__m_app_t_bitmap _m_app_t_bitmap={
+	&bbObjectClass,
+	bbObjectFree,
+	(BBDebugScope*)&_m_app_t_bitmap_scope,
+	sizeof(struct _m_app_t_bitmap_obj),
+	(void (*)(BBOBJECT))__m_app_t_bitmap_New,
+	bbObjectDtor,
+	bbObjectToString,
+	bbObjectCompare,
+	bbObjectSendMessage,
+	0,
+	0,
+	offsetof(struct _m_app_t_bitmap_obj,__m_app_t_bitmap_image) - offsetof(struct _m_app_t_bitmap_obj,__m_app_t_bitmap_width) + sizeof(struct brl_max2d_image_TImage_obj*)
+	,0
+	,offsetof(struct _m_app_t_bitmap_obj,__m_app_t_bitmap_width)
+};
+
+struct _m_app_t_bitmap_obj* _m_app_gb_bitmap=(struct _m_app_t_bitmap_obj*)(&bbNullObject);
 BBARRAY _m_app_gb_images=(&bbEmptyArray);
 BBARRAY _m_app_gb_image_paths=(&bbEmptyArray);
 BBARRAY _m_app_gb_sounds=(&bbEmptyArray);
@@ -2551,6 +2703,69 @@ struct _m_app_t_number_obj* _m_app_new_number(BBFLOAT bbt_n,BBFLOAT bbt_l,BBFLOA
 	bbt_r->__m_app_t_number_wrappable =((BBBYTE)_m_app_bool((BBINT)bbt_w));
 	return (struct _m_app_t_number_obj*)bbt_r;
 }
+BBINT _m_app_ilow(BBINT bbt_a,BBINT bbt_b){
+	if(bbt_a<bbt_b){
+		return bbt_b;
+	}
+	return bbt_a;
+}
+struct _m_app_t_int_obj* _m_app_new_int(BBINT bbt_v){
+	struct _m_app_t_int_obj* bbt_r=(struct _m_app_t_int_obj*)(struct _m_app_t_int_obj*)bbObjectAtomicNew((BBClass *)&_m_app_t_int);
+	bbt_r->__m_app_t_int_value =bbt_v;
+	return (struct _m_app_t_int_obj*)bbt_r;
+}
+struct _m_app_t_color_obj* _m_app_new_color(BBFLOAT bbt_r,BBFLOAT bbt_g,BBFLOAT bbt_b,BBFLOAT bbt_a,BBINT bbt_d){
+	struct _m_app_t_color_obj* bbt_u=(struct _m_app_t_color_obj*)(struct _m_app_t_color_obj*)bbObjectAtomicNew((BBClass *)&_m_app_t_color);
+	bbt_u->__m_app_t_color_r =bbt_r;
+	bbt_u->__m_app_t_color_g =bbt_g;
+	bbt_u->__m_app_t_color_b =bbt_b;
+	bbt_u->__m_app_t_color_a =bbt_a;
+	bbt_u->__m_app_t_color_depth =bbt_d;
+	return (struct _m_app_t_color_obj*)bbt_u;
+}
+void _m_app_color_set(struct _m_app_t_color_obj* bbt_c,BBFLOAT bbt_r,BBFLOAT bbt_g,BBFLOAT bbt_b,BBFLOAT bbt_a){
+	bbt_c->__m_app_t_color_r =_m_app_clamp(bbt_r,0.00000000f,3.00000000f);
+	bbt_c->__m_app_t_color_g =_m_app_clamp(bbt_g,0.00000000f,3.00000000f);
+	bbt_c->__m_app_t_color_b =_m_app_clamp(bbt_b,0.00000000f,3.00000000f);
+	bbt_c->__m_app_t_color_a =_m_app_clamp(bbt_a,0.00000000f,3.00000000f);
+}
+struct _m_app_t_palette_obj* _m_app_new_palette(){
+	struct _m_app_t_palette_obj* bbt_r=(struct _m_app_t_palette_obj*)(struct _m_app_t_palette_obj*)bbObjectNew((BBClass *)&_m_app_t_palette);
+	bbt_r->__m_app_t_palette_data =bbArrayNew1D(":t_color", 256);
+	{
+		BBINT bbt_i=0;
+		for(;(bbt_i<=255);bbt_i=(bbt_i+1)){
+			((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_r->__m_app_t_palette_data ,1))[((BBUINT)bbt_i)]=(struct _m_app_t_color_obj*)_m_app_new_color(3.00000000f,3.00000000f,3.00000000f,3.00000000f,0);
+		}
+	}
+	_m_app_color_set((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_r->__m_app_t_palette_data ,1))[255U],0.00000000f,0.00000000f,0.00000000f,0.00000000f);
+	bbt_r->__m_app_t_palette_depth =0;
+	return (struct _m_app_t_palette_obj*)bbt_r;
+}
+struct _m_app_t_bitmap_obj* _m_app_new_bitmap(BBINT bbt_x,BBINT bbt_y,BBFLOAT bbt_rr,BBFLOAT bbt_gg,BBFLOAT bbt_bb,BBFLOAT bbt_aa){
+	struct _m_app_t_bitmap_obj* bbt_r=(struct _m_app_t_bitmap_obj*)(struct _m_app_t_bitmap_obj*)bbObjectNew((BBClass *)&_m_app_t_bitmap);
+	bbt_r->__m_app_t_bitmap_width =(struct _m_app_t_int_obj*)_m_app_new_int(_m_app_ilow(bbt_x,10));
+	bbt_r->__m_app_t_bitmap_height =(struct _m_app_t_int_obj*)_m_app_new_int(_m_app_ilow(bbt_y,10));
+	bbt_r->__m_app_t_bitmap_data =bbArrayNew(":t_color", 2, bbt_r->__m_app_t_bitmap_width ->__m_app_t_int_value , bbt_r->__m_app_t_bitmap_height ->__m_app_t_int_value );
+	{
+		BBINT bbt_i=0;
+		BBINT bbt_=(bbt_r->__m_app_t_bitmap_width ->__m_app_t_int_value -1);
+		for(;(bbt_i<=bbt_);bbt_i=(bbt_i+1)){
+			{
+				BBINT bbt_j=0;
+				BBINT bbt_2=(bbt_r->__m_app_t_bitmap_height ->__m_app_t_int_value -1);
+				for(;(bbt_j<=bbt_2);bbt_j=(bbt_j+1)){
+					BBUINT* bbt_3=((BBARRAY)bbt_r->__m_app_t_bitmap_data )->scales + 1;
+					((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_r->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)bbt_i) + ((BBUINT)bbt_j)]=(struct _m_app_t_color_obj*)_m_app_new_color(bbt_rr,bbt_gg,bbt_bb,bbt_aa,0);
+				}
+			}
+		}
+	}
+	bbt_r->__m_app_t_bitmap_image =(struct brl_max2d_image_TImage_obj*)brl_max2d_CreateImage(bbt_r->__m_app_t_bitmap_width ->__m_app_t_int_value ,bbt_r->__m_app_t_bitmap_height ->__m_app_t_int_value ,1,8);
+	bbt_r->__m_app_t_bitmap_palette =(struct _m_app_t_palette_obj*)_m_app_new_palette();
+	bbt_r->__m_app_t_bitmap_coldepth =(struct _m_app_t_int_obj*)_m_app_new_int(0);
+	return (struct _m_app_t_bitmap_obj*)bbt_r;
+}
 struct _m_app_t_timer_obj* _m_app_new_timer(BBFLOAT bbt_n){
 	struct _m_app_t_timer_obj* bbt_r=(struct _m_app_t_timer_obj*)(struct _m_app_t_timer_obj*)bbObjectNew((BBClass *)&_m_app_t_timer);
 	bbt_r->__m_app_t_timer_value =(struct _m_app_t_number_obj*)_m_app_new_number(bbt_n,0.00000000f,bbt_n,0);
@@ -2560,11 +2775,6 @@ struct _m_app_t_string_obj* _m_app_new_string(BBSTRING bbt_v){
 	struct _m_app_t_string_obj* bbt_r=(struct _m_app_t_string_obj*)(struct _m_app_t_string_obj*)bbObjectNew((BBClass *)&_m_app_t_string);
 	bbt_r->__m_app_t_string_value =bbt_v;
 	return (struct _m_app_t_string_obj*)bbt_r;
-}
-struct _m_app_t_int_obj* _m_app_new_int(BBINT bbt_v){
-	struct _m_app_t_int_obj* bbt_r=(struct _m_app_t_int_obj*)(struct _m_app_t_int_obj*)bbObjectAtomicNew((BBClass *)&_m_app_t_int);
-	bbt_r->__m_app_t_int_value =bbt_v;
-	return (struct _m_app_t_int_obj*)bbt_r;
 }
 void __m_app_t_dictval_New(struct _m_app_t_dictval_obj* o) {
 	bbObjectCtor((BBOBJECT)o);
@@ -2708,7 +2918,7 @@ void _m_app_gb_timing_init(){
 }
 void _m_app_gb_audio_init(){
 	brl_openalaudio_EnableOpenALAudio();
-	brl_audio_SetAudioDriver(&_s55);
+	brl_audio_SetAudioDriver(&_s59);
 	_m_app_gb_audio_channels=bbArrayNew1D(":TChannel", 10);
 	{
 		BBINT bbt_i=0;
@@ -2832,21 +3042,13 @@ void _m_app_gb_visual_init(){
 	_m_app_gb_visual_use_scanlines=(struct _m_app_t_bool_obj*)_m_app_new_bool(0);
 	_m_app_gb_visual_scanlines_style=(struct _m_app_t_number_obj*)_m_app_new_number(0.00000000f,0.00000000f,4.00000000f,1);
 	_m_app_gb_visual_scanlines_thick=(struct _m_app_t_number_obj*)_m_app_new_number(0.00000000f,0.00000000f,4.00000000f,1);
-	bbAppTitle=&_s142;
+	bbAppTitle=&_s145;
 	brl_graphics_SetGraphicsDriver((struct brl_graphics_TGraphicsDriver_obj*)((struct brl_graphics_TGraphicsDriver_obj*)bbObjectDowncast((BBOBJECT)brl_glmax2d_GLMax2DDriver(),(BBClass*)&brl_graphics_TGraphicsDriver)),2);
 	brl_graphics_Graphics(800,480,0,0,2,-1,-1);
 	brl_max2d_SetBlend(3);
 	brl_max2d_SetMaskColor(150,0,250);
 	brl_system_HideMouse();
 	brl_random_SeedRnd(bbMilliSecs());
-}
-struct _m_app_t_color_obj* _m_app_new_color(BBFLOAT bbt_r,BBFLOAT bbt_g,BBFLOAT bbt_b,BBFLOAT bbt_a){
-	struct _m_app_t_color_obj* bbt_u=(struct _m_app_t_color_obj*)(struct _m_app_t_color_obj*)bbObjectAtomicNew((BBClass *)&_m_app_t_color);
-	bbt_u->__m_app_t_color_r =bbt_r;
-	bbt_u->__m_app_t_color_g =bbt_g;
-	bbt_u->__m_app_t_color_b =bbt_b;
-	bbt_u->__m_app_t_color_a =bbt_a;
-	return (struct _m_app_t_color_obj*)bbt_u;
 }
 struct _m_app_t_byte_obj* _m_app_new_byte(BBBYTE bbt_v){
 	struct _m_app_t_byte_obj* bbt_r=(struct _m_app_t_byte_obj*)(struct _m_app_t_byte_obj*)bbObjectAtomicNew((BBClass *)&_m_app_t_byte);
@@ -2875,7 +3077,7 @@ void _m_app_gb_graph_calc_drawscale(){
 	_m_app_gb_graph_drawscale->__m_app_t_point_y =(_m_app_float_get((struct _m_app_t_float_obj*)_m_app_gb_visual_pixelscale)*_m_app_float_get((struct _m_app_t_float_obj*)_m_app_gb_visual_virtualscale));
 }
 void _m_app_gb_graph_init(){
-	_m_app_gb_graph_color=(struct _m_app_t_color_obj*)_m_app_new_color(3.00000000f,3.00000000f,3.00000000f,3.00000000f);
+	_m_app_gb_graph_color=(struct _m_app_t_color_obj*)_m_app_new_color(3.00000000f,3.00000000f,3.00000000f,3.00000000f,0);
 	_m_app_gb_graph_scale=(struct _m_app_t_point_obj*)_m_app_new_point(1.00000000f,1.00000000f);
 	_m_app_gb_graph_handle=(struct _m_app_t_point_obj*)_m_app_new_point(0.00000000f,0.00000000f);
 	_m_app_gb_graph_offset=(struct _m_app_t_point_obj*)_m_app_new_point(0.00000000f,0.00000000f);
@@ -3136,10 +3338,10 @@ void _m_app_gbs_func_set(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_set(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s84;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s84;
+	bbt_r->__m_app_t_gbscmd_name =&_s88;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s88;
 	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
-	bbt_r->__m_app_t_gbscmd_desc =&_s85;
+	bbt_r->__m_app_t_gbscmd_desc =&_s89;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_set;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3151,10 +3353,10 @@ void _m_app_gbs_func_add(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_add(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s86;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s86;
+	bbt_r->__m_app_t_gbscmd_name =&_s90;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s90;
 	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
-	bbt_r->__m_app_t_gbscmd_desc =&_s87;
+	bbt_r->__m_app_t_gbscmd_desc =&_s91;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_add;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3162,10 +3364,10 @@ void _m_app_gbs_func_mul(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_mul(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s88;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s88;
+	bbt_r->__m_app_t_gbscmd_name =&_s92;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s92;
 	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
-	bbt_r->__m_app_t_gbscmd_desc =&_s89;
+	bbt_r->__m_app_t_gbscmd_desc =&_s93;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_mul;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3173,10 +3375,10 @@ void _m_app_gbs_func_div(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_div(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s90;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s90;
+	bbt_r->__m_app_t_gbscmd_name =&_s94;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s94;
 	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
-	bbt_r->__m_app_t_gbscmd_desc =&_s91;
+	bbt_r->__m_app_t_gbscmd_desc =&_s95;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_div;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3296,10 +3498,10 @@ void _m_app_gbs_func_write(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_write(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s92;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s92;
+	bbt_r->__m_app_t_gbscmd_name =&_s96;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s96;
 	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
-	bbt_r->__m_app_t_gbscmd_desc =&_s93;
+	bbt_r->__m_app_t_gbscmd_desc =&_s97;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_write;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3307,10 +3509,10 @@ void _m_app_gbs_func_read(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_read(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s94;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s94;
+	bbt_r->__m_app_t_gbscmd_name =&_s98;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s98;
 	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
-	bbt_r->__m_app_t_gbscmd_desc =&_s95;
+	bbt_r->__m_app_t_gbscmd_desc =&_s99;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_read;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3349,6 +3551,23 @@ BBLONG _m_app_long_get(struct _m_app_t_long_obj* bbt_b){
 BBLONG _m_app_long_get2(BBOBJECT bbt_o){
 	return ((struct _m_app_t_long_obj*)bbObjectDowncast((BBOBJECT)bbt_o,(BBClass*)&_m_app_t_long))->__m_app_t_long_value ;
 }
+BBINT _m_app_iclamp(BBINT bbt_n,BBINT bbt_l,BBINT bbt_h){
+	return brl_blitz_Max(brl_blitz_Min(bbt_n,bbt_h),bbt_l);
+}
+BBSTRING _m_app_strdec(BBFLOAT bbt_f,BBINT bbt_d){
+	bbt_d=_m_app_iclamp(bbt_d,0,10);
+	if(((BBDOUBLE)brl_blitz_Abs2(bbt_f))<(1.0*bbFloatPow(10.0, ((BBDOUBLE)-bbt_d)))){
+		bbt_f=0.0f;
+	}
+	BBSTRING bbt_r=&bbEmptyString;
+	BBARRAY bbt_w=_m_app_tokenize(bbStringFromFloat(bbt_f),&_s42,1);
+	if(bbt_d>0){
+		bbt_r=bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_w,1))[0U],&_s42),brl_retro_Left(((BBSTRING*)BBARRAYDATA(bbt_w,1))[1U],bbt_d));
+	}else{
+		bbt_r=((BBSTRING*)BBARRAYDATA(bbt_w,1))[0U];
+	}
+	return bbt_r;
+}
 BBDOUBLE _m_app_double_get(struct _m_app_t_double_obj* bbt_b){
 	return bbt_b->__m_app_t_double_value ;
 }
@@ -3371,29 +3590,29 @@ BBSTRING _m_app_gbml_to_string(struct _m_app_t_dict_obj* bbt_d,BBINT bbt_s){
 				if(((BBObject*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)])!= &bbNullObject){
 					BBINT bbt_2=((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_id ;
 					if(bbt_2==1){
-						(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s60,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s61),bbStringFromInt(_m_app_byte_get((struct _m_app_t_byte_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tbyte ))),&_s62));
+						(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s64,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s65),bbStringFromInt(_m_app_byte_get((struct _m_app_t_byte_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tbyte ))),&_s66));
 					}else{
 						if(bbt_2==2){
-							(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s60,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s63),bbStringFromInt(_m_app_short_get((struct _m_app_t_short_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tshort ))),&_s62));
+							(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s64,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s67),bbStringFromInt(_m_app_short_get((struct _m_app_t_short_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tshort ))),&_s66));
 						}else{
 							if(bbt_2==3){
-								(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s60,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s64),bbStringFromInt(_m_app_int_get((struct _m_app_t_int_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tint ))),&_s62));
+								(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s64,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s68),bbStringFromInt(_m_app_int_get((struct _m_app_t_int_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tint ))),&_s66));
 							}else{
 								if(bbt_2==4){
-									(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s60,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s65),bbStringFromLong(_m_app_long_get((struct _m_app_t_long_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tlong ))),&_s62));
+									(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s64,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s69),bbStringFromLong(_m_app_long_get((struct _m_app_t_long_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tlong ))),&_s66));
 								}else{
 									if(bbt_2==5){
-										(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s60,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s66),bbStringFromFloat(_m_app_float_get((struct _m_app_t_float_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tfloat ))),&_s62));
+										(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s64,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s70),_m_app_strdec(_m_app_float_get((struct _m_app_t_float_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tfloat ),2)),&_s66));
 									}else{
 										if(bbt_2==6){
-											(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s60,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s67),bbStringFromDouble(_m_app_double_get((struct _m_app_t_double_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tdouble ))),&_s62));
+											(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s64,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s71),bbStringFromDouble(_m_app_double_get((struct _m_app_t_double_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tdouble ))),&_s66));
 										}else{
 											if(bbt_2==7){
-												(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s60,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s68),_m_app_string_get((struct _m_app_t_string_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tstring )),&_s62));
+												(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s64,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s72),_m_app_string_get((struct _m_app_t_string_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tstring )),&_s66));
 											}else{
 												if(bbt_2==8){
 													struct _m_app_t_dict_obj* bbt_g=(struct _m_app_t_dict_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tdir ;
-													(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s60,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s69),_m_app_gbml_to_string((struct _m_app_t_dict_obj*)bbt_g,(bbt_s+1))),_m_app_rep(&_s60,bbt_s)),&_s70));
+													(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s64,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s73),_m_app_gbml_to_string((struct _m_app_t_dict_obj*)bbt_g,(bbt_s+1))),_m_app_rep(&_s64,bbt_s)),&_s74));
 												}
 											}
 										}
@@ -3410,19 +3629,19 @@ BBSTRING _m_app_gbml_to_string(struct _m_app_t_dict_obj* bbt_d,BBINT bbt_s){
 }
 void _m_app_gbml_save(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_s){
 	BBSTRING bbt_t=_m_app_gbml_to_string((struct _m_app_t_dict_obj*)bbt_d,0);
-	struct brl_stream_TStream_obj* bbt_ts=(struct brl_stream_TStream_obj*)brl_stream_WriteStream((BBOBJECT)bbStringConcat(bbt_s,&_s56));
+	struct brl_stream_TStream_obj* bbt_ts=(struct brl_stream_TStream_obj*)brl_stream_WriteStream((BBOBJECT)bbStringConcat(bbt_s,&_s60));
 	brl_stream_WriteString((struct brl_stream_TStream_obj*)bbt_ts,bbt_t);
 	brl_stream_CloseStream((struct brl_stream_TStream_obj*)bbt_ts);
 }
 void _m_app_gbs_func_save(BBARRAY bbt_s){
-	_m_app_gbml_save((struct _m_app_t_dict_obj*)_m_app_gbs_data,&_s122);
+	_m_app_gbml_save((struct _m_app_t_dict_obj*)_m_app_gbs_data,&_s126);
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_save(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s96;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s96;
+	bbt_r->__m_app_t_gbscmd_name =&_s100;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s100;
 	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
-	bbt_r->__m_app_t_gbscmd_desc =&_s97;
+	bbt_r->__m_app_t_gbscmd_desc =&_s101;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_save;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3522,7 +3741,7 @@ struct _m_app_t_dict_obj* _m_app_gbml_from_string(BBSTRING bbt_s){
 				bbt_cd=(struct _m_app_t_dict_obj*)((struct _m_app_t_dict_obj*)bbObjectDowncast((BBOBJECT)(bbt_dl)->clas->m_Last((struct brl_linkedlist_TList_obj*)bbt_dl),(BBClass*)&_m_app_t_dict));
 				bbt_c=bbStringFromChar((bbt_s)->buf[((BBUINT)bbt_i)]);
 				BBSTRING bbt_2=bbt_c;
-				if(bbStringEquals(bbt_2, &_s58)==1){
+				if(bbStringEquals(bbt_2, &_s62)==1){
 					if((((bbt_w!= &bbEmptyString) && (bbt_hk!= &bbEmptyString)) && (bbt_ht!= &bbEmptyString)) && !(bbt_hv!= &bbEmptyString)){
 						bbt_hv=brl_retro_Trim(bbt_w);
 						bbt_w=&bbEmptyString;
@@ -3609,10 +3828,10 @@ struct _m_app_t_dict_obj* _m_app_gbml_from_string(BBSTRING bbt_s){
 	return (struct _m_app_t_dict_obj*)bbt_dt;
 }
 struct _m_app_t_dict_obj* _m_app_gbml_load(BBSTRING bbt_s){
-	BBINT bbt_u=brl_filesystem_FileType(bbStringConcat(bbt_s,&_s56));
+	BBINT bbt_u=brl_filesystem_FileType(bbStringConcat(bbt_s,&_s60));
 	BBSTRING bbt_t=&bbEmptyString;
 	if(bbt_u==1){
-		struct brl_stream_TStream_obj* bbt_ts=(struct brl_stream_TStream_obj*)brl_stream_ReadStream((BBOBJECT)bbStringConcat(bbt_s,&_s56));
+		struct brl_stream_TStream_obj* bbt_ts=(struct brl_stream_TStream_obj*)brl_stream_ReadStream((BBOBJECT)bbStringConcat(bbt_s,&_s60));
 		BBINT bbt_b=((BBINT)brl_stream_StreamSize((struct brl_stream_TStream_obj*)bbt_ts));
 		BBSTRING bbt_tss=brl_stream_ReadString((struct brl_stream_TStream_obj*)bbt_ts,bbt_b);
 		brl_stream_CloseStream((struct brl_stream_TStream_obj*)bbt_ts);
@@ -3621,14 +3840,14 @@ struct _m_app_t_dict_obj* _m_app_gbml_load(BBSTRING bbt_s){
 	return (struct _m_app_t_dict_obj*)&bbNullObject;
 }
 void _m_app_gbs_func_load(BBARRAY bbt_s){
-	_m_app_gbs_data=(struct _m_app_t_dict_obj*)_m_app_gbml_load(&_s122);
+	_m_app_gbs_data=(struct _m_app_t_dict_obj*)_m_app_gbml_load(&_s126);
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_load(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s98;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s98;
+	bbt_r->__m_app_t_gbscmd_name =&_s102;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s102;
 	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
-	bbt_r->__m_app_t_gbscmd_desc =&_s99;
+	bbt_r->__m_app_t_gbscmd_desc =&_s103;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_load;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3700,13 +3919,35 @@ void _m_app_gb_console_out(BBSTRING bbt_s){
 		}
 	}
 }
+void _m_app_gb_console_out2(BBINT bbt_v){
+	BBSTRING bbt_s=bbStringFromInt(bbt_v);
+	BBARRAY bbt_u=_m_app_cut(bbt_s,80);
+	{
+		BBINT bbt_i=0;
+		BBINT bbt_=((bbt_u)->scales[0]-1);
+		for(;(bbt_i<=bbt_);bbt_i=(bbt_i+1)){
+			_m_app_gb_console_print_line(((BBSTRING*)BBARRAYDATA(bbt_u,1))[((BBUINT)bbt_i)]);
+		}
+	}
+}
+void _m_app_gb_console_out3(BBFLOAT bbt_v){
+	BBSTRING bbt_s=_m_app_strdec(bbt_v,2);
+	BBARRAY bbt_u=_m_app_cut(bbt_s,80);
+	{
+		BBINT bbt_i=0;
+		BBINT bbt_=((bbt_u)->scales[0]-1);
+		for(;(bbt_i<=bbt_);bbt_i=(bbt_i+1)){
+			_m_app_gb_console_print_line(((BBSTRING*)BBARRAYDATA(bbt_u,1))[((BBUINT)bbt_i)]);
+		}
+	}
+}
 void _m_app_gb_reload_images(){
 	{
 		BBINT bbt_i=0;
 		for(;(bbt_i<=99);bbt_i=(bbt_i+1)){
 			if(((BBSTRING*)BBARRAYDATA(_m_app_gb_image_paths,1))[((BBUINT)bbt_i)]!= &bbEmptyString){
 				_m_app_gb_add_image(bbt_i,((BBSTRING*)BBARRAYDATA(_m_app_gb_image_paths,1))[((BBUINT)bbt_i)]);
-				_m_app_gb_console_out(bbStringConcat(bbStringConcat(bbStringConcat(&_s134,bbStringFromInt(bbt_i)),&_s135),((BBSTRING*)BBARRAYDATA(_m_app_gb_image_paths,1))[((BBUINT)bbt_i)]));
+				_m_app_gb_console_out(bbStringConcat(bbStringConcat(bbStringConcat(&_s137,bbStringFromInt(bbt_i)),&_s138),((BBSTRING*)BBARRAYDATA(_m_app_gb_image_paths,1))[((BBUINT)bbt_i)]));
 			}
 		}
 	}
@@ -3716,12 +3957,12 @@ void _m_app_gbs_func_reloadimages(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_reloadimages(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s100;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s100;
-	BBSTRING bbt_[]={&_s101};
+	bbt_r->__m_app_t_gbscmd_name =&_s104;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s104;
+	BBSTRING bbt_[]={&_s105};
 	BBARRAY bbt_2 = bbArrayFromData("$",1,bbt_);
 	bbt_r->__m_app_t_gbscmd_aliases =bbt_2;
-	bbt_r->__m_app_t_gbscmd_desc =&_s102;
+	bbt_r->__m_app_t_gbscmd_desc =&_s106;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_reloadimages;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3738,7 +3979,7 @@ void _m_app_gb_reload_sounds(){
 		for(;(bbt_i<=99);bbt_i=(bbt_i+1)){
 			if(((BBSTRING*)BBARRAYDATA(_m_app_gb_sound_paths,1))[((BBUINT)bbt_i)]!= &bbEmptyString){
 				_m_app_gb_add_sound(bbt_i,((BBSTRING*)BBARRAYDATA(_m_app_gb_sound_paths,1))[((BBUINT)bbt_i)]);
-				_m_app_gb_console_out(bbStringConcat(bbStringConcat(bbStringConcat(&_s134,bbStringFromInt(bbt_i)),&_s135),((BBSTRING*)BBARRAYDATA(_m_app_gb_sound_paths,1))[((BBUINT)bbt_i)]));
+				_m_app_gb_console_out(bbStringConcat(bbStringConcat(bbStringConcat(&_s137,bbStringFromInt(bbt_i)),&_s138),((BBSTRING*)BBARRAYDATA(_m_app_gb_sound_paths,1))[((BBUINT)bbt_i)]));
 			}
 		}
 	}
@@ -3748,12 +3989,12 @@ void _m_app_gbs_func_reloadsounds(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_reloadsounds(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s103;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s103;
-	BBSTRING bbt_[]={&_s104};
+	bbt_r->__m_app_t_gbscmd_name =&_s107;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s107;
+	BBSTRING bbt_[]={&_s108};
 	BBARRAY bbt_2 = bbArrayFromData("$",1,bbt_);
 	bbt_r->__m_app_t_gbscmd_aliases =bbt_2;
-	bbt_r->__m_app_t_gbscmd_desc =&_s105;
+	bbt_r->__m_app_t_gbscmd_desc =&_s109;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_reloadsounds;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3762,19 +4003,19 @@ void _m_app_gbs_func_listimages(BBARRAY bbt_s){
 		BBINT bbt_i=0;
 		for(;(bbt_i<=99);bbt_i=(bbt_i+1)){
 			if(((BBObject*)((struct brl_max2d_image_TImage_obj**)BBARRAYDATA(_m_app_gb_images,1))[((BBUINT)bbt_i)])!= &bbNullObject){
-				_m_app_gb_console_out(bbStringConcat(bbStringConcat(bbStringFromInt(bbt_i),&_s123),((BBSTRING*)BBARRAYDATA(_m_app_gb_image_paths,1))[((BBUINT)bbt_i)]));
+				_m_app_gb_console_out(bbStringConcat(bbStringConcat(bbStringFromInt(bbt_i),&_s127),((BBSTRING*)BBARRAYDATA(_m_app_gb_image_paths,1))[((BBUINT)bbt_i)]));
 			}
 		}
 	}
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_listimages(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s106;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s106;
-	BBSTRING bbt_[]={&_s107};
+	bbt_r->__m_app_t_gbscmd_name =&_s110;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s110;
+	BBSTRING bbt_[]={&_s111};
 	BBARRAY bbt_2 = bbArrayFromData("$",1,bbt_);
 	bbt_r->__m_app_t_gbscmd_aliases =bbt_2;
-	bbt_r->__m_app_t_gbscmd_desc =&_s108;
+	bbt_r->__m_app_t_gbscmd_desc =&_s112;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_listimages;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3783,19 +4024,19 @@ void _m_app_gbs_func_listsounds(BBARRAY bbt_s){
 		BBINT bbt_i=0;
 		for(;(bbt_i<=99);bbt_i=(bbt_i+1)){
 			if(((BBObject*)((struct brl_audio_TSound_obj**)BBARRAYDATA(_m_app_gb_sounds,1))[((BBUINT)bbt_i)])!= &bbNullObject){
-				_m_app_gb_console_out(bbStringConcat(bbStringConcat(bbStringFromInt(bbt_i),&_s123),((BBSTRING*)BBARRAYDATA(_m_app_gb_sound_paths,1))[((BBUINT)bbt_i)]));
+				_m_app_gb_console_out(bbStringConcat(bbStringConcat(bbStringFromInt(bbt_i),&_s127),((BBSTRING*)BBARRAYDATA(_m_app_gb_sound_paths,1))[((BBUINT)bbt_i)]));
 			}
 		}
 	}
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_listsounds(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s109;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s109;
-	BBSTRING bbt_[]={&_s110};
+	bbt_r->__m_app_t_gbscmd_name =&_s113;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s113;
+	BBSTRING bbt_[]={&_s114};
 	BBARRAY bbt_2 = bbArrayFromData("$",1,bbt_);
 	bbt_r->__m_app_t_gbscmd_aliases =bbt_2;
-	bbt_r->__m_app_t_gbscmd_desc =&_s111;
+	bbt_r->__m_app_t_gbscmd_desc =&_s115;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_listsounds;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3809,25 +4050,25 @@ BBSTRING _m_app_gbml_to_string_compressed(struct _m_app_t_dict_obj* bbt_d){
 				if(((BBObject*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)])!= &bbNullObject){
 					BBINT bbt_2=((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_id ;
 					if(bbt_2==1){
-						(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s71),bbStringFromInt(_m_app_byte_get((struct _m_app_t_byte_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tbyte ))),&_s58));
+						(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s75),bbStringFromInt(_m_app_byte_get((struct _m_app_t_byte_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tbyte ))),&_s62));
 					}else{
 						if(bbt_2==2){
-							(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s72),bbStringFromInt(_m_app_short_get((struct _m_app_t_short_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tshort ))),&_s58));
+							(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s76),bbStringFromInt(_m_app_short_get((struct _m_app_t_short_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tshort ))),&_s62));
 						}else{
 							if(bbt_2==3){
-								(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s73),bbStringFromInt(_m_app_int_get((struct _m_app_t_int_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tint ))),&_s58));
+								(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s77),bbStringFromInt(_m_app_int_get((struct _m_app_t_int_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tint ))),&_s62));
 							}else{
 								if(bbt_2==4){
-									(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s74),bbStringFromLong(_m_app_long_get((struct _m_app_t_long_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tlong ))),&_s58));
+									(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s78),bbStringFromLong(_m_app_long_get((struct _m_app_t_long_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tlong ))),&_s62));
 								}else{
 									if(bbt_2==5){
-										(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s75),bbStringFromFloat(_m_app_float_get((struct _m_app_t_float_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tfloat ))),&_s58));
+										(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s79),_m_app_strdec(_m_app_float_get((struct _m_app_t_float_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tfloat ),2)),&_s62));
 									}else{
 										if(bbt_2==6){
-											(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s76),bbStringFromDouble(_m_app_double_get((struct _m_app_t_double_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tdouble ))),&_s58));
+											(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s80),bbStringFromDouble(_m_app_double_get((struct _m_app_t_double_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tdouble ))),&_s62));
 										}else{
 											if(bbt_2==7){
-												(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s77),_m_app_string_get((struct _m_app_t_string_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tstring )),&_s58));
+												(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s81),_m_app_string_get((struct _m_app_t_string_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tstring )),&_s62));
 											}else{
 												if(bbt_2==8){
 													struct _m_app_t_dict_obj* bbt_g=(struct _m_app_t_dict_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tdir ;
@@ -3851,10 +4092,10 @@ void _m_app_gbs_func_data(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_data(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s112;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s112;
+	bbt_r->__m_app_t_gbscmd_name =&_s116;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s116;
 	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
-	bbt_r->__m_app_t_gbscmd_desc =&_s113;
+	bbt_r->__m_app_t_gbscmd_desc =&_s117;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_data;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3863,15 +4104,12 @@ void _m_app_gbs_func_sdata(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_sdata(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s114;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s114;
+	bbt_r->__m_app_t_gbscmd_name =&_s118;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s118;
 	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
-	bbt_r->__m_app_t_gbscmd_desc =&_s115;
+	bbt_r->__m_app_t_gbscmd_desc =&_s119;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_sdata;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
-}
-BBINT _m_app_iclamp(BBINT bbt_n,BBINT bbt_l,BBINT bbt_h){
-	return brl_blitz_Max(brl_blitz_Min(bbt_n,bbt_h),bbt_l);
 }
 void _m_app_gb_audio_play_sound(BBINT bbt_n,BBINT bbt_c,BBFLOAT bbt_r,BBFLOAT bbt_v){
 	bbt_n=_m_app_iclamp(bbt_n,0,99);
@@ -3885,16 +4123,16 @@ void _m_app_gb_audio_play_sound(BBINT bbt_n,BBINT bbt_c,BBFLOAT bbt_r,BBFLOAT bb
 void _m_app_gbs_func_playsound(BBARRAY bbt_s){
 	BBINT bbt_u=bbStringToInt(_m_app_sind(bbt_s,0));
 	_m_app_gb_audio_play_sound(bbt_u,0,1.0f,1.0f);
-	_m_app_gb_console_out(bbStringConcat(bbStringConcat(bbStringConcat(&_s124,bbStringFromInt(bbt_u)),&_s125),((BBSTRING*)BBARRAYDATA(_m_app_gb_sound_paths,1))[((BBUINT)bbt_u)]));
+	_m_app_gb_console_out(bbStringConcat(bbStringConcat(bbStringConcat(&_s128,bbStringFromInt(bbt_u)),&_s129),((BBSTRING*)BBARRAYDATA(_m_app_gb_sound_paths,1))[((BBUINT)bbt_u)]));
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_playsound(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s116;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s116;
-	BBSTRING bbt_[]={&_s117};
+	bbt_r->__m_app_t_gbscmd_name =&_s120;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s120;
+	BBSTRING bbt_[]={&_s121};
 	BBARRAY bbt_2 = bbArrayFromData("$",1,bbt_);
 	bbt_r->__m_app_t_gbscmd_aliases =bbt_2;
-	bbt_r->__m_app_t_gbscmd_desc =&_s118;
+	bbt_r->__m_app_t_gbscmd_desc =&_s122;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_playsound;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3912,7 +4150,7 @@ void _m_app_gbs_func_help(BBARRAY bbt_s){
 					bbt_2=(bbt_2+1U);
 					bbt_t=bbStringConcat(bbStringConcat(bbt_t,&_s17),bbt_u);
 				}
-				bbt_t=bbStringConcat(bbStringConcat(bbt_t,&_s123),((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)bbt_i)]->__m_app_t_gbscmd_desc );
+				bbt_t=bbStringConcat(bbStringConcat(bbt_t,&_s127),((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)bbt_i)]->__m_app_t_gbscmd_desc );
 				_m_app_gb_console_out(bbt_t);
 			}
 		}
@@ -3920,12 +4158,12 @@ void _m_app_gbs_func_help(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_help(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s119;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s119;
-	BBSTRING bbt_[]={&_s120};
+	bbt_r->__m_app_t_gbscmd_name =&_s123;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s123;
+	BBSTRING bbt_[]={&_s124};
 	BBARRAY bbt_2 = bbArrayFromData("$",1,bbt_);
 	bbt_r->__m_app_t_gbscmd_aliases =bbt_2;
-	bbt_r->__m_app_t_gbscmd_desc =&_s121;
+	bbt_r->__m_app_t_gbscmd_desc =&_s125;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_help;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3950,245 +4188,17 @@ void _m_app_gbs_init(){
 	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_playsound();
 	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_help();
 }
-void __m_app_t_image_New(struct _m_app_t_image_obj* o) {
-	bbObjectCtor((BBOBJECT)o);
-	o->clas = &_m_app_t_image;
-	o->__m_app_t_image_image = (struct brl_max2d_image_TImage_obj*)(&bbNullObject);
-	o->__m_app_t_image_path = &bbEmptyString;
+void _m_app_gb_editor_init(){
+	_m_app_gb_editor_active=(struct _m_app_t_bool_obj*)_m_app_new_bool(0);
 }
-struct BBDebugScope_3 _m_app_t_image_scope ={
-	BBDEBUGSCOPE_USERTYPE,
-	"t_image",
-	{
-		{
-			BBDEBUGDECL_FIELD,
-			"image",
-			":TImage",
-			.field_offset=offsetof(struct _m_app_t_image_obj,__m_app_t_image_image)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"path",
-			"$",
-			.field_offset=offsetof(struct _m_app_t_image_obj,__m_app_t_image_path)
-		},
-		{
-			BBDEBUGDECL_TYPEMETHOD,
-			"New",
-			"()",
-			.var_address=(void*)&__m_app_t_image_New
-		},
-		BBDEBUGDECL_END
-	}
-};
-struct BBClass__m_app_t_image _m_app_t_image={
-	&bbObjectClass,
-	bbObjectFree,
-	(BBDebugScope*)&_m_app_t_image_scope,
-	sizeof(struct _m_app_t_image_obj),
-	(void (*)(BBOBJECT))__m_app_t_image_New,
-	bbObjectDtor,
-	bbObjectToString,
-	bbObjectCompare,
-	bbObjectSendMessage,
-	0,
-	0,
-	offsetof(struct _m_app_t_image_obj,__m_app_t_image_path) - offsetof(struct _m_app_t_image_obj,__m_app_t_image_image) + sizeof(BBSTRING)
-	,0
-	,offsetof(struct _m_app_t_image_obj,__m_app_t_image_image)
-};
-
-struct _m_app_t_image_obj* _m_app_new_image(BBSTRING bbt_p){
-	struct _m_app_t_image_obj* bbt_r=(struct _m_app_t_image_obj*)(struct _m_app_t_image_obj*)bbObjectNew((BBClass *)&_m_app_t_image);
-	bbt_r->__m_app_t_image_image =(struct brl_max2d_image_TImage_obj*)brl_max2d_LoadImage((BBOBJECT)bbt_p,8);
-	bbt_r->__m_app_t_image_path =bbt_p;
-	return (struct _m_app_t_image_obj*)bbt_r;
-}
-void __m_app_t_bitmap_New(struct _m_app_t_bitmap_obj* o) {
-	bbObjectCtor((BBOBJECT)o);
-	o->clas = &_m_app_t_bitmap;
-	o->__m_app_t_bitmap_width = 0;
-	o->__m_app_t_bitmap_height = 0;
-	o->__m_app_t_bitmap_data = (&bbEmptyArray);
-	o->__m_app_t_bitmap_depth = 0;
-	o->__m_app_t_bitmap_palette = (struct _m_app_t_palette_obj*)(&bbNullObject);
-	o->__m_app_t_bitmap_image = (struct brl_max2d_image_TImage_obj*)(&bbNullObject);
-}
-struct BBDebugScope_7 _m_app_t_bitmap_scope ={
-	BBDEBUGSCOPE_USERTYPE,
-	"t_bitmap",
-	{
-		{
-			BBDEBUGDECL_FIELD,
-			"width",
-			"i",
-			.field_offset=offsetof(struct _m_app_t_bitmap_obj,__m_app_t_bitmap_width)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"height",
-			"i",
-			.field_offset=offsetof(struct _m_app_t_bitmap_obj,__m_app_t_bitmap_height)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"data",
-			"[,]:t_color",
-			.field_offset=offsetof(struct _m_app_t_bitmap_obj,__m_app_t_bitmap_data)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"depth",
-			"i",
-			.field_offset=offsetof(struct _m_app_t_bitmap_obj,__m_app_t_bitmap_depth)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"palette",
-			":t_palette",
-			.field_offset=offsetof(struct _m_app_t_bitmap_obj,__m_app_t_bitmap_palette)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"image",
-			":TImage",
-			.field_offset=offsetof(struct _m_app_t_bitmap_obj,__m_app_t_bitmap_image)
-		},
-		{
-			BBDEBUGDECL_TYPEMETHOD,
-			"New",
-			"()",
-			.var_address=(void*)&__m_app_t_bitmap_New
-		},
-		BBDEBUGDECL_END
-	}
-};
-struct BBClass__m_app_t_bitmap _m_app_t_bitmap={
-	&bbObjectClass,
-	bbObjectFree,
-	(BBDebugScope*)&_m_app_t_bitmap_scope,
-	sizeof(struct _m_app_t_bitmap_obj),
-	(void (*)(BBOBJECT))__m_app_t_bitmap_New,
-	bbObjectDtor,
-	bbObjectToString,
-	bbObjectCompare,
-	bbObjectSendMessage,
-	0,
-	0,
-	offsetof(struct _m_app_t_bitmap_obj,__m_app_t_bitmap_image) - offsetof(struct _m_app_t_bitmap_obj,__m_app_t_bitmap_width) + sizeof(struct brl_max2d_image_TImage_obj*)
-	,0
-	,offsetof(struct _m_app_t_bitmap_obj,__m_app_t_bitmap_width)
-};
-
-BBINT _m_app_image_width(struct _m_app_t_image_obj* bbt_u){
-	return brl_max2d_ImageWidth((struct brl_max2d_image_TImage_obj*)bbt_u->__m_app_t_image_image );
-}
-BBINT _m_app_image_height(struct _m_app_t_image_obj* bbt_u){
-	return brl_max2d_ImageHeight((struct brl_max2d_image_TImage_obj*)bbt_u->__m_app_t_image_image );
-}
-void _m_app_color_set(struct _m_app_t_color_obj* bbt_c,BBFLOAT bbt_r,BBFLOAT bbt_g,BBFLOAT bbt_b,BBFLOAT bbt_a){
-	bbt_c->__m_app_t_color_r =_m_app_clamp(bbt_r,0.00000000f,3.00000000f);
-	bbt_c->__m_app_t_color_g =_m_app_clamp(bbt_g,0.00000000f,3.00000000f);
-	bbt_c->__m_app_t_color_b =_m_app_clamp(bbt_b,0.00000000f,3.00000000f);
-	bbt_c->__m_app_t_color_a =_m_app_clamp(bbt_a,0.00000000f,3.00000000f);
-}
-struct _m_app_t_palette_obj* _m_app_new_palette(){
-	struct _m_app_t_palette_obj* bbt_r=(struct _m_app_t_palette_obj*)(struct _m_app_t_palette_obj*)bbObjectNew((BBClass *)&_m_app_t_palette);
-	bbt_r->__m_app_t_palette_data =bbArrayNew1D(":t_color", 256);
-	{
-		BBINT bbt_i=0;
-		for(;(bbt_i<=255);bbt_i=(bbt_i+1)){
-			((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_r->__m_app_t_palette_data ,1))[((BBUINT)bbt_i)]=(struct _m_app_t_color_obj*)_m_app_new_color(3.00000000f,3.00000000f,3.00000000f,3.00000000f);
-		}
-	}
-	_m_app_color_set((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_r->__m_app_t_palette_data ,1))[255U],0.00000000f,0.00000000f,0.00000000f,0.00000000f);
-	bbt_r->__m_app_t_palette_depth =0;
-	return (struct _m_app_t_palette_obj*)bbt_r;
-}
-struct _m_app_t_bitmap_obj* _m_app_new_bitmap(BBINT bbt_x,BBINT bbt_y,BBFLOAT bbt_rr,BBFLOAT bbt_gg,BBFLOAT bbt_bb,BBFLOAT bbt_aa){
-	struct _m_app_t_bitmap_obj* bbt_r=(struct _m_app_t_bitmap_obj*)(struct _m_app_t_bitmap_obj*)bbObjectNew((BBClass *)&_m_app_t_bitmap);
-	bbt_r->__m_app_t_bitmap_width =((BBINT)_m_app_low(((BBFLOAT)bbt_x),10.0000000f));
-	bbt_r->__m_app_t_bitmap_height =((BBINT)_m_app_low(((BBFLOAT)bbt_y),10.0000000f));
-	bbt_r->__m_app_t_bitmap_data =bbArrayNew(":t_color", 2, bbt_r->__m_app_t_bitmap_width , bbt_r->__m_app_t_bitmap_height );
-	{
-		BBINT bbt_i=0;
-		BBINT bbt_=(bbt_r->__m_app_t_bitmap_width -1);
-		for(;(bbt_i<=bbt_);bbt_i=(bbt_i+1)){
-			{
-				BBINT bbt_j=0;
-				BBINT bbt_2=(bbt_r->__m_app_t_bitmap_height -1);
-				for(;(bbt_j<=bbt_2);bbt_j=(bbt_j+1)){
-					BBUINT* bbt_3=((BBARRAY)bbt_r->__m_app_t_bitmap_data )->scales + 1;
-					((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_r->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)bbt_i) + ((BBUINT)bbt_j)]=(struct _m_app_t_color_obj*)_m_app_new_color(bbt_rr,bbt_gg,bbt_bb,bbt_aa);
-				}
-			}
-		}
-	}
-	bbt_r->__m_app_t_bitmap_image =(struct brl_max2d_image_TImage_obj*)brl_max2d_CreateImage(bbt_r->__m_app_t_bitmap_width ,bbt_r->__m_app_t_bitmap_height ,1,8);
-	bbt_r->__m_app_t_bitmap_palette =(struct _m_app_t_palette_obj*)_m_app_new_palette();
-	bbt_r->__m_app_t_bitmap_depth =0;
-	return (struct _m_app_t_bitmap_obj*)bbt_r;
-}
-BBINT _m_app_color_to_argb(struct _m_app_t_color_obj* bbt_c){
-	return _m_app_argb(((BBBYTE)(bbt_c->__m_app_t_color_a *85.0000000f)),((BBBYTE)(bbt_c->__m_app_t_color_r *85.0000000f)),((BBBYTE)(bbt_c->__m_app_t_color_g *85.0000000f)),((BBBYTE)(bbt_c->__m_app_t_color_b *85.0000000f)));
-}
-void _m_app_bitmap_sync(struct _m_app_t_bitmap_obj* bbt_c){
-	struct brl_pixmap_TPixmap_obj* bbt_u=(struct brl_pixmap_TPixmap_obj*)brl_max2d_LockImage((struct brl_max2d_image_TImage_obj*)bbt_c->__m_app_t_bitmap_image ,0,1,1);
-	BBINT bbt_x=0;
-	{
-		BBINT bbt_i=0;
-		BBINT bbt_=(bbt_c->__m_app_t_bitmap_width -1);
-		for(;(bbt_i<=bbt_);bbt_i=(bbt_i+1)){
-			{
-				BBINT bbt_j=0;
-				BBINT bbt_2=(bbt_c->__m_app_t_bitmap_height -1);
-				for(;(bbt_j<=bbt_2);bbt_j=(bbt_j+1)){
-					BBUINT* bbt_3=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
-					bbt_x=_m_app_color_to_argb((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)bbt_i) + ((BBUINT)bbt_j)]);
-					brl_pixmap_WritePixel((struct brl_pixmap_TPixmap_obj*)bbt_u,bbt_i,bbt_j,bbt_x);
-				}
-			}
-		}
-	}
-}
-struct _m_app_t_bitmap_obj* _m_app_new_bitmap_from_image(struct _m_app_t_image_obj* bbt_u){
-	BBINT bbt_px=_m_app_image_width((struct _m_app_t_image_obj*)bbt_u);
-	BBINT bbt_py=_m_app_image_height((struct _m_app_t_image_obj*)bbt_u);
-	struct brl_pixmap_TPixmap_obj* bbt_pp=(struct brl_pixmap_TPixmap_obj*)brl_max2d_LockImage((struct brl_max2d_image_TImage_obj*)bbt_u->__m_app_t_image_image ,0,1,1);
-	BBINT bbt_ii=0;
-	BBFLOAT bbt_aa=0.00000000f;
-	BBFLOAT bbt_rr=0.00000000f;
-	BBFLOAT bbt_gg=0.00000000f;
-	BBFLOAT bbt_bb=0.00000000f;
-	struct _m_app_t_bitmap_obj* bbt_r=(struct _m_app_t_bitmap_obj*)_m_app_new_bitmap(bbt_px,bbt_py,0.00000000f,0.00000000f,0.00000000f,0.00000000f);
-	{
-		BBINT bbt_i=0;
-		BBINT bbt_=(bbt_px-1);
-		for(;(bbt_i<=bbt_);bbt_i=(bbt_i+1)){
-			{
-				BBINT bbt_j=0;
-				BBINT bbt_2=(bbt_py-1);
-				for(;(bbt_j<=bbt_2);bbt_j=(bbt_j+1)){
-					bbt_ii=brl_pixmap_ReadPixel((struct brl_pixmap_TPixmap_obj*)bbt_pp,bbt_i,bbt_j);
-					bbt_aa=((((BBFLOAT)_m_app_argb_a(bbt_ii))/255.000000f)*3.00000000f);
-					bbt_rr=((((BBFLOAT)_m_app_argb_r(bbt_ii))/255.000000f)*3.00000000f);
-					bbt_gg=((((BBFLOAT)_m_app_argb_g(bbt_ii))/255.000000f)*3.00000000f);
-					bbt_bb=((((BBFLOAT)_m_app_argb_b(bbt_ii))/255.000000f)*3.00000000f);
-					BBUINT* bbt_3=((BBARRAY)bbt_r->__m_app_t_bitmap_data )->scales + 1;
-					((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_r->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)bbt_i) + ((BBUINT)bbt_j)]=(struct _m_app_t_color_obj*)_m_app_new_color(bbt_rr,bbt_gg,bbt_bb,bbt_aa);
-				}
-			}
-		}
-	}
-	bbt_r->__m_app_t_bitmap_image =(struct brl_max2d_image_TImage_obj*)brl_max2d_CreateImage(bbt_r->__m_app_t_bitmap_width ,bbt_r->__m_app_t_bitmap_height ,1,8);
-	bbt_r->__m_app_t_bitmap_palette =(struct _m_app_t_palette_obj*)_m_app_new_palette();
-	_m_app_bitmap_sync((struct _m_app_t_bitmap_obj*)bbt_r);
-	return (struct _m_app_t_bitmap_obj*)bbt_r;
+struct _m_app_t_logchain_obj* _m_app_new_logchain(){
+	struct _m_app_t_logchain_obj* bbt_r=(struct _m_app_t_logchain_obj*)(struct _m_app_t_logchain_obj*)bbObjectNew((BBClass *)&_m_app_t_logchain);
+	bbt_r->__m_app_t_logchain_length =(struct _m_app_t_int_obj*)_m_app_new_int(0);
+	return (struct _m_app_t_logchain_obj*)bbt_r;
 }
 void _m_app_gb_testing_init(){
 	_m_app_gb_testing=(struct _m_app_t_gb_testing_obj*)(struct _m_app_t_gb_testing_obj*)bbObjectNew((BBClass *)&_m_app_t_gb_testing);
-	_m_app_gb_testing->__m_app_t_gb_testing_image =(struct _m_app_t_image_obj*)_m_app_new_image(&_s127);
-	_m_app_gb_testing->__m_app_t_gb_testing_bitmap =(struct _m_app_t_bitmap_obj*)_m_app_new_bitmap_from_image((struct _m_app_t_image_obj*)_m_app_gb_testing->__m_app_t_gb_testing_image );
+	_m_app_gb_testing->__m_app_t_gb_testing_logchain =(struct _m_app_t_logchain_obj*)_m_app_new_logchain();
 }
 void _m_app_gb_debug_init(){
 	_m_app_gb_debug_logpos=(struct _m_app_t_int_obj*)_m_app_new_int(0);
@@ -4199,6 +4209,7 @@ void _m_app_gb_init(){
 	_m_app_gb_running=(struct _m_app_t_bool_obj*)_m_app_new_bool(1);
 	_m_app_gb_paused=(struct _m_app_t_bool_obj*)_m_app_new_bool(0);
 	_m_app_gb_speed=(struct _m_app_t_number_obj*)_m_app_new_number(1.0f,0.0f,10.0f,0);
+	_m_app_gb_bitmap=(struct _m_app_t_bitmap_obj*)_m_app_new_bitmap(400,240,0.00000000f,0.00000000f,0.00000000f,0.00000000f);
 	_m_app_gb_fonts=bbArrayNew1D(":t_font", 10);
 	_m_app_gb_images=bbArrayNew1D(":TImage", 100);
 	_m_app_gb_sounds=bbArrayNew1D(":TSound", 100);
@@ -4220,6 +4231,7 @@ void _m_app_gb_init(){
 	_m_app_gb_scene_init();
 	_m_app_gb_net_init();
 	_m_app_gbs_init();
+	_m_app_gb_editor_init();
 	_m_app_gb_testing_init();
 	_m_app_gb_debug_init();
 }
@@ -4227,7 +4239,7 @@ void _m_app_event_init(){
 	_m_app_gb_init();
 }
 void _m_app_gb_load_settings(){
-	struct _m_app_t_dict_obj* bbt_u=(struct _m_app_t_dict_obj*)_m_app_gbml_load(&_s136);
+	struct _m_app_t_dict_obj* bbt_u=(struct _m_app_t_dict_obj*)_m_app_gbml_load(&_s139);
 	if(((BBObject*)bbt_u)!= &bbNullObject){
 		_m_app_gb_settings=(struct _m_app_t_dict_obj*)bbt_u;
 	}else{
@@ -4235,7 +4247,7 @@ void _m_app_gb_load_settings(){
 	}
 }
 void _m_app_gb_achievements_load(){
-	_m_app_gb_achievements=(struct _m_app_t_dict_obj*)_m_app_gbml_load(&_s83);
+	_m_app_gb_achievements=(struct _m_app_t_dict_obj*)_m_app_gbml_load(&_s87);
 }
 void _m_app_gb_console_load(){
 }
@@ -4383,15 +4395,51 @@ void _m_app_number_set(struct _m_app_t_number_obj* bbt_n,BBFLOAT bbt_v){
 		bbt_n->__m_app_t_number_value =_m_app_clamp(bbt_v,bbt_n->__m_app_t_number_low ,bbt_n->__m_app_t_number_high );
 	}
 }
+BBINT _m_app_dictval_get_int(struct _m_app_t_dictval_obj* bbt_d){
+	if(bbt_d->__m_app_t_dictval_id ==3){
+		return bbt_d->__m_app_t_dictval_tint ->__m_app_t_int_value ;
+	}else{
+		return 0;
+	}
+}
+BBINT _m_app_dict_get_int(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_k){
+	BBINT bbt_u=_m_app_dict_find_pos((struct _m_app_t_dict_obj*)bbt_d,bbt_k);
+	if(bbt_u!=-1){
+		return _m_app_dictval_get_int((struct _m_app_t_dictval_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_u)]);
+	}
+	return 0;
+}
+BBINT _m_app_dict_read_int(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_s){
+	BBARRAY bbt_w=_m_app_tokenize(bbt_s,&_s17,0);
+	struct _m_app_t_dict_obj* bbt_g=(struct _m_app_t_dict_obj*)&bbNullObject;
+	if((bbt_w->scales[0])==0){
+		return 0;
+	}else{
+		if((bbt_w->scales[0])==1){
+			return _m_app_dict_get_int((struct _m_app_t_dict_obj*)bbt_d,((BBSTRING*)BBARRAYDATA(bbt_w,1))[0U]);
+		}else{
+			if((bbt_w->scales[0])>1){
+				bbt_g=(struct _m_app_t_dict_obj*)_m_app_dict_goto_dir((struct _m_app_t_dict_obj*)bbt_d,bbArraySlice("$",bbt_w,0,(bbt_w->scales[0])),0);
+				if(((BBObject*)bbt_g)!= &bbNullObject){
+					return _m_app_dict_get_int((struct _m_app_t_dict_obj*)bbt_g,((BBSTRING*)BBARRAYDATA(bbt_w,1))[((BBUINT)((bbt_w->scales[0])-1))]);
+				}else{
+					return 0;
+				}
+			}
+		}
+	}
+	return 0;
+}
 void _m_app_gb_visual_load(){
 	struct _m_app_t_dict_obj* bbt_u=(struct _m_app_t_dict_obj*)_m_app_gb_settings;
-	_m_app_gb_visual_set_fullscreen((BBINT)_m_app_dict_read_byte((struct _m_app_t_dict_obj*)bbt_u,&_s44));
+	_m_app_gb_visual_set_fullscreen((BBINT)_m_app_dict_read_byte((struct _m_app_t_dict_obj*)bbt_u,&_s46));
 	if(!(_m_app_gb_visual_fullscreen->__m_app_t_bool_value !=0)){
-		_m_app_gb_visual_set_window_scale(_m_app_dict_read_float((struct _m_app_t_dict_obj*)bbt_u,&_s45));
+		_m_app_gb_visual_set_window_scale(_m_app_dict_read_float((struct _m_app_t_dict_obj*)bbt_u,&_s47));
 	}
-	_m_app_bool_set((struct _m_app_t_bool_obj*)_m_app_gb_visual_use_scanlines,((BBINT)_m_app_dict_read_byte((struct _m_app_t_dict_obj*)bbt_u,&_s46)));
-	_m_app_number_set((struct _m_app_t_number_obj*)_m_app_gb_visual_scanlines_style,((BBFLOAT)_m_app_dict_read_byte((struct _m_app_t_dict_obj*)bbt_u,&_s47)));
-	_m_app_number_set((struct _m_app_t_number_obj*)_m_app_gb_visual_scanlines_thick,((BBFLOAT)_m_app_dict_read_byte((struct _m_app_t_dict_obj*)bbt_u,&_s48)));
+	_m_app_bool_set((struct _m_app_t_bool_obj*)_m_app_gb_visual_use_scanlines,((BBINT)_m_app_dict_read_byte((struct _m_app_t_dict_obj*)bbt_u,&_s48)));
+	_m_app_number_set((struct _m_app_t_number_obj*)_m_app_gb_visual_scanlines_style,((BBFLOAT)_m_app_dict_read_byte((struct _m_app_t_dict_obj*)bbt_u,&_s49)));
+	_m_app_number_set((struct _m_app_t_number_obj*)_m_app_gb_visual_scanlines_thick,((BBFLOAT)_m_app_dict_read_byte((struct _m_app_t_dict_obj*)bbt_u,&_s50)));
+	_m_app_int_set((struct _m_app_t_int_obj*)_m_app_gb_visual_screenshot_id,_m_app_dict_read_int((struct _m_app_t_dict_obj*)bbt_u,&_s51));
 }
 void _m_app_palette_set(struct _m_app_t_palette_obj* bbt_p,BBINT bbt_n,BBFLOAT bbt_r,BBFLOAT bbt_g,BBFLOAT bbt_b,BBFLOAT bbt_a){
 	bbt_n=_m_app_iclamp(bbt_n,0,255);
@@ -4661,13 +4709,15 @@ void _m_app_gb_load_default_animations(){
 	((struct _m_app_t_animation_obj**)BBARRAYDATA(_m_app_gb_animations,1))[1U]=(struct _m_app_t_animation_obj*)bbt_a;
 }
 void _m_app_gb_load_default_sounds(){
-	_m_app_gb_add_sound(90,&_s138);
-	_m_app_gb_add_sound(91,&_s139);
-	_m_app_gb_add_sound(92,&_s140);
-	_m_app_gb_add_sound(93,&_s141);
+	_m_app_gb_add_sound(90,&_s141);
+	_m_app_gb_add_sound(91,&_s142);
+	_m_app_gb_add_sound(92,&_s143);
+	_m_app_gb_add_sound(93,&_s144);
 }
 void _m_app_gb_load_default_images(){
-	_m_app_gb_add_image(0,&_s137);
+	_m_app_gb_add_image(0,&_s140);
+}
+void _m_app_gb_editor_load(){
 }
 void _m_app_gb_testing_load(){
 }
@@ -4683,17 +4733,166 @@ void _m_app_gb_load(){
 	_m_app_gb_load_default_animations();
 	_m_app_gb_load_default_sounds();
 	_m_app_gb_load_default_images();
+	_m_app_gb_editor_load();
 	_m_app_gb_testing_load();
 	_m_app_gb_debug_load();
 }
 void _m_app_event_load(){
 	_m_app_gb_load();
 }
+void _m_app_gb_editor_start(){
+}
+BBSTRING _m_app_rpad(BBSTRING bbt_t,BBINT bbt_n,BBSTRING bbt_p){
+	BBINT bbt_l=(bbt_t)->length;
+	if(bbt_l<bbt_n){
+		return bbStringConcat(_m_app_rep(bbt_p,(bbt_n-bbt_l)),bbt_t);
+	}else{
+		if(bbt_l==bbt_n){
+			return bbt_t;
+		}else{
+			if(bbt_l>bbt_n){
+				return brl_retro_Right(bbt_t,bbt_n);
+			}
+		}
+	}
+	return &bbEmptyString;
+}
+void __m_app_t_logchain_node_New(struct _m_app_t_logchain_node_obj* o) {
+	bbObjectCtor((BBOBJECT)o);
+	o->clas = &_m_app_t_logchain_node;
+	o->__m_app_t_logchain_node_data = &bbEmptyString;
+	o->__m_app_t_logchain_node_chain_prev = (struct _m_app_t_logchain_node_obj*)(&bbNullObject);
+	o->__m_app_t_logchain_node_chain_next = (struct _m_app_t_logchain_node_obj*)(&bbNullObject);
+}
+struct BBDebugScope_4 _m_app_t_logchain_node_scope ={
+	BBDEBUGSCOPE_USERTYPE,
+	"t_logchain_node",
+	{
+		{
+			BBDEBUGDECL_FIELD,
+			"data",
+			"$",
+			.field_offset=offsetof(struct _m_app_t_logchain_node_obj,__m_app_t_logchain_node_data)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"chain_prev",
+			":t_logchain_node",
+			.field_offset=offsetof(struct _m_app_t_logchain_node_obj,__m_app_t_logchain_node_chain_prev)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"chain_next",
+			":t_logchain_node",
+			.field_offset=offsetof(struct _m_app_t_logchain_node_obj,__m_app_t_logchain_node_chain_next)
+		},
+		{
+			BBDEBUGDECL_TYPEMETHOD,
+			"New",
+			"()",
+			.var_address=(void*)&__m_app_t_logchain_node_New
+		},
+		BBDEBUGDECL_END
+	}
+};
+struct BBClass__m_app_t_logchain_node _m_app_t_logchain_node={
+	&bbObjectClass,
+	bbObjectFree,
+	(BBDebugScope*)&_m_app_t_logchain_node_scope,
+	sizeof(struct _m_app_t_logchain_node_obj),
+	(void (*)(BBOBJECT))__m_app_t_logchain_node_New,
+	bbObjectDtor,
+	bbObjectToString,
+	bbObjectCompare,
+	bbObjectSendMessage,
+	0,
+	0,
+	offsetof(struct _m_app_t_logchain_node_obj,__m_app_t_logchain_node_chain_next) - offsetof(struct _m_app_t_logchain_node_obj,__m_app_t_logchain_node_data) + sizeof(struct _m_app_t_logchain_node_obj*)
+	,0
+	,offsetof(struct _m_app_t_logchain_node_obj,__m_app_t_logchain_node_data)
+};
+
+struct _m_app_t_logchain_node_obj* _m_app_new_logchain_node(BBSTRING bbt_s){
+	struct _m_app_t_logchain_node_obj* bbt_r=(struct _m_app_t_logchain_node_obj*)(struct _m_app_t_logchain_node_obj*)bbObjectNew((BBClass *)&_m_app_t_logchain_node);
+	bbt_r->__m_app_t_logchain_node_data =bbt_s;
+	return (struct _m_app_t_logchain_node_obj*)bbt_r;
+}
+BBINT _m_app_int_eq(struct _m_app_t_int_obj* bbt_b,BBINT bbt_v){
+	if(bbt_b->__m_app_t_int_value ==bbt_v){
+		return 1;
+	}else{
+		return 0;
+	}
+}
+BBINT _m_app_int_eq2(struct _m_app_t_int_obj* bbt_b){
+	if(bbt_b->__m_app_t_int_value !=0){
+		return 1;
+	}else{
+		return 0;
+	}
+}
+BBINT _m_app_int_gte(struct _m_app_t_int_obj* bbt_b,BBINT bbt_v){
+	if(bbt_b->__m_app_t_int_value >=bbt_v){
+		return 1;
+	}else{
+		return 0;
+	}
+}
+void _m_app_logchain_add(struct _m_app_t_logchain_obj* bbt_l,BBSTRING bbt_s){
+	struct _m_app_t_logchain_node_obj* bbt_c=(struct _m_app_t_logchain_node_obj*)_m_app_new_logchain_node(bbt_s);
+	if(_m_app_int_eq((struct _m_app_t_int_obj*)bbt_l->__m_app_t_logchain_length ,0)!=0){
+		bbt_l->__m_app_t_logchain_chain_curr =(struct _m_app_t_logchain_node_obj*)bbt_c;
+		bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_chain_next =(struct _m_app_t_logchain_node_obj*)bbt_c;
+		bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_chain_prev =(struct _m_app_t_logchain_node_obj*)bbt_c;
+		bbt_l->__m_app_t_logchain_chain_seek =(struct _m_app_t_logchain_node_obj*)bbt_c;
+	}else{
+		if(_m_app_int_gte((struct _m_app_t_int_obj*)bbt_l->__m_app_t_logchain_length ,1)!=0){
+			struct _m_app_t_logchain_node_obj* bbt_d1=(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ;
+			struct _m_app_t_logchain_node_obj* bbt_d2=(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_chain_next ;
+			bbt_l->__m_app_t_logchain_chain_curr =(struct _m_app_t_logchain_node_obj*)bbt_c;
+			bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_chain_prev =(struct _m_app_t_logchain_node_obj*)bbt_d1;
+			bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_chain_next =(struct _m_app_t_logchain_node_obj*)bbt_d2;
+			bbt_d1->__m_app_t_logchain_node_chain_next =(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ;
+			bbt_d2->__m_app_t_logchain_node_chain_prev =(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ;
+			if(bbt_l->__m_app_t_logchain_chain_seek ==bbt_d1){
+				bbt_l->__m_app_t_logchain_chain_seek =(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ;
+			}
+		}
+	}
+	_m_app_int_add((struct _m_app_t_int_obj*)bbt_l->__m_app_t_logchain_length ,1);
+}
+BBSTRING _m_app_logchain_next(struct _m_app_t_logchain_obj* bbt_l){
+	if(bbt_l->__m_app_t_logchain_length ->__m_app_t_int_value >0){
+		bbt_l->__m_app_t_logchain_chain_curr =(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_chain_next ;
+		return bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_data ;
+	}
+	return &bbEmptyString;
+}
+BBSTRING _m_app_logchain_get(struct _m_app_t_logchain_obj* bbt_l){
+	if(((BBObject*)bbt_l->__m_app_t_logchain_chain_curr )!= &bbNullObject){
+		return bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_data ;
+	}
+	return &bbEmptyString;
+}
 void _m_app_gb_testing_start(){
+	{
+		BBINT bbt_i=1;
+		for(;(bbt_i<=10);bbt_i=(bbt_i+1)){
+			_m_app_logchain_add((struct _m_app_t_logchain_obj*)_m_app_gb_testing->__m_app_t_gb_testing_logchain ,_m_app_rpad(bbStringFromInt(bbt_i),2,&_s23));
+		}
+	}
+	{
+		BBINT bbt_i2=1;
+		for(;(bbt_i2<=14);bbt_i2=(bbt_i2+1)){
+			_m_app_logchain_next((struct _m_app_t_logchain_obj*)_m_app_gb_testing->__m_app_t_gb_testing_logchain );
+			brl_standardio_Print(_m_app_logchain_get((struct _m_app_t_logchain_obj*)_m_app_gb_testing->__m_app_t_gb_testing_logchain ));
+		}
+	}
 }
 void _m_app_gb_debug_start(){
 }
 void _m_app_gb_start(){
+	_m_app_gb_editor_start();
 	_m_app_gb_testing_start();
 	_m_app_gb_debug_start();
 }
@@ -4838,7 +5037,7 @@ void _m_app_gb_console_update(BBFLOAT bbt_d){
 					_m_app_string_set((struct _m_app_t_string_obj*)_m_app_gb_console_input,&bbEmptyString);
 				}else{
 					if(((BBINT)bbt_)==9){
-						_m_app_gb_console_add_input_char(&_s60);
+						_m_app_gb_console_add_input_char(&_s64);
 					}else{
 						_m_app_gb_console_add_input_char(bbStringFromChar((BBINT)bbt_u));
 					}
@@ -4872,6 +5071,15 @@ BBINT _m_app_float_lt(struct _m_app_t_float_obj* bbt_b,BBFLOAT bbt_v){
 BBINT _m_app_bool_nt(struct _m_app_t_bool_obj* bbt_b){
 	return (!(bbt_b->__m_app_t_bool_value !=0));
 }
+void _m_app_gb_visual_take_screenshot(){
+	struct brl_max2d_image_TImage_obj* bbt_u=(struct brl_max2d_image_TImage_obj*)brl_max2d_CreateImage(((BBINT)_m_app_gb_visual_letterbox_rect->__m_app_t_rect_w ),((BBINT)_m_app_gb_visual_letterbox_rect->__m_app_t_rect_h ),8,-1);
+	brl_max2d_GrabImage((struct brl_max2d_image_TImage_obj*)bbt_u,((BBINT)_m_app_gb_visual_letterbox_rect->__m_app_t_rect_x ),((BBINT)_m_app_gb_visual_letterbox_rect->__m_app_t_rect_y ),0);
+	BBSTRING bbt_ss=bbStringConcat(bbStringConcat(&_s43,_m_app_rpad(bbStringFromInt(_m_app_gb_visual_screenshot_id->__m_app_t_int_value ),3,&_s23)),&_s44);
+	_m_app_int_add((struct _m_app_t_int_obj*)_m_app_gb_visual_screenshot_id,1);
+	struct brl_pixmap_TPixmap_obj* bbt_x=(struct brl_pixmap_TPixmap_obj*)brl_max2d_LockImage((struct brl_max2d_image_TImage_obj*)bbt_u,0,1,1);
+	BBINT bbt_m=brl_pngloader_SavePixmapPNG((struct brl_pixmap_TPixmap_obj*)bbt_x,(BBOBJECT)bbt_ss,0);
+	brl_max2d_UnlockImage((struct brl_max2d_image_TImage_obj*)bbt_u,0);
+}
 void _m_app_gb_visual_update(BBFLOAT bbt_d){
 	if(brl_polledinput_KeyHit(113)!=0){
 		if(_m_app_float_gt((struct _m_app_t_float_obj*)_m_app_gb_visual_windowscale,1.0f)!=0){
@@ -4886,26 +5094,15 @@ void _m_app_gb_visual_update(BBFLOAT bbt_d){
 	if(brl_polledinput_KeyHit(115)!=0){
 		_m_app_gb_visual_set_fullscreen(_m_app_bool_nt((struct _m_app_t_bool_obj*)_m_app_gb_visual_fullscreen));
 	}
+	if(brl_polledinput_KeyHit(123)!=0){
+		_m_app_gb_visual_take_screenshot();
+	}
 }
 BBFLOAT _m_app_gb_mouse_virtual_tile_x(){
 	return (((((BBFLOAT)brl_polledinput_MouseX())-_m_app_gb_visual_letterbox_rect->__m_app_t_rect_x )/10.0f)/_m_app_float_get((struct _m_app_t_float_obj*)_m_app_gb_visual_pixelscale));
 }
 BBFLOAT _m_app_gb_mouse_virtual_tile_y(){
 	return (((((BBFLOAT)brl_polledinput_MouseY())-_m_app_gb_visual_letterbox_rect->__m_app_t_rect_y )/10.0f)/_m_app_float_get((struct _m_app_t_float_obj*)_m_app_gb_visual_pixelscale));
-}
-BBINT _m_app_int_eq(struct _m_app_t_int_obj* bbt_b,BBINT bbt_v){
-	if(bbt_b->__m_app_t_int_value ==bbt_v){
-		return 1;
-	}else{
-		return 0;
-	}
-}
-BBINT _m_app_int_eq2(struct _m_app_t_int_obj* bbt_b){
-	if(bbt_b->__m_app_t_int_value !=0){
-		return 1;
-	}else{
-		return 0;
-	}
 }
 void _m_app_number_to_low(struct _m_app_t_number_obj* bbt_n){
 	bbt_n->__m_app_t_number_value =bbt_n->__m_app_t_number_low ;
@@ -4978,7 +5175,9 @@ void _m_app_gb_scene_update(BBFLOAT bbt_d){
 	_m_app_gb_scene_uptime=(_m_app_gb_scene_uptime+bbt_d);
 }
 void _m_app_gb_save_settings(){
-	_m_app_gbml_save((struct _m_app_t_dict_obj*)_m_app_gb_settings,&_s136);
+	_m_app_gbml_save((struct _m_app_t_dict_obj*)_m_app_gb_settings,&_s139);
+}
+void _m_app_gb_editor_update(BBFLOAT bbt_d){
 }
 void _m_app_gb_testing_update(BBFLOAT bbt_d){
 }
@@ -5005,27 +5204,28 @@ void _m_app_gb_debug_update(BBFLOAT bbt_d){
 		_m_app_number_add((struct _m_app_t_number_obj*)_m_app_gb_visual_scanlines_thick,1.00000000f);
 	}
 }
-void _m_app_gb_update(BBFLOAT bbt_d){
+void _m_app_gb_update(){
 	_m_app_gb_timing_update();
-	BBFLOAT bbt_e=_m_app_gb_get_deltatime();
-	_m_app_gb_console_update(bbt_e);
-	_m_app_gb_visual_update(bbt_e);
-	_m_app_gb_mouse_update(bbt_e);
-	_m_app_gb_pulser_update(bbt_e);
+	BBFLOAT bbt_d=_m_app_gb_get_deltatime();
+	_m_app_gb_console_update(bbt_d);
+	_m_app_gb_visual_update(bbt_d);
+	_m_app_gb_mouse_update(bbt_d);
+	_m_app_gb_pulser_update(bbt_d);
 	if(_m_app_bool_eq((struct _m_app_t_bool_obj*)_m_app_gb_console_enabled,0)!=0){
-		_m_app_gb_controller_update(bbt_e);
-		_m_app_gb_scene_update(bbt_e*_m_app_gb_speed->__m_app_t_number_value );
+		_m_app_gb_controller_update(bbt_d);
+		_m_app_gb_scene_update(bbt_d*_m_app_gb_speed->__m_app_t_number_value );
 	}
-	_m_app_timer_update((struct _m_app_t_timer_obj*)_m_app_gb_autosave_timer,bbt_e);
+	_m_app_timer_update((struct _m_app_t_timer_obj*)_m_app_gb_autosave_timer,bbt_d);
 	if(_m_app_timer_finished((struct _m_app_t_timer_obj*)_m_app_gb_autosave_timer)!=0){
 		_m_app_gb_save_settings();
 		_m_app_timer_reset((struct _m_app_t_timer_obj*)_m_app_gb_autosave_timer);
 	}
-	_m_app_gb_testing_update(bbt_e);
-	_m_app_gb_debug_update(bbt_e);
+	_m_app_gb_editor_update(bbt_d);
+	_m_app_gb_testing_update(bbt_d);
+	_m_app_gb_debug_update(bbt_d);
 }
-void _m_app_event_update(BBFLOAT bbt_d){
-	_m_app_gb_update(bbt_d);
+void _m_app_event_update(){
+	_m_app_gb_update();
 }
 void _m_app_gb_debug_draw_grid_bg(){
 }
@@ -5038,22 +5238,6 @@ void _m_app_gb_scene_draw(BBFLOAT bbt_x,BBFLOAT bbt_y){
 	if((_m_app_gb_scene_draw_fn!=0) && (_m_app_gb_scene_draw_fn!=&brl_blitz_NullFunctionError)){
 		_m_app_gb_scene_draw_fn(bbt_x,bbt_y);
 	}
-}
-BBFLOAT _m_app_frand(BBFLOAT bbt_l,BBFLOAT bbt_h){
-	if(bbt_l>bbt_h){
-		_m_app_fswap((&bbt_l),(&bbt_h));
-	}
-	return (bbt_l+((bbt_h-bbt_l)*brl_random_RndFloat()));
-}
-void _m_app_bitmap_draw_dot(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt_y,BBFLOAT bbt_rr,BBFLOAT bbt_gg,BBFLOAT bbt_bb,BBFLOAT bbt_aa){
-	bbt_x=_m_app_iclamp(bbt_x,0,(bbt_c->__m_app_t_bitmap_width -1));
-	bbt_y=_m_app_iclamp(bbt_y,0,(bbt_c->__m_app_t_bitmap_height -1));
-	bbt_rr=_m_app_clamp(bbt_rr,0.00000000f,3.00000000f);
-	bbt_gg=_m_app_clamp(bbt_gg,0.00000000f,3.00000000f);
-	bbt_bb=_m_app_clamp(bbt_bb,0.00000000f,3.00000000f);
-	bbt_aa=_m_app_clamp(bbt_aa,0.00000000f,3.00000000f);
-	BBUINT* bbt_=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
-	_m_app_color_set((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_)) * ((BBUINT)bbt_x) + ((BBUINT)bbt_y)],bbt_rr,bbt_gg,bbt_bb,bbt_aa);
 }
 BBINT _m_app_roundint(BBFLOAT bbt_f){
 	BBFLOAT bbt_n=.00000000f;
@@ -5138,14 +5322,9 @@ void _m_app_gb_graph_draw_image(BBFLOAT bbt_x,BBFLOAT bbt_y,struct brl_max2d_ima
 void _m_app_bitmap_draw(struct _m_app_t_bitmap_obj* bbt_c,BBFLOAT bbt_x,BBFLOAT bbt_y){
 	_m_app_gb_graph_draw_image(bbt_x,bbt_y,(struct brl_max2d_image_TImage_obj*)bbt_c->__m_app_t_bitmap_image );
 }
-void _m_app_image_draw(struct _m_app_t_image_obj* bbt_u,BBFLOAT bbt_x,BBFLOAT bbt_y){
-	_m_app_gb_graph_draw_image(bbt_x,bbt_y,(struct brl_max2d_image_TImage_obj*)bbt_u->__m_app_t_image_image );
+void _m_app_gb_editor_draw(BBFLOAT bbt_x,BBFLOAT bbt_y){
 }
 void _m_app_gb_testing_draw(BBFLOAT bbt_x,BBFLOAT bbt_y){
-	_m_app_bitmap_draw_dot((struct _m_app_t_bitmap_obj*)_m_app_gb_testing->__m_app_t_gb_testing_bitmap ,brl_random_Rand(0,99),brl_random_Rand(0,99),_m_app_frand(0.00000000f,3.00000000f),_m_app_frand(0.00000000f,3.00000000f),_m_app_frand(0.00000000f,3.00000000f),3.00000000f);
-	_m_app_bitmap_sync((struct _m_app_t_bitmap_obj*)_m_app_gb_testing->__m_app_t_gb_testing_bitmap );
-	_m_app_bitmap_draw((struct _m_app_t_bitmap_obj*)_m_app_gb_testing->__m_app_t_gb_testing_bitmap ,(bbt_x+10.0000000f),bbt_y);
-	_m_app_image_draw((struct _m_app_t_image_obj*)_m_app_gb_testing->__m_app_t_gb_testing_image ,bbt_x,bbt_y);
 }
 void _m_app_gb_visual_set_virtual_scale(BBFLOAT bbt_f){
 	_m_app_float_set((struct _m_app_t_float_obj*)_m_app_gb_visual_virtualscale,bbt_f);
@@ -5264,46 +5443,17 @@ void _m_app_gb_graph_draw_tile_text(BBFLOAT bbt_x,BBFLOAT bbt_y,BBINT bbt_f,BBST
 		}
 	}
 }
-BBSTRING _m_app_rpad(BBSTRING bbt_t,BBINT bbt_n,BBSTRING bbt_p){
-	BBINT bbt_l=(bbt_t)->length;
-	if(bbt_l<bbt_n){
-		return bbStringConcat(_m_app_rep(bbt_p,(bbt_n-bbt_l)),bbt_t);
-	}else{
-		if(bbt_l==bbt_n){
-			return bbt_t;
-		}else{
-			if(bbt_l>bbt_n){
-				return brl_retro_Right(bbt_t,bbt_n);
-			}
-		}
-	}
-	return &bbEmptyString;
-}
 BBSTRING _m_app_stopwatch_tostring(struct _m_app_t_stopwatch_obj* bbt_s){
 	return bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(bbStringFromInt(bbt_s->__m_app_t_stopwatch_days ),&_s20),_m_app_rpad(bbStringFromInt(bbt_s->__m_app_t_stopwatch_hours ),2,&_s23)),&_s20),_m_app_rpad(bbStringFromInt(bbt_s->__m_app_t_stopwatch_minutes ),2,&_s23)),&_s20),_m_app_rpad(bbStringFromInt(bbt_s->__m_app_t_stopwatch_seconds ),2,&_s23));
-}
-BBSTRING _m_app_strdec(BBFLOAT bbt_f,BBINT bbt_d){
-	bbt_d=_m_app_iclamp(bbt_d,0,10);
-	if(((BBDOUBLE)brl_blitz_Abs2(bbt_f))<(1.0*bbFloatPow(10.0, ((BBDOUBLE)-bbt_d)))){
-		bbt_f=0.0f;
-	}
-	BBSTRING bbt_r=&bbEmptyString;
-	BBARRAY bbt_w=_m_app_tokenize(bbStringFromFloat(bbt_f),&_s42,1);
-	if(bbt_d>0){
-		bbt_r=bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_w,1))[0U],&_s42),brl_retro_Left(((BBSTRING*)BBARRAYDATA(bbt_w,1))[1U],bbt_d));
-	}else{
-		bbt_r=((BBSTRING*)BBARRAYDATA(bbt_w,1))[0U];
-	}
-	return bbt_r;
 }
 void _m_app_gb_debug_draw_panel(){
 	_m_app_gb_graph_enable_camera(0);
 	_m_app_gb_graph_draw_tile_rect(0.00000000f,0.00000000f,0,27.0000000f,23.0000000f,40,1);
-	_m_app_gb_graph_draw_tile_text(0.00000000f,0.00000000f,1,bbStringConcat(&_s128,bbStringFromSizet(bbGCMemAlloced())));
+	_m_app_gb_graph_draw_tile_text(0.00000000f,0.00000000f,1,bbStringConcat(&_s131,bbStringFromSizet(bbGCMemAlloced())));
 	_m_app_gb_graph_draw_tile_text(6.00000000f,0.00000000f,1,bbStringConcat(bbStringConcat(bbStringFromInt((BBINT)_m_app_gb_mouse_virtual_tile_x()),&_s14),bbStringFromInt((BBINT)_m_app_gb_mouse_virtual_tile_y())));
-	_m_app_gb_graph_draw_tile_text(9.00000000f,0.00000000f,1,bbStringConcat(&_s129,bbStringFromInt(_m_app_gb_graph_pixelmode->__m_app_t_bool_value )));
-	_m_app_gb_graph_draw_tile_text(11.0000000f,0.00000000f,1,bbStringConcat(&_s130,bbStringFromInt((BBINT)_m_app_gb_visual_windowscale->__m_app_t_float_value )));
-	_m_app_gb_graph_draw_tile_text(13.0000000f,0.00000000f,1,bbStringConcat(&_s131,bbStringFromInt(_m_app_gb_timing_fps_value)));
+	_m_app_gb_graph_draw_tile_text(9.00000000f,0.00000000f,1,bbStringConcat(&_s132,bbStringFromInt(_m_app_gb_graph_pixelmode->__m_app_t_bool_value )));
+	_m_app_gb_graph_draw_tile_text(11.0000000f,0.00000000f,1,bbStringConcat(&_s133,bbStringFromInt((BBINT)_m_app_gb_visual_windowscale->__m_app_t_float_value )));
+	_m_app_gb_graph_draw_tile_text(13.0000000f,0.00000000f,1,bbStringConcat(&_s134,bbStringFromInt(_m_app_gb_timing_fps_value)));
 	_m_app_gb_graph_draw_tile_text(16.0000000f,0.00000000f,1,_m_app_stopwatch_tostring((struct _m_app_t_stopwatch_obj*)_m_app_gb_timing_stopwatch));
 	BBFLOAT bbt_u=0.00000000f;
 	{
@@ -5358,7 +5508,7 @@ void _m_app_gb_console_draw(BBFLOAT bbt_x,BBFLOAT bbt_y){
 		{
 			BBINT bbt_i=0;
 			for(;(bbt_i<=22);bbt_i=(bbt_i+1)){
-				_m_app_gb_graph_draw_tile_text(0.00000000f,((BBFLOAT)bbt_i),1,((struct _m_app_t_string_obj**)BBARRAYDATA(_m_app_gb_console_lines,1))[((BBUINT)bbt_i)]->__m_app_t_string_value );
+				_m_app_gb_graph_draw_tile_text(0.25f,((BBFLOAT)bbt_i),1,((struct _m_app_t_string_obj**)BBARRAYDATA(_m_app_gb_console_lines,1))[((BBUINT)bbt_i)]->__m_app_t_string_value );
 			}
 		}
 		_m_app_gb_graph_draw_tile_text(0.00000000f,23.0000000f,1,brl_retro_Right(_m_app_gb_console_input->__m_app_t_string_value ,79));
@@ -5406,32 +5556,38 @@ void _m_app_gb_mouse_draw(BBFLOAT bbt_x,BBFLOAT bbt_y){
 void _m_app_gb_draw(BBFLOAT bbt_x,BBFLOAT bbt_y){
 	_m_app_gb_debug_draw_bg(bbt_x,bbt_y);
 	_m_app_gb_scene_draw(bbt_x,bbt_y);
+	_m_app_bitmap_draw((struct _m_app_t_bitmap_obj*)_m_app_gb_bitmap,bbt_x,bbt_y);
+	_m_app_gb_editor_draw(bbt_x,bbt_y);
 	_m_app_gb_testing_draw(bbt_x,bbt_y);
 	_m_app_gb_visual_draw(bbt_x,bbt_y);
 	_m_app_gb_debug_draw_fg(bbt_x,bbt_y);
 	_m_app_gb_console_draw(bbt_x,bbt_y);
 	_m_app_gb_mouse_draw(bbt_x,bbt_y);
 }
-void _m_app_event_draw(BBFLOAT bbt_x,BBFLOAT bbt_y){
-	_m_app_gb_draw(bbt_x,bbt_y);
+void _m_app_event_draw(){
+	_m_app_gb_draw(0.00000000f,0.00000000f);
+}
+void _m_app_gb_editor_end(){
 }
 void _m_app_gb_visual_end(){
 	struct _m_app_t_dict_obj* bbt_d=(struct _m_app_t_dict_obj*)_m_app_new_dict();
-	_m_app_dict_set_float((struct _m_app_t_dict_obj*)bbt_d,&_s49,_m_app_gb_visual_windowscale->__m_app_t_float_value );
-	_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_d,&_s50,_m_app_gb_visual_fullscreen->__m_app_t_bool_value );
-	_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_d,&_s51,_m_app_gb_visual_use_scanlines->__m_app_t_bool_value );
-	_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_d,&_s52,((BBBYTE)_m_app_gb_visual_scanlines_thick->__m_app_t_number_value ));
-	_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_d,&_s53,((BBBYTE)_m_app_gb_visual_scanlines_style->__m_app_t_number_value ));
-	_m_app_dict_set_dir((struct _m_app_t_dict_obj*)_m_app_gb_settings,&_s54,(struct _m_app_t_dict_obj*)bbt_d);
+	_m_app_dict_set_float((struct _m_app_t_dict_obj*)bbt_d,&_s52,_m_app_gb_visual_windowscale->__m_app_t_float_value );
+	_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_d,&_s53,_m_app_gb_visual_fullscreen->__m_app_t_bool_value );
+	_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_d,&_s54,_m_app_gb_visual_use_scanlines->__m_app_t_bool_value );
+	_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_d,&_s55,((BBBYTE)_m_app_gb_visual_scanlines_thick->__m_app_t_number_value ));
+	_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_d,&_s56,((BBBYTE)_m_app_gb_visual_scanlines_style->__m_app_t_number_value ));
+	_m_app_dict_set_int((struct _m_app_t_dict_obj*)bbt_d,&_s57,_m_app_gb_visual_screenshot_id->__m_app_t_int_value );
+	_m_app_dict_set_dir((struct _m_app_t_dict_obj*)_m_app_gb_settings,&_s58,(struct _m_app_t_dict_obj*)bbt_d);
 }
 void _m_app_gb_testing_end(){
 }
 void _m_app_gb_debug_end(){
 }
 void _m_app_gb_achievements_end(){
-	_m_app_gbml_save((struct _m_app_t_dict_obj*)_m_app_gb_achievements,&_s83);
+	_m_app_gbml_save((struct _m_app_t_dict_obj*)_m_app_gb_achievements,&_s87);
 }
 void _m_app_gb_end(){
+	_m_app_gb_editor_end();
 	_m_app_gb_visual_end();
 	_m_app_gb_testing_end();
 	_m_app_gb_debug_end();
@@ -5447,8 +5603,8 @@ void _m_app_event_main(){
 	_m_app_event_start();
 	while((_m_app_bool_eq((struct _m_app_t_bool_obj*)_m_app_gb_running,1)!=0) && (brl_polledinput_AppTerminate()==0)){
 		brl_max2d_Cls();
-		_m_app_event_update(0.00000000f);
-		_m_app_event_draw(0.00000000f,0.00000000f);
+		_m_app_event_update();
+		_m_app_event_draw();
 		brl_graphics_Flip(1);
 	}
 	_m_app_event_end();
@@ -6329,6 +6485,54 @@ struct BBClass__m_app_t_lightcube _m_app_t_lightcube={
 	,offsetof(struct _m_app_t_lightcube_obj,__m_app_t_lightcube_drawstack)
 };
 
+void __m_app_t_image_New(struct _m_app_t_image_obj* o) {
+	bbObjectCtor((BBOBJECT)o);
+	o->clas = &_m_app_t_image;
+	o->__m_app_t_image_image = (struct brl_max2d_image_TImage_obj*)(&bbNullObject);
+	o->__m_app_t_image_path = &bbEmptyString;
+}
+struct BBDebugScope_3 _m_app_t_image_scope ={
+	BBDEBUGSCOPE_USERTYPE,
+	"t_image",
+	{
+		{
+			BBDEBUGDECL_FIELD,
+			"image",
+			":TImage",
+			.field_offset=offsetof(struct _m_app_t_image_obj,__m_app_t_image_image)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"path",
+			"$",
+			.field_offset=offsetof(struct _m_app_t_image_obj,__m_app_t_image_path)
+		},
+		{
+			BBDEBUGDECL_TYPEMETHOD,
+			"New",
+			"()",
+			.var_address=(void*)&__m_app_t_image_New
+		},
+		BBDEBUGDECL_END
+	}
+};
+struct BBClass__m_app_t_image _m_app_t_image={
+	&bbObjectClass,
+	bbObjectFree,
+	(BBDebugScope*)&_m_app_t_image_scope,
+	sizeof(struct _m_app_t_image_obj),
+	(void (*)(BBOBJECT))__m_app_t_image_New,
+	bbObjectDtor,
+	bbObjectToString,
+	bbObjectCompare,
+	bbObjectSendMessage,
+	0,
+	0,
+	offsetof(struct _m_app_t_image_obj,__m_app_t_image_path) - offsetof(struct _m_app_t_image_obj,__m_app_t_image_image) + sizeof(BBSTRING)
+	,0
+	,offsetof(struct _m_app_t_image_obj,__m_app_t_image_image)
+};
+
 void __m_app_t_drawcmd_New(struct _m_app_t_drawcmd_obj* o) {
 	bbObjectCtor((BBOBJECT)o);
 	o->clas = &_m_app_t_drawcmd;
@@ -6805,13 +7009,6 @@ BBINT _m_app_int_gt(struct _m_app_t_int_obj* bbt_b,BBINT bbt_v){
 }
 BBINT _m_app_int_lt(struct _m_app_t_int_obj* bbt_b,BBINT bbt_v){
 	if(bbt_b->__m_app_t_int_value <bbt_v){
-		return 1;
-	}else{
-		return 0;
-	}
-}
-BBINT _m_app_int_gte(struct _m_app_t_int_obj* bbt_b,BBINT bbt_v){
-	if(bbt_b->__m_app_t_int_value >=bbt_v){
 		return 1;
 	}else{
 		return 0;
@@ -8300,6 +8497,7 @@ struct _m_app_t_color_obj* _m_app_new_color_from_argb(BBINT bbt_ii){
 	bbt_r->__m_app_t_color_r =((BBFLOAT)_m_app_argb_r(bbt_ii));
 	bbt_r->__m_app_t_color_g =((BBFLOAT)_m_app_argb_g(bbt_ii));
 	bbt_r->__m_app_t_color_b =((BBFLOAT)_m_app_argb_b(bbt_ii));
+	bbt_r->__m_app_t_color_depth =0;
 	return (struct _m_app_t_color_obj*)bbt_r;
 }
 struct _m_app_t_color_obj* _m_app_new_color_from_rgba(BBINT bbt_ii){
@@ -8308,10 +8506,25 @@ struct _m_app_t_color_obj* _m_app_new_color_from_rgba(BBINT bbt_ii){
 	bbt_r->__m_app_t_color_g =((BBFLOAT)_m_app_rgba_g(bbt_ii));
 	bbt_r->__m_app_t_color_b =((BBFLOAT)_m_app_rgba_b(bbt_ii));
 	bbt_r->__m_app_t_color_a =((BBFLOAT)_m_app_rgba_a(bbt_ii));
+	bbt_r->__m_app_t_color_depth =0;
 	return (struct _m_app_t_color_obj*)bbt_r;
 }
 struct _m_app_t_color_obj* _m_app_clone_color(struct _m_app_t_color_obj* bbt_c){
-	return (struct _m_app_t_color_obj*)_m_app_new_color(bbt_c->__m_app_t_color_r ,bbt_c->__m_app_t_color_g ,bbt_c->__m_app_t_color_b ,bbt_c->__m_app_t_color_a );
+	return (struct _m_app_t_color_obj*)_m_app_new_color(bbt_c->__m_app_t_color_r ,bbt_c->__m_app_t_color_g ,bbt_c->__m_app_t_color_b ,bbt_c->__m_app_t_color_a ,bbt_c->__m_app_t_color_depth );
+}
+void _m_app_color_fit_to_depth(struct _m_app_t_color_obj* bbt_c){
+	if(bbt_c->__m_app_t_color_depth >=2){
+		BBFLOAT bbt_q=((BBFLOAT)(3/(bbt_c->__m_app_t_color_depth -1)));
+	}
+}
+void _m_app_color_set_depth(struct _m_app_t_color_obj* bbt_c,BBINT bbt_d){
+	if(bbt_d<=0){
+		bbt_c->__m_app_t_color_depth =0;
+	}else{
+		if(bbt_d>=2){
+			bbt_c->__m_app_t_color_depth =bbt_d;
+		}
+	}
 }
 void _m_app_color_set_c(struct _m_app_t_color_obj* bbt_c,struct _m_app_t_color_obj* bbt_d){
 	bbt_c->__m_app_t_color_r =bbt_d->__m_app_t_color_r ;
@@ -8371,6 +8584,9 @@ void _m_app_color_div_alpha(struct _m_app_t_color_obj* bbt_c,BBFLOAT bbt_a){
 	if(bbt_a!=0.00000000f){
 		bbt_c->__m_app_t_color_a =_m_app_clamp((bbt_c->__m_app_t_color_a /bbt_a),0.00000000f,3.00000000f);
 	}
+}
+BBINT _m_app_color_to_argb(struct _m_app_t_color_obj* bbt_c){
+	return _m_app_argb(((BBBYTE)(bbt_c->__m_app_t_color_a *85.0000000f)),((BBBYTE)(bbt_c->__m_app_t_color_r *85.0000000f)),((BBBYTE)(bbt_c->__m_app_t_color_g *85.0000000f)),((BBBYTE)(bbt_c->__m_app_t_color_b *85.0000000f)));
 }
 struct _m_app_t_matrix_obj* _m_app_new_matrix(BBINT bbt_h,BBINT bbt_w){
 	bbt_h=((BBINT)_m_app_low(((BBFLOAT)bbt_h),1.00000000f));
@@ -8516,13 +8732,6 @@ BBSHORT _m_app_dictval_get_short(struct _m_app_t_dictval_obj* bbt_d){
 		return 0;
 	}
 }
-BBINT _m_app_dictval_get_int(struct _m_app_t_dictval_obj* bbt_d){
-	if(bbt_d->__m_app_t_dictval_id ==3){
-		return bbt_d->__m_app_t_dictval_tint ->__m_app_t_int_value ;
-	}else{
-		return 0;
-	}
-}
 BBLONG _m_app_dictval_get_long(struct _m_app_t_dictval_obj* bbt_d){
 	if(bbt_d->__m_app_t_dictval_id ==4){
 		return bbt_d->__m_app_t_dictval_tlong ->__m_app_t_long_value ;
@@ -8580,13 +8789,6 @@ BBSHORT _m_app_dict_get_short(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_k){
 	BBINT bbt_u=_m_app_dict_find_pos((struct _m_app_t_dict_obj*)bbt_d,bbt_k);
 	if(bbt_u!=-1){
 		return _m_app_dictval_get_short((struct _m_app_t_dictval_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_u)]);
-	}
-	return 0;
-}
-BBINT _m_app_dict_get_int(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_k){
-	BBINT bbt_u=_m_app_dict_find_pos((struct _m_app_t_dict_obj*)bbt_d,bbt_k);
-	if(bbt_u!=-1){
-		return _m_app_dictval_get_int((struct _m_app_t_dictval_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_u)]);
 	}
 	return 0;
 }
@@ -8829,27 +9031,6 @@ BBSHORT _m_app_dict_read_short(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_s){
 	}
 	return 0;
 }
-BBINT _m_app_dict_read_int(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_s){
-	BBARRAY bbt_w=_m_app_tokenize(bbt_s,&_s17,0);
-	struct _m_app_t_dict_obj* bbt_g=(struct _m_app_t_dict_obj*)&bbNullObject;
-	if((bbt_w->scales[0])==0){
-		return 0;
-	}else{
-		if((bbt_w->scales[0])==1){
-			return _m_app_dict_get_int((struct _m_app_t_dict_obj*)bbt_d,((BBSTRING*)BBARRAYDATA(bbt_w,1))[0U]);
-		}else{
-			if((bbt_w->scales[0])>1){
-				bbt_g=(struct _m_app_t_dict_obj*)_m_app_dict_goto_dir((struct _m_app_t_dict_obj*)bbt_d,bbArraySlice("$",bbt_w,0,(bbt_w->scales[0])),0);
-				if(((BBObject*)bbt_g)!= &bbNullObject){
-					return _m_app_dict_get_int((struct _m_app_t_dict_obj*)bbt_g,((BBSTRING*)BBARRAYDATA(bbt_w,1))[((BBUINT)((bbt_w->scales[0])-1))]);
-				}else{
-					return 0;
-				}
-			}
-		}
-	}
-	return 0;
-}
 BBLONG _m_app_dict_read_long(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_s){
 	BBARRAY bbt_w=_m_app_tokenize(bbt_s,&_s17,0);
 	struct _m_app_t_dict_obj* bbt_g=(struct _m_app_t_dict_obj*)&bbNullObject;
@@ -9016,7 +9197,7 @@ struct _m_app_t_sprite_obj* _m_app_new_sprite(BBINT bbt_im,BBFLOAT bbt_ix,BBINT 
 	bbt_r->__m_app_t_sprite_handle =(struct _m_app_t_point_obj*)_m_app_new_point(0.00000000f,0.00000000f);
 	bbt_r->__m_app_t_sprite_angle =(struct _m_app_t_number_obj*)_m_app_new_number(0.00000000f,0.00000000f,1000.00000f,1);
 	bbt_r->__m_app_t_sprite_scale =(struct _m_app_t_point_obj*)_m_app_new_point(1.00000000f,1.00000000f);
-	bbt_r->__m_app_t_sprite_color =(struct _m_app_t_color_obj*)_m_app_new_color(3.00000000f,3.00000000f,3.00000000f,3.00000000f);
+	bbt_r->__m_app_t_sprite_color =(struct _m_app_t_color_obj*)_m_app_new_color(3.00000000f,3.00000000f,3.00000000f,3.00000000f,0);
 	bbt_r->__m_app_t_sprite_mode =(struct _m_app_t_byte_obj*)_m_app_new_byte(0);
 	bbt_r->__m_app_t_sprite_anim =(struct _m_app_t_animation_obj*)&bbNullObject;
 	return (struct _m_app_t_sprite_obj*)bbt_r;
@@ -9218,21 +9399,15 @@ void _m_app_sprite_draw3d(struct _m_app_t_sprite_obj* bbt_s,BBFLOAT bbt_x,BBFLOA
 	_m_app_gb_graph_draw_tile_box3d((bbt_s->__m_app_t_sprite_pos ->__m_app_t_point3_x +bbt_x),(bbt_s->__m_app_t_sprite_pos ->__m_app_t_point3_y +bbt_y),(bbt_s->__m_app_t_sprite_pos ->__m_app_t_point3_z +bbt_z),bbt_s->__m_app_t_sprite_ibox ->__m_app_t_ibox_id ,bbt_s->__m_app_t_sprite_ibox ->__m_app_t_ibox_x ,bbt_s->__m_app_t_sprite_ibox ->__m_app_t_ibox_y ,bbt_s->__m_app_t_sprite_ibox ->__m_app_t_ibox_w ,bbt_s->__m_app_t_sprite_ibox ->__m_app_t_ibox_h );
 	_m_app_gb_graph_reset();
 }
-BBINT _m_app_ilow(BBINT bbt_a,BBINT bbt_b){
-	if(bbt_a<bbt_b){
-		return bbt_b;
-	}
-	return bbt_a;
-}
 struct _m_app_t_button_obj* _m_app_new_button(BBINT bbt_tx,BBINT bbt_ty){
 	bbt_tx=_m_app_ilow(bbt_tx,2);
 	bbt_ty=_m_app_ilow(bbt_ty,2);
 	struct _m_app_t_button_obj* bbt_r=(struct _m_app_t_button_obj*)(struct _m_app_t_button_obj*)bbObjectNew((BBClass *)&_m_app_t_button);
 	bbt_r->__m_app_t_button_rect =(struct _m_app_t_rect_obj*)_m_app_new_rect(0.00000000f,0.00000000f,((BBFLOAT)bbt_tx),((BBFLOAT)bbt_ty));
 	bbt_r->__m_app_t_button_ibox =(struct _m_app_t_ibox_obj*)_m_app_new_ibox(0,20.0000000f,12.0000000f,1.00000000f,1.00000000f);
-	bbt_r->__m_app_t_button_color_normal =(struct _m_app_t_color_obj*)_m_app_new_color(3.00000000f,3.00000000f,3.00000000f,3.00000000f);
-	bbt_r->__m_app_t_button_color_hover =(struct _m_app_t_color_obj*)_m_app_new_color(0.00000000f,3.00000000f,0.00000000f,3.00000000f);
-	bbt_r->__m_app_t_button_color_press =(struct _m_app_t_color_obj*)_m_app_new_color(0.00000000f,1.00000000f,0.00000000f,3.00000000f);
+	bbt_r->__m_app_t_button_color_normal =(struct _m_app_t_color_obj*)_m_app_new_color(3.00000000f,3.00000000f,3.00000000f,3.00000000f,0);
+	bbt_r->__m_app_t_button_color_hover =(struct _m_app_t_color_obj*)_m_app_new_color(0.00000000f,3.00000000f,0.00000000f,3.00000000f,0);
+	bbt_r->__m_app_t_button_color_press =(struct _m_app_t_color_obj*)_m_app_new_color(0.00000000f,1.00000000f,0.00000000f,3.00000000f,0);
 	bbt_r->__m_app_t_button_state =(struct _m_app_t_int_obj*)_m_app_new_int(0);
 	bbt_r->__m_app_t_button_presstime =(struct _m_app_t_number_obj*)_m_app_new_number(0.00000000f,0.00000000f,0.25f,0);
 	bbt_r->__m_app_t_button_margin =(struct _m_app_t_float_obj*)_m_app_new_float(0.5f);
@@ -9243,12 +9418,12 @@ void _m_app_button_set_pos(struct _m_app_t_button_obj* bbt_b,BBFLOAT bbt_x,BBFLO
 	bbt_b->__m_app_t_button_rect ->__m_app_t_rect_x =bbt_x;
 	bbt_b->__m_app_t_button_rect ->__m_app_t_rect_y =bbt_y;
 }
-BBFLOAT _m_app_fround(BBFLOAT bbt_f,BBFLOAT bbt_d){
-	return ((BBFLOAT)bbRound((double)((BBDOUBLE)bbt_f)));
+BBFLOAT _m_app_froundint(BBFLOAT bbt_f){
+	return ((BBFLOAT)_m_app_roundint(bbt_f));
 }
 void _m_app_button_set_size(struct _m_app_t_button_obj* bbt_b,BBFLOAT bbt_w,BBFLOAT bbt_h){
-	bbt_b->__m_app_t_button_rect ->__m_app_t_rect_w =_m_app_low(_m_app_fround(bbt_w,1.0f),0.00000000f);
-	bbt_b->__m_app_t_button_rect ->__m_app_t_rect_h =_m_app_low(_m_app_fround(bbt_h,1.0f),0.00000000f);
+	bbt_b->__m_app_t_button_rect ->__m_app_t_rect_w =_m_app_low(_m_app_froundint(bbt_w),0.00000000f);
+	bbt_b->__m_app_t_button_rect ->__m_app_t_rect_h =_m_app_low(_m_app_froundint(bbt_h),0.00000000f);
 }
 void _m_app_button_set_imgpos(struct _m_app_t_button_obj* bbt_b,BBFLOAT bbt_tx,BBFLOAT bbt_ty){
 	bbt_b->__m_app_t_button_ibox ->__m_app_t_ibox_x =bbt_tx;
@@ -9357,17 +9532,82 @@ void _m_app_button_draw(struct _m_app_t_button_obj* bbt_b,BBFLOAT bbt_x,BBFLOAT 
 	_m_app_gb_graph_set_color(3.00000000f,3.00000000f,3.00000000f);
 	_m_app_gb_graph_draw_tile_text((bbt_b->__m_app_t_button_rect ->__m_app_t_rect_x +1.00000000f),(bbt_b->__m_app_t_button_rect ->__m_app_t_rect_y +1.00000000f),1,bbt_b->__m_app_t_button_text ->__m_app_t_string_value );
 }
+BBINT _m_app_image_width(struct _m_app_t_image_obj* bbt_u){
+	return brl_max2d_ImageWidth((struct brl_max2d_image_TImage_obj*)bbt_u->__m_app_t_image_image );
+}
+BBINT _m_app_image_height(struct _m_app_t_image_obj* bbt_u){
+	return brl_max2d_ImageHeight((struct brl_max2d_image_TImage_obj*)bbt_u->__m_app_t_image_image );
+}
+void _m_app_bitmap_sync(struct _m_app_t_bitmap_obj* bbt_c){
+	struct brl_pixmap_TPixmap_obj* bbt_u=(struct brl_pixmap_TPixmap_obj*)brl_max2d_LockImage((struct brl_max2d_image_TImage_obj*)bbt_c->__m_app_t_bitmap_image ,0,1,1);
+	BBINT bbt_x=0;
+	{
+		BBINT bbt_i=0;
+		BBINT bbt_=(bbt_c->__m_app_t_bitmap_width ->__m_app_t_int_value -1);
+		for(;(bbt_i<=bbt_);bbt_i=(bbt_i+1)){
+			{
+				BBINT bbt_j=0;
+				BBINT bbt_2=(bbt_c->__m_app_t_bitmap_height ->__m_app_t_int_value -1);
+				for(;(bbt_j<=bbt_2);bbt_j=(bbt_j+1)){
+					BBUINT* bbt_3=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
+					bbt_x=_m_app_color_to_argb((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)bbt_i) + ((BBUINT)bbt_j)]);
+					brl_pixmap_WritePixel((struct brl_pixmap_TPixmap_obj*)bbt_u,bbt_i,bbt_j,bbt_x);
+				}
+			}
+		}
+	}
+}
+struct _m_app_t_bitmap_obj* _m_app_new_bitmap_from_image(struct _m_app_t_image_obj* bbt_u){
+	BBINT bbt_px=_m_app_image_width((struct _m_app_t_image_obj*)bbt_u);
+	BBINT bbt_py=_m_app_image_height((struct _m_app_t_image_obj*)bbt_u);
+	struct brl_pixmap_TPixmap_obj* bbt_pp=(struct brl_pixmap_TPixmap_obj*)brl_max2d_LockImage((struct brl_max2d_image_TImage_obj*)bbt_u->__m_app_t_image_image ,0,1,1);
+	BBINT bbt_ii=0;
+	BBFLOAT bbt_aa=0.00000000f;
+	BBFLOAT bbt_rr=0.00000000f;
+	BBFLOAT bbt_gg=0.00000000f;
+	BBFLOAT bbt_bb=0.00000000f;
+	struct _m_app_t_bitmap_obj* bbt_r=(struct _m_app_t_bitmap_obj*)_m_app_new_bitmap(bbt_px,bbt_py,0.00000000f,0.00000000f,0.00000000f,0.00000000f);
+	{
+		BBINT bbt_i=0;
+		BBINT bbt_=(bbt_px-1);
+		for(;(bbt_i<=bbt_);bbt_i=(bbt_i+1)){
+			{
+				BBINT bbt_j=0;
+				BBINT bbt_2=(bbt_py-1);
+				for(;(bbt_j<=bbt_2);bbt_j=(bbt_j+1)){
+					bbt_ii=brl_pixmap_ReadPixel((struct brl_pixmap_TPixmap_obj*)bbt_pp,bbt_i,bbt_j);
+					bbt_aa=((((BBFLOAT)_m_app_argb_a(bbt_ii))/255.000000f)*3.00000000f);
+					bbt_rr=((((BBFLOAT)_m_app_argb_r(bbt_ii))/255.000000f)*3.00000000f);
+					bbt_gg=((((BBFLOAT)_m_app_argb_g(bbt_ii))/255.000000f)*3.00000000f);
+					bbt_bb=((((BBFLOAT)_m_app_argb_b(bbt_ii))/255.000000f)*3.00000000f);
+					BBUINT* bbt_3=((BBARRAY)bbt_r->__m_app_t_bitmap_data )->scales + 1;
+					((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_r->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)bbt_i) + ((BBUINT)bbt_j)]=(struct _m_app_t_color_obj*)_m_app_new_color(bbt_rr,bbt_gg,bbt_bb,bbt_aa,0);
+				}
+			}
+		}
+	}
+	bbt_r->__m_app_t_bitmap_image =(struct brl_max2d_image_TImage_obj*)brl_max2d_CreateImage(bbt_r->__m_app_t_bitmap_width ->__m_app_t_int_value ,bbt_r->__m_app_t_bitmap_height ->__m_app_t_int_value ,1,8);
+	bbt_r->__m_app_t_bitmap_palette =(struct _m_app_t_palette_obj*)_m_app_new_palette();
+	_m_app_bitmap_sync((struct _m_app_t_bitmap_obj*)bbt_r);
+	return (struct _m_app_t_bitmap_obj*)bbt_r;
+}
+struct _m_app_t_image_obj* _m_app_new_image(BBSTRING bbt_p){
+	struct _m_app_t_image_obj* bbt_r=(struct _m_app_t_image_obj*)(struct _m_app_t_image_obj*)bbObjectNew((BBClass *)&_m_app_t_image);
+	bbt_r->__m_app_t_image_image =(struct brl_max2d_image_TImage_obj*)brl_max2d_LoadImage((BBOBJECT)bbt_p,8);
+	bbt_r->__m_app_t_image_path =bbt_p;
+	return (struct _m_app_t_image_obj*)bbt_r;
+}
 struct _m_app_t_bitmap_obj* _m_app_new_bitmap_from_path(BBSTRING bbt_p){
 	return (struct _m_app_t_bitmap_obj*)_m_app_new_bitmap_from_image((struct _m_app_t_image_obj*)_m_app_new_image(bbt_p));
 }
 void _m_app_bitmap_cls(struct _m_app_t_bitmap_obj* bbt_c){
 	{
 		BBINT bbt_i=0;
-		BBINT bbt_=(bbt_c->__m_app_t_bitmap_width -1);
+		BBINT bbt_=(bbt_c->__m_app_t_bitmap_width ->__m_app_t_int_value -1);
 		for(;(bbt_i<=bbt_);bbt_i=(bbt_i+1)){
 			{
 				BBINT bbt_j=0;
-				BBINT bbt_2=(bbt_c->__m_app_t_bitmap_height -1);
+				BBINT bbt_2=(bbt_c->__m_app_t_bitmap_height ->__m_app_t_int_value -1);
 				for(;(bbt_j<=bbt_2);bbt_j=(bbt_j+1)){
 					BBUINT* bbt_3=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
 					_m_app_color_set((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)bbt_i) + ((BBUINT)bbt_j)],0.00000000f,0.00000000f,0.00000000f,0.00000000f);
@@ -9376,17 +9616,27 @@ void _m_app_bitmap_cls(struct _m_app_t_bitmap_obj* bbt_c){
 		}
 	}
 }
-void _m_app_bitmap_draw_dot_c(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt_y,struct _m_app_t_color_obj* bbt_d){
-	bbt_x=_m_app_iclamp(bbt_x,0,(bbt_c->__m_app_t_bitmap_width -1));
-	bbt_y=_m_app_iclamp(bbt_y,0,(bbt_c->__m_app_t_bitmap_height -1));
-	BBUINT* bbt_=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
-	_m_app_color_set_c((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_)) * ((BBUINT)bbt_x) + ((BBUINT)bbt_y)],(struct _m_app_t_color_obj*)bbt_d);
+void _m_app_bitmap_draw_dot(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt_y,BBFLOAT bbt_rr,BBFLOAT bbt_gg,BBFLOAT bbt_bb,BBFLOAT bbt_aa){
+	bbt_x=_m_app_iwrap(bbt_x,0,(bbt_c->__m_app_t_bitmap_width ->__m_app_t_int_value -1));
+	bbt_y=_m_app_iwrap(bbt_y,0,(bbt_c->__m_app_t_bitmap_height ->__m_app_t_int_value -1));
+	if((_m_app_in_irange(bbt_x,0,bbt_c->__m_app_t_bitmap_width ->__m_app_t_int_value )!=0) && (_m_app_in_irange(bbt_y,0,bbt_c->__m_app_t_bitmap_height ->__m_app_t_int_value )!=0)){
+		BBUINT* bbt_=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
+		_m_app_color_set((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_)) * ((BBUINT)bbt_x) + ((BBUINT)bbt_y)],bbt_rr,bbt_gg,bbt_bb,bbt_aa);
+	}
 }
-void _m_app_bitmap_draw_rect(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt_y,BBINT bbt_w,BBINT bbt_h,struct _m_app_t_color_obj* bbt_d){
-	bbt_x=_m_app_iclamp(bbt_x,0,(bbt_c->__m_app_t_bitmap_width -1));
-	bbt_y=_m_app_iclamp(bbt_y,0,(bbt_c->__m_app_t_bitmap_height -1));
-	bbt_w=_m_app_iclamp(bbt_w,0,(bbt_c->__m_app_t_bitmap_width -bbt_x));
-	bbt_h=_m_app_iclamp(bbt_h,0,(bbt_c->__m_app_t_bitmap_height -bbt_y));
+void _m_app_bitmap_draw_dot_c(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt_y,struct _m_app_t_color_obj* bbt_d){
+	bbt_x=_m_app_iwrap(bbt_x,0,(bbt_c->__m_app_t_bitmap_width ->__m_app_t_int_value -1));
+	bbt_y=_m_app_iwrap(bbt_y,0,(bbt_c->__m_app_t_bitmap_height ->__m_app_t_int_value -1));
+	if((_m_app_in_irange(bbt_x,0,bbt_c->__m_app_t_bitmap_width ->__m_app_t_int_value )!=0) && (_m_app_in_irange(bbt_y,0,bbt_c->__m_app_t_bitmap_height ->__m_app_t_int_value )!=0)){
+		BBUINT* bbt_=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
+		_m_app_color_set_c((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_)) * ((BBUINT)bbt_x) + ((BBUINT)bbt_y)],(struct _m_app_t_color_obj*)bbt_d);
+	}
+}
+void _m_app_bitmap_draw_rect_c(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt_y,BBINT bbt_w,BBINT bbt_h,struct _m_app_t_color_obj* bbt_d){
+	bbt_x=_m_app_iwrap(bbt_x,0,(bbt_c->__m_app_t_bitmap_width ->__m_app_t_int_value -1));
+	bbt_y=_m_app_iwrap(bbt_y,0,(bbt_c->__m_app_t_bitmap_height ->__m_app_t_int_value -1));
+	bbt_w=_m_app_iclamp(bbt_w,0,(bbt_c->__m_app_t_bitmap_width ->__m_app_t_int_value -bbt_x));
+	bbt_h=_m_app_iclamp(bbt_h,0,(bbt_c->__m_app_t_bitmap_height ->__m_app_t_int_value -bbt_y));
 	{
 		BBINT bbt_i=0;
 		BBINT bbt_=(bbt_w-1);
@@ -9395,8 +9645,10 @@ void _m_app_bitmap_draw_rect(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT
 				BBINT bbt_j=0;
 				BBINT bbt_2=(bbt_h-1);
 				for(;(bbt_j<=bbt_2);bbt_j=(bbt_j+1)){
-					BBUINT* bbt_3=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
-					_m_app_color_set_c((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)bbt_i) + ((BBUINT)bbt_j)],(struct _m_app_t_color_obj*)bbt_d);
+					if((_m_app_in_irange((bbt_x+bbt_i),0,bbt_c->__m_app_t_bitmap_width ->__m_app_t_int_value )!=0) && (_m_app_in_irange((bbt_y+bbt_j),0,bbt_c->__m_app_t_bitmap_height ->__m_app_t_int_value )!=0)){
+						BBUINT* bbt_3=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
+						_m_app_color_set_c((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)(bbt_x+bbt_i)) + ((BBUINT)(bbt_y+bbt_j))],(struct _m_app_t_color_obj*)bbt_d);
+					}
 				}
 			}
 		}
@@ -9405,9 +9657,9 @@ void _m_app_bitmap_draw_rect(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT
 BBINT _m_app_ipoint_in_irect(BBINT bbt_x,BBINT bbt_y,BBINT bbt_rx,BBINT bbt_ry,BBINT bbt_rw,BBINT bbt_rh){
 	return ((_m_app_in_irange(bbt_x,bbt_rx,(bbt_rx+bbt_rw))!=0) && (_m_app_in_irange(bbt_y,bbt_ry,(bbt_ry+bbt_rh))!=0));
 }
-void _m_app_bitmap_paste(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt_y,struct _m_app_t_bitmap_obj* bbt_d){
-	BBINT bbt_ux=bbt_d->__m_app_t_bitmap_width ;
-	BBINT bbt_uy=bbt_d->__m_app_t_bitmap_height ;
+void _m_app_bitmap_blend(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt_y,struct _m_app_t_bitmap_obj* bbt_d){
+	BBINT bbt_ux=bbt_d->__m_app_t_bitmap_width ->__m_app_t_int_value ;
+	BBINT bbt_uy=bbt_d->__m_app_t_bitmap_height ->__m_app_t_int_value ;
 	{
 		BBINT bbt_i=0;
 		BBINT bbt_=(bbt_ux-1);
@@ -9416,7 +9668,7 @@ void _m_app_bitmap_paste(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt
 				BBINT bbt_j=0;
 				BBINT bbt_2=(bbt_uy-1);
 				for(;(bbt_j<=bbt_2);bbt_j=(bbt_j+1)){
-					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ,bbt_c->__m_app_t_bitmap_height )!=0){
+					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ->__m_app_t_int_value ,bbt_c->__m_app_t_bitmap_height ->__m_app_t_int_value )!=0){
 						BBUINT* bbt_3=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
 						BBUINT* bbt_4=((BBARRAY)bbt_d->__m_app_t_bitmap_data )->scales + 1;
 						_m_app_color_set_c((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)(bbt_x+bbt_i)) + ((BBUINT)(bbt_y+bbt_j))],(struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_d->__m_app_t_bitmap_data ,1))[(*(bbt_4)) * ((BBUINT)bbt_i) + ((BBUINT)bbt_j)]);
@@ -9426,11 +9678,7 @@ void _m_app_bitmap_paste(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt
 		}
 	}
 }
-void _m_app_bitmap_paste_part(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt_y,struct _m_app_t_bitmap_obj* bbt_d,BBINT bbt_dx,BBINT bbt_dy,BBINT bbt_dw,BBINT bbt_dh){
-	bbt_dx=_m_app_iclamp(bbt_dx,0,(bbt_d->__m_app_t_bitmap_width -1));
-	bbt_dy=_m_app_iclamp(bbt_dy,0,(bbt_d->__m_app_t_bitmap_height -1));
-	bbt_dw=_m_app_iclamp(bbt_dw,1,(bbt_d->__m_app_t_bitmap_width -bbt_dx));
-	bbt_dh=_m_app_iclamp(bbt_dh,1,(bbt_d->__m_app_t_bitmap_height -bbt_dy));
+void _m_app_bitmap_blend_part(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt_y,struct _m_app_t_bitmap_obj* bbt_d,BBINT bbt_dx,BBINT bbt_dy,BBINT bbt_dw,BBINT bbt_dh){
 	{
 		BBINT bbt_i=0;
 		BBINT bbt_=(bbt_dw-1);
@@ -9439,7 +9687,7 @@ void _m_app_bitmap_paste_part(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBIN
 				BBINT bbt_j=0;
 				BBINT bbt_2=(bbt_dh-1);
 				for(;(bbt_j<=bbt_2);bbt_j=(bbt_j+1)){
-					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ,bbt_c->__m_app_t_bitmap_height )!=0){
+					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ->__m_app_t_int_value ,bbt_c->__m_app_t_bitmap_height ->__m_app_t_int_value )!=0){
 						BBUINT* bbt_3=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
 						BBUINT* bbt_4=((BBARRAY)bbt_d->__m_app_t_bitmap_data )->scales + 1;
 						_m_app_color_set_c((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)(bbt_x+bbt_i)) + ((BBUINT)(bbt_y+bbt_j))],(struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_d->__m_app_t_bitmap_data ,1))[(*(bbt_4)) * ((BBUINT)(bbt_i+bbt_dx)) + ((BBUINT)(bbt_j+bbt_dy))]);
@@ -9450,8 +9698,8 @@ void _m_app_bitmap_paste_part(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBIN
 	}
 }
 void _m_app_bitmap_blend_alpha(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt_y,struct _m_app_t_bitmap_obj* bbt_d){
-	BBINT bbt_ux=bbt_d->__m_app_t_bitmap_width ;
-	BBINT bbt_uy=bbt_d->__m_app_t_bitmap_height ;
+	BBINT bbt_ux=bbt_d->__m_app_t_bitmap_width ->__m_app_t_int_value ;
+	BBINT bbt_uy=bbt_d->__m_app_t_bitmap_height ->__m_app_t_int_value ;
 	{
 		BBINT bbt_i=0;
 		BBINT bbt_=(bbt_ux-1);
@@ -9460,7 +9708,7 @@ void _m_app_bitmap_blend_alpha(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBI
 				BBINT bbt_j=0;
 				BBINT bbt_2=(bbt_uy-1);
 				for(;(bbt_j<=bbt_2);bbt_j=(bbt_j+1)){
-					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ,bbt_c->__m_app_t_bitmap_height )!=0){
+					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ->__m_app_t_int_value ,bbt_c->__m_app_t_bitmap_height ->__m_app_t_int_value )!=0){
 						BBUINT* bbt_3=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
 						BBUINT* bbt_4=((BBARRAY)bbt_d->__m_app_t_bitmap_data )->scales + 1;
 						_m_app_color_blend_alpha_c((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)(bbt_x+bbt_i)) + ((BBUINT)(bbt_y+bbt_j))],(struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_d->__m_app_t_bitmap_data ,1))[(*(bbt_4)) * ((BBUINT)bbt_i) + ((BBUINT)bbt_j)]);
@@ -9471,10 +9719,10 @@ void _m_app_bitmap_blend_alpha(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBI
 	}
 }
 void _m_app_bitmap_blend_alpha_part(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt_y,struct _m_app_t_bitmap_obj* bbt_d,BBINT bbt_dx,BBINT bbt_dy,BBINT bbt_dw,BBINT bbt_dh){
-	bbt_dx=_m_app_iclamp(bbt_dx,0,(bbt_d->__m_app_t_bitmap_width -1));
-	bbt_dy=_m_app_iclamp(bbt_dy,0,(bbt_d->__m_app_t_bitmap_height -1));
-	bbt_dw=_m_app_iclamp(bbt_dw,1,(bbt_d->__m_app_t_bitmap_width -bbt_dx));
-	bbt_dh=_m_app_iclamp(bbt_dh,1,(bbt_d->__m_app_t_bitmap_height -bbt_dy));
+	bbt_dx=_m_app_iclamp(bbt_dx,0,(bbt_d->__m_app_t_bitmap_width ->__m_app_t_int_value -1));
+	bbt_dy=_m_app_iclamp(bbt_dy,0,(bbt_d->__m_app_t_bitmap_height ->__m_app_t_int_value -1));
+	bbt_dw=_m_app_iclamp(bbt_dw,1,(bbt_d->__m_app_t_bitmap_width ->__m_app_t_int_value -bbt_dx));
+	bbt_dh=_m_app_iclamp(bbt_dh,1,(bbt_d->__m_app_t_bitmap_height ->__m_app_t_int_value -bbt_dy));
 	{
 		BBINT bbt_i=0;
 		BBINT bbt_=(bbt_dw-1);
@@ -9483,7 +9731,7 @@ void _m_app_bitmap_blend_alpha_part(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_
 				BBINT bbt_j=0;
 				BBINT bbt_2=(bbt_dh-1);
 				for(;(bbt_j<=bbt_2);bbt_j=(bbt_j+1)){
-					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ,bbt_c->__m_app_t_bitmap_height )!=0){
+					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ->__m_app_t_int_value ,bbt_c->__m_app_t_bitmap_height ->__m_app_t_int_value )!=0){
 						BBUINT* bbt_3=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
 						BBUINT* bbt_4=((BBARRAY)bbt_d->__m_app_t_bitmap_data )->scales + 1;
 						_m_app_color_blend_alpha_c((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)(bbt_x+bbt_i)) + ((BBUINT)(bbt_y+bbt_j))],(struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_d->__m_app_t_bitmap_data ,1))[(*(bbt_4)) * ((BBUINT)(bbt_i+bbt_dx)) + ((BBUINT)(bbt_j+bbt_dy))]);
@@ -9494,8 +9742,8 @@ void _m_app_bitmap_blend_alpha_part(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_
 	}
 }
 void _m_app_bitmap_blend_add(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt_y,struct _m_app_t_bitmap_obj* bbt_d){
-	BBINT bbt_ux=bbt_d->__m_app_t_bitmap_width ;
-	BBINT bbt_uy=bbt_d->__m_app_t_bitmap_height ;
+	BBINT bbt_ux=bbt_d->__m_app_t_bitmap_width ->__m_app_t_int_value ;
+	BBINT bbt_uy=bbt_d->__m_app_t_bitmap_height ->__m_app_t_int_value ;
 	{
 		BBINT bbt_i=0;
 		BBINT bbt_=(bbt_ux-1);
@@ -9504,7 +9752,7 @@ void _m_app_bitmap_blend_add(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT
 				BBINT bbt_j=0;
 				BBINT bbt_2=(bbt_uy-1);
 				for(;(bbt_j<=bbt_2);bbt_j=(bbt_j+1)){
-					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ,bbt_c->__m_app_t_bitmap_height )!=0){
+					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ->__m_app_t_int_value ,bbt_c->__m_app_t_bitmap_height ->__m_app_t_int_value )!=0){
 						BBUINT* bbt_3=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
 						BBUINT* bbt_4=((BBARRAY)bbt_d->__m_app_t_bitmap_data )->scales + 1;
 						_m_app_color_blend_add_c((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)(bbt_x+bbt_i)) + ((BBUINT)(bbt_y+bbt_j))],(struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_d->__m_app_t_bitmap_data ,1))[(*(bbt_4)) * ((BBUINT)bbt_i) + ((BBUINT)bbt_j)]);
@@ -9515,10 +9763,10 @@ void _m_app_bitmap_blend_add(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT
 	}
 }
 void _m_app_bitmap_blend_add_part(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt_y,struct _m_app_t_bitmap_obj* bbt_d,BBINT bbt_dx,BBINT bbt_dy,BBINT bbt_dw,BBINT bbt_dh){
-	bbt_dx=_m_app_iclamp(bbt_dx,0,(bbt_d->__m_app_t_bitmap_width -1));
-	bbt_dy=_m_app_iclamp(bbt_dy,0,(bbt_d->__m_app_t_bitmap_height -1));
-	bbt_dw=_m_app_iclamp(bbt_dw,1,(bbt_d->__m_app_t_bitmap_width -bbt_dx));
-	bbt_dh=_m_app_iclamp(bbt_dh,1,(bbt_d->__m_app_t_bitmap_height -bbt_dy));
+	bbt_dx=_m_app_iclamp(bbt_dx,0,(bbt_d->__m_app_t_bitmap_width ->__m_app_t_int_value -1));
+	bbt_dy=_m_app_iclamp(bbt_dy,0,(bbt_d->__m_app_t_bitmap_height ->__m_app_t_int_value -1));
+	bbt_dw=_m_app_iclamp(bbt_dw,1,(bbt_d->__m_app_t_bitmap_width ->__m_app_t_int_value -bbt_dx));
+	bbt_dh=_m_app_iclamp(bbt_dh,1,(bbt_d->__m_app_t_bitmap_height ->__m_app_t_int_value -bbt_dy));
 	{
 		BBINT bbt_i=0;
 		BBINT bbt_=(bbt_dw-1);
@@ -9527,7 +9775,7 @@ void _m_app_bitmap_blend_add_part(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,
 				BBINT bbt_j=0;
 				BBINT bbt_2=(bbt_dh-1);
 				for(;(bbt_j<=bbt_2);bbt_j=(bbt_j+1)){
-					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ,bbt_c->__m_app_t_bitmap_height )!=0){
+					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ->__m_app_t_int_value ,bbt_c->__m_app_t_bitmap_height ->__m_app_t_int_value )!=0){
 						BBUINT* bbt_3=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
 						BBUINT* bbt_4=((BBARRAY)bbt_d->__m_app_t_bitmap_data )->scales + 1;
 						_m_app_color_blend_add_c((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)(bbt_x+bbt_i)) + ((BBUINT)(bbt_y+bbt_j))],(struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_d->__m_app_t_bitmap_data ,1))[(*(bbt_4)) * ((BBUINT)(bbt_i+bbt_dx)) + ((BBUINT)(bbt_j+bbt_dy))]);
@@ -9538,8 +9786,8 @@ void _m_app_bitmap_blend_add_part(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,
 	}
 }
 void _m_app_bitmap_blend_multiply(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt_y,struct _m_app_t_bitmap_obj* bbt_d){
-	BBINT bbt_ux=bbt_d->__m_app_t_bitmap_width ;
-	BBINT bbt_uy=bbt_d->__m_app_t_bitmap_height ;
+	BBINT bbt_ux=bbt_d->__m_app_t_bitmap_width ->__m_app_t_int_value ;
+	BBINT bbt_uy=bbt_d->__m_app_t_bitmap_height ->__m_app_t_int_value ;
 	{
 		BBINT bbt_i=0;
 		BBINT bbt_=(bbt_ux-1);
@@ -9548,7 +9796,7 @@ void _m_app_bitmap_blend_multiply(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,
 				BBINT bbt_j=0;
 				BBINT bbt_2=(bbt_uy-1);
 				for(;(bbt_j<=bbt_2);bbt_j=(bbt_j+1)){
-					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ,bbt_c->__m_app_t_bitmap_height )!=0){
+					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ->__m_app_t_int_value ,bbt_c->__m_app_t_bitmap_height ->__m_app_t_int_value )!=0){
 						BBUINT* bbt_3=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
 						BBUINT* bbt_4=((BBARRAY)bbt_d->__m_app_t_bitmap_data )->scales + 1;
 						_m_app_color_blend_multiply_c((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)(bbt_x+bbt_i)) + ((BBUINT)(bbt_y+bbt_j))],(struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_d->__m_app_t_bitmap_data ,1))[(*(bbt_4)) * ((BBUINT)bbt_i) + ((BBUINT)bbt_j)]);
@@ -9559,10 +9807,10 @@ void _m_app_bitmap_blend_multiply(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,
 	}
 }
 void _m_app_bitmap_blend_multiply_part(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt_y,struct _m_app_t_bitmap_obj* bbt_d,BBINT bbt_dx,BBINT bbt_dy,BBINT bbt_dw,BBINT bbt_dh){
-	bbt_dx=_m_app_iclamp(bbt_dx,0,(bbt_d->__m_app_t_bitmap_width -1));
-	bbt_dy=_m_app_iclamp(bbt_dy,0,(bbt_d->__m_app_t_bitmap_height -1));
-	bbt_dw=_m_app_iclamp(bbt_dw,1,(bbt_d->__m_app_t_bitmap_width -bbt_dx));
-	bbt_dh=_m_app_iclamp(bbt_dh,1,(bbt_d->__m_app_t_bitmap_height -bbt_dy));
+	bbt_dx=_m_app_iclamp(bbt_dx,0,(bbt_d->__m_app_t_bitmap_width ->__m_app_t_int_value -1));
+	bbt_dy=_m_app_iclamp(bbt_dy,0,(bbt_d->__m_app_t_bitmap_height ->__m_app_t_int_value -1));
+	bbt_dw=_m_app_iclamp(bbt_dw,1,(bbt_d->__m_app_t_bitmap_width ->__m_app_t_int_value -bbt_dx));
+	bbt_dh=_m_app_iclamp(bbt_dh,1,(bbt_d->__m_app_t_bitmap_height ->__m_app_t_int_value -bbt_dy));
 	{
 		BBINT bbt_i=0;
 		BBINT bbt_=(bbt_dw-1);
@@ -9571,7 +9819,7 @@ void _m_app_bitmap_blend_multiply_part(struct _m_app_t_bitmap_obj* bbt_c,BBINT b
 				BBINT bbt_j=0;
 				BBINT bbt_2=(bbt_dh-1);
 				for(;(bbt_j<=bbt_2);bbt_j=(bbt_j+1)){
-					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ,bbt_c->__m_app_t_bitmap_height )!=0){
+					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ->__m_app_t_int_value ,bbt_c->__m_app_t_bitmap_height ->__m_app_t_int_value )!=0){
 						BBUINT* bbt_3=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
 						BBUINT* bbt_4=((BBARRAY)bbt_d->__m_app_t_bitmap_data )->scales + 1;
 						_m_app_color_blend_multiply_c((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)(bbt_x+bbt_i)) + ((BBUINT)(bbt_y+bbt_j))],(struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_d->__m_app_t_bitmap_data ,1))[(*(bbt_4)) * ((BBUINT)(bbt_i+bbt_dx)) + ((BBUINT)(bbt_j+bbt_dy))]);
@@ -9582,8 +9830,8 @@ void _m_app_bitmap_blend_multiply_part(struct _m_app_t_bitmap_obj* bbt_c,BBINT b
 	}
 }
 void _m_app_bitmap_blend_sub(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt_y,struct _m_app_t_bitmap_obj* bbt_d){
-	BBINT bbt_ux=bbt_d->__m_app_t_bitmap_width ;
-	BBINT bbt_uy=bbt_d->__m_app_t_bitmap_height ;
+	BBINT bbt_ux=bbt_d->__m_app_t_bitmap_width ->__m_app_t_int_value ;
+	BBINT bbt_uy=bbt_d->__m_app_t_bitmap_height ->__m_app_t_int_value ;
 	{
 		BBINT bbt_i=0;
 		BBINT bbt_=(bbt_ux-1);
@@ -9592,7 +9840,7 @@ void _m_app_bitmap_blend_sub(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT
 				BBINT bbt_j=0;
 				BBINT bbt_2=(bbt_uy-1);
 				for(;(bbt_j<=bbt_2);bbt_j=(bbt_j+1)){
-					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ,bbt_c->__m_app_t_bitmap_height )!=0){
+					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ->__m_app_t_int_value ,bbt_c->__m_app_t_bitmap_height ->__m_app_t_int_value )!=0){
 						BBUINT* bbt_3=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
 						BBUINT* bbt_4=((BBARRAY)bbt_d->__m_app_t_bitmap_data )->scales + 1;
 						_m_app_color_blend_sub_c((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)(bbt_x+bbt_i)) + ((BBUINT)(bbt_y+bbt_j))],(struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_d->__m_app_t_bitmap_data ,1))[(*(bbt_4)) * ((BBUINT)bbt_i) + ((BBUINT)bbt_j)]);
@@ -9603,10 +9851,10 @@ void _m_app_bitmap_blend_sub(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT
 	}
 }
 void _m_app_bitmap_blend_sub_part(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt_y,struct _m_app_t_bitmap_obj* bbt_d,BBINT bbt_dx,BBINT bbt_dy,BBINT bbt_dw,BBINT bbt_dh){
-	bbt_dx=_m_app_iclamp(bbt_dx,0,(bbt_d->__m_app_t_bitmap_width -1));
-	bbt_dy=_m_app_iclamp(bbt_dy,0,(bbt_d->__m_app_t_bitmap_height -1));
-	bbt_dw=_m_app_iclamp(bbt_dw,1,(bbt_d->__m_app_t_bitmap_width -bbt_dx));
-	bbt_dh=_m_app_iclamp(bbt_dh,1,(bbt_d->__m_app_t_bitmap_height -bbt_dy));
+	bbt_dx=_m_app_iclamp(bbt_dx,0,(bbt_d->__m_app_t_bitmap_width ->__m_app_t_int_value -1));
+	bbt_dy=_m_app_iclamp(bbt_dy,0,(bbt_d->__m_app_t_bitmap_height ->__m_app_t_int_value -1));
+	bbt_dw=_m_app_iclamp(bbt_dw,1,(bbt_d->__m_app_t_bitmap_width ->__m_app_t_int_value -bbt_dx));
+	bbt_dh=_m_app_iclamp(bbt_dh,1,(bbt_d->__m_app_t_bitmap_height ->__m_app_t_int_value -bbt_dy));
 	{
 		BBINT bbt_i=0;
 		BBINT bbt_=(bbt_dw-1);
@@ -9615,7 +9863,7 @@ void _m_app_bitmap_blend_sub_part(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,
 				BBINT bbt_j=0;
 				BBINT bbt_2=(bbt_dh-1);
 				for(;(bbt_j<=bbt_2);bbt_j=(bbt_j+1)){
-					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ,bbt_c->__m_app_t_bitmap_height )!=0){
+					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ->__m_app_t_int_value ,bbt_c->__m_app_t_bitmap_height ->__m_app_t_int_value )!=0){
 						BBUINT* bbt_3=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
 						BBUINT* bbt_4=((BBARRAY)bbt_d->__m_app_t_bitmap_data )->scales + 1;
 						_m_app_color_blend_sub_c((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)(bbt_x+bbt_i)) + ((BBUINT)(bbt_y+bbt_j))],(struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_d->__m_app_t_bitmap_data ,1))[(*(bbt_4)) * ((BBUINT)(bbt_i+bbt_dx)) + ((BBUINT)(bbt_j+bbt_dy))]);
@@ -9626,8 +9874,8 @@ void _m_app_bitmap_blend_sub_part(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,
 	}
 }
 void _m_app_bitmap_blend_custom(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BBINT bbt_y,struct _m_app_t_bitmap_obj* bbt_d,void(* bbt_f)(struct _m_app_t_color_obj*,struct _m_app_t_color_obj*)){
-	BBINT bbt_ux=bbt_d->__m_app_t_bitmap_width ;
-	BBINT bbt_uy=bbt_d->__m_app_t_bitmap_height ;
+	BBINT bbt_ux=bbt_d->__m_app_t_bitmap_width ->__m_app_t_int_value ;
+	BBINT bbt_uy=bbt_d->__m_app_t_bitmap_height ->__m_app_t_int_value ;
 	{
 		BBINT bbt_i=0;
 		BBINT bbt_=(bbt_ux-1);
@@ -9636,7 +9884,7 @@ void _m_app_bitmap_blend_custom(struct _m_app_t_bitmap_obj* bbt_c,BBINT bbt_x,BB
 				BBINT bbt_j=0;
 				BBINT bbt_2=(bbt_uy-1);
 				for(;(bbt_j<=bbt_2);bbt_j=(bbt_j+1)){
-					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ,bbt_c->__m_app_t_bitmap_height )!=0){
+					if(_m_app_ipoint_in_irect((bbt_x+bbt_i),(bbt_y+bbt_j),0,0,bbt_c->__m_app_t_bitmap_width ->__m_app_t_int_value ,bbt_c->__m_app_t_bitmap_height ->__m_app_t_int_value )!=0){
 						BBUINT* bbt_3=((BBARRAY)bbt_c->__m_app_t_bitmap_data )->scales + 1;
 						BBUINT* bbt_4=((BBARRAY)bbt_d->__m_app_t_bitmap_data )->scales + 1;
 						_m_app_color_blend_custom((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_c->__m_app_t_bitmap_data ,1))[(*(bbt_3)) * ((BBUINT)(bbt_x+bbt_i)) + ((BBUINT)(bbt_y+bbt_j))],(struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_d->__m_app_t_bitmap_data ,1))[(*(bbt_4)) * ((BBUINT)bbt_i) + ((BBUINT)bbt_j)],bbt_f);
@@ -9725,6 +9973,12 @@ BBSTRING _m_app_matrix_tostring(struct _m_app_t_matrix_obj* bbt_m){
 		}
 	}
 	return bbt_r;
+}
+BBFLOAT _m_app_frand(BBFLOAT bbt_l,BBFLOAT bbt_h){
+	if(bbt_l>bbt_h){
+		_m_app_fswap((&bbt_l),(&bbt_h));
+	}
+	return (bbt_l+((bbt_h-bbt_l)*brl_random_RndFloat()));
 }
 struct _m_app_t_jake_obj* _m_app_new_jake(){
 	struct _m_app_t_jake_obj* bbt_r=(struct _m_app_t_jake_obj*)(struct _m_app_t_jake_obj*)bbObjectNew((BBClass *)&_m_app_t_jake);
@@ -10354,6 +10608,91 @@ void _m_app_lightcube_draw(struct _m_app_t_lightcube_obj* bbt_a,BBFLOAT bbt_x,BB
 }
 BBSTRING _m_app_image_path(struct _m_app_t_image_obj* bbt_u){
 	return bbt_u->__m_app_t_image_path ;
+}
+void _m_app_image_draw(struct _m_app_t_image_obj* bbt_u,BBFLOAT bbt_x,BBFLOAT bbt_y){
+	_m_app_gb_graph_draw_image(bbt_x,bbt_y,(struct brl_max2d_image_TImage_obj*)bbt_u->__m_app_t_image_image );
+}
+void _m_app_logchain_node_set(struct _m_app_t_logchain_node_obj* bbt_l,BBSTRING bbt_s){
+	bbt_l->__m_app_t_logchain_node_data =bbt_s;
+}
+struct _m_app_t_logchain_obj* _m_app_new_logchain_ex(BBINT bbt_n){
+	bbt_n=_m_app_ilow(bbt_n,1);
+	struct _m_app_t_logchain_obj* bbt_r=(struct _m_app_t_logchain_obj*)_m_app_new_logchain();
+	{
+		BBINT bbt_i=1;
+		BBINT bbt_=bbt_n;
+		for(;(bbt_i<=bbt_);bbt_i=(bbt_i+1)){
+			_m_app_logchain_add((struct _m_app_t_logchain_obj*)bbt_r,&bbEmptyString);
+		}
+	}
+	return (struct _m_app_t_logchain_obj*)(&bbNullObject);
+}
+void _m_app_logchain_remove(struct _m_app_t_logchain_obj* bbt_l){
+	if(_m_app_int_eq((struct _m_app_t_int_obj*)bbt_l->__m_app_t_logchain_length ,1)!=0){
+		_m_app_int_set((struct _m_app_t_int_obj*)bbt_l->__m_app_t_logchain_length ,0);
+		bbt_l->__m_app_t_logchain_chain_curr =(struct _m_app_t_logchain_node_obj*)&bbNullObject;
+		bbt_l->__m_app_t_logchain_chain_seek =(struct _m_app_t_logchain_node_obj*)&bbNullObject;
+	}else{
+		if(_m_app_int_gte((struct _m_app_t_int_obj*)bbt_l->__m_app_t_logchain_length ,2)!=0){
+			struct _m_app_t_logchain_node_obj* bbt_c=(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ;
+			bbt_c->__m_app_t_logchain_node_chain_prev ->__m_app_t_logchain_node_chain_next =(struct _m_app_t_logchain_node_obj*)bbt_c->__m_app_t_logchain_node_chain_next ;
+			bbt_c->__m_app_t_logchain_node_chain_next ->__m_app_t_logchain_node_chain_prev =(struct _m_app_t_logchain_node_obj*)bbt_c->__m_app_t_logchain_node_chain_prev ;
+			if(bbt_l->__m_app_t_logchain_chain_seek ==bbt_c){
+				bbt_l->__m_app_t_logchain_chain_seek =(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ;
+			}
+			_m_app_int_add((struct _m_app_t_int_obj*)bbt_l->__m_app_t_logchain_length ,-1);
+		}
+	}
+}
+void _m_app_logchain_set(struct _m_app_t_logchain_obj* bbt_l,BBSTRING bbt_s){
+	if(bbt_l->__m_app_t_logchain_length ->__m_app_t_int_value >0){
+		_m_app_logchain_node_set((struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ,bbt_s);
+	}
+}
+BBSTRING _m_app_logchain_prev(struct _m_app_t_logchain_obj* bbt_l){
+	if(bbt_l->__m_app_t_logchain_length ->__m_app_t_int_value >0){
+		bbt_l->__m_app_t_logchain_chain_curr =(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_chain_prev ;
+		return bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_data ;
+	}
+	return &bbEmptyString;
+}
+BBARRAY _m_app_logchain_to_array(struct _m_app_t_logchain_obj* bbt_l){
+	if(bbt_l->__m_app_t_logchain_length ->__m_app_t_int_value >0){
+		BBARRAY bbt_s=bbArrayNew1D("$", bbt_l->__m_app_t_logchain_length ->__m_app_t_int_value );
+		{
+			BBINT bbt_i=0;
+			BBINT bbt_=(bbt_l->__m_app_t_logchain_length ->__m_app_t_int_value -1);
+			for(;(bbt_i<=bbt_);bbt_i=(bbt_i+1)){
+				_m_app_logchain_next((struct _m_app_t_logchain_obj*)bbt_l);
+				((BBSTRING*)BBARRAYDATA(bbt_s,1))[((BBUINT)bbt_i)]=bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_data ;
+			}
+		}
+		return bbt_s;
+	}
+	return bbArrayNew1D("$", 0);
+}
+void _m_app_logchain_seek_back(struct _m_app_t_logchain_obj* bbt_l,BBINT bbt_n){
+	bbt_n=_m_app_ilow(bbt_n,1);
+	{
+		BBINT bbt_i=1;
+		BBINT bbt_=bbt_n;
+		for(;(bbt_i<=bbt_);bbt_i=(bbt_i+1)){
+			bbt_l->__m_app_t_logchain_chain_seek =(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_seek ->__m_app_t_logchain_node_chain_prev ;
+		}
+	}
+}
+void _m_app_logchain_seek_forward(struct _m_app_t_logchain_obj* bbt_l,BBINT bbt_n){
+	bbt_n=_m_app_ilow(bbt_n,1);
+	{
+		BBINT bbt_i=1;
+		BBINT bbt_=bbt_n;
+		for(;(bbt_i<=bbt_);bbt_i=(bbt_i+1)){
+			bbt_l->__m_app_t_logchain_chain_seek =(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_seek ->__m_app_t_logchain_node_chain_next ;
+		}
+	}
+}
+void _m_app_logchain_reset_seek(struct _m_app_t_logchain_obj* bbt_l){
+	bbt_l->__m_app_t_logchain_chain_seek =(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ;
 }
 void _m_app_drawcmd_set_pos(struct _m_app_t_drawcmd_obj* bbt_d,BBFLOAT bbt_x,BBFLOAT bbt_y,BBFLOAT bbt_z){
 	((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]=bbt_x;
@@ -11181,6 +11520,42 @@ BBARRAY _m_app_sarray3(BBINT bbt_x,BBINT bbt_y,BBINT bbt_z,BBSTRING bbt_v){
 	}
 	return bbt_r;
 }
+BBFLOAT _m_app_fmod(BBFLOAT bbt_v,BBFLOAT bbt_m){
+	bbt_m=_m_app_low(bbt_m,0.00000000f);
+	if(bbt_m==0.00000000f){
+		return bbt_v;
+	}
+	return _m_app_wrap(bbt_v,0.00000000f,bbt_m);
+}
+BBINT _m_app_imod(BBINT bbt_v,BBINT bbt_m){
+	bbt_m=_m_app_ilow(bbt_m,0);
+	if(bbt_m==0){
+		return bbt_v;
+	}
+	if(bbt_m==1){
+		return 0;
+	}
+	return _m_app_iwrap(bbt_v,0,bbt_m);
+}
+BBINT _m_app_iround(BBINT bbt_n,BBINT bbt_d){
+	BBINT bbt_v=_m_app_imod(bbt_n,bbt_d);
+	BBINT bbt_w=(bbt_d-bbt_v);
+	if(bbt_v>=bbt_w){
+		return (bbt_n+bbt_w);
+	}
+	return (bbt_n-bbt_v);
+}
+BBFLOAT _m_app_fround(BBFLOAT bbt_n,BBFLOAT bbt_d){
+	if(brl_blitz_Abs2(bbt_n)<(bbt_d/2.00000000f)){
+		return 0.0f;
+	}
+	BBFLOAT bbt_v=_m_app_fmod(bbt_n,bbt_d);
+	BBFLOAT bbt_w=(bbt_d-bbt_v);
+	if(bbt_v>=bbt_w){
+		return (bbt_n+bbt_w);
+	}
+	return (bbt_n-bbt_v);
+}
 BBSTRING _m_app_char(BBSTRING bbt_s,BBINT bbt_n){
 	return bbStringFromChar((bbt_s)->buf[((BBUINT)bbt_n)]);
 }
@@ -11376,19 +11751,21 @@ void _m_app_gb_graph_draw_tile_line3d(BBFLOAT bbt_x1,BBFLOAT bbt_y1,BBFLOAT bbt_
 		}
 	}
 }
+void _m_app_gb_console_refresh_lines(){
+}
 void _m_app_gb_achievements_add_achievement(BBSTRING bbt_id,BBSTRING bbt_name){
 	struct _m_app_t_dict_obj* bbt_u=(struct _m_app_t_dict_obj*)_m_app_new_dict();
-	_m_app_dict_set_string((struct _m_app_t_dict_obj*)bbt_u,&_s78,bbt_id);
-	_m_app_dict_set_string((struct _m_app_t_dict_obj*)bbt_u,&_s79,bbt_name);
-	_m_app_dict_set_string((struct _m_app_t_dict_obj*)bbt_u,&_s80,&_s81);
-	_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_u,&_s82,0);
+	_m_app_dict_set_string((struct _m_app_t_dict_obj*)bbt_u,&_s82,bbt_id);
+	_m_app_dict_set_string((struct _m_app_t_dict_obj*)bbt_u,&_s83,bbt_name);
+	_m_app_dict_set_string((struct _m_app_t_dict_obj*)bbt_u,&_s84,&_s85);
+	_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_u,&_s86,0);
 	_m_app_dict_set_dir((struct _m_app_t_dict_obj*)_m_app_gb_achievements,bbt_id,(struct _m_app_t_dict_obj*)bbt_u);
 }
 void _m_app_gb_achievements_fulfill(BBSTRING bbt_id){
 	struct _m_app_t_dictval_obj* bbt_u=(struct _m_app_t_dictval_obj*)_m_app_dict_find((struct _m_app_t_dict_obj*)_m_app_gb_achievements,bbt_id);
 	if(((BBObject*)bbt_u)!= &bbNullObject){
 		struct _m_app_t_dict_obj* bbt_v=(struct _m_app_t_dict_obj*)_m_app_dictval_get_dir((struct _m_app_t_dictval_obj*)bbt_u);
-		_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_v,&_s82,1);
+		_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_v,&_s86,1);
 	}
 }
 void _m_app_gb_achievements_init(){
@@ -11449,9 +11826,9 @@ void _m_app_gb_debug_out(BBSTRING bbt_s){
 		_m_app_gb_debug_log=bbArraySlice("$",_m_app_gb_debug_log,0,((_m_app_gb_debug_log->scales[0])+1000));
 	}
 	((BBSTRING*)BBARRAYDATA(_m_app_gb_debug_log,1))[((BBUINT)_m_app_int_get((struct _m_app_t_int_obj*)_m_app_gb_debug_logpos))]=bbt_s;
-}
-void _m_app_gb_editor_init(){
-	_m_app_gb_editor_active=(struct _m_app_t_bool_obj*)_m_app_new_bool(0);
+	BBBYTE* bbt_ = bbStringToCString(bbt_s);
+	SDL_Log(bbt_);
+	bbMemFree(bbt_);
 }
 void _m_app_gb_stop(){
 	_m_app_bool_set((struct _m_app_t_bool_obj*)_m_app_gb_running,0);
@@ -11543,18 +11920,19 @@ int _bb_main(){
 		bbObjectRegisterType((BBCLASS)&_m_app_t_color);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_timer);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_dict);
+		bbObjectRegisterType((BBCLASS)&_m_app_t_logchain);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_gbscmd);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_gb_testing);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_font);
+		bbObjectRegisterType((BBCLASS)&_m_app_t_bitmap);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_palette);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_animation);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_dictval);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_counter);
-		bbObjectRegisterType((BBCLASS)&_m_app_t_image);
-		bbObjectRegisterType((BBCLASS)&_m_app_t_bitmap);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_ipoint);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_animframe);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_ibox);
+		bbObjectRegisterType((BBCLASS)&_m_app_t_logchain_node);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_ipoint3);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_inumber);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_cube);
@@ -11568,6 +11946,7 @@ int _bb_main(){
 		bbObjectRegisterType((BBCLASS)&_m_app_t_jake);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_spinicon);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_lightcube);
+		bbObjectRegisterType((BBCLASS)&_m_app_t_image);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_drawcmd);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_drawstack_node);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_drawstack);

@@ -52,6 +52,7 @@ import pub.vulkan
 import pub.opengles3
 import pub.nfd
 import sdl.sdl
+palette_size%=256
 gb_max_fonts%=10
 gb_max_images%=100
 gb_max_sounds%=100
@@ -78,7 +79,6 @@ dictval_id_string%=7
 dictval_id_dir%=8
 gbml_ext$=$".gbml"
 gb_audio_max_sounds%=100
-palette_size%=256
 gb_debug_max_logs%=1000
 gb_visual_diag_size#=466.47615158762403#
 animation_status_stopped%=0
@@ -152,6 +152,7 @@ gb_graph_color_b@=2
 gb_graph_color_a@=3
 gb_console_chars_x%=80
 gb_console_chars_y%=24
+gb_console_max_lines%=1000
 gb_mouse_tile_id%=0
 gb_net_master_server$=$"mr-goober.com"
 gb_transition_id_squares%=1
@@ -257,6 +258,7 @@ t_color^Object{
 .g#&
 .b#&
 .a#&
+.depth%&
 -New()="__m_app_t_color_New"
 }="_m_app_t_color"
 t_timer^Object{
@@ -270,6 +272,12 @@ t_dict^Object{
 .values:t_dictval&[]&
 -New()="__m_app_t_dict_New"
 }="_m_app_t_dict"
+t_logchain^Object{
+.length:t_int&
+.chain_curr:t_logchain_node&
+.chain_seek:t_logchain_node&
+-New()="__m_app_t_logchain_New"
+}="_m_app_t_logchain"
 t_gbscmd^Object{
 .name$&
 .cmd$&
@@ -279,8 +287,7 @@ t_gbscmd^Object{
 -New()="__m_app_t_gbscmd_New"
 }="_m_app_t_gbscmd"
 t_gb_testing^Object{
-.bitmap:t_bitmap&
-.image:t_image&
+.logchain:t_logchain&
 -New()="__m_app_t_gb_testing_New"
 }="_m_app_t_gb_testing"
 t_font^Object{
@@ -292,6 +299,15 @@ t_font^Object{
 .spacing#&[]&
 -New()="__m_app_t_font_New"
 }="_m_app_t_font"
+t_bitmap^Object{
+.width:t_int&
+.height:t_int&
+.data:t_color&[,]&
+.coldepth:t_int&
+.palette:t_palette&
+.image:TImage&
+-New()="__m_app_t_bitmap_New"
+}="_m_app_t_bitmap"
 t_palette^Object{
 .data:t_color&[]&
 .depth%&
@@ -323,20 +339,6 @@ t_counter^Object{
 .value%&
 -New()="__m_app_t_counter_New"
 }="_m_app_t_counter"
-t_image^Object{
-.image:TImage&
-.path$&
--New()="__m_app_t_image_New"
-}="_m_app_t_image"
-t_bitmap^Object{
-.width%&
-.height%&
-.data:t_color&[,]&
-.depth%&
-.palette:t_palette&
-.image:TImage&
--New()="__m_app_t_bitmap_New"
-}="_m_app_t_bitmap"
 t_ipoint^Object{
 .x%&
 .y%&
@@ -355,6 +357,12 @@ t_ibox^Object{
 .h#&
 -New()="__m_app_t_ibox_New"
 }="_m_app_t_ibox"
+t_logchain_node^Object{
+.data$&
+.chain_prev:t_logchain_node&
+.chain_next:t_logchain_node&
+-New()="__m_app_t_logchain_node_New"
+}="_m_app_t_logchain_node"
 t_ipoint3^Object{
 .x%&
 .y%&
@@ -456,6 +464,11 @@ t_lightcube^Object{
 .ibox:t_ibox&
 -New()="__m_app_t_lightcube_New"
 }="_m_app_t_lightcube"
+t_image^Object{
+.image:TImage&
+.path$&
+-New()="__m_app_t_image_New"
+}="_m_app_t_image"
 t_drawcmd^Object{
 .pos#&[]&
 .id%&
@@ -532,9 +545,14 @@ asinf#(f#)="_m_app_asinf"
 angle_z#(x#,y#)="_m_app_angle_z"
 new_bool:t_bool(n%=0)="_m_app_new_bool"
 new_number:t_number(n#=0.00000000#,l#=0.00000000#,h#=100.000000#,w@=0)="_m_app_new_number"
+ilow%(a%,b%)="_m_app_ilow"
+new_int:t_int(v%)="_m_app_new_int"
+new_color:t_color(r#=3.00000000#,g#=3.00000000#,b#=3.00000000#,a#=3.00000000#,d%=0)="_m_app_new_color"
+color_set(c:t_color,r#,g#,b#,a#=3.00000000#)="_m_app_color_set"
+new_palette:t_palette()="_m_app_new_palette"
+new_bitmap:t_bitmap(x%,y%,rr#=0.00000000#,gg#=0.00000000#,bb#=0.00000000#,aa#=0.00000000#)="_m_app_new_bitmap"
 new_timer:t_timer(n#)="_m_app_new_timer"
 new_string:t_string(v$)="_m_app_new_string"
-new_int:t_int(v%)="_m_app_new_int"
 new_dict:t_dict()="_m_app_new_dict"
 gb_console_init()="_m_app_gb_console_init"
 new_stopwatch:t_stopwatch()="_m_app_new_stopwatch"
@@ -553,7 +571,6 @@ low#(a#,b#)="_m_app_low"
 new_rect:t_rect(x#,y#,w#,h#)="_m_app_new_rect"
 new_irect:t_irect(x%,y%,w%,h%)="_m_app_new_irect"
 gb_visual_init()="_m_app_gb_visual_init"
-new_color:t_color(r#=3.00000000#,g#=3.00000000#,b#=3.00000000#,a#=3.00000000#)="_m_app_new_color"
 new_byte:t_byte(v@)="_m_app_new_byte"
 new_boolv:t_bool&[](a%,n%=0)="_m_app_new_boolv"
 float_get#(b:t_float)="_m_app_float_get"
@@ -612,6 +629,8 @@ int_get%(b:t_int)="_m_app_int_get"
 int_get%(o:Object)="_m_app_int_get2"
 long_get%%(b:t_long)="_m_app_long_get"
 long_get%%(o:Object)="_m_app_long_get2"
+iclamp%(n%,l%,h%)="_m_app_iclamp"
+strdec$(f#=0.0#,d%=2)="_m_app_strdec"
 double_get!(b:t_double)="_m_app_double_get"
 double_get!(o:Object)="_m_app_double_get2"
 string_get$(s:t_string)="_m_app_string_get"
@@ -637,6 +656,8 @@ gb_add_image(n%,f$)="_m_app_gb_add_image"
 cut$&[](s$,n%=80)="_m_app_cut"
 gb_console_print_line(s$)="_m_app_gb_console_print_line"
 gb_console_out(s$)="_m_app_gb_console_out"
+gb_console_out(v%)="_m_app_gb_console_out2"
+gb_console_out(v#)="_m_app_gb_console_out3"
 gb_reload_images()="_m_app_gb_reload_images"
 gbs_func_reloadimages(s$&[])="_m_app_gbs_func_reloadimages"
 new_gbscmd_reloadimages:t_gbscmd()="_m_app_new_gbscmd_reloadimages"
@@ -653,22 +674,14 @@ gbs_func_data(s$&[])="_m_app_gbs_func_data"
 new_gbscmd_data:t_gbscmd()="_m_app_new_gbscmd_data"
 gbs_func_sdata(s$&[])="_m_app_gbs_func_sdata"
 new_gbscmd_sdata:t_gbscmd()="_m_app_new_gbscmd_sdata"
-iclamp%(n%,l%,h%)="_m_app_iclamp"
 gb_audio_play_sound(n%,c%=0,r#=1.0#,v#=1.0#)="_m_app_gb_audio_play_sound"
 gbs_func_playsound(s$&[])="_m_app_gbs_func_playsound"
 new_gbscmd_playsound:t_gbscmd()="_m_app_new_gbscmd_playsound"
 gbs_func_help(s$&[])="_m_app_gbs_func_help"
 new_gbscmd_help:t_gbscmd()="_m_app_new_gbscmd_help"
 gbs_init()="_m_app_gbs_init"
-new_image:t_image(p$)="_m_app_new_image"
-image_width%(u:t_image)="_m_app_image_width"
-image_height%(u:t_image)="_m_app_image_height"
-color_set(c:t_color,r#,g#,b#,a#=3.00000000#)="_m_app_color_set"
-new_palette:t_palette()="_m_app_new_palette"
-new_bitmap:t_bitmap(x%,y%,rr#=0.00000000#,gg#=0.00000000#,bb#=0.00000000#,aa#=0.00000000#)="_m_app_new_bitmap"
-color_to_argb%(c:t_color)="_m_app_color_to_argb"
-bitmap_sync(c:t_bitmap)="_m_app_bitmap_sync"
-new_bitmap_from_image:t_bitmap(u:t_image)="_m_app_new_bitmap_from_image"
+gb_editor_init()="_m_app_gb_editor_init"
+new_logchain:t_logchain()="_m_app_new_logchain"
 gb_testing_init()="_m_app_gb_testing_init"
 gb_debug_init()="_m_app_gb_debug_init"
 gb_init()="_m_app_gb_init"
@@ -689,6 +702,9 @@ dict_get_float#(d:t_dict,k$)="_m_app_dict_get_float"
 dict_read_float#(d:t_dict,s$)="_m_app_dict_read_float"
 gb_visual_set_window_scale(n#)="_m_app_gb_visual_set_window_scale"
 number_set(n:t_number,v#)="_m_app_number_set"
+dictval_get_int%(d:t_dictval)="_m_app_dictval_get_int"
+dict_get_int%(d:t_dict,k$)="_m_app_dict_get_int"
+dict_read_int%(d:t_dict,s$)="_m_app_dict_read_int"
 gb_visual_load()="_m_app_gb_visual_load"
 palette_set(p:t_palette,n%,r#,g#,b#,a#)="_m_app_palette_set"
 gb_load_default_palettes()="_m_app_gb_load_default_palettes"
@@ -704,10 +720,20 @@ animation_add_new_frame(a:t_animation,n%,id%,fx#,fy#,fw#,fh#,fd#)="_m_app_animat
 gb_load_default_animations()="_m_app_gb_load_default_animations"
 gb_load_default_sounds()="_m_app_gb_load_default_sounds"
 gb_load_default_images()="_m_app_gb_load_default_images"
+gb_editor_load()="_m_app_gb_editor_load"
 gb_testing_load()="_m_app_gb_testing_load"
 gb_debug_load()="_m_app_gb_debug_load"
 gb_load()="_m_app_gb_load"
 event_load()="_m_app_event_load"
+gb_editor_start()="_m_app_gb_editor_start"
+rpad$(t$,n%,p$=$" ")="_m_app_rpad"
+new_logchain_node:t_logchain_node(s$=$"")="_m_app_new_logchain_node"
+int_eq%(b:t_int,v%)="_m_app_int_eq"
+int_eq%(b:t_int)="_m_app_int_eq2"
+int_gte%(b:t_int,v%)="_m_app_int_gte"
+logchain_add(l:t_logchain,s$)="_m_app_logchain_add"
+logchain_next$(l:t_logchain)="_m_app_logchain_next"
+logchain_get$(l:t_logchain)="_m_app_logchain_get"
 gb_testing_start()="_m_app_gb_testing_start"
 gb_debug_start()="_m_app_gb_debug_start"
 gb_start()="_m_app_gb_start"
@@ -732,11 +758,10 @@ gb_console_update(d#)="_m_app_gb_console_update"
 float_gt%(b:t_float,v#)="_m_app_float_gt"
 float_lt%(b:t_float,v#)="_m_app_float_lt"
 bool_nt%(b:t_bool)="_m_app_bool_nt"
+gb_visual_take_screenshot()="_m_app_gb_visual_take_screenshot"
 gb_visual_update(d#)="_m_app_gb_visual_update"
 gb_mouse_virtual_tile_x#()="_m_app_gb_mouse_virtual_tile_x"
 gb_mouse_virtual_tile_y#()="_m_app_gb_mouse_virtual_tile_y"
-int_eq%(b:t_int,v%)="_m_app_int_eq"
-int_eq%(b:t_int)="_m_app_int_eq2"
 number_to_low(n:t_number)="_m_app_number_to_low"
 gb_mouse_update(d#)="_m_app_gb_mouse_update"
 gb_pulser_update(d#)="_m_app_gb_pulser_update"
@@ -745,15 +770,14 @@ gb_controller_release_button(n%)="_m_app_gb_controller_release_button"
 gb_controller_update(d#)="_m_app_gb_controller_update"
 gb_scene_update(d#)="_m_app_gb_scene_update"
 gb_save_settings()="_m_app_gb_save_settings"
+gb_editor_update(d#)="_m_app_gb_editor_update"
 gb_testing_update(d#)="_m_app_gb_testing_update"
 gb_debug_update(d#)="_m_app_gb_debug_update"
-gb_update(d#=0.0#)="_m_app_gb_update"
-event_update(d#)="_m_app_event_update"
+gb_update()="_m_app_gb_update"
+event_update()="_m_app_event_update"
 gb_debug_draw_grid_bg()="_m_app_gb_debug_draw_grid_bg"
 gb_debug_draw_bg(x#=0.00000000#,y#=0.00000000#)="_m_app_gb_debug_draw_bg"
 gb_scene_draw(x#,y#)="_m_app_gb_scene_draw"
-frand#(l#,h#)="_m_app_frand"
-bitmap_draw_dot(c:t_bitmap,x%,y%,rr#,gg#,bb#,aa#=3.00000000#)="_m_app_bitmap_draw_dot"
 roundint%(f#)="_m_app_roundint"
 gb_graph_calc_viewport()="_m_app_gb_graph_calc_viewport"
 gb_graph_prepare()="_m_app_gb_graph_prepare"
@@ -765,7 +789,7 @@ gb_graph_calc_w#(w#)="_m_app_gb_graph_calc_w"
 gb_graph_calc_h#(h#)="_m_app_gb_graph_calc_h"
 gb_graph_draw_image(x#,y#,im:TImage)="_m_app_gb_graph_draw_image"
 bitmap_draw(c:t_bitmap,x#=0.00000000#,y#=0.00000000#)="_m_app_bitmap_draw"
-image_draw(u:t_image,x#,y#)="_m_app_image_draw"
+gb_editor_draw(x#,y#)="_m_app_gb_editor_draw"
 gb_testing_draw(x#=0.00000000#,y#=0.00000000#)="_m_app_gb_testing_draw"
 gb_visual_set_virtual_scale(f#)="_m_app_gb_visual_set_virtual_scale"
 gb_graph_set_mode(d%)="_m_app_gb_graph_set_mode"
@@ -777,9 +801,7 @@ gb_graph_draw_tile(x#,y#,im%,ix#,iy#)="_m_app_gb_graph_draw_tile"
 gb_debug_draw_grid_fg()="_m_app_gb_debug_draw_grid_fg"
 gb_graph_draw_tile_rect(x#,y#,im%,ix#,iy#,rx%,ry%)="_m_app_gb_graph_draw_tile_rect"
 gb_graph_draw_tile_text(x#,y#,f%,t$)="_m_app_gb_graph_draw_tile_text"
-rpad$(t$,n%,p$=$" ")="_m_app_rpad"
 stopwatch_tostring$(s:t_stopwatch)="_m_app_stopwatch_tostring"
-strdec$(f#=0.0#,d%=2)="_m_app_strdec"
 gb_debug_draw_panel()="_m_app_gb_debug_draw_panel"
 gb_debug_draw_fg(x#=0.00000000#,y#=0.00000000#)="_m_app_gb_debug_draw_fg"
 high#(a#,b#)="_m_app_high"
@@ -790,7 +812,8 @@ gb_graph_set_alpha(a#)="_m_app_gb_graph_set_alpha"
 gb_graph_set_alpha(c:t_color)="_m_app_gb_graph_set_alpha2"
 gb_mouse_draw(x#=0.00000000#,y#=0.00000000#)="_m_app_gb_mouse_draw"
 gb_draw(x#=0.00000000#,y#=0.00000000#)="_m_app_gb_draw"
-event_draw(x#=0.00000000#,y#=0.00000000#)="_m_app_event_draw"
+event_draw()="_m_app_event_draw"
+gb_editor_end()="_m_app_gb_editor_end"
 gb_visual_end()="_m_app_gb_visual_end"
 gb_testing_end()="_m_app_gb_testing_end"
 gb_debug_end()="_m_app_gb_debug_end"
@@ -839,7 +862,6 @@ int_nt(b:t_int)="_m_app_int_nt"
 int_neq%(b:t_int,v%)="_m_app_int_neq"
 int_gt%(b:t_int,v%)="_m_app_int_gt"
 int_lt%(b:t_int,v%)="_m_app_int_lt"
-int_gte%(b:t_int,v%)="_m_app_int_gte"
 int_lte%(b:t_int,v%)="_m_app_int_lte"
 int_tostring$(b:t_int)="_m_app_int_tostring"
 long_pow(b:t_long,v%%)="_m_app_long_pow"
@@ -1016,6 +1038,8 @@ stopwatch_reset(s:t_stopwatch)="_m_app_stopwatch_reset"
 new_color_from_argb:t_color(ii%)="_m_app_new_color_from_argb"
 new_color_from_rgba:t_color(ii%)="_m_app_new_color_from_rgba"
 clone_color:t_color(c:t_color)="_m_app_clone_color"
+color_fit_to_depth(c:t_color)="_m_app_color_fit_to_depth"
+color_set_depth(c:t_color,d%=0)="_m_app_color_set_depth"
 color_set_c(c:t_color,d:t_color)="_m_app_color_set_c"
 color_set_rgb(c:t_color,r#,g#,b#)="_m_app_color_set_rgb"
 color_add(c:t_color,r#,g#,b#,a#=3.00000000#)="_m_app_color_add"
@@ -1027,6 +1051,7 @@ color_mul_alpha(c:t_color,a#)="_m_app_color_mul_alpha"
 color_div(c:t_color,r#,g#,b#,a#=3.00000000#)="_m_app_color_div"
 color_div_rgb(c:t_color,r#,g#,b#)="_m_app_color_div_rgb"
 color_div_alpha(c:t_color,a#=3.00000000#)="_m_app_color_div_alpha"
+color_to_argb%(c:t_color)="_m_app_color_to_argb"
 new_matrix:t_matrix(h%=3,w%=3)="_m_app_new_matrix"
 color_to_matrix:t_matrix(c:t_color)="_m_app_color_to_matrix"
 color_blend_alpha(c:t_color,r#,g#,b#,a#=3.00000000#)="_m_app_color_blend_alpha"
@@ -1043,7 +1068,6 @@ color_blend_custom(c:t_color,d:t_color,f(c:t_color,d:t_color))="_m_app_color_ble
 timer_set(t:t_timer,n#)="_m_app_timer_set"
 timer_get#(t:t_timer)="_m_app_timer_get"
 dictval_get_short@@(d:t_dictval)="_m_app_dictval_get_short"
-dictval_get_int%(d:t_dictval)="_m_app_dictval_get_int"
 dictval_get_long%%(d:t_dictval)="_m_app_dictval_get_long"
 dictval_get_double!(d:t_dictval)="_m_app_dictval_get_double"
 dictval_get_string$(d:t_dictval)="_m_app_dictval_get_string"
@@ -1052,7 +1076,6 @@ dict_find:t_dictval(d:t_dict,k$=$"")="_m_app_dict_find"
 dict_load%(d:t_dict,t$)="_m_app_dict_load"
 dict_save(d:t_dict,t$)="_m_app_dict_save"
 dict_get_short@@(d:t_dict,k$)="_m_app_dict_get_short"
-dict_get_int%(d:t_dict,k$)="_m_app_dict_get_int"
 dict_get_long%%(d:t_dict,k$)="_m_app_dict_get_long"
 dict_get_double!(d:t_dict,k$)="_m_app_dict_get_double"
 dict_get_string$(d:t_dict,k$)="_m_app_dict_get_string"
@@ -1067,7 +1090,6 @@ dict_write_double%(d:t_dict,s$,v!)="_m_app_dict_write_double"
 dict_write_string%(d:t_dict,s$,v$)="_m_app_dict_write_string"
 dict_write_dir%(d:t_dict,s$)="_m_app_dict_write_dir"
 dict_read_short@@(d:t_dict,s$)="_m_app_dict_read_short"
-dict_read_int%(d:t_dict,s$)="_m_app_dict_read_int"
 dict_read_long%%(d:t_dict,s$)="_m_app_dict_read_long"
 dict_read_double!(d:t_dict,s$)="_m_app_dict_read_double"
 dict_read_string$(d:t_dict,s$)="_m_app_dict_read_string"
@@ -1118,10 +1140,9 @@ gb_graph_calc_w3d#(w#,z#)="_m_app_gb_graph_calc_w3d"
 gb_graph_calc_h3d#(h#,z#)="_m_app_gb_graph_calc_h3d"
 gb_graph_draw_tile_box3d(x#,y#,z#,im%,ix#,iy#,iw#,ih#)="_m_app_gb_graph_draw_tile_box3d"
 sprite_draw3d(s:t_sprite,x#=0.00000000#,y#=0.00000000#,z#=0.00000000#)="_m_app_sprite_draw3d"
-ilow%(a%,b%)="_m_app_ilow"
 new_button:t_button(tx%,ty%)="_m_app_new_button"
 button_set_pos(b:t_button,x#,y#)="_m_app_button_set_pos"
-fround#(f#,d#=1.0#)="_m_app_fround"
+froundint#(f#)="_m_app_froundint"
 button_set_size(b:t_button,w#,h#)="_m_app_button_set_size"
 button_set_imgpos(b:t_button,tx#,ty#)="_m_app_button_set_imgpos"
 button_set_margin(b:t_button,f#)="_m_app_button_set_margin"
@@ -1132,13 +1153,19 @@ point_in_rect%(x#,y#,rx#,ry#,rw#,rh#)="_m_app_point_in_rect"
 button_update(b:t_button,d#)="_m_app_button_update"
 gb_graph_draw_tile_window(x#,y#,im%,ix#,iy#,wx%=2,wy%=2,b@=0)="_m_app_gb_graph_draw_tile_window"
 button_draw(b:t_button,x#=0.00000000#,y#=0.00000000#)="_m_app_button_draw"
+image_width%(u:t_image)="_m_app_image_width"
+image_height%(u:t_image)="_m_app_image_height"
+bitmap_sync(c:t_bitmap)="_m_app_bitmap_sync"
+new_bitmap_from_image:t_bitmap(u:t_image)="_m_app_new_bitmap_from_image"
+new_image:t_image(p$)="_m_app_new_image"
 new_bitmap_from_path:t_bitmap(p$)="_m_app_new_bitmap_from_path"
 bitmap_cls(c:t_bitmap)="_m_app_bitmap_cls"
+bitmap_draw_dot(c:t_bitmap,x%,y%,rr#,gg#,bb#,aa#=3.00000000#)="_m_app_bitmap_draw_dot"
 bitmap_draw_dot_c(c:t_bitmap,x%,y%,d:t_color)="_m_app_bitmap_draw_dot_c"
-bitmap_draw_rect(c:t_bitmap,x%,y%,w%,h%,d:t_color)="_m_app_bitmap_draw_rect"
+bitmap_draw_rect_c(c:t_bitmap,x%,y%,w%,h%,d:t_color)="_m_app_bitmap_draw_rect_c"
 ipoint_in_irect%(x%,y%,rx%,ry%,rw%,rh%)="_m_app_ipoint_in_irect"
-bitmap_paste(c:t_bitmap,x%,y%,d:t_bitmap)="_m_app_bitmap_paste"
-bitmap_paste_part(c:t_bitmap,x%,y%,d:t_bitmap,dx%,dy%,dw%,dh%)="_m_app_bitmap_paste_part"
+bitmap_blend(c:t_bitmap,x%,y%,d:t_bitmap)="_m_app_bitmap_blend"
+bitmap_blend_part(c:t_bitmap,x%,y%,d:t_bitmap,dx%,dy%,dw%,dh%)="_m_app_bitmap_blend_part"
 bitmap_blend_alpha(c:t_bitmap,x%,y%,d:t_bitmap)="_m_app_bitmap_blend_alpha"
 bitmap_blend_alpha_part(c:t_bitmap,x%,y%,d:t_bitmap,dx%,dy%,dw%,dh%)="_m_app_bitmap_blend_alpha_part"
 bitmap_blend_add(c:t_bitmap,x%,y%,d:t_bitmap)="_m_app_bitmap_blend_add"
@@ -1152,6 +1179,7 @@ clone_matrix:t_matrix(m:t_matrix)="_m_app_clone_matrix"
 matrix_plot(m:t_matrix,y%,x%,f#)="_m_app_matrix_plot"
 matrix_add:t_matrix(m1:t_matrix,m2:t_matrix)="_m_app_matrix_add"
 matrix_tostring$(m:t_matrix)="_m_app_matrix_tostring"
+frand#(l#,h#)="_m_app_frand"
 new_jake:t_jake()="_m_app_new_jake"
 prob%(r#)="_m_app_prob"
 jake_smile(j:t_jake)="_m_app_jake_smile"
@@ -1207,6 +1235,16 @@ drawstack_draw3d(d:t_drawstack,x#=0.00000000#,y#=0.00000000#,z#=0.00000000#)="_m
 lightcube_draw3d(a:t_lightcube,x#=0.00000000#,y#=0.00000000#,z#=0.00000000#)="_m_app_lightcube_draw3d"
 lightcube_draw(a:t_lightcube,x#=0.00000000#,y#=0.00000000#)="_m_app_lightcube_draw"
 image_path$(u:t_image)="_m_app_image_path"
+image_draw(u:t_image,x#,y#)="_m_app_image_draw"
+logchain_node_set(l:t_logchain_node,s$=$"")="_m_app_logchain_node_set"
+new_logchain_ex:t_logchain(n%)="_m_app_new_logchain_ex"
+logchain_remove(l:t_logchain)="_m_app_logchain_remove"
+logchain_set(l:t_logchain,s$)="_m_app_logchain_set"
+logchain_prev$(l:t_logchain)="_m_app_logchain_prev"
+logchain_to_array$&[](l:t_logchain)="_m_app_logchain_to_array"
+logchain_seek_back(l:t_logchain,n%=1)="_m_app_logchain_seek_back"
+logchain_seek_forward(l:t_logchain,n%=1)="_m_app_logchain_seek_forward"
+logchain_reset_seek(l:t_logchain)="_m_app_logchain_reset_seek"
 drawcmd_set_pos(d:t_drawcmd,x#,y#,z#)="_m_app_drawcmd_set_pos"
 drawcmd_set_rotation(d:t_drawcmd,r#)="_m_app_drawcmd_set_rotation"
 drawcmd_set_scale(d:t_drawcmd,x#,y#)="_m_app_drawcmd_set_scale"
@@ -1290,6 +1328,10 @@ darray3!&[,,](x%,y%,z%,v!)="_m_app_darray3"
 sarray$&[](n%,v$)="_m_app_sarray"
 sarray2$&[,](x%,y%,v$)="_m_app_sarray2"
 sarray3$&[,,](x%,y%,z%,v$)="_m_app_sarray3"
+fmod#(v#,m#=1.0#)="_m_app_fmod"
+imod%(v%,m%=1)="_m_app_imod"
+iround%(n%,d%=10)="_m_app_iround"
+fround#(n#,d#=1.0#)="_m_app_fround"
 char$(s$,n%)="_m_app_char"
 gb_visual_reopen_graphics()="_m_app_gb_visual_reopen_graphics"
 gb_audio_cue_sound(n%,c%=0,r#=1.0#,v#=1.0#)="_m_app_gb_audio_cue_sound"
@@ -1323,6 +1365,7 @@ gb_graph_draw_tile_hstrip(x#,y#,im%,ix#,iy#,tw%=2)="_m_app_gb_graph_draw_tile_hs
 gb_graph_draw_tile_vstrip(x#,y#,im%,ix#,iy#,th%=2)="_m_app_gb_graph_draw_tile_vstrip"
 gb_graph_draw_tile_line(x1#,y1#,x2#,y2#,im%,ix#,iy#,n%=10)="_m_app_gb_graph_draw_tile_line"
 gb_graph_draw_tile_line3d(x1#,y1#,z1#,x2#,y2#,z2#,im%,ix#,iy#,n%=10)="_m_app_gb_graph_draw_tile_line3d"
+gb_console_refresh_lines()="_m_app_gb_console_refresh_lines"
 gb_achievements_add_achievement(id$,name$)="_m_app_gb_achievements_add_achievement"
 gb_achievements_fulfill(id$)="_m_app_gb_achievements_fulfill"
 gb_achievements_init()="_m_app_gb_achievements_init"
@@ -1343,7 +1386,6 @@ gb_transition_fade_out()="_m_app_gb_transition_fade_out"
 gb_transition_fade_in()="_m_app_gb_transition_fade_in"
 gb_transition_init()="_m_app_gb_transition_init"
 gb_debug_out(s$)="_m_app_gb_debug_out"
-gb_editor_init()="_m_app_gb_editor_init"
 gb_stop()="_m_app_gb_stop"
 gb_add_font(n%,f:t_font)="_m_app_gb_add_font"
 gb_set_speed(n#)="_m_app_gb_set_speed"
@@ -1406,6 +1448,7 @@ gb_visual_letterbox_scales:t_point&=mem:p("_m_app_gb_visual_letterbox_scales")
 gb_visual_use_scanlines:t_bool&=mem:p("_m_app_gb_visual_use_scanlines")
 gb_visual_scanlines_style:t_number&=mem:p("_m_app_gb_visual_scanlines_style")
 gb_visual_scanlines_thick:t_number&=mem:p("_m_app_gb_visual_scanlines_thick")
+gb_visual_screenshot_id:t_int&=mem:p("_m_app_gb_visual_screenshot_id")
 gb_audio_channels:TChannel&[]&=mem:p("_m_app_gb_audio_channels")
 gb_timing_curr|&=mem:p("_m_app_gb_timing_curr")
 gb_timing_old|&=mem:p("_m_app_gb_timing_old")
@@ -1449,6 +1492,7 @@ gb_console_cursor_flash:t_bool&=mem:p("_m_app_gb_console_cursor_flash")
 gb_console_cursor_timer:t_timer&=mem:p("_m_app_gb_console_cursor_timer")
 gb_console_cursor_pos:t_int&=mem:p("_m_app_gb_console_cursor_pos")
 gb_console_data:t_dict&=mem:p("_m_app_gb_console_data")
+gb_console_logchain:t_logchain&=mem:p("_m_app_gb_console_logchain")
 gb_achievements:t_dict&=mem:p("_m_app_gb_achievements")
 gb_mouse_click:t_int&=mem:p("_m_app_gb_mouse_click")
 gb_mouse_clicktime:t_number&=mem:p("_m_app_gb_mouse_clicktime")
@@ -1480,6 +1524,7 @@ gb_running:t_bool&=mem:p("_m_app_gb_running")
 gb_paused:t_bool&=mem:p("_m_app_gb_paused")
 gb_speed:t_number&=mem:p("_m_app_gb_speed")
 gb_fonts:t_font&[]&=mem:p("_m_app_gb_fonts")
+gb_bitmap:t_bitmap&=mem:p("_m_app_gb_bitmap")
 gb_images:TImage&[]&=mem:p("_m_app_gb_images")
 gb_image_paths$&[]&=mem:p("_m_app_gb_image_paths")
 gb_sounds:TSound&[]&=mem:p("_m_app_gb_sounds")

@@ -1,7 +1,8 @@
 visual {
-  windowscale : #4.00000000;
+  windowscale : #2.00;
   fullscreen : @0;
-  use-scanlines : @0;
+  use-scanlines : @1;
   scanlines-thick : @2;
-  scanlines-style : @0;
+  scanlines-style : @2;
+  screenshot-id : %13;
 }

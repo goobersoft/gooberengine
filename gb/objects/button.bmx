@@ -42,8 +42,8 @@ function button_set_pos(b:t_button, x:float, y:float)
 endfunction
 
 function button_set_size(b:t_button, w:float, h:float)
-	b.rect.w = low(fround(w),0)
-	b.rect.h = low(fround(h),0)
+	b.rect.w = low(froundint(w),0)
+	b.rect.h = low(froundint(h),0)
 endfunction
 
 function button_set_imgpos(b:t_button, tx:float, ty:float)

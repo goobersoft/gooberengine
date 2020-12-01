@@ -991,8 +991,36 @@ function roundint:int( f:float )
 	endif
 endfunction
 
-function fround:float( f:float, d:float=1.0 )
-	return float(round(f))
+function froundint:float( f:float )
+  return float(roundint(f))
+endfunction
+
+function fmod:float( v:float, m:float=1.0 )
+  m = low(m,0)
+  if m = 0 then return v
+  return wrap(v,0,m)
+endfunction
+
+function imod:int( v:int, m:int=1 )
+  m = ilow(m,0)
+  if m = 0 then return v
+  if m = 1 then return 0
+  return iwrap(v,0,m)
+endfunction
+
+function iround:int( n:int, d:int=10 )
+  local v:int = imod(n,d)
+  local w:int = d-v
+  if (v >= w) then return n+w
+  return n-v 
+endfunction
+
+function fround:float( n:float, d:float=1.0 )
+  if abs(n) < (d/2) then return 0.0
+  local v:float = fmod(n,d)
+  local w:float = d-v
+  if (v >= w) then return n+w
+  return n-v 
 endfunction
 
 function char:string(s:string, n:int)

@@ -29,6 +29,8 @@ global gb_visual_use_scanlines			:t_bool
 global gb_visual_scanlines_style		:t_number
 global gb_visual_scanlines_thick		:t_number
 
+global gb_visual_screenshot_id      :t_int
+
 '''''''''''''''
 '' Functions ''
 '''''''''''''''
@@ -113,15 +115,26 @@ function gb_visual_set_window_scale(n:float)
 	gb_visual_refresh()
 endfunction
 
+function gb_visual_take_screenshot()
+  local u:timage = createimage(int(gb_visual_letterbox_rect.w),
+    int(gb_visual_letterbox_rect.h),DYNAMICIMAGE)
+  grabimage         (u,int(gb_visual_letterbox_rect.x), int(gb_visual_letterbox_rect.y))
+  local ss:string   = "./screenshots/" + rpad(string(gb_visual_screenshot_id.value),3,"0") + ".png"
+  int_add           (gb_visual_screenshot_id,1)
+  local x:tpixmap   = lockimage(u)
+  local m:int       = savepixmappng(x,ss,0)
+  unlockimage       (u)
+endfunction
+
 ''''''''''''
 '' Events ''
 ''''''''''''
 
 function gb_visual_init()
-	gb_visual_fullscreen 		= new_bool(false)
-	gb_visual_windowscale 	= new_float(2.0)
-	gb_visual_virtualscale 	= new_float(1.0)
-	gb_visual_pixelscale		= new_float(2.0)
+	gb_visual_fullscreen 		      = new_bool(false)
+	gb_visual_windowscale 	      = new_float(2.0)
+	gb_visual_virtualscale 	      = new_float(1.0)
+	gb_visual_pixelscale		      = new_float(2.0)
 	
 	gb_visual_letterbox_aspect 		= new_float(5.0/3.0)
 	gb_visual_letterbox_diagonal 	= new_float(dist2d(0,0,800,480))
@@ -149,10 +162,10 @@ function gb_visual_load()
 		gb_visual_set_window_scale( dict_read_float(u,"visual/windowscale") )
 	endif
 	
-	bool_set(gb_visual_use_scanlines, dict_read_byte(u,"visual/use-scanlines"))
-	number_set(gb_visual_scanlines_style,dict_read_byte(u,"visual/scanlines-style"))
-	number_set(gb_visual_scanlines_thick,dict_read_byte(u,"visual/scanlines-thick"))
-	
+	bool_set    (gb_visual_use_scanlines,   dict_read_byte(u,"visual/use-scanlines"))
+	number_set  (gb_visual_scanlines_style, dict_read_byte(u,"visual/scanlines-style"))
+	number_set  (gb_visual_scanlines_thick, dict_read_byte(u,"visual/scanlines-thick"))
+	int_set     (gb_visual_screenshot_id,   dict_read_int(u,"visual/screenshot-id"))
 endfunction
 
 function gb_visual_update(d:float)
@@ -161,16 +174,17 @@ function gb_visual_update(d:float)
 			gb_visual_set_window_scale( float_get(gb_visual_windowscale)-1.0)
 		endif
 	endif
-	
 	if keyhit(key_f3)
 		if float_lt(gb_visual_windowscale, 4.0)
 			gb_visual_set_window_scale( float_get(gb_visual_windowscale)+1.0)
 		endif
 	endif
-	
 	if keyhit(key_f4)
 		gb_visual_set_fullscreen( bool_nt(gb_visual_fullscreen) )
 	endif
+  if keyhit(key_f12)
+    gb_visual_take_screenshot()
+  endif
 endfunction
 
 function gb_visual_draw(x:float=0, y:float=0)
@@ -193,6 +207,7 @@ function gb_visual_end()
 	dict_set_byte		(d,"use-scanlines",gb_visual_use_scanlines.value)
 	dict_set_byte		(d,"scanlines-thick",byte(gb_visual_scanlines_thick.value))
 	dict_set_byte		(d,"scanlines-style",byte(gb_visual_scanlines_style.value))
+  dict_set_int    (d,"screenshot-id",int(gb_visual_screenshot_id.value))
 	dict_set_dir		(gb_settings,"visual",d)
 endfunction
 

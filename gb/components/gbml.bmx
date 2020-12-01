@@ -61,7 +61,7 @@ function gbml_to_string:string(d:t_dict, s:int=0)
 						Case dictval_id_long
 							sb.append(rep("  ",s) + d.keys[i] + " : ^" + long_get(d.values[i].tlong) + ";~n")
 						Case dictval_id_float
-							sb.append(rep("  ",s) + d.keys[i] + " : #" + float_get(d.values[i].tfloat) + ";~n")
+							sb.append(rep("  ",s) + d.keys[i] + " : #" + strdec(float_get(d.values[i].tfloat)) + ";~n")
 						Case dictval_id_double
 							sb.append(rep("  ",s) + d.keys[i] + " : !" + double_get(d.values[i].tdouble) + ";~n")
 						Case dictval_id_string
@@ -92,7 +92,7 @@ function gbml_to_string_compressed:string(d:t_dict)
 						Case dictval_id_long
 							sb.append(d.keys[i] + ":^" + long_get(d.values[i].tlong) + ";")
 						Case dictval_id_float
-							sb.append(d.keys[i] + ":#" + float_get(d.values[i].tfloat) + ";")
+							sb.append(d.keys[i] + ":#" + strdec(float_get(d.values[i].tfloat)) + ";")
 						Case dictval_id_double
 							sb.append(d.keys[i] + ":!" + double_get(d.values[i].tdouble) + ";")
 						Case dictval_id_string

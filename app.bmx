@@ -24,12 +24,12 @@ function event_start()
 	gb_start()
 endfunction
 
-function event_update(d:float)
-	gb_update(d)
+function event_update()
+	gb_update()
 endfunction
 
-function event_draw(x:float=0, y:float=0)
-	gb_draw(x,y)
+function event_draw()
+	gb_draw()
 endfunction
 
 function event_end()
@@ -42,8 +42,8 @@ function event_main()
 	event_start()
 	while bool_eq(gb_running,true) and appterminate()=false
 		cls()
-		event_update(0)
-		event_draw(0,0)
+		event_update()
+		event_draw()
 		flip(1)
 	wend
 	event_end()

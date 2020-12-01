@@ -5,27 +5,27 @@
 ''      (4 = 4-tone color, 16 'bits' total) 
 
 type t_bitmap
-	field width		:int
-	field height	:int
-	field data		:t_color[,]
-  field depth   :int
-  field palette :t_palette
-	field image		:timage
+	field width		  :t_int
+	field height	  :t_int
+	field data		  :t_color[,]
+  field coldepth  :t_int
+  field palette   :t_palette
+	field image		  :timage
 endtype
 
 function new_bitmap:t_bitmap(x:int, y:int, rr:float=0, gg:float=0, bb:float=0, aa:float=0)
 	local r:t_bitmap = new t_bitmap
-	r.width 		= low(x,10)
-	r.height 		= low(y,10)
-	r.data 			= new t_color[r.width, r.height]
-	for local i:int = 0 to r.width-1
-		for local j:int = 0 to r.height-1
+	r.width 		= new_int(ilow(x,10))
+	r.height 		= new_int(ilow(y,10))
+	r.data 			= new t_color[r.width.value, r.height.value]
+	for local i:int = 0 to r.width.value-1
+		for local j:int = 0 to r.height.value-1
 			r.data[i,j] = new_color(rr,gg,bb,aa)
 		next
 	next
-	r.image     = createimage(r.width, r.height, 1, DYNAMICIMAGE)
+	r.image     = createimage(r.width.value, r.height.value, 1, DYNAMICIMAGE)
   r.palette   = new_palette()
-  r.depth     = 0
+  r.coldepth  = new_int(0)
 	return r
 endfunction
 
@@ -33,11 +33,11 @@ function new_bitmap_from_image:t_bitmap( u:t_image )
 	local px :int     = image_width(u)
 	local py :int     = image_height(u)
   local pp :tpixmap = lockimage(u.image)
-  local ii :int = 0
-  local aa :float = 0
-  local rr :float = 0
-  local gg :float = 0
-  local bb :float = 0
+  local ii :int     = 0
+  local aa :float   = 0
+  local rr :float   = 0
+  local gg :float   = 0
+  local bb :float   = 0
 	
 	local r:t_bitmap = new_bitmap(px,py)
 	for local i:int = 0 to px-1
@@ -50,7 +50,7 @@ function new_bitmap_from_image:t_bitmap( u:t_image )
       r.data[i,j] = new_color(rr,gg,bb,aa)
 		next
 	next
-	r.image     = createimage(r.width, r.height, 1, DYNAMICIMAGE)
+	r.image     = createimage(r.width.value, r.height.value, 1, DYNAMICIMAGE)
   r.palette   = new_palette()
   bitmap_sync(r)
 	return r
@@ -67,8 +67,8 @@ endfunction
 function bitmap_sync(c:t_bitmap)
 	local u:tpixmap = lockimage(c.image)
 	local x:int = 0
-	for local i:int = 0 to c.width-1
-		for local j:int = 0 to c.height-1
+	for local i:int = 0 to c.width.value-1
+		for local j:int = 0 to c.height.value-1
 			x = color_to_argb(c.data[i,j])
 			writepixel(u,i,j,x)
 		next
@@ -76,8 +76,8 @@ function bitmap_sync(c:t_bitmap)
 endfunction
 
 function bitmap_cls(c:t_bitmap)
-	for local i:int = 0 to c.width-1
-		for local j:int = 0 to c.height-1
+	for local i:int = 0 to c.width.value-1
+		for local j:int = 0 to c.height.value-1
 			color_set(c.data[i,j], 0, 0, 0, 0)
 		next
 	next
@@ -88,66 +88,68 @@ endfunction
 '''''''''''''''''''''''
 
 function bitmap_draw_dot(c:t_bitmap, x:int, y:int, rr:float, gg:float, bb:float, aa:float=3)
-	x = iwrap(x,0,c.width-1)
-	y = iwrap(y,0,c.height-1)
-	color_set(c.data[x,y], rr, gg, bb, aa)
+	x = iwrap(x,0,c.width.value-1)
+	y = iwrap(y,0,c.height.value-1)
+  if in_irange( x, 0, c.width.value ) and in_irange( y, 0, c.height.value )
+    color_set(c.data[x,y], rr, gg, bb, aa)
+  endif
 endfunction
 
 function bitmap_draw_dot_c(c:t_bitmap, x:int, y:int, d:t_color)
-	x = iwrap(x,0,c.width-1)
-	y = iwrap(y,0,c.height-1)
-	color_set_c(c.data[x,y], d)
+	x = iwrap(x,0,c.width.value-1)
+	y = iwrap(y,0,c.height.value-1)
+  if in_irange( x, 0, c.width.value ) and in_irange( y, 0, c.height.value )
+	  color_set_c(c.data[x,y], d)
+  endif
 endfunction
 
 function bitmap_draw_rect_c( c:t_bitmap, x:int, y:int, w:int, h:int, d:t_color)
-	x = iwrap(x,0,c.width-1)
-	y = iwrap(y,0,c.height-1)
-	w = iclamp(w,0,c.width-x)
-	h = iclamp(h,0,c.height-y)
+	x = iwrap(x,0,c.width.value-1)
+	y = iwrap(y,0,c.height.value-1)
+	w = iclamp(w,0,c.width.value-x)
+	h = iclamp(h,0,c.height.value-y)
 	for local i:int = 0 to w-1
 		for local j:int = 0 to h-1
-			color_set_c( c.data[i,j], d )
+      if in_irange( x+i, 0, c.width.value ) and in_irange( y+j, 0, c.height.value )
+			  color_set_c( c.data[x+i,y+j], d )
+      endif
 		next
 	next
 endfunction
 
-function bitmap_paste( c:t_bitmap, x:int, y:int, d:t_bitmap )
-	local ux:int = d.width
-	local uy:int = d.height
+'''''''''''''''''''''''
+'' blending commands ''
+'''''''''''''''''''''''
+
+function bitmap_blend( c:t_bitmap, x:int, y:int, d:t_bitmap )
+	local ux:int = d.width.value
+	local uy:int = d.height.value
 	for local i:int = 0 to ux-1
 		for local j:int = 0 to uy-1
-			if ipoint_in_irect(x+i, y+j, 0, 0, c.width, c.height)
+			if ipoint_in_irect(x+i, y+j, 0, 0, c.width.value, c.height.value)
 				color_set_c( c.data[x+i, y+j], d.data[i,j])
 			endif
 		next
 	next
 endfunction
 
-function bitmap_paste_part( c:t_bitmap, x:int, y:int, d:t_bitmap,
+function bitmap_blend_part( c:t_bitmap, x:int, y:int, d:t_bitmap,
 dx:int, dy:int, dw:int, dh:int )
-	dx = iclamp(dx,0,d.width-1)
-	dy = iclamp(dy,0,d.height-1)
-	dw = iclamp(dw,1,d.width-dx)
-	dh = iclamp(dh,1,d.height-dy)
 	for local i:int = 0 to dw-1
 		for local j:int = 0 to dh-1
-			if ipoint_in_irect( x+i, y+j, 0, 0, c.width, c.height )
+			if ipoint_in_irect( x+i, y+j, 0, 0, c.width.value, c.height.value )
 				color_set_c( c.data[x+i, y+j], d.data[i+dx, j+dy] )
 			endif
 		next
 	next
 endfunction
 
-''''''''''''''''''''''''
-'' blending commands) ''
-''''''''''''''''''''''''
-
 function bitmap_blend_alpha( c:t_bitmap, x:int, y:int, d:t_bitmap )
-	local ux:int = d.width
-	local uy:int = d.height
+	local ux:int = d.width.value
+	local uy:int = d.height.value
 	for local i:int = 0 to ux-1
 		for local j:int = 0 to uy-1
-			if ipoint_in_irect(x+i, y+j, 0, 0, c.width, c.height)
+			if ipoint_in_irect(x+i, y+j, 0, 0, c.width.value, c.height.value)
 				color_blend_alpha_c( c.data[x+i, y+j], d.data[i,j])
 			endif
 		next
@@ -156,13 +158,13 @@ endfunction
 
 function bitmap_blend_alpha_part( c:t_bitmap, x:int, y:int, d:t_bitmap,
 dx:int, dy:int, dw:int, dh:int )
-	dx = iclamp(dx,0,d.width-1)
-	dy = iclamp(dy,0,d.height-1)
-	dw = iclamp(dw,1,d.width-dx)
-	dh = iclamp(dh,1,d.height-dy)
+	dx = iclamp(dx,0,d.width.value-1)
+	dy = iclamp(dy,0,d.height.value-1)
+	dw = iclamp(dw,1,d.width.value-dx)
+	dh = iclamp(dh,1,d.height.value-dy)
 	for local i:int = 0 to dw-1
 		for local j:int = 0 to dh-1
-			if ipoint_in_irect( x+i, y+j, 0, 0, c.width, c.height )
+			if ipoint_in_irect( x+i, y+j, 0, 0, c.width.value, c.height.value )
 				color_blend_alpha_c( c.data[x+i, y+j], d.data[i+dx, j+dy] )
 			endif
 		next
@@ -170,11 +172,11 @@ dx:int, dy:int, dw:int, dh:int )
 endfunction
 
 function bitmap_blend_add( c:t_bitmap, x:int, y:int, d:t_bitmap )
-	local ux:int = d.width
-	local uy:int = d.height
+	local ux:int = d.width.value
+	local uy:int = d.height.value
 	for local i:int = 0 to ux-1
 		for local j:int = 0 to uy-1
-			if ipoint_in_irect(x+i, y+j, 0, 0, c.width, c.height)
+			if ipoint_in_irect(x+i, y+j, 0, 0, c.width.value, c.height.value)
 				color_blend_add_c( c.data[x+i, y+j], d.data[i,j])
 			endif
 		next
@@ -183,13 +185,13 @@ endfunction
 
 function bitmap_blend_add_part( c:t_bitmap, x:int, y:int, d:t_bitmap,
 dx:int, dy:int, dw:int, dh:int )
-	dx = iclamp(dx,0,d.width-1)
-	dy = iclamp(dy,0,d.height-1)
-	dw = iclamp(dw,1,d.width-dx)
-	dh = iclamp(dh,1,d.height-dy)
+	dx = iclamp(dx,0,d.width.value-1)
+	dy = iclamp(dy,0,d.height.value-1)
+	dw = iclamp(dw,1,d.width.value-dx)
+	dh = iclamp(dh,1,d.height.value-dy)
 	for local i:int = 0 to dw-1
 		for local j:int = 0 to dh-1
-			if ipoint_in_irect( x+i, y+j, 0, 0, c.width, c.height )
+			if ipoint_in_irect( x+i, y+j, 0, 0, c.width.value, c.height.value )
 				color_blend_add_c( c.data[x+i, y+j], d.data[i+dx, j+dy] )
 			endif
 		next
@@ -197,11 +199,11 @@ dx:int, dy:int, dw:int, dh:int )
 endfunction
 
 function bitmap_blend_multiply( c:t_bitmap, x:int, y:int, d:t_bitmap )
-	local ux:int = d.width
-	local uy:int = d.height
+	local ux:int = d.width.value
+	local uy:int = d.height.value
 	for local i:int = 0 to ux-1
 		for local j:int = 0 to uy-1
-			if ipoint_in_irect(x+i, y+j, 0, 0, c.width, c.height)
+			if ipoint_in_irect(x+i, y+j, 0, 0, c.width.value, c.height.value)
 				color_blend_multiply_c( c.data[x+i, y+j], d.data[i,j])
 			endif
 		next
@@ -210,13 +212,13 @@ endfunction
 
 function bitmap_blend_multiply_part( c:t_bitmap, x:int, y:int, d:t_bitmap,
 dx:int, dy:int, dw:int, dh:int )
-	dx = iclamp(dx,0,d.width-1)
-	dy = iclamp(dy,0,d.height-1)
-	dw = iclamp(dw,1,d.width-dx)
-	dh = iclamp(dh,1,d.height-dy)
+	dx = iclamp(dx,0,d.width.value-1)
+	dy = iclamp(dy,0,d.height.value-1)
+	dw = iclamp(dw,1,d.width.value-dx)
+	dh = iclamp(dh,1,d.height.value-dy)
 	for local i:int = 0 to dw-1
 		for local j:int = 0 to dh-1
-			if ipoint_in_irect( x+i, y+j, 0, 0, c.width, c.height )
+			if ipoint_in_irect( x+i, y+j, 0, 0, c.width.value, c.height.value )
 				color_blend_multiply_c( c.data[x+i, y+j], d.data[i+dx, j+dy] )
 			endif
 		next
@@ -224,11 +226,11 @@ dx:int, dy:int, dw:int, dh:int )
 endfunction
 
 function bitmap_blend_sub( c:t_bitmap, x:int, y:int, d:t_bitmap )
-	local ux:int = d.width
-	local uy:int = d.height
+	local ux:int = d.width.value
+	local uy:int = d.height.value
 	for local i:int = 0 to ux-1
 		for local j:int = 0 to uy-1
-			if ipoint_in_irect(x+i, y+j, 0, 0, c.width, c.height)
+			if ipoint_in_irect(x+i, y+j, 0, 0, c.width.value, c.height.value)
 				color_blend_sub_c( c.data[x+i, y+j], d.data[i,j])
 			endif
 		next
@@ -237,13 +239,13 @@ endfunction
 
 function bitmap_blend_sub_part( c:t_bitmap, x:int, y:int, d:t_bitmap,
 dx:int, dy:int, dw:int, dh:int )
-	dx = iclamp(dx,0,d.width-1)
-	dy = iclamp(dy,0,d.height-1)
-	dw = iclamp(dw,1,d.width-dx)
-	dh = iclamp(dh,1,d.height-dy)
+	dx = iclamp(dx,0,d.width.value-1)
+	dy = iclamp(dy,0,d.height.value-1)
+	dw = iclamp(dw,1,d.width.value-dx)
+	dh = iclamp(dh,1,d.height.value-dy)
 	for local i:int = 0 to dw-1
 		for local j:int = 0 to dh-1
-			if ipoint_in_irect( x+i, y+j, 0, 0, c.width, c.height )
+			if ipoint_in_irect( x+i, y+j, 0, 0, c.width.value, c.height.value )
 				color_blend_sub_c( c.data[x+i, y+j], d.data[i+dx, j+dy] )
 			endif
 		next
@@ -252,11 +254,11 @@ endfunction
 
 function bitmap_blend_custom( c:t_bitmap, x:int, y:int, d:t_bitmap,
 f(c:t_color, d:t_color))
-	local ux:int = d.width
-	local uy:int = d.height
+	local ux:int = d.width.value
+	local uy:int = d.height.value
 	for local i:int = 0 to ux-1
 		for local j:int = 0 to uy-1
-			if ipoint_in_irect(x+i, y+j, 0, 0, c.width, c.height)
+			if ipoint_in_irect(x+i, y+j, 0, 0, c.width.value, c.height.value)
 				color_blend_custom( c.data[x+i, y+j], d.data[i,j], f)
 			endif
 		next

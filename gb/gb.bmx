@@ -62,6 +62,7 @@ include "objects/gbscmd.bmx"
 include "objects/spinicon.bmx"
 include "objects/lightcube.bmx"
 include "objects/image.bmx"
+include "objects/logchain.bmx"
 
 '' ~~unfinished modules~~
 include "objects/drawcmd.bmx"
@@ -134,21 +135,22 @@ const gb_gravity						:float		= 0.25
 '' Globals ''
 '''''''''''''
 
-global gb_running 		:t_bool
-global gb_paused 			:t_bool
-global gb_speed 			:t_number
+global gb_running 		      :t_bool
+global gb_paused 			      :t_bool
+global gb_speed 			      :t_number
 
-global gb_fonts				:t_font[]
+global gb_fonts				      :t_font[]
 
-global gb_images				:timage[]
-global gb_image_paths		:string[]
+global gb_bitmap            :t_bitmap
 
-global gb_sounds				:tsound[]
-global gb_sound_paths		:string[]
+global gb_images				    :timage[]
+global gb_image_paths		    :string[]
 
-global gb_palettes		:t_palette[]
-global gb_animations	:t_animation[]
+global gb_sounds				    :tsound[]
+global gb_sound_paths		    :string[]
 
+global gb_palettes		      :t_palette[]
+global gb_animations	      :t_animation[]
 
 global gb_settings					:t_dict
 global gb_autosave_timer		:t_timer
@@ -300,7 +302,8 @@ function gb_init()
 	gb_running 		= new_bool(true)
 	gb_paused 		= new_bool(false)
 	gb_speed 			= new_number(1.0,0.0,10.0)
-	
+  gb_bitmap     = new_bitmap(400,240)
+
 	gb_fonts					= new t_font				[gb_max_fonts]
 	gb_images					= new timage				[gb_max_images]
 	gb_sounds					= new tsound				[gb_max_sounds]
@@ -324,7 +327,8 @@ function gb_init()
 	gb_scene_init()
 	gb_net_init()
 	gbs_init()
-	
+  
+	gb_editor_init()
 	gb_testing_init()
 	gb_debug_init()
 endfunction
@@ -342,43 +346,48 @@ function gb_load()
 	gb_load_default_sounds()
 	gb_load_default_images()
 	
+  gb_editor_load()
 	gb_testing_load()
 	gb_debug_load()
 endfunction
 
 function gb_start()
+  gb_editor_start()
 	gb_testing_start()
 	gb_debug_start()
 endfunction
 
-function gb_update(d:float=0.0)
+function gb_update()
 	gb_timing_update	()
 	
-	local e:float = gb_get_deltatime()
-	gb_console_update	(e)
-	gb_visual_update	(e)
+	local d:float = gb_get_deltatime()
+	gb_console_update	(d)
+	gb_visual_update	(d)
 	
-	gb_mouse_update		(e)
-	gb_pulser_update	(e)
+	gb_mouse_update		(d)
+	gb_pulser_update	(d)
 	
 	if bool_eq(gb_console_enabled,false)
-		gb_controller_update(e)
-		gb_scene_update(e * gb_speed.value)
+		gb_controller_update(d)
+		gb_scene_update(d * gb_speed.value)
 	endif
 	
-	timer_update(gb_autosave_timer,e)
+	timer_update(gb_autosave_timer,d)
 	if timer_finished(gb_autosave_timer)
 		gb_save_settings()
 		timer_reset(gb_autosave_timer)
 	endif
 	
-	gb_testing_update	(e)
-	gb_debug_update		(e)
+  gb_editor_update  (d)
+	gb_testing_update	(d)
+	gb_debug_update		(d)
 endfunction
 
 function gb_draw(x:float=0, y:float=0)
 	gb_debug_draw_bg	(x,y)
 	gb_scene_draw			(x,y)
+  bitmap_draw       (gb_bitmap,x,y)
+  gb_editor_draw    (x,y)
 	gb_testing_draw		(x,y)
 	gb_visual_draw		(x,y)
 	gb_debug_draw_fg	(x,y)
@@ -387,6 +396,7 @@ function gb_draw(x:float=0, y:float=0)
 endfunction
 
 function gb_end()
+  gb_editor_end       ()
 	gb_visual_end				()
 	gb_testing_end			()
 	gb_debug_end				()

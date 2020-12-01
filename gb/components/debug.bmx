@@ -19,6 +19,7 @@ function gb_debug_out( s:string )
 		gb_debug_log = gb_debug_log[..gb_debug_log.length+1000]
 	endif
 	gb_debug_log[int_get(gb_debug_logpos)] = s
+  SDL_Log(s)
 endfunction
 
 function gb_debug_draw_panel()
