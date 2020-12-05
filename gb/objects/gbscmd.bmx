@@ -4,11 +4,11 @@
 ''''''''''
 
 type t_gbscmd
-	field name :string
-	field cmd :string
-	field aliases :string[]
-	field desc :string
-	field func(args:string[])
+	field name      :string
+	field cmd       :string
+	field aliases   :string[]
+	field desc      :string
+	field func      (args:string[])
 endtype
 
 function new_gbscmd:t_gbscmd()

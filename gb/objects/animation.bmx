@@ -21,6 +21,7 @@ Type t_animation
 	field stoptofirst		:t_bool
 endtype
 
+'' create an animation with blank frames
 function new_animation:t_animation(l:int=1, s:int=false)
 	local r:t_animation = new t_animation
 	r.status 			= new_int( animation_status_stopped )
@@ -32,7 +33,8 @@ function new_animation:t_animation(l:int=1, s:int=false)
 	return r
 endfunction
 
-function new_animation_a:t_animation(a:t_animframe[], s:int=false)
+'' create an animation from predefined frames
+function new_animation:t_animation(a:t_animframe[], s:int=false)
 	local r:t_animation = new t_animation
 	r.status 			= new_int( animation_status_stopped )
 	r.pos 				= new_int( undefined )
@@ -56,7 +58,7 @@ function animation_add_frame(a:t_animation, n:int, f:t_animframe)
 	a.frames[n] = f
 endfunction
 
-function animation_add_new_frame(a:t_animation, n:int, id:int, fx:float, fy:float, fw:float, fh:float, fd:float)
+function animation_add_frame(a:t_animation, n:int, id:int, fx:float, fy:float, fw:float, fh:float, fd:float)
 	animation_add_frame(a, n, new_animframe( id,fx,fy,fw,fh,fd )	)
 endfunction
 

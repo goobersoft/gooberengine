@@ -45,6 +45,9 @@ function gb_console_out(s:string)
 	for local i:int = 0 to len(u)-1
 		gb_console_print_line(u[i])
 	next
+
+  logchain_set    ( gb_console_logchain, s )
+  logchain_next   ( gb_console_logchain )
 endfunction
 
 '' input as integer value
@@ -80,6 +83,7 @@ function gb_console_init()
 	gb_console_cursor_timer = new_timer(0.5)
 	gb_console_cursor_pos		= new_int(0)
 	gb_console_data					= new_dict()
+  gb_console_logchain     = new_logchain(gb_console_max_lines)
 endfunction
 
 function gb_console_load()
@@ -92,7 +96,6 @@ function gb_console_update(d:float)
 	endif
 	
 	if bool_eq(gb_console_enabled)
-	
 		local u:byte = getchar()
 		while u <> 0
 			select u
@@ -136,7 +139,5 @@ function gb_console_draw(x:float=0, y:float=0)
 			high(string_length(gb_console_input)/2.0,39.5),
 			23,0,28+(0.5*gb_console_cursor_flash.value),22,0.5,1)
 		gb_graph_enable_camera(true)
-
-
 	endif
 endfunction

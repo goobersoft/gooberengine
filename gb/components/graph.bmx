@@ -321,8 +321,18 @@ function gb_graph_draw_rect3d( x:float, y:float, z:float, w:float, h:float )
 	endif
 endfunction
 
-function gb_graph_draw_image( x:float, y:float, im:timage )
+'' draw an image using an index.
+function gb_graph_draw_image( x:float, y:float, im:int )
 	gb_graph_prepare()
+  local u:timage = gb_images[im]
+	DrawSubImageRect( u, gb_graph_calc_x(x), gb_graph_calc_y(y),
+		gb_graph_calc_w(u.width/10), gb_graph_calc_h(u.height/10),
+		0, 0, u.width, u.height )
+endfunction
+
+'' draw an image using a timage object
+function gb_graph_draw_image( x:float, y:float, im:timage )
+  gb_graph_prepare()
 	DrawSubImageRect( im, gb_graph_calc_x(x), gb_graph_calc_y(y),
 		gb_graph_calc_w(im.width/10), gb_graph_calc_h(im.height/10),
 		0, 0, im.width, im.height )

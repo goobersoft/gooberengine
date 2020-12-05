@@ -12,6 +12,7 @@ Const dictval_id_float	:Int = 5
 Const dictval_id_double :Int = 6
 Const dictval_id_string	:Int = 7
 Const dictval_id_dir		:Int = 8
+const dictval_id_data   :int = 9
 
 ''''''''''
 '' type ''
@@ -27,6 +28,7 @@ type t_dictval
 	field tdouble		:t_double
 	field tstring		:t_string
 	field tdir			:t_dict
+  field tdata     :object
 endtype
 
 function new_dictval:t_dictval()
@@ -47,6 +49,7 @@ function dictval_clear(d:t_dictval)
 	d.tdouble = null
 	d.tstring = null
 	d.tdir 		= null
+  d.tdata   = null
 endfunction
 
 function dictval_eval(d:t_dictval, s:string)
@@ -132,6 +135,12 @@ function dictval_set_dir(d:t_dictval, t:t_dict=null)
 	endif
 endfunction
 
+function dictval_set_data(d:t_dictval, o:object)
+  dictval_clear(d)
+	d.id 				= dictval_id_data
+	d.tdata     = o
+endfunction
+
 function dictval_get_byte:byte(d:t_dictval)
 	if (d.id = dictval_id_byte) then return d.tbyte.value else return 0
 endfunction
@@ -162,6 +171,10 @@ endfunction
 
 function dictval_get_dir:t_dict(d:t_dictval)
 	if (d.id = dictval_id_dir) then return d.tdir else return null
+endfunction
+
+function dictval_get_data:object(d:t_dictval)
+  if (d.id = dictval_id_data) then return d.tdata else return null
 endfunction
 
 function dictval_get_id:int(d:t_dictval)

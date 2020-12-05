@@ -11,13 +11,13 @@ static BBString _s21={
 	1,
 	{32}
 };
-static BBString _s64={
+static BBString _s65={
 	&bbStringClass,
 	0xd080db24ebb0e205,
 	2,
 	{32,32}
 };
-static BBString _s135={
+static BBString _s138={
 	&bbStringClass,
 	0x9dfc4b1a7ff6e236,
 	95,
@@ -28,49 +28,49 @@ static BBString _s135={
 	,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112
 	,113,114,115,116,117,118,119,120,121,122,123,124,125,126}
 };
-static BBString _s71={
+static BBString _s72={
 	&bbStringClass,
 	0x37282ba3781b0ea9,
 	4,
 	{32,58,32,33}
 };
-static BBString _s70={
+static BBString _s71={
 	&bbStringClass,
 	0x8bbc990201c7c485,
 	4,
 	{32,58,32,35}
 };
-static BBString _s72={
+static BBString _s73={
 	&bbStringClass,
 	0xa8b0ca5434e125ae,
 	4,
 	{32,58,32,36}
 };
-static BBString _s68={
+static BBString _s69={
 	&bbStringClass,
 	0xd2dfcab4ae7a78e1,
 	4,
 	{32,58,32,37}
 };
-static BBString _s67={
+static BBString _s68={
 	&bbStringClass,
 	0x753bd7a881c30250,
 	4,
 	{32,58,32,38}
 };
-static BBString _s65={
+static BBString _s66={
 	&bbStringClass,
 	0x285aed8e0eaa3db4,
 	4,
 	{32,58,32,64}
 };
-static BBString _s69={
+static BBString _s70={
 	&bbStringClass,
 	0x47f5c13580c51bb3,
 	4,
 	{32,58,32,94}
 };
-static BBString _s73={
+static BBString _s74={
 	&bbStringClass,
 	0xad2a4e127dc15a83,
 	3,
@@ -112,7 +112,7 @@ static BBString _s25={
 	1,
 	{38}
 };
-static BBString _s61={
+static BBString _s62={
 	&bbStringClass,
 	0xbea2784021cfe3ff,
 	1,
@@ -124,25 +124,25 @@ static BBString _s14={
 	1,
 	{44}
 };
-static BBString _s42={
+static BBString _s43={
 	&bbStringClass,
 	0xce2681625dc80f4b,
 	1,
 	{46}
 };
-static BBString _s43={
+static BBString _s44={
 	&bbStringClass,
 	0xc2475a087e862e7e,
 	14,
 	{46,47,115,99,114,101,101,110,115,104,111,116,115,47}
 };
-static BBString _s60={
+static BBString _s61={
 	&bbStringClass,
 	0x6a2b7f7c5d27d56a,
 	5,
 	{46,103,98,109,108}
 };
-static BBString _s44={
+static BBString _s45={
 	&bbStringClass,
 	0xa244bb45f7b43a74,
 	4,
@@ -166,61 +166,61 @@ static BBString _s20={
 	1,
 	{58}
 };
-static BBString _s127={
+static BBString _s130={
 	&bbStringClass,
 	0xa51cb897e9712eca,
 	2,
 	{58,32}
 };
-static BBString _s80={
+static BBString _s81={
 	&bbStringClass,
 	0xc3771816531f89c,
 	2,
 	{58,33}
 };
-static BBString _s79={
+static BBString _s80={
 	&bbStringClass,
 	0xcbbe3ddee46731e2,
 	2,
 	{58,35}
 };
-static BBString _s81={
+static BBString _s82={
 	&bbStringClass,
 	0x2f61b60e83e1e4ea,
 	2,
 	{58,36}
 };
-static BBString _s77={
+static BBString _s78={
 	&bbStringClass,
 	0x46a9d618e1d402ea,
 	2,
 	{58,37}
 };
-static BBString _s76={
+static BBString _s77={
 	&bbStringClass,
 	0x40e784aa208786f4,
 	2,
 	{58,38}
 };
-static BBString _s75={
+static BBString _s76={
 	&bbStringClass,
 	0xecd219ce60396e46,
 	2,
 	{58,64}
 };
-static BBString _s78={
+static BBString _s79={
 	&bbStringClass,
 	0xf5c5f19eb32d60ce,
 	2,
 	{58,94}
 };
-static BBString _s62={
+static BBString _s63={
 	&bbStringClass,
 	0xd772c6ce2dfe0c0b,
 	1,
 	{59}
 };
-static BBString _s66={
+static BBString _s67={
 	&bbStringClass,
 	0xd90e34a38133a5cc,
 	2,
@@ -232,7 +232,7 @@ static BBString _s16={
 	2,
 	{60,61}
 };
-static BBString _s124={
+static BBString _s127={
 	&bbStringClass,
 	0x3f550a910185016f,
 	1,
@@ -262,56 +262,56 @@ static BBString _s2={
 	,97,100,121,32,101,120,105,115,116,115,32,105,110,32,116,104
 	,101,32,109,97,112}
 };
-static BBString _s134={
+static BBString _s137={
 	&bbStringClass,
 	0xd4aa834fc269f4b3,
 	2,
 	{70,58}
 };
-static BBString _s145={
+static BBString _s149={
 	&bbStringClass,
 	0x8d752a74e41cb76,
 	19,
 	{71,111,111,98,101,114,69,110,103,105,110,101,32,48,46,50,46
 	,48,48}
 };
-static BBString _s131={
+static BBString _s134={
 	&bbStringClass,
 	0x1077bc78f36ae96,
 	2,
 	{77,58}
 };
-static BBString _s85={
+static BBString _s86={
 	&bbStringClass,
 	0xcdcbb2e8e53f23d3,
 	8,
 	{78,111,32,68,101,115,99,46}
 };
-static BBString _s41={
+static BBString _s42={
 	&bbStringClass,
 	0x97bade1a9c0cb01a,
 	8,
 	{78,111,32,84,101,120,116,46}
 };
-static BBString _s59={
+static BBString _s60={
 	&bbStringClass,
 	0x54ea21d1943c6155,
 	6,
 	{79,112,101,110,65,76}
 };
-static BBString _s132={
+static BBString _s135={
 	&bbStringClass,
 	0x2f8b4ed5bc862464,
 	2,
 	{80,58}
 };
-static BBString _s128={
+static BBString _s131={
 	&bbStringClass,
 	0xf0a62d9eb2156487,
 	9,
 	{80,76,65,89,73,78,71,32,91}
 };
-static BBString _s137={
+static BBString _s140={
 	&bbStringClass,
 	0x9b23f3d5fe40262c,
 	10,
@@ -331,7 +331,7 @@ static BBString _s4={
 	{84,104,101,32,115,116,97,99,107,32,105,115,32,101,109,112,116
 	,121}
 };
-static BBString _s133={
+static BBString _s136={
 	&bbStringClass,
 	0x7d2a0922a3d0de87,
 	2,
@@ -349,13 +349,13 @@ static BBString _s22={
 	1,
 	{93}
 };
-static BBString _s129={
+static BBString _s132={
 	&bbStringClass,
 	0xa7cc0f0822044ec7,
 	4,
 	{93,32,45,32}
 };
-static BBString _s138={
+static BBString _s141={
 	&bbStringClass,
 	0xd29df61f0ed5039f,
 	2,
@@ -367,19 +367,19 @@ static BBString _s27={
 	1,
 	{94}
 };
-static BBString _s87={
+static BBString _s88={
 	&bbStringClass,
 	0xa02ae626104adb0c,
 	12,
 	{97,99,104,105,101,118,101,109,101,110,116,115}
 };
-static BBString _s90={
+static BBString _s94={
 	&bbStringClass,
 	0xf638697e577d2f30,
 	3,
 	{97,100,100}
 };
-static BBString _s91={
+static BBString _s95={
 	&bbStringClass,
 	0x7446205d165df135,
 	18,
@@ -392,13 +392,32 @@ static BBString _s32={
 	4,
 	{98,121,116,101}
 };
-static BBString _s116={
+static BBString _s89={
+	&bbStringClass,
+	0xa8f1a26caae749a6,
+	5,
+	{99,108,101,97,114}
+};
+static BBString _s91={
+	&bbStringClass,
+	0xcc3117f57eb2c1a5,
+	17,
+	{99,108,101,97,114,32,116,104,101,32,99,111,110,115,111,108,101
+}
+};
+static BBString _s90={
+	&bbStringClass,
+	0x939c82e2a34129dc,
+	3,
+	{99,108,115}
+};
+static BBString _s40={
 	&bbStringClass,
 	0xe75dd4ade996cffb,
 	4,
 	{100,97,116,97}
 };
-static BBString _s84={
+static BBString _s85={
 	&bbStringClass,
 	0x50a99cdc3f00f5af,
 	4,
@@ -410,13 +429,13 @@ static BBString _s39={
 	3,
 	{100,105,114}
 };
-static BBString _s94={
+static BBString _s98={
 	&bbStringClass,
 	0x2d608db093df5f8,
 	3,
 	{100,105,118}
 };
-static BBString _s95={
+static BBString _s99={
 	&bbStringClass,
 	0xe58090a38d516e03,
 	21,
@@ -441,66 +460,73 @@ static BBString _s36={
 	5,
 	{102,108,111,97,116}
 };
-static BBString _s86={
+static BBString _s87={
 	&bbStringClass,
 	0x531b7d3ef505dcb6,
 	9,
 	{102,117,108,102,105,108,108,101,100}
 };
-static BBString _s53={
+static BBString _s54={
 	&bbStringClass,
 	0xc01dc1502d516870,
 	10,
 	{102,117,108,108,115,99,114,101,101,110}
 };
-static BBString _s140={
+static BBString _s144={
+	&bbStringClass,
+	0x720148c315c80562,
+	29,
+	{103,98,47,109,101,100,105,97,47,105,109,97,103,101,115,47,101
+	,100,105,116,111,114,45,98,103,46,112,110,103}
+};
+static BBString _s143={
 	&bbStringClass,
 	0xdaeae2ebbd58d8c5,
 	24,
 	{103,98,47,109,101,100,105,97,47,105,109,97,103,101,115,47,103
 	,98,45,48,46,112,110,103}
 };
-static BBString _s141={
+static BBString _s145={
 	&bbStringClass,
 	0xb7d1490c9dbe664d,
 	26,
 	{103,98,47,109,101,100,105,97,47,115,111,117,110,100,115,47,106
 	,97,107,101,45,49,46,111,103,103}
 };
-static BBString _s142={
+static BBString _s146={
 	&bbStringClass,
 	0xa2d9319fca017093,
 	26,
 	{103,98,47,109,101,100,105,97,47,115,111,117,110,100,115,47,106
 	,97,107,101,45,50,46,111,103,103}
 };
-static BBString _s143={
+static BBString _s147={
 	&bbStringClass,
 	0xa01a227825f18573,
 	26,
 	{103,98,47,109,101,100,105,97,47,115,111,117,110,100,115,47,106
 	,97,107,101,45,51,46,111,103,103}
 };
-static BBString _s144={
+static BBString _s148={
 	&bbStringClass,
 	0xa8391a95d32fcc2b,
 	26,
 	{103,98,47,109,101,100,105,97,47,115,111,117,110,100,115,47,106
 	,97,107,101,45,52,46,111,103,103}
 };
-static BBString _s126={
+static BBString _s129={
 	&bbStringClass,
 	0x87ec4dc54c60c9a0,
 	3,
 	{103,98,115}
 };
-static BBString _s123={
+static BBString _s126={
 	&bbStringClass,
 	0x1dcdead19e062155,
 	4,
 	{104,101,108,112}
 };
-static BBString _s82={
+static BBString _s83={
 	&bbStringClass,
 	0x4ce197065112922c,
 	2,
@@ -512,13 +538,13 @@ static BBString _s34={
 	3,
 	{105,110,116}
 };
-static BBString _s111={
+static BBString _s115={
 	&bbStringClass,
 	0xe14c57e078ac7ff2,
 	2,
 	{108,105}
 };
-static BBString _s125={
+static BBString _s128={
 	&bbStringClass,
 	0xd1a764cff1742bb1,
 	24,
@@ -531,39 +557,39 @@ static BBString _s5={
 	13,
 	{108,105,115,116,32,105,115,32,101,109,112,116,121}
 };
-static BBString _s112={
+static BBString _s116={
 	&bbStringClass,
 	0xb149ee9f078b6f39,
 	27,
 	{108,105,115,116,32,108,111,97,100,101,100,32,105,109,97,103,101
 	,115,32,98,121,32,105,110,100,101,120}
 };
-static BBString _s115={
+static BBString _s119={
 	&bbStringClass,
 	0xecb584862c1c6cf5,
 	27,
 	{108,105,115,116,32,108,111,97,100,101,100,32,115,111,117,110,100
 	,115,32,98,121,32,105,110,100,101,120}
 };
-static BBString _s110={
+static BBString _s114={
 	&bbStringClass,
 	0xfd529bc32e0b9a7b,
 	10,
 	{108,105,115,116,105,109,97,103,101,115}
 };
-static BBString _s113={
+static BBString _s117={
 	&bbStringClass,
 	0xe88dce661e56d7a1,
 	10,
 	{108,105,115,116,115,111,117,110,100,115}
 };
-static BBString _s102={
+static BBString _s106={
 	&bbStringClass,
 	0xf91755e0de62549d,
 	4,
 	{108,111,97,100}
 };
-static BBString _s103={
+static BBString _s107={
 	&bbStringClass,
 	0xbf6aa7fb90b626e2,
 	21,
@@ -584,32 +610,32 @@ static BBString _s10={
 	,97,116,101,114,32,116,104,97,110,32,117,112,112,101,114,86
 	,97,108,117,101}
 };
-static BBString _s114={
+static BBString _s118={
 	&bbStringClass,
 	0x8f1504dd1a5d3a88,
 	2,
 	{108,115}
 };
-static BBString _s130={
+static BBString _s133={
 	&bbStringClass,
 	0xdee3714151e65fb4,
 	13,
 	{109,114,45,103,111,111,98,101,114,46,99,111,109}
 };
-static BBString _s92={
+static BBString _s96={
 	&bbStringClass,
 	0xc9e617a10fddb6bb,
 	3,
 	{109,117,108}
 };
-static BBString _s93={
+static BBString _s97={
 	&bbStringClass,
 	0x8823f46720c85a67,
 	23,
 	{109,117,108,116,105,112,108,121,32,118,97,114,32,91,48,93,32
 	,98,121,32,91,49,93}
 };
-static BBString _s83={
+static BBString _s84={
 	&bbStringClass,
 	0x2c1599df1bab3baf,
 	4,
@@ -635,7 +661,7 @@ static BBString _s7={
 	{110,111,100,101,32,112,97,114,101,110,116,32,108,105,115,116,32
 	,105,115,32,100,105,102,102,101,114,101,110,116}
 };
-static BBString _s40={
+static BBString _s41={
 	&bbStringClass,
 	0xcd0064649397c314,
 	4,
@@ -647,7 +673,7 @@ static BBString _s9={
 	5,
 	{111,116,104,101,114}
 };
-static BBString _s117={
+static BBString _s120={
 	&bbStringClass,
 	0x71ed90c870aaba11,
 	34,
@@ -655,7 +681,7 @@ static BBString _s117={
 	,116,116,101,100,32,115,101,115,115,105,111,110,32,100,97,116
 	,97}
 };
-static BBString _s119={
+static BBString _s122={
 	&bbStringClass,
 	0x95b5dcec7bad8863,
 	35,
@@ -663,120 +689,120 @@ static BBString _s119={
 	,116,116,101,100,32,115,101,116,116,105,110,103,115,32,100,97
 	,116,97}
 };
-static BBString _s122={
+static BBString _s125={
 	&bbStringClass,
 	0xff861fec61cf3f1a,
 	14,
 	{112,108,97,121,32,115,111,117,110,100,32,91,48,93}
 };
-static BBString _s120={
+static BBString _s123={
 	&bbStringClass,
 	0x775a30698627de0e,
 	9,
 	{112,108,97,121,115,111,117,110,100}
 };
-static BBString _s98={
+static BBString _s102={
 	&bbStringClass,
 	0x6be55727bcac13b2,
 	4,
 	{114,101,97,100}
 };
-static BBString _s99={
+static BBString _s103={
 	&bbStringClass,
 	0xdab9d7ac74d7a5b5,
 	27,
 	{114,101,97,100,32,102,114,111,109,32,112,97,116,104,32,91,48
 	,93,32,105,110,116,111,32,91,49,93}
 };
-static BBString _s106={
+static BBString _s110={
 	&bbStringClass,
 	0xe4e48a2c04fec5ba,
 	24,
 	{114,101,108,111,97,100,32,105,109,97,103,101,115,32,102,114,111
 	,109,32,102,105,108,101,115}
 };
-static BBString _s109={
+static BBString _s113={
 	&bbStringClass,
 	0x6497eac939569603,
 	24,
 	{114,101,108,111,97,100,32,115,111,117,110,100,115,32,102,114,111
 	,109,32,102,105,108,101,115}
 };
-static BBString _s104={
+static BBString _s108={
 	&bbStringClass,
 	0x9b6f8f76466dec77,
 	12,
 	{114,101,108,111,97,100,105,109,97,103,101,115}
 };
-static BBString _s107={
+static BBString _s111={
 	&bbStringClass,
 	0xb06c0a64e6692242,
 	12,
 	{114,101,108,111,97,100,115,111,117,110,100,115}
 };
-static BBString _s105={
+static BBString _s109={
 	&bbStringClass,
 	0xa725778fcc1f6580,
 	3,
 	{114,108,105}
 };
-static BBString _s108={
+static BBString _s112={
 	&bbStringClass,
 	0xf5e9da692742e056,
 	3,
 	{114,108,115}
 };
-static BBString _s100={
+static BBString _s104={
 	&bbStringClass,
 	0xa06877c16216f837,
 	4,
 	{115,97,118,101}
 };
-static BBString _s101={
+static BBString _s105={
 	&bbStringClass,
 	0x7fd9b72d207e05a0,
 	21,
 	{115,97,118,101,32,103,98,115,32,115,101,115,115,105,111,110,32
 	,100,97,116,97}
 };
-static BBString _s56={
+static BBString _s57={
 	&bbStringClass,
 	0x62cbf46c594dd18c,
 	15,
 	{115,99,97,110,108,105,110,101,115,45,115,116,121,108,101}
 };
-static BBString _s55={
+static BBString _s56={
 	&bbStringClass,
 	0xf87756a771a39736,
 	15,
 	{115,99,97,110,108,105,110,101,115,45,116,104,105,99,107}
 };
-static BBString _s57={
+static BBString _s58={
 	&bbStringClass,
 	0xc9a3b2552ba8cb9,
 	13,
 	{115,99,114,101,101,110,115,104,111,116,45,105,100}
 };
-static BBString _s118={
+static BBString _s121={
 	&bbStringClass,
 	0x3a393d2ffd346100,
 	5,
 	{115,100,97,116,97}
 };
-static BBString _s88={
+static BBString _s92={
 	&bbStringClass,
 	0x40b60d3d6e1bfb8c,
 	3,
 	{115,101,116}
 };
-static BBString _s89={
+static BBString _s93={
 	&bbStringClass,
 	0x631cba77df44b38b,
 	18,
 	{115,101,116,32,118,97,114,32,91,48,93,32,116,111,32,91,49
 	,93}
 };
-static BBString _s139={
+static BBString _s142={
 	&bbStringClass,
 	0xe553d5c0b64ea175,
 	8,
@@ -788,7 +814,7 @@ static BBString _s33={
 	5,
 	{115,104,111,114,116}
 };
-static BBString _s121={
+static BBString _s124={
 	&bbStringClass,
 	0x255bf5f4c447dc00,
 	3,
@@ -800,7 +826,7 @@ static BBString _s38={
 	6,
 	{115,116,114,105,110,103}
 };
-static BBString _s63={
+static BBString _s64={
 	&bbStringClass,
 	0x4630ec0d0f8d94bb,
 	3,
@@ -812,73 +838,73 @@ static BBString _s11={
 	4,
 	{116,114,117,101}
 };
-static BBString _s54={
+static BBString _s55={
 	&bbStringClass,
 	0x9118ea7fe5a8915e,
 	13,
 	{117,115,101,45,115,99,97,110,108,105,110,101,115}
 };
-static BBString _s58={
+static BBString _s59={
 	&bbStringClass,
 	0x55c33a4fda7d6de1,
 	6,
 	{118,105,115,117,97,108}
 };
-static BBString _s46={
+static BBString _s47={
 	&bbStringClass,
 	0xb78eadcea82118e8,
 	17,
 	{118,105,115,117,97,108,47,102,117,108,108,115,99,114,101,101,110
 }
 };
-static BBString _s49={
+static BBString _s50={
 	&bbStringClass,
 	0x655052a83ea71206,
 	22,
 	{118,105,115,117,97,108,47,115,99,97,110,108,105,110,101,115,45
 	,115,116,121,108,101}
 };
-static BBString _s50={
+static BBString _s51={
 	&bbStringClass,
 	0x96b84bcff9e7cd48,
 	22,
 	{118,105,115,117,97,108,47,115,99,97,110,108,105,110,101,115,45
 	,116,104,105,99,107}
 };
-static BBString _s51={
+static BBString _s52={
 	&bbStringClass,
 	0x71ff72f45e35da84,
 	20,
 	{118,105,115,117,97,108,47,115,99,114,101,101,110,115,104,111,116
 	,45,105,100}
 };
-static BBString _s48={
+static BBString _s49={
 	&bbStringClass,
 	0xdea8cb5fa46cac4b,
 	20,
 	{118,105,115,117,97,108,47,117,115,101,45,115,99,97,110,108,105
 	,110,101,115}
 };
-static BBString _s47={
+static BBString _s48={
 	&bbStringClass,
 	0x2c675f2a9334835f,
 	18,
 	{118,105,115,117,97,108,47,119,105,110,100,111,119,115,99,97,108
 	,101}
 };
-static BBString _s52={
+static BBString _s53={
 	&bbStringClass,
 	0xcbfb33a17503f706,
 	11,
 	{119,105,110,100,111,119,115,99,97,108,101}
 };
-static BBString _s96={
+static BBString _s100={
 	&bbStringClass,
 	0x884c68e9668c9cca,
 	5,
 	{119,114,105,116,101}
 };
-static BBString _s97={
+static BBString _s101={
 	&bbStringClass,
 	0x8144b37c4dca7bed,
 	21,
@@ -903,13 +929,15 @@ static BBString _s15={
 	1,
 	{125}
 };
-static BBString _s74={
+static BBString _s75={
 	&bbStringClass,
 	0xce05553e9b3fcfcd,
 	2,
 	{125,10}
 };
+struct BBDebugScope_1{int kind; const char *name; BBDebugDecl decls[2]; };
 struct BBDebugScope_10{int kind; const char *name; BBDebugDecl decls[11]; };
+struct BBDebugScope_11{int kind; const char *name; BBDebugDecl decls[12]; };
 struct BBDebugScope_2{int kind; const char *name; BBDebugDecl decls[3]; };
 struct BBDebugScope_3{int kind; const char *name; BBDebugDecl decls[4]; };
 struct BBDebugScope_4{int kind; const char *name; BBDebugDecl decls[5]; };
@@ -2352,18 +2380,11 @@ struct _m_app_t_bool_obj* _m_app_gb_transition_fade=(struct _m_app_t_bool_obj*)(
 void __m_app_t_gb_testing_New(struct _m_app_t_gb_testing_obj* o) {
 	bbObjectCtor((BBOBJECT)o);
 	o->clas = &_m_app_t_gb_testing;
-	o->__m_app_t_gb_testing_logchain = (struct _m_app_t_logchain_obj*)(&bbNullObject);
 }
-struct BBDebugScope_2 _m_app_t_gb_testing_scope ={
+struct BBDebugScope_1 _m_app_t_gb_testing_scope ={
 	BBDEBUGSCOPE_USERTYPE,
 	"t_gb_testing",
 	{
-		{
-			BBDEBUGDECL_FIELD,
-			"logchain",
-			":t_logchain",
-			.field_offset=offsetof(struct _m_app_t_gb_testing_obj,__m_app_t_gb_testing_logchain)
-		},
 		{
 			BBDEBUGDECL_TYPEMETHOD,
 			"New",
@@ -2385,9 +2406,9 @@ struct BBClass__m_app_t_gb_testing _m_app_t_gb_testing={
 	bbObjectSendMessage,
 	0,
 	0,
-	sizeof(struct _m_app_t_logchain_obj*)
+	0
 	,0
-	,offsetof(struct _m_app_t_gb_testing_obj,__m_app_t_gb_testing_logchain)
+	,sizeof(void*)
 };
 
 struct _m_app_t_gb_testing_obj* _m_app_gb_testing=(struct _m_app_t_gb_testing_obj*)(&bbNullObject);
@@ -2788,8 +2809,9 @@ void __m_app_t_dictval_New(struct _m_app_t_dictval_obj* o) {
 	o->__m_app_t_dictval_tdouble = (struct _m_app_t_double_obj*)(&bbNullObject);
 	o->__m_app_t_dictval_tstring = (struct _m_app_t_string_obj*)(&bbNullObject);
 	o->__m_app_t_dictval_tdir = (struct _m_app_t_dict_obj*)(&bbNullObject);
+	o->__m_app_t_dictval_tdata = (BBOBJECT)(&bbNullObject);
 }
-struct BBDebugScope_10 _m_app_t_dictval_scope ={
+struct BBDebugScope_11 _m_app_t_dictval_scope ={
 	BBDEBUGSCOPE_USERTYPE,
 	"t_dictval",
 	{
@@ -2848,6 +2870,12 @@ struct BBDebugScope_10 _m_app_t_dictval_scope ={
 			.field_offset=offsetof(struct _m_app_t_dictval_obj,__m_app_t_dictval_tdir)
 		},
 		{
+			BBDEBUGDECL_FIELD,
+			"tdata",
+			":Object",
+			.field_offset=offsetof(struct _m_app_t_dictval_obj,__m_app_t_dictval_tdata)
+		},
+		{
 			BBDEBUGDECL_TYPEMETHOD,
 			"New",
 			"()",
@@ -2868,7 +2896,7 @@ struct BBClass__m_app_t_dictval _m_app_t_dictval={
 	bbObjectSendMessage,
 	0,
 	0,
-	offsetof(struct _m_app_t_dictval_obj,__m_app_t_dictval_tdir) - offsetof(struct _m_app_t_dictval_obj,__m_app_t_dictval_id) + sizeof(struct _m_app_t_dict_obj*)
+	offsetof(struct _m_app_t_dictval_obj,__m_app_t_dictval_tdata) - offsetof(struct _m_app_t_dictval_obj,__m_app_t_dictval_id) + sizeof(BBOBJECT)
 	,0
 	,offsetof(struct _m_app_t_dictval_obj,__m_app_t_dictval_id)
 };
@@ -2880,6 +2908,125 @@ struct _m_app_t_dict_obj* _m_app_new_dict(){
 	bbt_r->__m_app_t_dict_keys =bbArrayNew1D("$", 0);
 	bbt_r->__m_app_t_dict_values =bbArrayNew1D(":t_dictval", 0);
 	return (struct _m_app_t_dict_obj*)bbt_r;
+}
+void __m_app_t_logchain_node_New(struct _m_app_t_logchain_node_obj* o) {
+	bbObjectCtor((BBOBJECT)o);
+	o->clas = &_m_app_t_logchain_node;
+	o->__m_app_t_logchain_node_data = &bbEmptyString;
+	o->__m_app_t_logchain_node_chain_prev = (struct _m_app_t_logchain_node_obj*)(&bbNullObject);
+	o->__m_app_t_logchain_node_chain_next = (struct _m_app_t_logchain_node_obj*)(&bbNullObject);
+}
+struct BBDebugScope_4 _m_app_t_logchain_node_scope ={
+	BBDEBUGSCOPE_USERTYPE,
+	"t_logchain_node",
+	{
+		{
+			BBDEBUGDECL_FIELD,
+			"data",
+			"$",
+			.field_offset=offsetof(struct _m_app_t_logchain_node_obj,__m_app_t_logchain_node_data)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"chain_prev",
+			":t_logchain_node",
+			.field_offset=offsetof(struct _m_app_t_logchain_node_obj,__m_app_t_logchain_node_chain_prev)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"chain_next",
+			":t_logchain_node",
+			.field_offset=offsetof(struct _m_app_t_logchain_node_obj,__m_app_t_logchain_node_chain_next)
+		},
+		{
+			BBDEBUGDECL_TYPEMETHOD,
+			"New",
+			"()",
+			.var_address=(void*)&__m_app_t_logchain_node_New
+		},
+		BBDEBUGDECL_END
+	}
+};
+struct BBClass__m_app_t_logchain_node _m_app_t_logchain_node={
+	&bbObjectClass,
+	bbObjectFree,
+	(BBDebugScope*)&_m_app_t_logchain_node_scope,
+	sizeof(struct _m_app_t_logchain_node_obj),
+	(void (*)(BBOBJECT))__m_app_t_logchain_node_New,
+	bbObjectDtor,
+	bbObjectToString,
+	bbObjectCompare,
+	bbObjectSendMessage,
+	0,
+	0,
+	offsetof(struct _m_app_t_logchain_node_obj,__m_app_t_logchain_node_chain_next) - offsetof(struct _m_app_t_logchain_node_obj,__m_app_t_logchain_node_data) + sizeof(struct _m_app_t_logchain_node_obj*)
+	,0
+	,offsetof(struct _m_app_t_logchain_node_obj,__m_app_t_logchain_node_data)
+};
+
+struct _m_app_t_logchain_node_obj* _m_app_new_logchain_node(BBSTRING bbt_s){
+	struct _m_app_t_logchain_node_obj* bbt_r=(struct _m_app_t_logchain_node_obj*)(struct _m_app_t_logchain_node_obj*)bbObjectNew((BBClass *)&_m_app_t_logchain_node);
+	bbt_r->__m_app_t_logchain_node_data =bbt_s;
+	return (struct _m_app_t_logchain_node_obj*)bbt_r;
+}
+BBINT _m_app_int_eq(struct _m_app_t_int_obj* bbt_b,BBINT bbt_v){
+	if(bbt_b->__m_app_t_int_value ==bbt_v){
+		return 1;
+	}else{
+		return 0;
+	}
+}
+BBINT _m_app_int_eq2(struct _m_app_t_int_obj* bbt_b){
+	if(bbt_b->__m_app_t_int_value !=0){
+		return 1;
+	}else{
+		return 0;
+	}
+}
+BBINT _m_app_int_gte(struct _m_app_t_int_obj* bbt_b,BBINT bbt_v){
+	if(bbt_b->__m_app_t_int_value >=bbt_v){
+		return 1;
+	}else{
+		return 0;
+	}
+}
+void _m_app_logchain_add(struct _m_app_t_logchain_obj* bbt_l,BBSTRING bbt_s){
+	struct _m_app_t_logchain_node_obj* bbt_c=(struct _m_app_t_logchain_node_obj*)_m_app_new_logchain_node(bbt_s);
+	if(_m_app_int_eq((struct _m_app_t_int_obj*)bbt_l->__m_app_t_logchain_length ,0)!=0){
+		bbt_l->__m_app_t_logchain_chain_curr =(struct _m_app_t_logchain_node_obj*)bbt_c;
+		bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_chain_next =(struct _m_app_t_logchain_node_obj*)bbt_c;
+		bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_chain_prev =(struct _m_app_t_logchain_node_obj*)bbt_c;
+		bbt_l->__m_app_t_logchain_chain_seek =(struct _m_app_t_logchain_node_obj*)bbt_c;
+	}else{
+		if(_m_app_int_gte((struct _m_app_t_int_obj*)bbt_l->__m_app_t_logchain_length ,1)!=0){
+			struct _m_app_t_logchain_node_obj* bbt_d1=(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ;
+			struct _m_app_t_logchain_node_obj* bbt_d2=(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_chain_next ;
+			bbt_l->__m_app_t_logchain_chain_curr =(struct _m_app_t_logchain_node_obj*)bbt_c;
+			bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_chain_prev =(struct _m_app_t_logchain_node_obj*)bbt_d1;
+			bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_chain_next =(struct _m_app_t_logchain_node_obj*)bbt_d2;
+			bbt_d1->__m_app_t_logchain_node_chain_next =(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ;
+			bbt_d2->__m_app_t_logchain_node_chain_prev =(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ;
+			if(bbt_l->__m_app_t_logchain_chain_seek ==bbt_d1){
+				bbt_l->__m_app_t_logchain_chain_seek =(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ;
+			}
+		}
+	}
+	_m_app_int_add((struct _m_app_t_int_obj*)bbt_l->__m_app_t_logchain_length ,1);
+}
+struct _m_app_t_logchain_obj* _m_app_new_logchain(BBINT bbt_n,BBSTRING bbt_s){
+	bbt_n=_m_app_ilow(bbt_n,0);
+	struct _m_app_t_logchain_obj* bbt_r=(struct _m_app_t_logchain_obj*)(struct _m_app_t_logchain_obj*)bbObjectNew((BBClass *)&_m_app_t_logchain);
+	bbt_r->__m_app_t_logchain_length =(struct _m_app_t_int_obj*)_m_app_new_int(0);
+	if(bbt_n>0){
+		{
+			BBINT bbt_i=1;
+			BBINT bbt_=bbt_n;
+			for(;(bbt_i<=bbt_);bbt_i=(bbt_i+1)){
+				_m_app_logchain_add((struct _m_app_t_logchain_obj*)bbt_r,bbt_s);
+			}
+		}
+	}
+	return (struct _m_app_t_logchain_obj*)bbt_r;
 }
 void _m_app_gb_console_init(){
 	_m_app_gb_console_enabled=(struct _m_app_t_bool_obj*)_m_app_new_bool(0);
@@ -2895,6 +3042,7 @@ void _m_app_gb_console_init(){
 	_m_app_gb_console_cursor_timer=(struct _m_app_t_timer_obj*)_m_app_new_timer(0.5f);
 	_m_app_gb_console_cursor_pos=(struct _m_app_t_int_obj*)_m_app_new_int(0);
 	_m_app_gb_console_data=(struct _m_app_t_dict_obj*)_m_app_new_dict();
+	_m_app_gb_console_logchain=(struct _m_app_t_logchain_obj*)_m_app_new_logchain(1000,&bbEmptyString);
 }
 struct _m_app_t_stopwatch_obj* _m_app_new_stopwatch(){
 	struct _m_app_t_stopwatch_obj* bbt_r=(struct _m_app_t_stopwatch_obj*)(struct _m_app_t_stopwatch_obj*)bbObjectAtomicNew((BBClass *)&_m_app_t_stopwatch);
@@ -2918,7 +3066,7 @@ void _m_app_gb_timing_init(){
 }
 void _m_app_gb_audio_init(){
 	brl_openalaudio_EnableOpenALAudio();
-	brl_audio_SetAudioDriver(&_s59);
+	brl_audio_SetAudioDriver(&_s60);
 	_m_app_gb_audio_channels=bbArrayNew1D(":TChannel", 10);
 	{
 		BBINT bbt_i=0;
@@ -3042,7 +3190,7 @@ void _m_app_gb_visual_init(){
 	_m_app_gb_visual_use_scanlines=(struct _m_app_t_bool_obj*)_m_app_new_bool(0);
 	_m_app_gb_visual_scanlines_style=(struct _m_app_t_number_obj*)_m_app_new_number(0.00000000f,0.00000000f,4.00000000f,1);
 	_m_app_gb_visual_scanlines_thick=(struct _m_app_t_number_obj*)_m_app_new_number(0.00000000f,0.00000000f,4.00000000f,1);
-	bbAppTitle=&_s145;
+	bbAppTitle=&_s149;
 	brl_graphics_SetGraphicsDriver((struct brl_graphics_TGraphicsDriver_obj*)((struct brl_graphics_TGraphicsDriver_obj*)bbObjectDowncast((BBOBJECT)brl_glmax2d_GLMax2DDriver(),(BBClass*)&brl_graphics_TGraphicsDriver)),2);
 	brl_graphics_Graphics(800,480,0,0,2,-1,-1);
 	brl_max2d_SetBlend(3);
@@ -3106,8 +3254,9 @@ void __m_app_t_counter_New(struct _m_app_t_counter_obj* o) {
 	o->clas = &_m_app_t_counter;
 	o->__m_app_t_counter_init = 0;
 	o->__m_app_t_counter_value = 0;
+	o->__m_app_t_counter_vstep = 0;
 }
-struct BBDebugScope_3 _m_app_t_counter_scope ={
+struct BBDebugScope_4 _m_app_t_counter_scope ={
 	BBDEBUGSCOPE_USERTYPE,
 	"t_counter",
 	{
@@ -3122,6 +3271,12 @@ struct BBDebugScope_3 _m_app_t_counter_scope ={
 			"value",
 			"i",
 			.field_offset=offsetof(struct _m_app_t_counter_obj,__m_app_t_counter_value)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"vstep",
+			"i",
+			.field_offset=offsetof(struct _m_app_t_counter_obj,__m_app_t_counter_vstep)
 		},
 		{
 			BBDEBUGDECL_TYPEMETHOD,
@@ -3144,7 +3299,7 @@ struct BBClass__m_app_t_counter _m_app_t_counter={
 	bbObjectSendMessage,
 	0,
 	0,
-	offsetof(struct _m_app_t_counter_obj,__m_app_t_counter_value) - offsetof(struct _m_app_t_counter_obj,__m_app_t_counter_init) + sizeof(BBINT)
+	offsetof(struct _m_app_t_counter_obj,__m_app_t_counter_vstep) - offsetof(struct _m_app_t_counter_obj,__m_app_t_counter_init) + sizeof(BBINT)
 	,0
 	,offsetof(struct _m_app_t_counter_obj,__m_app_t_counter_init)
 };
@@ -3153,6 +3308,7 @@ struct _m_app_t_counter_obj* _m_app_new_counter(BBINT bbt_n){
 	struct _m_app_t_counter_obj* bbt_r=(struct _m_app_t_counter_obj*)(struct _m_app_t_counter_obj*)bbObjectAtomicNew((BBClass *)&_m_app_t_counter);
 	bbt_r->__m_app_t_counter_value =bbt_n;
 	bbt_r->__m_app_t_counter_init =bbt_n;
+	bbt_r->__m_app_t_counter_vstep =1;
 	return (struct _m_app_t_counter_obj*)bbt_r;
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd(){
@@ -3163,6 +3319,30 @@ struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd(){
 	bbt_r->__m_app_t_gbscmd_desc =&bbEmptyString;
 	bbt_r->__m_app_t_gbscmd_func =(&brl_blitz_NullFunctionError);
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
+}
+void _m_app_gbs_func_clear(BBARRAY bbt_s){
+	_m_app_gb_console_lines=bbArrayNew1D(":t_string", 23);
+	{
+		BBINT bbt_i=0;
+		for(;(bbt_i<=22);bbt_i=(bbt_i+1)){
+			((struct _m_app_t_string_obj**)BBARRAYDATA(_m_app_gb_console_lines,1))[((BBUINT)bbt_i)]=(struct _m_app_t_string_obj*)_m_app_new_string(&bbEmptyString);
+		}
+	}
+}
+struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_clear(){
+	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
+	bbt_r->__m_app_t_gbscmd_name =&_s89;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s89;
+	BBSTRING bbt_[]={&_s90};
+	BBARRAY bbt_2 = bbArrayFromData("$",1,bbt_);
+	bbt_r->__m_app_t_gbscmd_aliases =bbt_2;
+	bbt_r->__m_app_t_gbscmd_desc =&_s91;
+	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_clear;
+	return (struct _m_app_t_gbscmd_obj*)bbt_r;
+}
+BBINT _m_app_counter_inc(struct _m_app_t_counter_obj* bbt_c,BBINT bbt_n){
+	bbt_c->__m_app_t_counter_value =(bbt_c->__m_app_t_counter_value +bbt_n);
+	return bbt_c->__m_app_t_counter_value ;
 }
 struct _m_app_t_dictval_obj* _m_app_new_dictval(){
 	struct _m_app_t_dictval_obj* bbt_d=(struct _m_app_t_dictval_obj*)(struct _m_app_t_dictval_obj*)bbObjectNew((BBClass *)&_m_app_t_dictval);
@@ -3191,6 +3371,7 @@ void _m_app_dictval_clear(struct _m_app_t_dictval_obj* bbt_d){
 	bbt_d->__m_app_t_dictval_tdouble =(struct _m_app_t_double_obj*)&bbNullObject;
 	bbt_d->__m_app_t_dictval_tstring =(struct _m_app_t_string_obj*)&bbNullObject;
 	bbt_d->__m_app_t_dictval_tdir =(struct _m_app_t_dict_obj*)&bbNullObject;
+	bbt_d->__m_app_t_dictval_tdata =(BBOBJECT)&bbNullObject;
 }
 void _m_app_dictval_set_byte(struct _m_app_t_dictval_obj* bbt_d,BBBYTE bbt_v){
 	_m_app_dictval_clear((struct _m_app_t_dictval_obj*)bbt_d);
@@ -3338,25 +3519,21 @@ void _m_app_gbs_func_set(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_set(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s88;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s88;
+	bbt_r->__m_app_t_gbscmd_name =&_s92;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s92;
 	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
-	bbt_r->__m_app_t_gbscmd_desc =&_s89;
+	bbt_r->__m_app_t_gbscmd_desc =&_s93;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_set;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
-}
-BBINT _m_app_counter_inc(struct _m_app_t_counter_obj* bbt_c){
-	bbt_c->__m_app_t_counter_value =(bbt_c->__m_app_t_counter_value +1);
-	return bbt_c->__m_app_t_counter_value ;
 }
 void _m_app_gbs_func_add(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_add(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s90;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s90;
+	bbt_r->__m_app_t_gbscmd_name =&_s94;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s94;
 	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
-	bbt_r->__m_app_t_gbscmd_desc =&_s91;
+	bbt_r->__m_app_t_gbscmd_desc =&_s95;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_add;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3364,10 +3541,10 @@ void _m_app_gbs_func_mul(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_mul(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s92;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s92;
+	bbt_r->__m_app_t_gbscmd_name =&_s96;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s96;
 	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
-	bbt_r->__m_app_t_gbscmd_desc =&_s93;
+	bbt_r->__m_app_t_gbscmd_desc =&_s97;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_mul;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3375,10 +3552,10 @@ void _m_app_gbs_func_div(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_div(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s94;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s94;
+	bbt_r->__m_app_t_gbscmd_name =&_s98;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s98;
 	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
-	bbt_r->__m_app_t_gbscmd_desc =&_s95;
+	bbt_r->__m_app_t_gbscmd_desc =&_s99;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_div;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3498,10 +3675,10 @@ void _m_app_gbs_func_write(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_write(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s96;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s96;
+	bbt_r->__m_app_t_gbscmd_name =&_s100;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s100;
 	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
-	bbt_r->__m_app_t_gbscmd_desc =&_s97;
+	bbt_r->__m_app_t_gbscmd_desc =&_s101;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_write;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3509,10 +3686,10 @@ void _m_app_gbs_func_read(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_read(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s98;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s98;
+	bbt_r->__m_app_t_gbscmd_name =&_s102;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s102;
 	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
-	bbt_r->__m_app_t_gbscmd_desc =&_s99;
+	bbt_r->__m_app_t_gbscmd_desc =&_s103;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_read;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3560,9 +3737,9 @@ BBSTRING _m_app_strdec(BBFLOAT bbt_f,BBINT bbt_d){
 		bbt_f=0.0f;
 	}
 	BBSTRING bbt_r=&bbEmptyString;
-	BBARRAY bbt_w=_m_app_tokenize(bbStringFromFloat(bbt_f),&_s42,1);
+	BBARRAY bbt_w=_m_app_tokenize(bbStringFromFloat(bbt_f),&_s43,1);
 	if(bbt_d>0){
-		bbt_r=bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_w,1))[0U],&_s42),brl_retro_Left(((BBSTRING*)BBARRAYDATA(bbt_w,1))[1U],bbt_d));
+		bbt_r=bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_w,1))[0U],&_s43),brl_retro_Left(((BBSTRING*)BBARRAYDATA(bbt_w,1))[1U],bbt_d));
 	}else{
 		bbt_r=((BBSTRING*)BBARRAYDATA(bbt_w,1))[0U];
 	}
@@ -3590,29 +3767,29 @@ BBSTRING _m_app_gbml_to_string(struct _m_app_t_dict_obj* bbt_d,BBINT bbt_s){
 				if(((BBObject*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)])!= &bbNullObject){
 					BBINT bbt_2=((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_id ;
 					if(bbt_2==1){
-						(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s64,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s65),bbStringFromInt(_m_app_byte_get((struct _m_app_t_byte_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tbyte ))),&_s66));
+						(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s65,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s66),bbStringFromInt(_m_app_byte_get((struct _m_app_t_byte_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tbyte ))),&_s67));
 					}else{
 						if(bbt_2==2){
-							(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s64,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s67),bbStringFromInt(_m_app_short_get((struct _m_app_t_short_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tshort ))),&_s66));
+							(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s65,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s68),bbStringFromInt(_m_app_short_get((struct _m_app_t_short_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tshort ))),&_s67));
 						}else{
 							if(bbt_2==3){
-								(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s64,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s68),bbStringFromInt(_m_app_int_get((struct _m_app_t_int_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tint ))),&_s66));
+								(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s65,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s69),bbStringFromInt(_m_app_int_get((struct _m_app_t_int_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tint ))),&_s67));
 							}else{
 								if(bbt_2==4){
-									(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s64,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s69),bbStringFromLong(_m_app_long_get((struct _m_app_t_long_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tlong ))),&_s66));
+									(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s65,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s70),bbStringFromLong(_m_app_long_get((struct _m_app_t_long_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tlong ))),&_s67));
 								}else{
 									if(bbt_2==5){
-										(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s64,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s70),_m_app_strdec(_m_app_float_get((struct _m_app_t_float_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tfloat ),2)),&_s66));
+										(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s65,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s71),_m_app_strdec(_m_app_float_get((struct _m_app_t_float_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tfloat ),2)),&_s67));
 									}else{
 										if(bbt_2==6){
-											(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s64,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s71),bbStringFromDouble(_m_app_double_get((struct _m_app_t_double_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tdouble ))),&_s66));
+											(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s65,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s72),bbStringFromDouble(_m_app_double_get((struct _m_app_t_double_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tdouble ))),&_s67));
 										}else{
 											if(bbt_2==7){
-												(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s64,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s72),_m_app_string_get((struct _m_app_t_string_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tstring )),&_s66));
+												(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s65,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s73),_m_app_string_get((struct _m_app_t_string_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tstring )),&_s67));
 											}else{
 												if(bbt_2==8){
 													struct _m_app_t_dict_obj* bbt_g=(struct _m_app_t_dict_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tdir ;
-													(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s64,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s73),_m_app_gbml_to_string((struct _m_app_t_dict_obj*)bbt_g,(bbt_s+1))),_m_app_rep(&_s64,bbt_s)),&_s74));
+													(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(_m_app_rep(&_s65,bbt_s),((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)]),&_s74),_m_app_gbml_to_string((struct _m_app_t_dict_obj*)bbt_g,(bbt_s+1))),_m_app_rep(&_s65,bbt_s)),&_s75));
 												}
 											}
 										}
@@ -3629,19 +3806,19 @@ BBSTRING _m_app_gbml_to_string(struct _m_app_t_dict_obj* bbt_d,BBINT bbt_s){
 }
 void _m_app_gbml_save(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_s){
 	BBSTRING bbt_t=_m_app_gbml_to_string((struct _m_app_t_dict_obj*)bbt_d,0);
-	struct brl_stream_TStream_obj* bbt_ts=(struct brl_stream_TStream_obj*)brl_stream_WriteStream((BBOBJECT)bbStringConcat(bbt_s,&_s60));
+	struct brl_stream_TStream_obj* bbt_ts=(struct brl_stream_TStream_obj*)brl_stream_WriteStream((BBOBJECT)bbStringConcat(bbt_s,&_s61));
 	brl_stream_WriteString((struct brl_stream_TStream_obj*)bbt_ts,bbt_t);
 	brl_stream_CloseStream((struct brl_stream_TStream_obj*)bbt_ts);
 }
 void _m_app_gbs_func_save(BBARRAY bbt_s){
-	_m_app_gbml_save((struct _m_app_t_dict_obj*)_m_app_gbs_data,&_s126);
+	_m_app_gbml_save((struct _m_app_t_dict_obj*)_m_app_gbs_data,&_s129);
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_save(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s100;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s100;
+	bbt_r->__m_app_t_gbscmd_name =&_s104;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s104;
 	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
-	bbt_r->__m_app_t_gbscmd_desc =&_s101;
+	bbt_r->__m_app_t_gbscmd_desc =&_s105;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_save;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3741,7 +3918,7 @@ struct _m_app_t_dict_obj* _m_app_gbml_from_string(BBSTRING bbt_s){
 				bbt_cd=(struct _m_app_t_dict_obj*)((struct _m_app_t_dict_obj*)bbObjectDowncast((BBOBJECT)(bbt_dl)->clas->m_Last((struct brl_linkedlist_TList_obj*)bbt_dl),(BBClass*)&_m_app_t_dict));
 				bbt_c=bbStringFromChar((bbt_s)->buf[((BBUINT)bbt_i)]);
 				BBSTRING bbt_2=bbt_c;
-				if(bbStringEquals(bbt_2, &_s62)==1){
+				if(bbStringEquals(bbt_2, &_s63)==1){
 					if((((bbt_w!= &bbEmptyString) && (bbt_hk!= &bbEmptyString)) && (bbt_ht!= &bbEmptyString)) && !(bbt_hv!= &bbEmptyString)){
 						bbt_hv=brl_retro_Trim(bbt_w);
 						bbt_w=&bbEmptyString;
@@ -3828,10 +4005,10 @@ struct _m_app_t_dict_obj* _m_app_gbml_from_string(BBSTRING bbt_s){
 	return (struct _m_app_t_dict_obj*)bbt_dt;
 }
 struct _m_app_t_dict_obj* _m_app_gbml_load(BBSTRING bbt_s){
-	BBINT bbt_u=brl_filesystem_FileType(bbStringConcat(bbt_s,&_s60));
+	BBINT bbt_u=brl_filesystem_FileType(bbStringConcat(bbt_s,&_s61));
 	BBSTRING bbt_t=&bbEmptyString;
 	if(bbt_u==1){
-		struct brl_stream_TStream_obj* bbt_ts=(struct brl_stream_TStream_obj*)brl_stream_ReadStream((BBOBJECT)bbStringConcat(bbt_s,&_s60));
+		struct brl_stream_TStream_obj* bbt_ts=(struct brl_stream_TStream_obj*)brl_stream_ReadStream((BBOBJECT)bbStringConcat(bbt_s,&_s61));
 		BBINT bbt_b=((BBINT)brl_stream_StreamSize((struct brl_stream_TStream_obj*)bbt_ts));
 		BBSTRING bbt_tss=brl_stream_ReadString((struct brl_stream_TStream_obj*)bbt_ts,bbt_b);
 		brl_stream_CloseStream((struct brl_stream_TStream_obj*)bbt_ts);
@@ -3840,14 +4017,14 @@ struct _m_app_t_dict_obj* _m_app_gbml_load(BBSTRING bbt_s){
 	return (struct _m_app_t_dict_obj*)&bbNullObject;
 }
 void _m_app_gbs_func_load(BBARRAY bbt_s){
-	_m_app_gbs_data=(struct _m_app_t_dict_obj*)_m_app_gbml_load(&_s126);
+	_m_app_gbs_data=(struct _m_app_t_dict_obj*)_m_app_gbml_load(&_s129);
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_load(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s102;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s102;
+	bbt_r->__m_app_t_gbscmd_name =&_s106;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s106;
 	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
-	bbt_r->__m_app_t_gbscmd_desc =&_s103;
+	bbt_r->__m_app_t_gbscmd_desc =&_s107;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_load;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3909,6 +4086,21 @@ void _m_app_gb_console_print_line(BBSTRING bbt_s){
 	}
 	((struct _m_app_t_string_obj**)BBARRAYDATA(_m_app_gb_console_lines,1))[22U]=(struct _m_app_t_string_obj*)_m_app_new_string(bbt_s);
 }
+void _m_app_logchain_node_set(struct _m_app_t_logchain_node_obj* bbt_l,BBSTRING bbt_s){
+	bbt_l->__m_app_t_logchain_node_data =bbt_s;
+}
+void _m_app_logchain_set(struct _m_app_t_logchain_obj* bbt_l,BBSTRING bbt_s){
+	if(bbt_l->__m_app_t_logchain_length ->__m_app_t_int_value >0){
+		_m_app_logchain_node_set((struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ,bbt_s);
+	}
+}
+BBSTRING _m_app_logchain_next(struct _m_app_t_logchain_obj* bbt_l){
+	if(bbt_l->__m_app_t_logchain_length ->__m_app_t_int_value >0){
+		bbt_l->__m_app_t_logchain_chain_curr =(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_chain_next ;
+		return bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_data ;
+	}
+	return &bbEmptyString;
+}
 void _m_app_gb_console_out(BBSTRING bbt_s){
 	BBARRAY bbt_u=_m_app_cut(bbt_s,80);
 	{
@@ -3918,6 +4110,8 @@ void _m_app_gb_console_out(BBSTRING bbt_s){
 			_m_app_gb_console_print_line(((BBSTRING*)BBARRAYDATA(bbt_u,1))[((BBUINT)bbt_i)]);
 		}
 	}
+	_m_app_logchain_set((struct _m_app_t_logchain_obj*)_m_app_gb_console_logchain,bbt_s);
+	_m_app_logchain_next((struct _m_app_t_logchain_obj*)_m_app_gb_console_logchain);
 }
 void _m_app_gb_console_out2(BBINT bbt_v){
 	BBSTRING bbt_s=bbStringFromInt(bbt_v);
@@ -3947,7 +4141,7 @@ void _m_app_gb_reload_images(){
 		for(;(bbt_i<=99);bbt_i=(bbt_i+1)){
 			if(((BBSTRING*)BBARRAYDATA(_m_app_gb_image_paths,1))[((BBUINT)bbt_i)]!= &bbEmptyString){
 				_m_app_gb_add_image(bbt_i,((BBSTRING*)BBARRAYDATA(_m_app_gb_image_paths,1))[((BBUINT)bbt_i)]);
-				_m_app_gb_console_out(bbStringConcat(bbStringConcat(bbStringConcat(&_s137,bbStringFromInt(bbt_i)),&_s138),((BBSTRING*)BBARRAYDATA(_m_app_gb_image_paths,1))[((BBUINT)bbt_i)]));
+				_m_app_gb_console_out(bbStringConcat(bbStringConcat(bbStringConcat(&_s140,bbStringFromInt(bbt_i)),&_s141),((BBSTRING*)BBARRAYDATA(_m_app_gb_image_paths,1))[((BBUINT)bbt_i)]));
 			}
 		}
 	}
@@ -3957,12 +4151,12 @@ void _m_app_gbs_func_reloadimages(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_reloadimages(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s104;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s104;
-	BBSTRING bbt_[]={&_s105};
+	bbt_r->__m_app_t_gbscmd_name =&_s108;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s108;
+	BBSTRING bbt_[]={&_s109};
 	BBARRAY bbt_2 = bbArrayFromData("$",1,bbt_);
 	bbt_r->__m_app_t_gbscmd_aliases =bbt_2;
-	bbt_r->__m_app_t_gbscmd_desc =&_s106;
+	bbt_r->__m_app_t_gbscmd_desc =&_s110;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_reloadimages;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -3979,7 +4173,7 @@ void _m_app_gb_reload_sounds(){
 		for(;(bbt_i<=99);bbt_i=(bbt_i+1)){
 			if(((BBSTRING*)BBARRAYDATA(_m_app_gb_sound_paths,1))[((BBUINT)bbt_i)]!= &bbEmptyString){
 				_m_app_gb_add_sound(bbt_i,((BBSTRING*)BBARRAYDATA(_m_app_gb_sound_paths,1))[((BBUINT)bbt_i)]);
-				_m_app_gb_console_out(bbStringConcat(bbStringConcat(bbStringConcat(&_s137,bbStringFromInt(bbt_i)),&_s138),((BBSTRING*)BBARRAYDATA(_m_app_gb_sound_paths,1))[((BBUINT)bbt_i)]));
+				_m_app_gb_console_out(bbStringConcat(bbStringConcat(bbStringConcat(&_s140,bbStringFromInt(bbt_i)),&_s141),((BBSTRING*)BBARRAYDATA(_m_app_gb_sound_paths,1))[((BBUINT)bbt_i)]));
 			}
 		}
 	}
@@ -3989,12 +4183,12 @@ void _m_app_gbs_func_reloadsounds(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_reloadsounds(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s107;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s107;
-	BBSTRING bbt_[]={&_s108};
+	bbt_r->__m_app_t_gbscmd_name =&_s111;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s111;
+	BBSTRING bbt_[]={&_s112};
 	BBARRAY bbt_2 = bbArrayFromData("$",1,bbt_);
 	bbt_r->__m_app_t_gbscmd_aliases =bbt_2;
-	bbt_r->__m_app_t_gbscmd_desc =&_s109;
+	bbt_r->__m_app_t_gbscmd_desc =&_s113;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_reloadsounds;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -4003,19 +4197,19 @@ void _m_app_gbs_func_listimages(BBARRAY bbt_s){
 		BBINT bbt_i=0;
 		for(;(bbt_i<=99);bbt_i=(bbt_i+1)){
 			if(((BBObject*)((struct brl_max2d_image_TImage_obj**)BBARRAYDATA(_m_app_gb_images,1))[((BBUINT)bbt_i)])!= &bbNullObject){
-				_m_app_gb_console_out(bbStringConcat(bbStringConcat(bbStringFromInt(bbt_i),&_s127),((BBSTRING*)BBARRAYDATA(_m_app_gb_image_paths,1))[((BBUINT)bbt_i)]));
+				_m_app_gb_console_out(bbStringConcat(bbStringConcat(bbStringFromInt(bbt_i),&_s130),((BBSTRING*)BBARRAYDATA(_m_app_gb_image_paths,1))[((BBUINT)bbt_i)]));
 			}
 		}
 	}
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_listimages(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s110;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s110;
-	BBSTRING bbt_[]={&_s111};
+	bbt_r->__m_app_t_gbscmd_name =&_s114;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s114;
+	BBSTRING bbt_[]={&_s115};
 	BBARRAY bbt_2 = bbArrayFromData("$",1,bbt_);
 	bbt_r->__m_app_t_gbscmd_aliases =bbt_2;
-	bbt_r->__m_app_t_gbscmd_desc =&_s112;
+	bbt_r->__m_app_t_gbscmd_desc =&_s116;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_listimages;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -4024,19 +4218,19 @@ void _m_app_gbs_func_listsounds(BBARRAY bbt_s){
 		BBINT bbt_i=0;
 		for(;(bbt_i<=99);bbt_i=(bbt_i+1)){
 			if(((BBObject*)((struct brl_audio_TSound_obj**)BBARRAYDATA(_m_app_gb_sounds,1))[((BBUINT)bbt_i)])!= &bbNullObject){
-				_m_app_gb_console_out(bbStringConcat(bbStringConcat(bbStringFromInt(bbt_i),&_s127),((BBSTRING*)BBARRAYDATA(_m_app_gb_sound_paths,1))[((BBUINT)bbt_i)]));
+				_m_app_gb_console_out(bbStringConcat(bbStringConcat(bbStringFromInt(bbt_i),&_s130),((BBSTRING*)BBARRAYDATA(_m_app_gb_sound_paths,1))[((BBUINT)bbt_i)]));
 			}
 		}
 	}
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_listsounds(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s113;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s113;
-	BBSTRING bbt_[]={&_s114};
+	bbt_r->__m_app_t_gbscmd_name =&_s117;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s117;
+	BBSTRING bbt_[]={&_s118};
 	BBARRAY bbt_2 = bbArrayFromData("$",1,bbt_);
 	bbt_r->__m_app_t_gbscmd_aliases =bbt_2;
-	bbt_r->__m_app_t_gbscmd_desc =&_s115;
+	bbt_r->__m_app_t_gbscmd_desc =&_s119;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_listsounds;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -4050,25 +4244,25 @@ BBSTRING _m_app_gbml_to_string_compressed(struct _m_app_t_dict_obj* bbt_d){
 				if(((BBObject*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)])!= &bbNullObject){
 					BBINT bbt_2=((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_id ;
 					if(bbt_2==1){
-						(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s75),bbStringFromInt(_m_app_byte_get((struct _m_app_t_byte_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tbyte ))),&_s62));
+						(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s76),bbStringFromInt(_m_app_byte_get((struct _m_app_t_byte_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tbyte ))),&_s63));
 					}else{
 						if(bbt_2==2){
-							(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s76),bbStringFromInt(_m_app_short_get((struct _m_app_t_short_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tshort ))),&_s62));
+							(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s77),bbStringFromInt(_m_app_short_get((struct _m_app_t_short_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tshort ))),&_s63));
 						}else{
 							if(bbt_2==3){
-								(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s77),bbStringFromInt(_m_app_int_get((struct _m_app_t_int_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tint ))),&_s62));
+								(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s78),bbStringFromInt(_m_app_int_get((struct _m_app_t_int_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tint ))),&_s63));
 							}else{
 								if(bbt_2==4){
-									(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s78),bbStringFromLong(_m_app_long_get((struct _m_app_t_long_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tlong ))),&_s62));
+									(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s79),bbStringFromLong(_m_app_long_get((struct _m_app_t_long_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tlong ))),&_s63));
 								}else{
 									if(bbt_2==5){
-										(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s79),_m_app_strdec(_m_app_float_get((struct _m_app_t_float_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tfloat ),2)),&_s62));
+										(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s80),_m_app_strdec(_m_app_float_get((struct _m_app_t_float_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tfloat ),2)),&_s63));
 									}else{
 										if(bbt_2==6){
-											(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s80),bbStringFromDouble(_m_app_double_get((struct _m_app_t_double_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tdouble ))),&_s62));
+											(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s81),bbStringFromDouble(_m_app_double_get((struct _m_app_t_double_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tdouble ))),&_s63));
 										}else{
 											if(bbt_2==7){
-												(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s81),_m_app_string_get((struct _m_app_t_string_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tstring )),&_s62));
+												(bbt_sb)->clas->m_Append_S((struct brl_stringbuilder_TStringBuilder_obj*)bbt_sb,bbStringConcat(bbStringConcat(bbStringConcat(((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_i)],&_s82),_m_app_string_get((struct _m_app_t_string_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tstring )),&_s63));
 											}else{
 												if(bbt_2==8){
 													struct _m_app_t_dict_obj* bbt_g=(struct _m_app_t_dict_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_i)]->__m_app_t_dictval_tdir ;
@@ -4092,10 +4286,10 @@ void _m_app_gbs_func_data(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_data(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s116;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s116;
+	bbt_r->__m_app_t_gbscmd_name =&_s40;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s40;
 	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
-	bbt_r->__m_app_t_gbscmd_desc =&_s117;
+	bbt_r->__m_app_t_gbscmd_desc =&_s120;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_data;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -4104,10 +4298,10 @@ void _m_app_gbs_func_sdata(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_sdata(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s118;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s118;
+	bbt_r->__m_app_t_gbscmd_name =&_s121;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s121;
 	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
-	bbt_r->__m_app_t_gbscmd_desc =&_s119;
+	bbt_r->__m_app_t_gbscmd_desc =&_s122;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_sdata;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -4123,16 +4317,16 @@ void _m_app_gb_audio_play_sound(BBINT bbt_n,BBINT bbt_c,BBFLOAT bbt_r,BBFLOAT bb
 void _m_app_gbs_func_playsound(BBARRAY bbt_s){
 	BBINT bbt_u=bbStringToInt(_m_app_sind(bbt_s,0));
 	_m_app_gb_audio_play_sound(bbt_u,0,1.0f,1.0f);
-	_m_app_gb_console_out(bbStringConcat(bbStringConcat(bbStringConcat(&_s128,bbStringFromInt(bbt_u)),&_s129),((BBSTRING*)BBARRAYDATA(_m_app_gb_sound_paths,1))[((BBUINT)bbt_u)]));
+	_m_app_gb_console_out(bbStringConcat(bbStringConcat(bbStringConcat(&_s131,bbStringFromInt(bbt_u)),&_s132),((BBSTRING*)BBARRAYDATA(_m_app_gb_sound_paths,1))[((BBUINT)bbt_u)]));
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_playsound(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s120;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s120;
-	BBSTRING bbt_[]={&_s121};
+	bbt_r->__m_app_t_gbscmd_name =&_s123;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s123;
+	BBSTRING bbt_[]={&_s124};
 	BBARRAY bbt_2 = bbArrayFromData("$",1,bbt_);
 	bbt_r->__m_app_t_gbscmd_aliases =bbt_2;
-	bbt_r->__m_app_t_gbscmd_desc =&_s122;
+	bbt_r->__m_app_t_gbscmd_desc =&_s125;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_playsound;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -4150,7 +4344,7 @@ void _m_app_gbs_func_help(BBARRAY bbt_s){
 					bbt_2=(bbt_2+1U);
 					bbt_t=bbStringConcat(bbStringConcat(bbt_t,&_s17),bbt_u);
 				}
-				bbt_t=bbStringConcat(bbStringConcat(bbt_t,&_s127),((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)bbt_i)]->__m_app_t_gbscmd_desc );
+				bbt_t=bbStringConcat(bbStringConcat(bbt_t,&_s130),((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)bbt_i)]->__m_app_t_gbscmd_desc );
 				_m_app_gb_console_out(bbt_t);
 			}
 		}
@@ -4158,12 +4352,12 @@ void _m_app_gbs_func_help(BBARRAY bbt_s){
 }
 struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_help(){
 	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
-	bbt_r->__m_app_t_gbscmd_name =&_s123;
-	bbt_r->__m_app_t_gbscmd_cmd =&_s123;
-	BBSTRING bbt_[]={&_s124};
+	bbt_r->__m_app_t_gbscmd_name =&_s126;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s126;
+	BBSTRING bbt_[]={&_s127};
 	BBARRAY bbt_2 = bbArrayFromData("$",1,bbt_);
 	bbt_r->__m_app_t_gbscmd_aliases =bbt_2;
-	bbt_r->__m_app_t_gbscmd_desc =&_s125;
+	bbt_r->__m_app_t_gbscmd_desc =&_s128;
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_help;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
@@ -4171,34 +4365,29 @@ void _m_app_gbs_init(){
 	_m_app_gbs_data=(struct _m_app_t_dict_obj*)_m_app_new_dict();
 	_m_app_gbs_cmds=bbArrayNew1D(":t_gbscmd", 100);
 	struct _m_app_t_counter_obj* bbt_u=(struct _m_app_t_counter_obj*)_m_app_new_counter(-1);
-	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_set();
-	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_add();
-	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_mul();
-	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_div();
-	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_write();
-	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_read();
-	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_save();
-	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_load();
-	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_reloadimages();
-	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_reloadsounds();
-	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_listimages();
-	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_listsounds();
-	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_data();
-	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_sdata();
-	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_playsound();
-	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_help();
+	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_clear();
+	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_set();
+	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_add();
+	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_mul();
+	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_div();
+	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_write();
+	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_read();
+	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_save();
+	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_load();
+	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_reloadimages();
+	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_reloadsounds();
+	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_listimages();
+	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_listsounds();
+	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_data();
+	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_sdata();
+	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_playsound();
+	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gbs_cmds,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_help();
 }
 void _m_app_gb_editor_init(){
 	_m_app_gb_editor_active=(struct _m_app_t_bool_obj*)_m_app_new_bool(0);
 }
-struct _m_app_t_logchain_obj* _m_app_new_logchain(){
-	struct _m_app_t_logchain_obj* bbt_r=(struct _m_app_t_logchain_obj*)(struct _m_app_t_logchain_obj*)bbObjectNew((BBClass *)&_m_app_t_logchain);
-	bbt_r->__m_app_t_logchain_length =(struct _m_app_t_int_obj*)_m_app_new_int(0);
-	return (struct _m_app_t_logchain_obj*)bbt_r;
-}
 void _m_app_gb_testing_init(){
-	_m_app_gb_testing=(struct _m_app_t_gb_testing_obj*)(struct _m_app_t_gb_testing_obj*)bbObjectNew((BBClass *)&_m_app_t_gb_testing);
-	_m_app_gb_testing->__m_app_t_gb_testing_logchain =(struct _m_app_t_logchain_obj*)_m_app_new_logchain();
+	_m_app_gb_testing=(struct _m_app_t_gb_testing_obj*)(struct _m_app_t_gb_testing_obj*)bbObjectAtomicNew((BBClass *)&_m_app_t_gb_testing);
 }
 void _m_app_gb_debug_init(){
 	_m_app_gb_debug_logpos=(struct _m_app_t_int_obj*)_m_app_new_int(0);
@@ -4239,7 +4428,7 @@ void _m_app_event_init(){
 	_m_app_gb_init();
 }
 void _m_app_gb_load_settings(){
-	struct _m_app_t_dict_obj* bbt_u=(struct _m_app_t_dict_obj*)_m_app_gbml_load(&_s139);
+	struct _m_app_t_dict_obj* bbt_u=(struct _m_app_t_dict_obj*)_m_app_gbml_load(&_s142);
 	if(((BBObject*)bbt_u)!= &bbNullObject){
 		_m_app_gb_settings=(struct _m_app_t_dict_obj*)bbt_u;
 	}else{
@@ -4247,7 +4436,7 @@ void _m_app_gb_load_settings(){
 	}
 }
 void _m_app_gb_achievements_load(){
-	_m_app_gb_achievements=(struct _m_app_t_dict_obj*)_m_app_gbml_load(&_s87);
+	_m_app_gb_achievements=(struct _m_app_t_dict_obj*)_m_app_gbml_load(&_s88);
 }
 void _m_app_gb_console_load(){
 }
@@ -4432,14 +4621,14 @@ BBINT _m_app_dict_read_int(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_s){
 }
 void _m_app_gb_visual_load(){
 	struct _m_app_t_dict_obj* bbt_u=(struct _m_app_t_dict_obj*)_m_app_gb_settings;
-	_m_app_gb_visual_set_fullscreen((BBINT)_m_app_dict_read_byte((struct _m_app_t_dict_obj*)bbt_u,&_s46));
+	_m_app_gb_visual_set_fullscreen((BBINT)_m_app_dict_read_byte((struct _m_app_t_dict_obj*)bbt_u,&_s47));
 	if(!(_m_app_gb_visual_fullscreen->__m_app_t_bool_value !=0)){
-		_m_app_gb_visual_set_window_scale(_m_app_dict_read_float((struct _m_app_t_dict_obj*)bbt_u,&_s47));
+		_m_app_gb_visual_set_window_scale(_m_app_dict_read_float((struct _m_app_t_dict_obj*)bbt_u,&_s48));
 	}
-	_m_app_bool_set((struct _m_app_t_bool_obj*)_m_app_gb_visual_use_scanlines,((BBINT)_m_app_dict_read_byte((struct _m_app_t_dict_obj*)bbt_u,&_s48)));
-	_m_app_number_set((struct _m_app_t_number_obj*)_m_app_gb_visual_scanlines_style,((BBFLOAT)_m_app_dict_read_byte((struct _m_app_t_dict_obj*)bbt_u,&_s49)));
-	_m_app_number_set((struct _m_app_t_number_obj*)_m_app_gb_visual_scanlines_thick,((BBFLOAT)_m_app_dict_read_byte((struct _m_app_t_dict_obj*)bbt_u,&_s50)));
-	_m_app_int_set((struct _m_app_t_int_obj*)_m_app_gb_visual_screenshot_id,_m_app_dict_read_int((struct _m_app_t_dict_obj*)bbt_u,&_s51));
+	_m_app_bool_set((struct _m_app_t_bool_obj*)_m_app_gb_visual_use_scanlines,((BBINT)_m_app_dict_read_byte((struct _m_app_t_dict_obj*)bbt_u,&_s49)));
+	_m_app_number_set((struct _m_app_t_number_obj*)_m_app_gb_visual_scanlines_style,((BBFLOAT)_m_app_dict_read_byte((struct _m_app_t_dict_obj*)bbt_u,&_s50)));
+	_m_app_number_set((struct _m_app_t_number_obj*)_m_app_gb_visual_scanlines_thick,((BBFLOAT)_m_app_dict_read_byte((struct _m_app_t_dict_obj*)bbt_u,&_s51)));
+	_m_app_int_set((struct _m_app_t_int_obj*)_m_app_gb_visual_screenshot_id,_m_app_dict_read_int((struct _m_app_t_dict_obj*)bbt_u,&_s52));
 }
 void _m_app_palette_set(struct _m_app_t_palette_obj* bbt_p,BBINT bbt_n,BBFLOAT bbt_r,BBFLOAT bbt_g,BBFLOAT bbt_b,BBFLOAT bbt_a){
 	bbt_n=_m_app_iclamp(bbt_n,0,255);
@@ -4601,6 +4790,20 @@ struct _m_app_t_animation_obj* _m_app_new_animation(BBINT bbt_l,BBINT bbt_s){
 	bbt_r->__m_app_t_animation_stoptofirst =(struct _m_app_t_bool_obj*)_m_app_new_bool(bbt_s);
 	return (struct _m_app_t_animation_obj*)bbt_r;
 }
+struct _m_app_t_animation_obj* _m_app_new_animation2(BBARRAY bbt_a,BBINT bbt_s){
+	struct _m_app_t_animation_obj* bbt_r=(struct _m_app_t_animation_obj*)(struct _m_app_t_animation_obj*)bbObjectNew((BBClass *)&_m_app_t_animation);
+	bbt_r->__m_app_t_animation_status =(struct _m_app_t_int_obj*)_m_app_new_int(0);
+	bbt_r->__m_app_t_animation_pos =(struct _m_app_t_int_obj*)_m_app_new_int(-1);
+	bbt_r->__m_app_t_animation_framedelay =(struct _m_app_t_float_obj*)_m_app_new_float(0.00000000f);
+	bbt_r->__m_app_t_animation_frames =bbt_a;
+	bbt_r->__m_app_t_animation_length =(struct _m_app_t_int_obj*)_m_app_new_int(bbt_a->scales[0]);
+	bbt_r->__m_app_t_animation_stoptofirst =(struct _m_app_t_bool_obj*)_m_app_new_bool(bbt_s);
+	return (struct _m_app_t_animation_obj*)bbt_r;
+}
+void _m_app_animation_add_frame(struct _m_app_t_animation_obj* bbt_a,BBINT bbt_n,struct _m_app_t_animframe_obj* bbt_f){
+	bbt_n=((BBINT)_m_app_clamp(((BBFLOAT)bbt_n),0.00000000f,((BBFLOAT)_m_app_int_get((struct _m_app_t_int_obj*)bbt_a->__m_app_t_animation_length ))));
+	((struct _m_app_t_animframe_obj**)BBARRAYDATA(bbt_a->__m_app_t_animation_frames ,1))[((BBUINT)bbt_n)]=(struct _m_app_t_animframe_obj*)bbt_f;
+}
 void __m_app_t_ibox_New(struct _m_app_t_ibox_obj* o) {
 	bbObjectCtor((BBOBJECT)o);
 	o->clas = &_m_app_t_ibox;
@@ -4685,37 +4888,34 @@ struct _m_app_t_animframe_obj* _m_app_new_animframe(BBINT bbt_id,BBFLOAT bbt_ix,
 	bbt_r->__m_app_t_animframe_framedelay =(struct _m_app_t_float_obj*)_m_app_new_float(bbt_d);
 	return (struct _m_app_t_animframe_obj*)bbt_r;
 }
-void _m_app_animation_add_frame(struct _m_app_t_animation_obj* bbt_a,BBINT bbt_n,struct _m_app_t_animframe_obj* bbt_f){
-	bbt_n=((BBINT)_m_app_clamp(((BBFLOAT)bbt_n),0.00000000f,((BBFLOAT)_m_app_int_get((struct _m_app_t_int_obj*)bbt_a->__m_app_t_animation_length ))));
-	((struct _m_app_t_animframe_obj**)BBARRAYDATA(bbt_a->__m_app_t_animation_frames ,1))[((BBUINT)bbt_n)]=(struct _m_app_t_animframe_obj*)bbt_f;
-}
-void _m_app_animation_add_new_frame(struct _m_app_t_animation_obj* bbt_a,BBINT bbt_n,BBINT bbt_id,BBFLOAT bbt_fx,BBFLOAT bbt_fy,BBFLOAT bbt_fw,BBFLOAT bbt_fh,BBFLOAT bbt_fd){
+void _m_app_animation_add_frame2(struct _m_app_t_animation_obj* bbt_a,BBINT bbt_n,BBINT bbt_id,BBFLOAT bbt_fx,BBFLOAT bbt_fy,BBFLOAT bbt_fw,BBFLOAT bbt_fh,BBFLOAT bbt_fd){
 	_m_app_animation_add_frame((struct _m_app_t_animation_obj*)bbt_a,bbt_n,(struct _m_app_t_animframe_obj*)_m_app_new_animframe(bbt_id,bbt_fx,bbt_fy,bbt_fw,bbt_fh,bbt_fd));
 }
 void _m_app_gb_load_default_animations(){
 	struct _m_app_t_animation_obj* bbt_a=(struct _m_app_t_animation_obj*)(&bbNullObject);
 	bbt_a=(struct _m_app_t_animation_obj*)_m_app_new_animation(4,0);
-	_m_app_animation_add_new_frame((struct _m_app_t_animation_obj*)bbt_a,0,0,19.0000000f,22.0000000f,2.00000000f,2.00000000f,0.125f);
-	_m_app_animation_add_new_frame((struct _m_app_t_animation_obj*)bbt_a,1,0,21.0000000f,22.0000000f,2.00000000f,2.00000000f,0.125f);
-	_m_app_animation_add_new_frame((struct _m_app_t_animation_obj*)bbt_a,2,0,23.0000000f,22.0000000f,2.00000000f,2.00000000f,0.125f);
-	_m_app_animation_add_new_frame((struct _m_app_t_animation_obj*)bbt_a,3,0,25.0000000f,22.0000000f,2.00000000f,2.00000000f,0.125f);
+	_m_app_animation_add_frame2((struct _m_app_t_animation_obj*)bbt_a,0,0,19.0000000f,22.0000000f,2.00000000f,2.00000000f,0.125f);
+	_m_app_animation_add_frame2((struct _m_app_t_animation_obj*)bbt_a,1,0,21.0000000f,22.0000000f,2.00000000f,2.00000000f,0.125f);
+	_m_app_animation_add_frame2((struct _m_app_t_animation_obj*)bbt_a,2,0,23.0000000f,22.0000000f,2.00000000f,2.00000000f,0.125f);
+	_m_app_animation_add_frame2((struct _m_app_t_animation_obj*)bbt_a,3,0,25.0000000f,22.0000000f,2.00000000f,2.00000000f,0.125f);
 	((struct _m_app_t_animation_obj**)BBARRAYDATA(_m_app_gb_animations,1))[0U]=(struct _m_app_t_animation_obj*)bbt_a;
 	bbt_a=(struct _m_app_t_animation_obj*)_m_app_new_animation(5,0);
-	_m_app_animation_add_new_frame((struct _m_app_t_animation_obj*)bbt_a,0,0,5.00000000f,20.0000000f,1.00000000f,1.00000000f,0.05f);
-	_m_app_animation_add_new_frame((struct _m_app_t_animation_obj*)bbt_a,1,0,6.00000000f,20.0000000f,1.00000000f,1.00000000f,0.05f);
-	_m_app_animation_add_new_frame((struct _m_app_t_animation_obj*)bbt_a,2,0,7.00000000f,20.0000000f,1.00000000f,1.00000000f,0.05f);
-	_m_app_animation_add_new_frame((struct _m_app_t_animation_obj*)bbt_a,3,0,8.00000000f,20.0000000f,1.00000000f,1.00000000f,0.05f);
-	_m_app_animation_add_new_frame((struct _m_app_t_animation_obj*)bbt_a,4,0,9.00000000f,20.0000000f,1.00000000f,1.00000000f,0.05f);
+	_m_app_animation_add_frame2((struct _m_app_t_animation_obj*)bbt_a,0,0,5.00000000f,20.0000000f,1.00000000f,1.00000000f,0.05f);
+	_m_app_animation_add_frame2((struct _m_app_t_animation_obj*)bbt_a,1,0,6.00000000f,20.0000000f,1.00000000f,1.00000000f,0.05f);
+	_m_app_animation_add_frame2((struct _m_app_t_animation_obj*)bbt_a,2,0,7.00000000f,20.0000000f,1.00000000f,1.00000000f,0.05f);
+	_m_app_animation_add_frame2((struct _m_app_t_animation_obj*)bbt_a,3,0,8.00000000f,20.0000000f,1.00000000f,1.00000000f,0.05f);
+	_m_app_animation_add_frame2((struct _m_app_t_animation_obj*)bbt_a,4,0,9.00000000f,20.0000000f,1.00000000f,1.00000000f,0.05f);
 	((struct _m_app_t_animation_obj**)BBARRAYDATA(_m_app_gb_animations,1))[1U]=(struct _m_app_t_animation_obj*)bbt_a;
 }
 void _m_app_gb_load_default_sounds(){
-	_m_app_gb_add_sound(90,&_s141);
-	_m_app_gb_add_sound(91,&_s142);
-	_m_app_gb_add_sound(92,&_s143);
-	_m_app_gb_add_sound(93,&_s144);
+	_m_app_gb_add_sound(90,&_s145);
+	_m_app_gb_add_sound(91,&_s146);
+	_m_app_gb_add_sound(92,&_s147);
+	_m_app_gb_add_sound(93,&_s148);
 }
 void _m_app_gb_load_default_images(){
-	_m_app_gb_add_image(0,&_s140);
+	_m_app_gb_add_image(0,&_s143);
+	_m_app_gb_add_image(1,&_s144);
 }
 void _m_app_gb_editor_load(){
 }
@@ -4742,152 +4942,7 @@ void _m_app_event_load(){
 }
 void _m_app_gb_editor_start(){
 }
-BBSTRING _m_app_rpad(BBSTRING bbt_t,BBINT bbt_n,BBSTRING bbt_p){
-	BBINT bbt_l=(bbt_t)->length;
-	if(bbt_l<bbt_n){
-		return bbStringConcat(_m_app_rep(bbt_p,(bbt_n-bbt_l)),bbt_t);
-	}else{
-		if(bbt_l==bbt_n){
-			return bbt_t;
-		}else{
-			if(bbt_l>bbt_n){
-				return brl_retro_Right(bbt_t,bbt_n);
-			}
-		}
-	}
-	return &bbEmptyString;
-}
-void __m_app_t_logchain_node_New(struct _m_app_t_logchain_node_obj* o) {
-	bbObjectCtor((BBOBJECT)o);
-	o->clas = &_m_app_t_logchain_node;
-	o->__m_app_t_logchain_node_data = &bbEmptyString;
-	o->__m_app_t_logchain_node_chain_prev = (struct _m_app_t_logchain_node_obj*)(&bbNullObject);
-	o->__m_app_t_logchain_node_chain_next = (struct _m_app_t_logchain_node_obj*)(&bbNullObject);
-}
-struct BBDebugScope_4 _m_app_t_logchain_node_scope ={
-	BBDEBUGSCOPE_USERTYPE,
-	"t_logchain_node",
-	{
-		{
-			BBDEBUGDECL_FIELD,
-			"data",
-			"$",
-			.field_offset=offsetof(struct _m_app_t_logchain_node_obj,__m_app_t_logchain_node_data)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"chain_prev",
-			":t_logchain_node",
-			.field_offset=offsetof(struct _m_app_t_logchain_node_obj,__m_app_t_logchain_node_chain_prev)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"chain_next",
-			":t_logchain_node",
-			.field_offset=offsetof(struct _m_app_t_logchain_node_obj,__m_app_t_logchain_node_chain_next)
-		},
-		{
-			BBDEBUGDECL_TYPEMETHOD,
-			"New",
-			"()",
-			.var_address=(void*)&__m_app_t_logchain_node_New
-		},
-		BBDEBUGDECL_END
-	}
-};
-struct BBClass__m_app_t_logchain_node _m_app_t_logchain_node={
-	&bbObjectClass,
-	bbObjectFree,
-	(BBDebugScope*)&_m_app_t_logchain_node_scope,
-	sizeof(struct _m_app_t_logchain_node_obj),
-	(void (*)(BBOBJECT))__m_app_t_logchain_node_New,
-	bbObjectDtor,
-	bbObjectToString,
-	bbObjectCompare,
-	bbObjectSendMessage,
-	0,
-	0,
-	offsetof(struct _m_app_t_logchain_node_obj,__m_app_t_logchain_node_chain_next) - offsetof(struct _m_app_t_logchain_node_obj,__m_app_t_logchain_node_data) + sizeof(struct _m_app_t_logchain_node_obj*)
-	,0
-	,offsetof(struct _m_app_t_logchain_node_obj,__m_app_t_logchain_node_data)
-};
-
-struct _m_app_t_logchain_node_obj* _m_app_new_logchain_node(BBSTRING bbt_s){
-	struct _m_app_t_logchain_node_obj* bbt_r=(struct _m_app_t_logchain_node_obj*)(struct _m_app_t_logchain_node_obj*)bbObjectNew((BBClass *)&_m_app_t_logchain_node);
-	bbt_r->__m_app_t_logchain_node_data =bbt_s;
-	return (struct _m_app_t_logchain_node_obj*)bbt_r;
-}
-BBINT _m_app_int_eq(struct _m_app_t_int_obj* bbt_b,BBINT bbt_v){
-	if(bbt_b->__m_app_t_int_value ==bbt_v){
-		return 1;
-	}else{
-		return 0;
-	}
-}
-BBINT _m_app_int_eq2(struct _m_app_t_int_obj* bbt_b){
-	if(bbt_b->__m_app_t_int_value !=0){
-		return 1;
-	}else{
-		return 0;
-	}
-}
-BBINT _m_app_int_gte(struct _m_app_t_int_obj* bbt_b,BBINT bbt_v){
-	if(bbt_b->__m_app_t_int_value >=bbt_v){
-		return 1;
-	}else{
-		return 0;
-	}
-}
-void _m_app_logchain_add(struct _m_app_t_logchain_obj* bbt_l,BBSTRING bbt_s){
-	struct _m_app_t_logchain_node_obj* bbt_c=(struct _m_app_t_logchain_node_obj*)_m_app_new_logchain_node(bbt_s);
-	if(_m_app_int_eq((struct _m_app_t_int_obj*)bbt_l->__m_app_t_logchain_length ,0)!=0){
-		bbt_l->__m_app_t_logchain_chain_curr =(struct _m_app_t_logchain_node_obj*)bbt_c;
-		bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_chain_next =(struct _m_app_t_logchain_node_obj*)bbt_c;
-		bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_chain_prev =(struct _m_app_t_logchain_node_obj*)bbt_c;
-		bbt_l->__m_app_t_logchain_chain_seek =(struct _m_app_t_logchain_node_obj*)bbt_c;
-	}else{
-		if(_m_app_int_gte((struct _m_app_t_int_obj*)bbt_l->__m_app_t_logchain_length ,1)!=0){
-			struct _m_app_t_logchain_node_obj* bbt_d1=(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ;
-			struct _m_app_t_logchain_node_obj* bbt_d2=(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_chain_next ;
-			bbt_l->__m_app_t_logchain_chain_curr =(struct _m_app_t_logchain_node_obj*)bbt_c;
-			bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_chain_prev =(struct _m_app_t_logchain_node_obj*)bbt_d1;
-			bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_chain_next =(struct _m_app_t_logchain_node_obj*)bbt_d2;
-			bbt_d1->__m_app_t_logchain_node_chain_next =(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ;
-			bbt_d2->__m_app_t_logchain_node_chain_prev =(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ;
-			if(bbt_l->__m_app_t_logchain_chain_seek ==bbt_d1){
-				bbt_l->__m_app_t_logchain_chain_seek =(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ;
-			}
-		}
-	}
-	_m_app_int_add((struct _m_app_t_int_obj*)bbt_l->__m_app_t_logchain_length ,1);
-}
-BBSTRING _m_app_logchain_next(struct _m_app_t_logchain_obj* bbt_l){
-	if(bbt_l->__m_app_t_logchain_length ->__m_app_t_int_value >0){
-		bbt_l->__m_app_t_logchain_chain_curr =(struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_chain_next ;
-		return bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_data ;
-	}
-	return &bbEmptyString;
-}
-BBSTRING _m_app_logchain_get(struct _m_app_t_logchain_obj* bbt_l){
-	if(((BBObject*)bbt_l->__m_app_t_logchain_chain_curr )!= &bbNullObject){
-		return bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_data ;
-	}
-	return &bbEmptyString;
-}
 void _m_app_gb_testing_start(){
-	{
-		BBINT bbt_i=1;
-		for(;(bbt_i<=10);bbt_i=(bbt_i+1)){
-			_m_app_logchain_add((struct _m_app_t_logchain_obj*)_m_app_gb_testing->__m_app_t_gb_testing_logchain ,_m_app_rpad(bbStringFromInt(bbt_i),2,&_s23));
-		}
-	}
-	{
-		BBINT bbt_i2=1;
-		for(;(bbt_i2<=14);bbt_i2=(bbt_i2+1)){
-			_m_app_logchain_next((struct _m_app_t_logchain_obj*)_m_app_gb_testing->__m_app_t_gb_testing_logchain );
-			brl_standardio_Print(_m_app_logchain_get((struct _m_app_t_logchain_obj*)_m_app_gb_testing->__m_app_t_gb_testing_logchain ));
-		}
-	}
 }
 void _m_app_gb_debug_start(){
 }
@@ -5037,7 +5092,7 @@ void _m_app_gb_console_update(BBFLOAT bbt_d){
 					_m_app_string_set((struct _m_app_t_string_obj*)_m_app_gb_console_input,&bbEmptyString);
 				}else{
 					if(((BBINT)bbt_)==9){
-						_m_app_gb_console_add_input_char(&_s64);
+						_m_app_gb_console_add_input_char(&_s65);
 					}else{
 						_m_app_gb_console_add_input_char(bbStringFromChar((BBINT)bbt_u));
 					}
@@ -5071,10 +5126,25 @@ BBINT _m_app_float_lt(struct _m_app_t_float_obj* bbt_b,BBFLOAT bbt_v){
 BBINT _m_app_bool_nt(struct _m_app_t_bool_obj* bbt_b){
 	return (!(bbt_b->__m_app_t_bool_value !=0));
 }
+BBSTRING _m_app_rpad(BBSTRING bbt_t,BBINT bbt_n,BBSTRING bbt_p){
+	BBINT bbt_l=(bbt_t)->length;
+	if(bbt_l<bbt_n){
+		return bbStringConcat(_m_app_rep(bbt_p,(bbt_n-bbt_l)),bbt_t);
+	}else{
+		if(bbt_l==bbt_n){
+			return bbt_t;
+		}else{
+			if(bbt_l>bbt_n){
+				return brl_retro_Right(bbt_t,bbt_n);
+			}
+		}
+	}
+	return &bbEmptyString;
+}
 void _m_app_gb_visual_take_screenshot(){
 	struct brl_max2d_image_TImage_obj* bbt_u=(struct brl_max2d_image_TImage_obj*)brl_max2d_CreateImage(((BBINT)_m_app_gb_visual_letterbox_rect->__m_app_t_rect_w ),((BBINT)_m_app_gb_visual_letterbox_rect->__m_app_t_rect_h ),8,-1);
 	brl_max2d_GrabImage((struct brl_max2d_image_TImage_obj*)bbt_u,((BBINT)_m_app_gb_visual_letterbox_rect->__m_app_t_rect_x ),((BBINT)_m_app_gb_visual_letterbox_rect->__m_app_t_rect_y ),0);
-	BBSTRING bbt_ss=bbStringConcat(bbStringConcat(&_s43,_m_app_rpad(bbStringFromInt(_m_app_gb_visual_screenshot_id->__m_app_t_int_value ),3,&_s23)),&_s44);
+	BBSTRING bbt_ss=bbStringConcat(bbStringConcat(&_s44,_m_app_rpad(bbStringFromInt(_m_app_gb_visual_screenshot_id->__m_app_t_int_value ),3,&_s23)),&_s45);
 	_m_app_int_add((struct _m_app_t_int_obj*)_m_app_gb_visual_screenshot_id,1);
 	struct brl_pixmap_TPixmap_obj* bbt_x=(struct brl_pixmap_TPixmap_obj*)brl_max2d_LockImage((struct brl_max2d_image_TImage_obj*)bbt_u,0,1,1);
 	BBINT bbt_m=brl_pngloader_SavePixmapPNG((struct brl_pixmap_TPixmap_obj*)bbt_x,(BBOBJECT)bbt_ss,0);
@@ -5175,7 +5245,7 @@ void _m_app_gb_scene_update(BBFLOAT bbt_d){
 	_m_app_gb_scene_uptime=(_m_app_gb_scene_uptime+bbt_d);
 }
 void _m_app_gb_save_settings(){
-	_m_app_gbml_save((struct _m_app_t_dict_obj*)_m_app_gb_settings,&_s139);
+	_m_app_gbml_save((struct _m_app_t_dict_obj*)_m_app_gb_settings,&_s142);
 }
 void _m_app_gb_editor_update(BBFLOAT bbt_d){
 }
@@ -5315,16 +5385,22 @@ BBFLOAT _m_app_gb_graph_calc_h(BBFLOAT bbt_h){
 	}
 	return (((bbt_h*_m_app_gb_graph_drawscale->__m_app_t_point_y )*10.0f)*_m_app_gb_graph_scale->__m_app_t_point_y );
 }
-void _m_app_gb_graph_draw_image(BBFLOAT bbt_x,BBFLOAT bbt_y,struct brl_max2d_image_TImage_obj* bbt_im){
+void _m_app_gb_graph_draw_image(BBFLOAT bbt_x,BBFLOAT bbt_y,BBINT bbt_im){
+	_m_app_gb_graph_prepare();
+	struct brl_max2d_image_TImage_obj* bbt_u=(struct brl_max2d_image_TImage_obj*)((struct brl_max2d_image_TImage_obj**)BBARRAYDATA(_m_app_gb_images,1))[((BBUINT)bbt_im)];
+	brl_max2d_DrawSubImageRect((struct brl_max2d_image_TImage_obj*)bbt_u,_m_app_gb_graph_calc_x(bbt_x),_m_app_gb_graph_calc_y(bbt_y),_m_app_gb_graph_calc_w((BBFLOAT)(bbt_u->_brl_max2d_image_timage_width /10)),_m_app_gb_graph_calc_h((BBFLOAT)(bbt_u->_brl_max2d_image_timage_height /10)),0.00000000f,0.00000000f,((BBFLOAT)bbt_u->_brl_max2d_image_timage_width ),((BBFLOAT)bbt_u->_brl_max2d_image_timage_height ),0.00000000f,0.00000000f,0);
+}
+void _m_app_gb_graph_draw_image2(BBFLOAT bbt_x,BBFLOAT bbt_y,struct brl_max2d_image_TImage_obj* bbt_im){
 	_m_app_gb_graph_prepare();
 	brl_max2d_DrawSubImageRect((struct brl_max2d_image_TImage_obj*)bbt_im,_m_app_gb_graph_calc_x(bbt_x),_m_app_gb_graph_calc_y(bbt_y),_m_app_gb_graph_calc_w((BBFLOAT)(bbt_im->_brl_max2d_image_timage_width /10)),_m_app_gb_graph_calc_h((BBFLOAT)(bbt_im->_brl_max2d_image_timage_height /10)),0.00000000f,0.00000000f,((BBFLOAT)bbt_im->_brl_max2d_image_timage_width ),((BBFLOAT)bbt_im->_brl_max2d_image_timage_height ),0.00000000f,0.00000000f,0);
 }
 void _m_app_bitmap_draw(struct _m_app_t_bitmap_obj* bbt_c,BBFLOAT bbt_x,BBFLOAT bbt_y){
-	_m_app_gb_graph_draw_image(bbt_x,bbt_y,(struct brl_max2d_image_TImage_obj*)bbt_c->__m_app_t_bitmap_image );
+	_m_app_gb_graph_draw_image2(bbt_x,bbt_y,(struct brl_max2d_image_TImage_obj*)bbt_c->__m_app_t_bitmap_image );
 }
 void _m_app_gb_editor_draw(BBFLOAT bbt_x,BBFLOAT bbt_y){
 }
 void _m_app_gb_testing_draw(BBFLOAT bbt_x,BBFLOAT bbt_y){
+	_m_app_gb_graph_draw_image(0.00000000f,0.00000000f,1);
 }
 void _m_app_gb_visual_set_virtual_scale(BBFLOAT bbt_f){
 	_m_app_float_set((struct _m_app_t_float_obj*)_m_app_gb_visual_virtualscale,bbt_f);
@@ -5449,11 +5525,11 @@ BBSTRING _m_app_stopwatch_tostring(struct _m_app_t_stopwatch_obj* bbt_s){
 void _m_app_gb_debug_draw_panel(){
 	_m_app_gb_graph_enable_camera(0);
 	_m_app_gb_graph_draw_tile_rect(0.00000000f,0.00000000f,0,27.0000000f,23.0000000f,40,1);
-	_m_app_gb_graph_draw_tile_text(0.00000000f,0.00000000f,1,bbStringConcat(&_s131,bbStringFromSizet(bbGCMemAlloced())));
+	_m_app_gb_graph_draw_tile_text(0.00000000f,0.00000000f,1,bbStringConcat(&_s134,bbStringFromSizet(bbGCMemAlloced())));
 	_m_app_gb_graph_draw_tile_text(6.00000000f,0.00000000f,1,bbStringConcat(bbStringConcat(bbStringFromInt((BBINT)_m_app_gb_mouse_virtual_tile_x()),&_s14),bbStringFromInt((BBINT)_m_app_gb_mouse_virtual_tile_y())));
-	_m_app_gb_graph_draw_tile_text(9.00000000f,0.00000000f,1,bbStringConcat(&_s132,bbStringFromInt(_m_app_gb_graph_pixelmode->__m_app_t_bool_value )));
-	_m_app_gb_graph_draw_tile_text(11.0000000f,0.00000000f,1,bbStringConcat(&_s133,bbStringFromInt((BBINT)_m_app_gb_visual_windowscale->__m_app_t_float_value )));
-	_m_app_gb_graph_draw_tile_text(13.0000000f,0.00000000f,1,bbStringConcat(&_s134,bbStringFromInt(_m_app_gb_timing_fps_value)));
+	_m_app_gb_graph_draw_tile_text(9.00000000f,0.00000000f,1,bbStringConcat(&_s135,bbStringFromInt(_m_app_gb_graph_pixelmode->__m_app_t_bool_value )));
+	_m_app_gb_graph_draw_tile_text(11.0000000f,0.00000000f,1,bbStringConcat(&_s136,bbStringFromInt((BBINT)_m_app_gb_visual_windowscale->__m_app_t_float_value )));
+	_m_app_gb_graph_draw_tile_text(13.0000000f,0.00000000f,1,bbStringConcat(&_s137,bbStringFromInt(_m_app_gb_timing_fps_value)));
 	_m_app_gb_graph_draw_tile_text(16.0000000f,0.00000000f,1,_m_app_stopwatch_tostring((struct _m_app_t_stopwatch_obj*)_m_app_gb_timing_stopwatch));
 	BBFLOAT bbt_u=0.00000000f;
 	{
@@ -5571,20 +5647,20 @@ void _m_app_gb_editor_end(){
 }
 void _m_app_gb_visual_end(){
 	struct _m_app_t_dict_obj* bbt_d=(struct _m_app_t_dict_obj*)_m_app_new_dict();
-	_m_app_dict_set_float((struct _m_app_t_dict_obj*)bbt_d,&_s52,_m_app_gb_visual_windowscale->__m_app_t_float_value );
-	_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_d,&_s53,_m_app_gb_visual_fullscreen->__m_app_t_bool_value );
-	_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_d,&_s54,_m_app_gb_visual_use_scanlines->__m_app_t_bool_value );
-	_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_d,&_s55,((BBBYTE)_m_app_gb_visual_scanlines_thick->__m_app_t_number_value ));
-	_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_d,&_s56,((BBBYTE)_m_app_gb_visual_scanlines_style->__m_app_t_number_value ));
-	_m_app_dict_set_int((struct _m_app_t_dict_obj*)bbt_d,&_s57,_m_app_gb_visual_screenshot_id->__m_app_t_int_value );
-	_m_app_dict_set_dir((struct _m_app_t_dict_obj*)_m_app_gb_settings,&_s58,(struct _m_app_t_dict_obj*)bbt_d);
+	_m_app_dict_set_float((struct _m_app_t_dict_obj*)bbt_d,&_s53,_m_app_gb_visual_windowscale->__m_app_t_float_value );
+	_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_d,&_s54,_m_app_gb_visual_fullscreen->__m_app_t_bool_value );
+	_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_d,&_s55,_m_app_gb_visual_use_scanlines->__m_app_t_bool_value );
+	_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_d,&_s56,((BBBYTE)_m_app_gb_visual_scanlines_thick->__m_app_t_number_value ));
+	_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_d,&_s57,((BBBYTE)_m_app_gb_visual_scanlines_style->__m_app_t_number_value ));
+	_m_app_dict_set_int((struct _m_app_t_dict_obj*)bbt_d,&_s58,_m_app_gb_visual_screenshot_id->__m_app_t_int_value );
+	_m_app_dict_set_dir((struct _m_app_t_dict_obj*)_m_app_gb_settings,&_s59,(struct _m_app_t_dict_obj*)bbt_d);
 }
 void _m_app_gb_testing_end(){
 }
 void _m_app_gb_debug_end(){
 }
 void _m_app_gb_achievements_end(){
-	_m_app_gbml_save((struct _m_app_t_dict_obj*)_m_app_gb_achievements,&_s87);
+	_m_app_gbml_save((struct _m_app_t_dict_obj*)_m_app_gb_achievements,&_s88);
 }
 void _m_app_gb_end(){
 	_m_app_gb_editor_end();
@@ -6531,6 +6607,54 @@ struct BBClass__m_app_t_image _m_app_t_image={
 	offsetof(struct _m_app_t_image_obj,__m_app_t_image_path) - offsetof(struct _m_app_t_image_obj,__m_app_t_image_image) + sizeof(BBSTRING)
 	,0
 	,offsetof(struct _m_app_t_image_obj,__m_app_t_image_image)
+};
+
+void __m_app_t_sound_New(struct _m_app_t_sound_obj* o) {
+	bbObjectCtor((BBOBJECT)o);
+	o->clas = &_m_app_t_sound;
+	o->__m_app_t_sound_sound = (struct brl_audio_TSound_obj*)(&bbNullObject);
+	o->__m_app_t_sound_path = &bbEmptyString;
+}
+struct BBDebugScope_3 _m_app_t_sound_scope ={
+	BBDEBUGSCOPE_USERTYPE,
+	"t_sound",
+	{
+		{
+			BBDEBUGDECL_FIELD,
+			"sound",
+			":TSound",
+			.field_offset=offsetof(struct _m_app_t_sound_obj,__m_app_t_sound_sound)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"path",
+			"$",
+			.field_offset=offsetof(struct _m_app_t_sound_obj,__m_app_t_sound_path)
+		},
+		{
+			BBDEBUGDECL_TYPEMETHOD,
+			"New",
+			"()",
+			.var_address=(void*)&__m_app_t_sound_New
+		},
+		BBDEBUGDECL_END
+	}
+};
+struct BBClass__m_app_t_sound _m_app_t_sound={
+	&bbObjectClass,
+	bbObjectFree,
+	(BBDebugScope*)&_m_app_t_sound_scope,
+	sizeof(struct _m_app_t_sound_obj),
+	(void (*)(BBOBJECT))__m_app_t_sound_New,
+	bbObjectDtor,
+	bbObjectToString,
+	bbObjectCompare,
+	bbObjectSendMessage,
+	0,
+	0,
+	offsetof(struct _m_app_t_sound_obj,__m_app_t_sound_path) - offsetof(struct _m_app_t_sound_obj,__m_app_t_sound_sound) + sizeof(BBSTRING)
+	,0
+	,offsetof(struct _m_app_t_sound_obj,__m_app_t_sound_sound)
 };
 
 void __m_app_t_drawcmd_New(struct _m_app_t_drawcmd_obj* o) {
@@ -8372,16 +8496,6 @@ void _m_app_list_sort_by_depth(struct _m_app_t_list_obj* bbt_l){
 	if(bbt_l->__m_app_t_list_count ->__m_app_t_int_value >1){
 	}
 }
-struct _m_app_t_animation_obj* _m_app_new_animation_a(BBARRAY bbt_a,BBINT bbt_s){
-	struct _m_app_t_animation_obj* bbt_r=(struct _m_app_t_animation_obj*)(struct _m_app_t_animation_obj*)bbObjectNew((BBClass *)&_m_app_t_animation);
-	bbt_r->__m_app_t_animation_status =(struct _m_app_t_int_obj*)_m_app_new_int(0);
-	bbt_r->__m_app_t_animation_pos =(struct _m_app_t_int_obj*)_m_app_new_int(-1);
-	bbt_r->__m_app_t_animation_framedelay =(struct _m_app_t_float_obj*)_m_app_new_float(0.00000000f);
-	bbt_r->__m_app_t_animation_frames =bbt_a;
-	bbt_r->__m_app_t_animation_length =(struct _m_app_t_int_obj*)_m_app_new_int(bbt_a->scales[0]);
-	bbt_r->__m_app_t_animation_stoptofirst =(struct _m_app_t_bool_obj*)_m_app_new_bool(bbt_s);
-	return (struct _m_app_t_animation_obj*)bbt_r;
-}
 struct _m_app_t_ibox_obj* _m_app_animation_get_current_frame(struct _m_app_t_animation_obj* bbt_a){
 	if(_m_app_int_neq((struct _m_app_t_int_obj*)bbt_a->__m_app_t_animation_pos ,-1)!=0){
 		if(((BBObject*)((struct _m_app_t_animframe_obj**)BBARRAYDATA(bbt_a->__m_app_t_animation_frames ,1))[((BBUINT)_m_app_int_get((struct _m_app_t_int_obj*)bbt_a->__m_app_t_animation_pos ))])!= &bbNullObject){
@@ -8725,6 +8839,11 @@ void _m_app_timer_set(struct _m_app_t_timer_obj* bbt_t,BBFLOAT bbt_n){
 BBFLOAT _m_app_timer_get(struct _m_app_t_timer_obj* bbt_t){
 	return _m_app_number_get((struct _m_app_t_number_obj*)bbt_t->__m_app_t_timer_value );
 }
+void _m_app_dictval_set_data(struct _m_app_t_dictval_obj* bbt_d,BBOBJECT bbt_o){
+	_m_app_dictval_clear((struct _m_app_t_dictval_obj*)bbt_d);
+	bbt_d->__m_app_t_dictval_id =9;
+	bbt_d->__m_app_t_dictval_tdata =(BBOBJECT)bbt_o;
+}
 BBSHORT _m_app_dictval_get_short(struct _m_app_t_dictval_obj* bbt_d){
 	if(bbt_d->__m_app_t_dictval_id ==2){
 		return bbt_d->__m_app_t_dictval_tshort ->__m_app_t_short_value ;
@@ -8751,6 +8870,13 @@ BBSTRING _m_app_dictval_get_string(struct _m_app_t_dictval_obj* bbt_d){
 		return bbt_d->__m_app_t_dictval_tstring ->__m_app_t_string_value ;
 	}else{
 		return &_s23;
+	}
+}
+BBOBJECT _m_app_dictval_get_data(struct _m_app_t_dictval_obj* bbt_d){
+	if(bbt_d->__m_app_t_dictval_id ==9){
+		return (BBOBJECT)bbt_d->__m_app_t_dictval_tdata ;
+	}else{
+		return (BBOBJECT)&bbNullObject;
 	}
 }
 BBINT _m_app_dictval_get_id(struct _m_app_t_dictval_obj* bbt_d){
@@ -8785,6 +8911,17 @@ BBINT _m_app_dict_load(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_t){
 void _m_app_dict_save(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_t){
 	_m_app_gbml_save((struct _m_app_t_dict_obj*)bbt_d,bbt_t);
 }
+struct _m_app_t_dictval_obj* _m_app_dict_set_data(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_k,BBOBJECT bbt_v){
+	_m_app_dict_lencheck((struct _m_app_t_dict_obj*)bbt_d);
+	BBINT bbt_u=_m_app_dict_find_pos((struct _m_app_t_dict_obj*)bbt_d,bbt_k);
+	if(bbt_u==-1){
+		bbt_u=_m_app_dict_find_pos((struct _m_app_t_dict_obj*)bbt_d,(&bbEmptyString));
+	}
+	((BBSTRING*)BBARRAYDATA(bbt_d->__m_app_t_dict_keys ,1))[((BBUINT)bbt_u)]=bbt_k;
+	((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_u)]=(struct _m_app_t_dictval_obj*)_m_app_new_dictval();
+	_m_app_dictval_set_data((struct _m_app_t_dictval_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_u)],(BBOBJECT)bbt_v);
+	return (struct _m_app_t_dictval_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_u)];
+}
 BBSHORT _m_app_dict_get_short(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_k){
 	BBINT bbt_u=_m_app_dict_find_pos((struct _m_app_t_dict_obj*)bbt_d,bbt_k);
 	if(bbt_u!=-1){
@@ -8812,6 +8949,13 @@ BBSTRING _m_app_dict_get_string(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_k){
 		return _m_app_dictval_get_string((struct _m_app_t_dictval_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_u)]);
 	}
 	return &_s23;
+}
+BBOBJECT _m_app_dict_get_data(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_k){
+	BBINT bbt_u=_m_app_dict_find_pos((struct _m_app_t_dict_obj*)bbt_d,bbt_k);
+	if(bbt_u!=-1){
+		return (BBOBJECT)_m_app_dictval_get_data((struct _m_app_t_dictval_obj*)((struct _m_app_t_dictval_obj**)BBARRAYDATA(bbt_d->__m_app_t_dict_values ,1))[((BBUINT)bbt_u)]);
+	}
+	return (BBOBJECT)&bbNullObject;
 }
 BBINT _m_app_dict_get_id(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_k){
 	BBINT bbt_u=_m_app_dict_find_pos((struct _m_app_t_dict_obj*)bbt_d,bbt_k);
@@ -8847,6 +8991,10 @@ BBSTRING _m_app_dict_get_type(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_k){
 								}else{
 									if(bbt_==8){
 										return &_s39;
+									}else{
+										if(bbt_==9){
+											return &_s40;
+										}
 									}
 								}
 							}
@@ -8856,7 +9004,7 @@ BBSTRING _m_app_dict_get_type(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_k){
 			}
 		}
 	}
-	return &_s40;
+	return &_s41;
 }
 BBINT _m_app_dict_write_byte(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_s,BBBYTE bbt_v){
 	BBARRAY bbt_w=_m_app_tokenize(bbt_s,&_s17,0);
@@ -9010,6 +9158,25 @@ BBINT _m_app_dict_write_dir(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_s){
 	}
 	return 0;
 }
+BBINT _m_app_dict_write_data(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_s,BBOBJECT bbt_v){
+	BBARRAY bbt_w=_m_app_tokenize(bbt_s,&_s17,0);
+	struct _m_app_t_dict_obj* bbt_g=(struct _m_app_t_dict_obj*)&bbNullObject;
+	if((bbt_w->scales[0])==0){
+		return 0;
+	}else{
+		if((bbt_w->scales[0])==1){
+			_m_app_dict_set_data((struct _m_app_t_dict_obj*)bbt_d,((BBSTRING*)BBARRAYDATA(bbt_w,1))[0U],(BBOBJECT)bbt_v);
+			return 1;
+		}else{
+			if((bbt_w->scales[0])>1){
+				bbt_g=(struct _m_app_t_dict_obj*)_m_app_dict_goto_dir((struct _m_app_t_dict_obj*)bbt_d,bbArraySlice("$",bbt_w,0,(bbt_w->scales[0])),1);
+				_m_app_dict_set_data((struct _m_app_t_dict_obj*)bbt_g,((BBSTRING*)BBARRAYDATA(bbt_w,1))[((BBUINT)((bbt_w->scales[0])-1))],(BBOBJECT)bbt_v);
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
 BBSHORT _m_app_dict_read_short(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_s){
 	BBARRAY bbt_w=_m_app_tokenize(bbt_s,&_s17,0);
 	struct _m_app_t_dict_obj* bbt_g=(struct _m_app_t_dict_obj*)&bbNullObject;
@@ -9115,6 +9282,27 @@ struct _m_app_t_dict_obj* _m_app_dict_read_dir(struct _m_app_t_dict_obj* bbt_d,B
 	}
 	return (struct _m_app_t_dict_obj*)(&bbNullObject);
 }
+BBOBJECT _m_app_dict_read_data(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_s){
+	BBARRAY bbt_w=_m_app_tokenize(bbt_s,&_s17,0);
+	struct _m_app_t_dict_obj* bbt_g=(struct _m_app_t_dict_obj*)&bbNullObject;
+	if((bbt_w->scales[0])==0){
+		return (BBOBJECT)&bbNullObject;
+	}else{
+		if((bbt_w->scales[0])==1){
+			return (BBOBJECT)_m_app_dict_get_data((struct _m_app_t_dict_obj*)bbt_d,((BBSTRING*)BBARRAYDATA(bbt_w,1))[0U]);
+		}else{
+			if((bbt_w->scales[0])>1){
+				bbt_g=(struct _m_app_t_dict_obj*)_m_app_dict_goto_dir((struct _m_app_t_dict_obj*)bbt_d,bbArraySlice("$",bbt_w,0,(bbt_w->scales[0])),0);
+				if(((BBObject*)bbt_g)!= &bbNullObject){
+					return (BBOBJECT)_m_app_dict_get_data((struct _m_app_t_dict_obj*)bbt_g,((BBSTRING*)BBARRAYDATA(bbt_w,1))[((BBUINT)((bbt_w->scales[0])-1))]);
+				}else{
+					return (BBOBJECT)&bbNullObject;
+				}
+			}
+		}
+	}
+	return (BBOBJECT)(&bbNullObject);
+}
 struct _m_app_t_tag_obj* _m_app_new_tag(BBSTRING bbt_n,BBINT bbt_id){
 	struct _m_app_t_tag_obj* bbt_r=(struct _m_app_t_tag_obj*)(struct _m_app_t_tag_obj*)bbObjectNew((BBClass *)&_m_app_t_tag);
 	bbt_r->__m_app_t_tag_name =bbt_n;
@@ -9188,6 +9376,14 @@ BBINT _m_app_counter_reset(struct _m_app_t_counter_obj* bbt_c){
 }
 BBINT _m_app_counter_set(struct _m_app_t_counter_obj* bbt_c,BBINT bbt_n){
 	bbt_c->__m_app_t_counter_value =bbt_n;
+	return bbt_c->__m_app_t_counter_value ;
+}
+BBINT _m_app_counter_dec(struct _m_app_t_counter_obj* bbt_c,BBINT bbt_n){
+	bbt_c->__m_app_t_counter_value =(bbt_c->__m_app_t_counter_value -bbt_n);
+	return bbt_c->__m_app_t_counter_value ;
+}
+BBINT _m_app_counter_step(struct _m_app_t_counter_obj* bbt_c){
+	bbt_c->__m_app_t_counter_value =(bbt_c->__m_app_t_counter_value +bbt_c->__m_app_t_counter_vstep );
 	return bbt_c->__m_app_t_counter_value ;
 }
 struct _m_app_t_sprite_obj* _m_app_new_sprite(BBINT bbt_im,BBFLOAT bbt_ix,BBINT bbt_iy,BBINT bbt_iw,BBINT bbt_ih){
@@ -9411,7 +9607,7 @@ struct _m_app_t_button_obj* _m_app_new_button(BBINT bbt_tx,BBINT bbt_ty){
 	bbt_r->__m_app_t_button_state =(struct _m_app_t_int_obj*)_m_app_new_int(0);
 	bbt_r->__m_app_t_button_presstime =(struct _m_app_t_number_obj*)_m_app_new_number(0.00000000f,0.00000000f,0.25f,0);
 	bbt_r->__m_app_t_button_margin =(struct _m_app_t_float_obj*)_m_app_new_float(0.5f);
-	bbt_r->__m_app_t_button_text =(struct _m_app_t_string_obj*)_m_app_new_string(&_s41);
+	bbt_r->__m_app_t_button_text =(struct _m_app_t_string_obj*)_m_app_new_string(&_s42);
 	return (struct _m_app_t_button_obj*)bbt_r;
 }
 void _m_app_button_set_pos(struct _m_app_t_button_obj* bbt_b,BBFLOAT bbt_x,BBFLOAT bbt_y){
@@ -10610,22 +10806,16 @@ BBSTRING _m_app_image_path(struct _m_app_t_image_obj* bbt_u){
 	return bbt_u->__m_app_t_image_path ;
 }
 void _m_app_image_draw(struct _m_app_t_image_obj* bbt_u,BBFLOAT bbt_x,BBFLOAT bbt_y){
-	_m_app_gb_graph_draw_image(bbt_x,bbt_y,(struct brl_max2d_image_TImage_obj*)bbt_u->__m_app_t_image_image );
+	_m_app_gb_graph_draw_image2(bbt_x,bbt_y,(struct brl_max2d_image_TImage_obj*)bbt_u->__m_app_t_image_image );
 }
-void _m_app_logchain_node_set(struct _m_app_t_logchain_node_obj* bbt_l,BBSTRING bbt_s){
-	bbt_l->__m_app_t_logchain_node_data =bbt_s;
+struct _m_app_t_sound_obj* _m_app_new_sound(BBSTRING bbt_p){
+	struct _m_app_t_sound_obj* bbt_r=(struct _m_app_t_sound_obj*)(struct _m_app_t_sound_obj*)bbObjectNew((BBClass *)&_m_app_t_sound);
+	bbt_r->__m_app_t_sound_sound =(struct brl_audio_TSound_obj*)brl_audio_LoadSound((BBOBJECT)bbt_p,0);
+	bbt_r->__m_app_t_sound_path =bbt_p;
+	return (struct _m_app_t_sound_obj*)bbt_r;
 }
-struct _m_app_t_logchain_obj* _m_app_new_logchain_ex(BBINT bbt_n){
-	bbt_n=_m_app_ilow(bbt_n,1);
-	struct _m_app_t_logchain_obj* bbt_r=(struct _m_app_t_logchain_obj*)_m_app_new_logchain();
-	{
-		BBINT bbt_i=1;
-		BBINT bbt_=bbt_n;
-		for(;(bbt_i<=bbt_);bbt_i=(bbt_i+1)){
-			_m_app_logchain_add((struct _m_app_t_logchain_obj*)bbt_r,&bbEmptyString);
-		}
-	}
-	return (struct _m_app_t_logchain_obj*)(&bbNullObject);
+BBSTRING _m_app_sound_path(struct _m_app_t_sound_obj* bbt_u){
+	return bbt_u->__m_app_t_sound_path ;
 }
 void _m_app_logchain_remove(struct _m_app_t_logchain_obj* bbt_l){
 	if(_m_app_int_eq((struct _m_app_t_int_obj*)bbt_l->__m_app_t_logchain_length ,1)!=0){
@@ -10644,10 +10834,11 @@ void _m_app_logchain_remove(struct _m_app_t_logchain_obj* bbt_l){
 		}
 	}
 }
-void _m_app_logchain_set(struct _m_app_t_logchain_obj* bbt_l,BBSTRING bbt_s){
-	if(bbt_l->__m_app_t_logchain_length ->__m_app_t_int_value >0){
-		_m_app_logchain_node_set((struct _m_app_t_logchain_node_obj*)bbt_l->__m_app_t_logchain_chain_curr ,bbt_s);
+BBSTRING _m_app_logchain_get(struct _m_app_t_logchain_obj* bbt_l){
+	if(((BBObject*)bbt_l->__m_app_t_logchain_chain_curr )!= &bbNullObject){
+		return bbt_l->__m_app_t_logchain_chain_curr ->__m_app_t_logchain_node_data ;
 	}
+	return &bbEmptyString;
 }
 BBSTRING _m_app_logchain_prev(struct _m_app_t_logchain_obj* bbt_l){
 	if(bbt_l->__m_app_t_logchain_length ->__m_app_t_int_value >0){
@@ -11755,17 +11946,17 @@ void _m_app_gb_console_refresh_lines(){
 }
 void _m_app_gb_achievements_add_achievement(BBSTRING bbt_id,BBSTRING bbt_name){
 	struct _m_app_t_dict_obj* bbt_u=(struct _m_app_t_dict_obj*)_m_app_new_dict();
-	_m_app_dict_set_string((struct _m_app_t_dict_obj*)bbt_u,&_s82,bbt_id);
-	_m_app_dict_set_string((struct _m_app_t_dict_obj*)bbt_u,&_s83,bbt_name);
-	_m_app_dict_set_string((struct _m_app_t_dict_obj*)bbt_u,&_s84,&_s85);
-	_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_u,&_s86,0);
+	_m_app_dict_set_string((struct _m_app_t_dict_obj*)bbt_u,&_s83,bbt_id);
+	_m_app_dict_set_string((struct _m_app_t_dict_obj*)bbt_u,&_s84,bbt_name);
+	_m_app_dict_set_string((struct _m_app_t_dict_obj*)bbt_u,&_s85,&_s86);
+	_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_u,&_s87,0);
 	_m_app_dict_set_dir((struct _m_app_t_dict_obj*)_m_app_gb_achievements,bbt_id,(struct _m_app_t_dict_obj*)bbt_u);
 }
 void _m_app_gb_achievements_fulfill(BBSTRING bbt_id){
 	struct _m_app_t_dictval_obj* bbt_u=(struct _m_app_t_dictval_obj*)_m_app_dict_find((struct _m_app_t_dict_obj*)_m_app_gb_achievements,bbt_id);
 	if(((BBObject*)bbt_u)!= &bbNullObject){
 		struct _m_app_t_dict_obj* bbt_v=(struct _m_app_t_dict_obj*)_m_app_dictval_get_dir((struct _m_app_t_dictval_obj*)bbt_u);
-		_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_v,&_s86,1);
+		_m_app_dict_set_byte((struct _m_app_t_dict_obj*)bbt_v,&_s87,1);
 	}
 }
 void _m_app_gb_achievements_init(){
@@ -11928,11 +12119,11 @@ int _bb_main(){
 		bbObjectRegisterType((BBCLASS)&_m_app_t_palette);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_animation);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_dictval);
+		bbObjectRegisterType((BBCLASS)&_m_app_t_logchain_node);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_counter);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_ipoint);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_animframe);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_ibox);
-		bbObjectRegisterType((BBCLASS)&_m_app_t_logchain_node);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_ipoint3);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_inumber);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_cube);
@@ -11947,6 +12138,7 @@ int _bb_main(){
 		bbObjectRegisterType((BBCLASS)&_m_app_t_spinicon);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_lightcube);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_image);
+		bbObjectRegisterType((BBCLASS)&_m_app_t_sound);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_drawcmd);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_drawstack_node);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_drawstack);

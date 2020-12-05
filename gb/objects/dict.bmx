@@ -178,6 +178,16 @@ function dict_set_dir:t_dictval(d:t_dict, k:string, t:t_dict=null)
 	return d.values[u]
 endfunction
 
+function dict_set_data:t_dictval ( d:t_dict, k:string, v:object )
+  dict_lencheck(d)
+	local u:int = dict_find_pos(d,k)
+	if (u = undefined) then u = dict_find_pos(d,null)
+	d.keys[u] = k
+	d.values[u] = new_dictval()
+	dictval_set_data(d.values[u], v)
+	return d.values[u]
+endfunction
+
 '''''''''''''
 '' setters ''
 '''''''''''''
@@ -246,6 +256,14 @@ function dict_get_dir:t_dict(d:t_dict, k:string)
 	return null
 endfunction
 
+function dict_get_data:object(d:t_dict, k:string)
+	local u:int = dict_find_pos(d,k)
+	if (u <> undefined)
+		return dictval_get_data(d.values[u])
+	endif
+	return null
+endfunction
+
 function dict_get_id:int(d:t_dict, k:string)
 	local u:int = dict_find_pos(d,k)
 	if (u <> undefined)
@@ -274,6 +292,8 @@ function dict_get_type:string( d:t_dict, k:string )
 				return "string"
 			case dictval_id_dir
 				return "dir"
+      case dictval_id_data
+        return "data"
 		endselect
 	endif
 	return "null"
@@ -418,6 +438,21 @@ function dict_write_dir:int( d:t_dict, s:string)
 	endif
 endfunction
 
+function dict_write_data:int (d:t_dict, s:string, v:object)
+  local w:string[] = tokenize(s,"/",false)
+	local g:t_dict = null
+	if (w.length = 0)
+		return false
+	elseif (w.length = 1)
+		dict_set_data(d,w[0],v)
+		return true
+	elseif (w.length > 1)
+		g = dict_goto_dir(d, w[..w.length])
+		dict_set_data(g, w[w.length-1], v)
+		return true
+	endif
+endfunction
+
 '''''''''''''
 '' Reading ''
 '''''''''''''
@@ -552,6 +587,23 @@ function dict_read_dir:t_dict(d:t_dict, s:string)
 		g = dict_goto_dir(d, w[..w.length], false)
 		if (g)
 			return dict_get_dir(g,w[w.length-1])
+		else
+			return null
+		endif
+	endif
+endfunction
+
+function dict_read_data:object(d:t_dict, s:string)
+	local w:string[] = tokenize(s,"/",false)
+	local g:t_dict = null
+	if (w.length = 0)
+		return null
+	elseif (w.length = 1)
+		return dict_get_data(d, w[0])
+	elseif (w.length > 1)
+		g = dict_goto_dir(d, w[..w.length], false)
+		if (g)
+			return dict_get_data(g,w[w.length-1])
 		else
 			return null
 		endif

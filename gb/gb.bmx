@@ -24,8 +24,9 @@ rem
                      ++++++MMMMMM   yyy///yyy///            
                      ------oooooo   ///---///---            
                                                             
-DEVELOPED BY MR.GOOBER - 2020-01-31
-goober was here, 2020-06-28
+DEVELOPED BY MR.GOOBER    2020-01-31
+goober was here           2020-06-28
+goober was here again     2020-12-04
 endrem
 
 ''''''''''''''
@@ -62,6 +63,7 @@ include "objects/gbscmd.bmx"
 include "objects/spinicon.bmx"
 include "objects/lightcube.bmx"
 include "objects/image.bmx"
+include "objects/sound.bmx"
 include "objects/logchain.bmx"
 
 '' ~~unfinished modules~~
@@ -229,6 +231,7 @@ endfunction
 
 function gb_load_default_images()
 	gb_add_image(0,"gb/media/images/gb-0.png")
+  gb_adD_image(1,"gb/media/images/editor-bg.png")
 endfunction
 
 function gb_load_default_sounds()
@@ -261,18 +264,18 @@ function gb_load_default_animations()
 	local a:t_animation
 	
 	a = new_animation(4)
-	animation_add_new_frame(a, 0, 0,19,22,2,2, 0.125)
-	animation_add_new_frame(a, 1, 0,21,22,2,2, 0.125)
-	animation_add_new_frame(a, 2, 0,23,22,2,2, 0.125)
-	animation_add_new_frame(a, 3, 0,25,22,2,2, 0.125)
+	animation_add_frame(a, 0, 0,19,22,2,2, 0.125)
+	animation_add_frame(a, 1, 0,21,22,2,2, 0.125)
+	animation_add_frame(a, 2, 0,23,22,2,2, 0.125)
+	animation_add_frame(a, 3, 0,25,22,2,2, 0.125)
 	gb_animations[0] = a
 	
 	a = new_animation(5)
-	animation_add_new_frame(a, 0, 0,5,20,1,1, 0.05)
-	animation_add_new_frame(a, 1, 0,6,20,1,1, 0.05)
-	animation_add_new_frame(a, 2, 0,7,20,1,1, 0.05)
-	animation_add_new_frame(a, 3, 0,8,20,1,1, 0.05)
-	animation_add_new_frame(a, 4, 0,9,20,1,1, 0.05)
+	animation_add_frame(a, 0, 0,5,20,1,1, 0.05)
+	animation_add_frame(a, 1, 0,6,20,1,1, 0.05)
+	animation_add_frame(a, 2, 0,7,20,1,1, 0.05)
+	animation_add_frame(a, 3, 0,8,20,1,1, 0.05)
+	animation_add_frame(a, 4, 0,9,20,1,1, 0.05)
 	gb_animations[1] = a
 endfunction
 

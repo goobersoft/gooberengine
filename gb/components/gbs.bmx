@@ -47,6 +47,16 @@ endfunction
 '' commands ''
 ''''''''''''''
 
+function new_gbscmd_clear:t_gbscmd()
+  local r:t_gbscmd = new_gbscmd()
+  r.name = "clear"
+  r.cmd = "clear"
+  r.aliases = ["cls"]
+  r.desc = "clear the console"
+  r.func = gbs_func_clear
+  return r
+endfunction
+
 function new_gbscmd_set:t_gbscmd()
 	local r:t_gbscmd = new_gbscmd()
 	r.name = "set"
@@ -211,6 +221,13 @@ endfunction
 '' functions ''
 '''''''''''''''
 
+function gbs_func_clear(s:string[])
+  gb_console_lines			= new t_string[23]
+  for local i:int = 0 to 22
+		gb_console_lines[i] = new_string("")
+	next
+endfunction
+
 function gbs_func_set(s:string[])
 	local u:t_dictval = new_dictval()
 	dictval_eval(u,sind(s,1))
@@ -304,6 +321,7 @@ function gbs_init()
 	gbs_cmds 		= new t_gbscmd[gbs_max_cmds]
 	
 	local u:t_counter = new_counter()
+  gbs_cmds[counter_inc(u)] = new_gbscmd_clear()
 	gbs_cmds[counter_inc(u)] = new_gbscmd_set()
 	gbs_cmds[counter_inc(u)] = new_gbscmd_add()
 	gbs_cmds[counter_inc(u)] = new_gbscmd_mul()

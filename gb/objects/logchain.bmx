@@ -34,18 +34,18 @@ endtype
 '' new ''
 '''''''''
 
-function new_logchain:t_logchain ()
+function new_logchain:t_logchain (n:int=0, s:string="")
+  n = ilow(n,0)
   local r:t_logchain = new t_logchain
   r.length = new_int(0)
-  return r
-endfunction
 
-function new_logchain_ex:t_logchain (n:int)
-  n = ilow(n,1)
-  local r:t_logchain = new_logchain()
-  for local i:int = 1 to n
-    logchain_add(r,"")
-  next 
+  if n > 0
+    for local i:int = 1 to n
+      logchain_add(r,s)
+    next 
+  endif
+
+  return r
 endfunction
 
 '''''''''''''''
