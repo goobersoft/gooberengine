@@ -40,7 +40,7 @@ function event_main()
 	event_init()
 	event_load()
 	event_start()
-	while bool_eq(gb_running,true) and appterminate()=false
+	while bool_eq(gb.running,true) and appterminate()=false
 		cls()
 		event_update()
 		event_draw()
