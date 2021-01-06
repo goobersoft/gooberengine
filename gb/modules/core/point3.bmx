@@ -59,7 +59,7 @@ function point3_neq:int(p:t_point3, x:float, y:float, z:float)
 	if (p.x <> x) and (p.y <> y) and (p.z <> z) return true else return false
 endfunction
 
-function point3_tostring:string(p:t_point3)
+function point3_to_string:string(p:t_point3)
 		return "{" + p.x + "," + p.y + "," + p.z + "}"
 endfunction
 
@@ -123,6 +123,6 @@ function ipoint3_neq:int(p:t_ipoint3, x:int, y:int, z:int)
 	if (p.x <> x) and (p.y <> y) and (p.z <> z) return true else return false
 endfunction
 
-function ipoint3_tostring:string(p:t_ipoint3)
+function ipoint3_to_string:string(p:t_ipoint3)
 		return "{" + p.x + "," + p.y + "," + p.z + "}"
 endfunction

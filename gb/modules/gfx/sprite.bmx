@@ -8,6 +8,7 @@ type t_sprite
 	field color		:t_color
 	field mode		:t_byte
 	field anim		:t_animation
+  field data    :t_dict
 endtype
 
 function new_sprite:t_sprite(im:int=0, ix:float=39, iy:int=0, iw:int=1, ih:int=1)
@@ -20,6 +21,7 @@ function new_sprite:t_sprite(im:int=0, ix:float=39, iy:int=0, iw:int=1, ih:int=1
 	r.color			= new_color(3,3,3,3)
 	r.mode			= new_byte(gb_graph_mode_normal)
 	r.anim			= null
+  r.data      = new_dict()
 	return r
 endfunction
 
@@ -27,10 +29,13 @@ endfunction
 '' functions ''
 '''''''''''''''
 
-function sprite_move(s:t_sprite, x:float, y:float, z:float=0)
-	point3_set(s.pos, x, y, z)
+function sprite_set_pos(s:t_sprite, x:float, y:float, z:float)
+  point3_set(s.pos, x, y, z)
 endfunction
-global sprite_set_pos(s:t_sprite, x:float, y:float, z:float) = sprite_move
+
+function sprite_move_pos(s:t_sprite, x:float, y:float, z:float)
+  point3_add(s.pos, x, y, z)
+endfunction
 
 function sprite_rotate(s:t_sprite, a:float)
 	number_set(s.angle, a)
@@ -58,6 +63,14 @@ endfunction
 
 function sprite_set_ibox(s:t_sprite, im:int, ix:float, iy:float, iw:float, ih:float)
 	ibox_set(s.ibox, im,ix,iy,iw,ih)
+endfunction
+
+function sprite_write_data(s:t_sprite, n:string, v:object)
+  dict_write(s.data,n,v)
+endfunction
+
+function sprite_read_data:object(s:t_sprite, n:string)
+  return dict_read(s.data,n)
 endfunction
 
 ''''''''''''

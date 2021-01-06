@@ -127,11 +127,15 @@ function gbml_from_string:t_dict(s:string)
 			
 			select c
 				case ";"
-					if w and hk and ht and (not hv)
+					if w and hk
 						hv = trim(w)
 						w = ""
-					endif
-					if hk and ht and hv
+          else
+            hk = ""
+            hv = trim(w)
+            w = ""
+          endif
+					if hk and hv
 						select ht
 							case "@"
 								dict_set_byte(cd, hk, byte(hv))
@@ -147,8 +151,10 @@ function gbml_from_string:t_dict(s:string)
 								dict_set_double(cd, hk, double(hv))
 							case "$"
 								dict_set_string(cd, hk, string(hv))
+              default
+                dict_set_string(cd, hk, string(hv))
 						endselect
-					endif
+          endif
 					hk = null
 					ht = null
 					hv = null

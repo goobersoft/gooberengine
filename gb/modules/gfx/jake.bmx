@@ -48,7 +48,8 @@ endfunction
 '' events ''
 ''''''''''''
 
-function jake_update(j:t_jake, d:float)
+function jake_update(j:t_jake)
+  local d:float = gb_delta()
 	number_add( j.anim, d * jake_animspeed )
 	number_add( j.smiletime, -d )
 	

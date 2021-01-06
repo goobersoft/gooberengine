@@ -166,14 +166,7 @@ function color_to_argb:int(c:t_color)
 		byte(c.b*255/c.depth))
 endfunction
 
-function color_to_matrix:t_matrix(c:t_color)
-	local r:t_matrix = new_matrix(4,1)
-	r.data[0,0] = c.r
-	r.data[1,0] = c.g
-	r.data[2,0] = c.b
-	r.data[3,0] = c.a
-	return r
-endfunction
+
 
 ''''''''''''''''''''''''''''
 '' special blending modes ''
@@ -237,16 +230,6 @@ function color_blend_sub_c( c:t_color, d:t_color )
 	c.g = low(c.g-d.g,0)
 	c.b = low(c.b-d.b,0)
 	c.a = low(c.a-d.a,0)
-endfunction
-
-function color_blend_matrix( c:t_color, m:t_matrix )
-	if (m.width = 4) and (m.height = 4)
-		local r:t_matrix = matrix_multiply(m,color_to_matrix(c))
-		c.r = r.data[0,0]
-		c.g = r.data[1,0]
-		c.b = r.data[2,0]
-		c.a = r.data[3,0]
-	endif
 endfunction
 
 function color_blend_custom( c:t_color, d:t_color, f(c:t_color, d:t_color) )

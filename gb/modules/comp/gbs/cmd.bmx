@@ -66,10 +66,7 @@ function new_gbscmd_clear:t_gbscmd()
 endfunction
 
 function gbs_func_clear(s:string[])
-  gb.console.lines			= new t_string[23]
-  for local i:int = 0 to 22
-		gb.console.lines[i] = new_string("")
-	next
+
 endfunction
 
 '''

@@ -21,6 +21,9 @@ const gb_graph_mode_multiply 	:byte = 2
 
 type t_gb_graph
   field color           :t_color
+  field clscolor        :t_color
+  field swapcolor       :t_color
+  field clsmode         :t_bool
   field scale           :t_point
   field handle          :t_point
   field offset          :t_point
@@ -43,6 +46,9 @@ function new_gb_graph:t_gb_graph()
   local r:t_gb_graph = new t_gb_graph
 
   r.color       = new_color(3,3,3,3)
+  r.clscolor    = new_color(0,0,0,3)
+  r.swapcolor   = new_color(0,0,0,0)
+  r.clsmode     = new_bool(true)
   r.scale       = new_point(1,1)
   r.drawscale   = new_point(1,1)
   r.handle      = new_point(0,0)
@@ -68,6 +74,12 @@ endfunction
 function gb_graph_init()
   gb.graph            = new_gb_graph()
 	gb_graph_calc_drawscale()
+endfunction
+
+function gb_graph_draw()
+  if bool_eq(gb.graph.clsmode)
+    gb_graph_cls()
+  endif
 endfunction
 
 
@@ -264,6 +276,18 @@ function gb_graph_set_rgba( r:float, g:float, b:float, a:float )
 	gb_graph_set_alpha(a)
 endfunction
 
+function gb_graph_set_cls_color( r:float=3.0, g:float=3.0, b:float=3.0 )
+  color_set_rgb(gb.graph.clscolor, r, g, b)
+endfunction
+
+function gb_graph_set_cls_alpha( a:float=3.0 )
+  color_set_alpha(gb.graph.clscolor, a)
+endfunction
+
+function gb_graph_set_cls_rgba( r:float=3.0, g:float=3.0, b:float=3.0, a:float=3.0 )
+  color_set( gb.graph.clscolor, r, g, b, a )
+endfunction
+
 function gb_graph_set_angle(f:float)
 	number_set(gb.graph.angle,f)
 	gb_graph_calc_offsets()
@@ -299,6 +323,7 @@ endfunction
 
 function gb_graph_reset()
 	gb_graph_set_rgba				(3,3,3,3)
+  color_set(gb.graph.swapcolor, 0,0,0,0)
 	gb_graph_set_angle			(0)
 	gb_graph_set_scale			(1,1)
 	gb_graph_set_handle			(0,0)
@@ -312,6 +337,39 @@ endfunction
 '''''''''''''''''''''''
 '' drawing functions ''
 '''''''''''''''''''''''
+
+function gb_graph_cls()
+  local rr:float = gb.graph.color.r
+  local gg:float = gb.graph.color.g
+  local bb:float = gb.graph.color.b
+  local aa:float = gb.graph.color.a
+
+  gb.graph.color.r = gb.graph.clscolor.r
+  gb.graph.color.g = gb.graph.clscolor.g
+  gb.graph.color.b = gb.graph.clscolor.b
+  gb.graph.color.a = gb.graph.clscolor.a
+
+  gb_graph_draw_rect(0,0,40.1,24.1)
+
+  gb.graph.color.r = rr
+  gb.graph.color.g = gg
+  gb.graph.color.b = bb
+  gb.graph.color.a = aa
+endfunction
+
+function gb_graph_swap_color()
+  local c1:t_color = gb.graph.color
+  local c2:t_color = gb.graph.swapcolor
+  gb.graph.color = c2
+  gb.graph.swapcolor = c1
+endfunction
+
+function gb_graph_swap_cls_color()
+  local c1:t_color = gb.graph.clscolor
+  local c2:t_color = gb.graph.swapcolor
+  gb.graph.clscolor = c2
+  gb.graph.swapcolor = c1
+endfunction
 
 function gb_graph_draw_line(x1:float, y1:float, x2:float, y2:float)
 	gb_graph_prepare()

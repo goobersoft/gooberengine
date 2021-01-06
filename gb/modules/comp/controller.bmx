@@ -30,16 +30,18 @@ endtype
 
 function new_gb_controller:t_gb_controller ()
   local r:t_gb_controller = new t_gb_controller
+
   r.keymaps = new t_byte[gb_controller_max_keymaps][]
+
   for local i:int = 0 to gb_controller_max_keymaps-1
-    r.keymaps[i] = new t_byte[2]
-    r.keymaps[i][0] = new_byte(0)
-    r.keymaps[i][1] = new_byte(0)
+    r.keymaps[i] = [new_byte(0), new_byte(0)]
   next
+
   r.buttons = new t_byte[gb_controller_max_buttons]
   for local i:int = 0 to gb_controller_max_buttons-1
     r.buttons[i] = new_byte(0)
   next
+
   return r
 endfunction
 
@@ -55,7 +57,7 @@ endfunction
 function gb_controller_update()
 	for local i:int = 0 to gb_controller_max_buttons-1
 		if keydown(gb.controller.keymaps[i][0].value) or keydown(gb.controller.keymaps[i][1].value)
-			gb_controller_press_button(i)
+      gb_controller_press_button(i)
 		else
 			gb_controller_release_button(i)
 		endif

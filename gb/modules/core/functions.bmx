@@ -966,7 +966,25 @@ endfunction
 
 ''''''''''''''''''''''''''''''''''''''''''''
 
+function astr:string(b:byte[])
+  return string.fromcstring(b)
+endfunction
+
+
 function strdec:string( f:float=0.0, d:int=2 )
+	d = iclamp(d,0,10)
+	if abs(f) < 1.0 * (10.0 ^ -d) then f = 0.0
+	local r:string
+	local w:string[] = tokenize(string(f),".")
+	if (d > 0)
+		r = w[0] + "." + left(w[1],d)
+	else
+		r = w[0]
+	endif
+	return r
+endfunction
+
+function strdbl:string( f:double=0.0, d:int=2 )
 	d = iclamp(d,0,10)
 	if abs(f) < 1.0 * (10.0 ^ -d) then f = 0.0
 	local r:string
@@ -1049,3 +1067,6 @@ function cut:string[](s:string, n:int=80)
 	endif
 	return r
 endfunction
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+

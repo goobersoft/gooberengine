@@ -4,7 +4,8 @@
 ''''''''''
 
 type t_gb_editor
-  field active :t_bool
+  field active      :t_bool
+  field lightcube   :t_lightcube
 endtype
 
 '''''''''
@@ -32,12 +33,19 @@ function gb_editor_update()
 endfunction
 
 function gb_editor_draw()
+  if bool_eq(gb.editor.active)
+    
+  endif
+endfunction
+
+function gb_editor_end()
+  gb.editor = null
 endfunction
 
 '''''''''''''''
 '' functions ''
 '''''''''''''''
 
-function gb_editor_set_active(g:t_gb_editor, n:int)
+function gb_editor_set_active(n:int)
   bool_set(gb.editor.active, n)
 endfunction

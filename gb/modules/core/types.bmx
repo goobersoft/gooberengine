@@ -5,34 +5,116 @@
 '' meant to be a reference type for :object types.
 '' this class ensures an object + a string for its type
 
-type t_object
-  field data      :object
-  field objtype   :string
+type t_datum
+  field id        :string
+  field value     :object
 endtype
 
-function new_object:t_object (d:object=null, s:string="null")
-  local r:t_object = new t_object
-  r.data      = d
-  r.objtype   = s
+function new_datum:t_datum (d:object=null, s:string="null")
+  local r:t_datum = new t_datum
+  r.value     = d
+  r.id        = s
   return r
 endfunction
 
-function object_set_data(o:t_object, d:object)
-  o.data = d
-endfunction
-function object_set_type(o:t_object, s:string)
-  o.objtype = s
-endfunction
-function object_set(o:t_object, d:object, s:string)
-  object_set_data(o,d)
-  object_set_type(o,s)
+function new_datum_bool:t_datum(v:int)
+  local r:object = new_bool(v)
+  return new_datum(r,"bool")
 endfunction
 
-function object_data:object(o:t_object)
-  return o.data
+function new_datum_byte:t_datum(v:byte)
+  local r:t_byte = new_byte(v)
+  return new_datum(r,"byte")
 endfunction
-function object_type:string(o:t_object)
-  return o.objtype
+
+function new_datum_short:t_datum(v:short)
+  local r:t_short = new_short(v)
+  return new_datum(r,"short")
+endfunction
+
+function new_datum_int:t_datum(v:int)
+  local r:t_int = new_int(v)
+  return new_datum(r,"int")
+endfunction
+
+function new_datum_long:t_datum(v:long)
+  local r:t_long = new_long(v)
+  return new_datum(r,"long")
+endfunction
+
+function new_datum_float:t_datum(v:float)
+  local r:t_float = new_float(v)
+  return new_datum(r,"float")
+endfunction
+
+function new_datum_double:t_datum(v:double)
+  local r:t_double = new_double(v)
+  return new_datum(r,"double")
+endfunction
+
+function new_datum_string:t_datum(v:string)
+  local r:t_string = new_string(v)
+  return new_datum(r,"string")
+endfunction
+
+function datum_set_value(o:t_datum, d:object)
+  o.value = d
+endfunction
+function datum_set_id(o:t_datum, s:string)
+  o.id = s
+endfunction
+function datum_set(o:t_datum, d:object, s:string)
+  datum_set_value(o,d)
+  if s <> null
+    datum_set_id(o,s)
+  endif
+endfunction
+
+function datum_value:object(o:t_datum)
+  return o.value
+endfunction
+global datum_get:object(o:t_datum) = datum_value
+
+function datum_id:string(o:t_datum)
+  return o.id
+endfunction
+
+function datum_to_string:string(d:t_datum)
+  if d
+    select d.id
+      case "bool"
+        local u:t_bool = t_bool(d.value)
+        return "bool:" + bool_to_string(u)
+      case "byte"
+        local u:t_byte = t_byte(d.value)
+        return  "byte:" + byte_to_string(u)
+      case "short" 
+        local u:t_short = t_short(d.value)
+        return "short:" + short_to_string(u)
+      case "int"
+        local u:t_int = t_int(d.value)
+        return "int:" + int_to_string(u)
+      case "long"
+        local u:t_long = t_long(d.value)
+        return "long:" + long_to_string(u)
+      case "float"
+        local u:t_float = t_float(d.value)
+        return "float:" + float_to_string(u)
+      case "double"
+        local u:t_double = t_double(d.value)
+        return "double:" + double_to_string(u)
+      case "string"
+        local u:t_string = t_string(d.value)
+        return "string:" + string_to_string(u)
+      default
+        if d.value
+          return "datum: " + datum_to_string(t_datum(d.value))
+        else
+          return "datum: null"
+        endif
+    endselect
+  endif
+  return ""
 endfunction
 
 ''''''''''
@@ -93,14 +175,9 @@ function bool_eq:int ( b:t_bool )
 	if (b.value) then return true else return false
 endfunction
 
-function bool_tostring:string ( b:t_bool )
+function bool_to_string:string ( b:t_bool )
 	if (b.value) then return "true" else return "false"
 endfunction
-
-rem
-  global qset(b:t_bool,v:int) 	= bool_set
-  global qtog(b:t_bool) 				= bool_toggle
-endrem
 
 ''''''''''
 '' byte ''
@@ -110,13 +187,13 @@ Type t_byte
 	Field value :Byte
 endtype
 
-function new_byte:t_byte ( v:byte )
+function new_byte:t_byte ( v:int )
 	local r:t_byte = new t_byte
 	r.value = v
 	return r
 endfunction
 
-function new_byte_v:t_byte[] ( a:int, v:byte )
+function new_byte_v:t_byte[] ( a:int, v:int )
 	local r :t_byte[] = new t_byte[a]
 	for local i:int = 0 to a-1
 		r[i] = new_byte(v)
@@ -124,7 +201,7 @@ function new_byte_v:t_byte[] ( a:int, v:byte )
 	return r
 endfunction
 
-function byte_set ( b:t_byte, v:byte)
+function byte_set ( b:t_byte, v:int)
 	b.value = v
 endfunction
 
@@ -140,19 +217,19 @@ function byte_get:byte ( o:object )
 	return t_byte(o).value
 endfunction
 
-function byte_add ( b:t_byte, v:byte )
+function byte_add ( b:t_byte, v:int )
 	b.value = b.value + v
 endfunction
 
-function byte_mul ( b:t_byte, v:byte )
+function byte_mul ( b:t_byte, v:int )
 	b.value = b.value * v
 endfunction
 	
-function byte_div ( b:t_byte, v:byte )
+function byte_div ( b:t_byte, v:int )
 	If (v <> 0) Then b.value = b.value / v
 endfunction
 
-function byte_pow ( b:t_byte, v:byte )
+function byte_pow ( b:t_byte, v:int )
 	b.value = b.value ^ v
 endfunction
 
@@ -172,11 +249,11 @@ function byte_nt ( b:t_byte )
 	b.value = not b.value
 endfunction
 
-function byte_neq:int ( b:t_byte, v:byte )
+function byte_neq:int ( b:t_byte, v:int )
 	if (b.value <> v) then return true else return false
 endfunction
 
-function byte_eq:int ( b:t_byte, v:byte )
+function byte_eq:int ( b:t_byte, v:int )
 	if (b.value = v) then return true else return false
 endfunction
 
@@ -184,32 +261,25 @@ function byte_eq:int ( b:t_byte )
 	if (b.value) then return true else return false
 endfunction
 	
-function byte_gt:int ( b:t_byte, v:byte )
+function byte_gt:int ( b:t_byte, v:int )
 	if (b.value > v) then return true else return false
 endfunction
 
-function byte_lt:int ( b:t_byte, v:byte )
+function byte_lt:int ( b:t_byte, v:int )
 	if (b.value < v) then return true else return false
 endfunction
 
-function byte_gte:int ( b:t_byte, v:byte )
+function byte_gte:int ( b:t_byte, v:int )
 	if (b.value >= v) then return true else return false
 endfunction
 
-function byte_lte:int ( b:t_byte, v:byte )
+function byte_lte:int ( b:t_byte, v:int )
 	if (b.value <= v) then return true else return false
 endfunction
 
-function byte_tostring:string ( b:t_byte )
+function byte_to_string:string ( b:t_byte )
 	return string(b.value)
 endfunction
-
-rem
-  global bset(b:t_byte,v:byte) = byte_set
-  global badd(b:t_byte,v:byte) = byte_add
-  global bmul(b:t_byte,v:byte) = byte_mul
-  global bdiv(b:t_byte,v:byte) = byte_div
-endrem
 
 '''''''''''
 '' short ''
@@ -219,13 +289,13 @@ Type t_short
 	Field value :short
 endtype
 
-function new_short:t_short ( v:short )
+function new_short:t_short ( v:int )
 	local r:t_short = new t_short
 	r.value = v
 	return r
 endfunction
 
-function new_short_v:t_short[] ( a:int, v:short )
+function new_short_v:t_short[] ( a:int, v:int )
 	local r :t_short[] = new t_short[a]
 	for local i:int = 0 to a-1
 		r[i] = new_short(v)
@@ -233,7 +303,7 @@ function new_short_v:t_short[] ( a:int, v:short )
 	return r
 endfunction
 
-function short_set ( b:t_short, v:short)
+function short_set ( b:t_short, v:int)
 	b.value = v
 endfunction
 
@@ -249,23 +319,23 @@ function short_get:short ( o:object )
 	return t_short(o).value
 endfunction
 
-function short_add ( b:t_short, v:short )
+function short_add ( b:t_short, v:int )
 	b.value = b.value + v
 endfunction
 
-function short_mul ( b:t_short, v:short )
+function short_mul ( b:t_short, v:int )
 	b.value = b.value * v
 endfunction
 	
-function short_div ( b:t_short, v:short )
+function short_div ( b:t_short, v:int )
 	If (v <> 0) Then b.value = b.value / v
 endfunction
 
-function short_pow ( b:t_short, v:short )
+function short_pow ( b:t_short, v:int )
 	b.value = b.value ^ v
 endfunction
 
-function short_sqrt ( b:t_short, v:short )
+function short_sqrt ( b:t_short, v:int )
 	b.value = sqr(b.value)	
 endfunction 
 	
@@ -281,11 +351,11 @@ function short_nt ( b:t_short )
 	b.value = not b.value
 endfunction
 
-function short_neq:int ( b:t_short, v:short )
+function short_neq:int ( b:t_short, v:int )
 	if (b.value <> v) then return true else return false
 endfunction
 
-function short_eq:int ( b:t_short, v:short )
+function short_eq:int ( b:t_short, v:int )
 	if (b.value = v) then return true else return false
 endfunction
 
@@ -293,32 +363,25 @@ function short_eq:int ( b:t_short )
 	if (b.value) then return true else return false
 endfunction
 	
-function short_gt:int ( b:t_short, v:short )
+function short_gt:int ( b:t_short, v:int )
 	if (b.value > v) then return true else return false
 endfunction
 
-function short_lt:int ( b:t_short, v:short )
+function short_lt:int ( b:t_short, v:int )
 	if (b.value < v) then return true else return false
 endfunction
 
-function short_gte:int ( b:t_short, v:short )
+function short_gte:int ( b:t_short, v:int )
 	if (b.value >= v) then return true else return false
 endfunction
 
-function short_lte:int ( b:t_short, v:short )
+function short_lte:int ( b:t_short, v:int )
 	if (b.value <= v) then return true else return false
 endfunction
 
-function short_tostring:string ( b:t_short )
+function short_to_string:string ( b:t_short )
 	return string(b.value)
 endfunction
-
-rem
-  global hset(b:t_short,v:short) = short_set
-  global hadd(b:t_short,v:short) = short_add
-  global hmul(b:t_short,v:short) = short_mul
-  global hdiv(b:t_short,v:short) = short_div
-endrem
 
 '''''''''
 '' int ''
@@ -418,16 +481,9 @@ function int_lte:int ( b:t_int, v:int )
 	if (b.value <= v) then return true else return false
 endfunction
 
-function int_tostring:string ( b:t_int )
+function int_to_string:string ( b:t_int )
 	return string(b.value)
 endfunction
-
-rem
-  global iset(b:t_int,v:int) = int_set
-  global iadd(b:t_int,v:int) = int_add
-  global imul(b:t_int,v:int) = int_mul
-  global idiv(b:t_int,v:int) = int_div
-endrem
 
 ''''''''''
 '' long ''
@@ -519,16 +575,9 @@ function long_lte:int ( b:t_long, v:long )
 	if (b.value <= v) then return true else return false
 endfunction
 
-function long_tostring:string ( b:t_long )
+function long_to_string:string ( b:t_long )
 	return string(b.value)
 endfunction
-
-rem
-  global lset(b:t_long,v:long) = long_set
-  global ladd(b:t_long,v:long) = long_add
-  global lmul(b:t_long,v:long) = long_mul
-  global ldiv(b:t_long,v:long) = long_div
-endrem
 
 '''''''''''
 '' float ''
@@ -612,16 +661,9 @@ function float_lte:int ( b:t_float, v:float )
 	if (b.value <= v) then return true else return false
 endfunction
 
-function float_tostring:string ( b:t_float )
-	return string(b.value)
+function float_to_string:string ( b:t_float )
+	return strdec(b.value,3)
 endfunction
-
-rem
-  global fset(b:t_float,v:float) = float_set
-  global fadd(b:t_float,v:float) = float_add
-  global fmul(b:t_float,v:float) = float_mul
-  global fdiv(b:t_float,v:float) = float_div
-endrem
 
 ''''''''''''
 '' double ''
@@ -705,16 +747,9 @@ function double_lte:int ( b:t_double, v:double )
 	if (b.value <= v) then return true else return false
 endfunction
 
-function double_tostring:string ( b:t_double )
-	return string(b.value)
+function double_to_string:string ( b:t_double )
+	return strdbl(b.value,6)
 endfunction
-
-rem
-  global dset(b:t_double,v:double) = double_set
-  global dadd(b:t_double,v:double) = double_add
-  global dmul(b:t_double,v:double) = double_mul
-  global ddiv(b:t_double,v:double) = double_div
-endrem
 
 ''''''''''''
 '' String ''
@@ -784,8 +819,6 @@ function string_del:string ( b:t_string, n:int=-1 )
 	return c
 endfunction
 
-rem
-  global sset(b:t_string,v:string) 	= string_set
-  global sadd(b:t_string,v:string) 	= string_add
-  global slen:int(b:t_string) 			= string_length
-endrem
+function string_to_string:string(s:t_string)
+  return s.value
+endfunction

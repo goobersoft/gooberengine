@@ -1,3 +1,4 @@
+include "dict/dictval.bmx"
 
 type t_dict
 	field length 		:int
@@ -454,6 +455,7 @@ function dict_write_data:int (d:t_dict, s:string, v:object)
 		return true
 	endif
 endfunction
+global dict_write:int (d:t_dict, s:string, v:object) = dict_write_data
 
 '''''''''''''
 '' Reading ''
@@ -611,6 +613,7 @@ function dict_read_data:object(d:t_dict, s:string)
 		endif
 	endif
 endfunction
+global dict_read:object(d:t_dict, s:string) = dict_read_data
 
 ''''''''''
 '' goto ''

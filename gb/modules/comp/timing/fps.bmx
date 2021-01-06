@@ -1,14 +1,14 @@
 
-type t_gb_timing_fps
-  field ticks   :t_int
-  field value   :t_int
-  field time    :t_long
-endtype
+Type t_gb_timing_fps
+  Field ticks   :t_long
+  Field value   :t_long
+  Field time    :t_long
+EndType
 
-function new_gb_timing_fps:t_gb_timing_fps ()
-  local r:t_gb_timing_fps = new t_gb_timing_fps
-  r.ticks   = new_int(0)
-  r.value   = new_int(0)
+Function new_gb_timing_fps:t_gb_timing_fps ()
+  Local r:t_gb_timing_fps = New t_gb_timing_fps
+  r.ticks   = new_long(0)
+  r.value   = new_long(0)
   r.time    = new_long(0)
-  return r
-endfunction
+  Return r
+EndFunction

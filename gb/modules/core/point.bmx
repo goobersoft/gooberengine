@@ -52,7 +52,7 @@ function point_neq:int(p:t_point, x:float, y:float)
 	if (p.x <> x) and (p.y <> y) return true else return false
 endfunction
 
-function point_tostring:string(p:t_point)
+function point_to_string:string(p:t_point)
 		return "{" + p.x + "," + p.y + "}"
 endfunction
 
@@ -109,6 +109,6 @@ function ipoint_neq:int(p:t_ipoint, x:int, y:int)
 	if (p.x <> x) and (p.y <> y) return true else return false
 endfunction
 
-function ipoint_tostring:string(p:t_ipoint)
+function ipoint_to_string:string(p:t_ipoint)
 		return "{" + p.x + "," + p.y + "}"
 endfunction

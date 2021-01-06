@@ -34,6 +34,10 @@ function timer_finished:int(t:t_timer)
 	return number_eq(t.value,0)
 endfunction
 
+function timer_value:float(t:t_timer)
+  return t.value.value
+endfunction
+
 ''''''''''''
 '' events ''
 ''''''''''''

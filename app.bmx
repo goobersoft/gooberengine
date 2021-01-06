@@ -37,16 +37,15 @@ function event_end()
 endfunction
 
 function event_main()
-	event_init()
-	event_load()
-	event_start()
-	while bool_eq(gb.running,true) and appterminate()=false
-		cls()
-		event_update()
-		event_draw()
-		flip(1)
-	wend
-	event_end()
+  event_init()
+  event_load()
+  event_start()
+  while bool_eq(gb.running,true) and appterminate()=false
+    event_update()
+    event_draw()
+    flip(1)
+  wend
+  event_end()
 endfunction
 
 ''''''''''
