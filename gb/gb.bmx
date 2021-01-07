@@ -70,6 +70,8 @@ Include "modules/gfx/spinicon.bmx"
 Include "modules/gfx/jake.bmx"
 Include "modules/gfx/tilemap.bmx"
 Include "modules/gfx/sprite.bmx"
+include "modules/gfx/model.bmx"
+include "modules/gfx/tri.bmx"
 
 '' ui objects
 Include "modules/ui/button.bmx"
@@ -155,15 +157,9 @@ Type t_gb
   Field running         :t_bool
   Field paused          :t_bool
   Field speed           :t_number
-  Field fonts           :t_font[]
   Field canvas          :t_canvas
-  Field images          :TImage[]
-  Field image_paths     :String[]
-  Field sounds          :TSound[]
-  Field sound_paths     :String[]
-  Field palettes        :t_palette[]
-  Field animations      :t_animation[]
   Field settings        :t_dict
+  
 
   ''  updatables
   Field pulser          :t_pulser
@@ -183,6 +179,7 @@ Type t_gb
   Field controller      :t_gb_controller
   Field audio           :t_gb_audio
   Field gbs             :t_gbs
+  field net             :t_gb_net
 
   Field editor          :t_gb_editor
   Field testing         :t_gb_testing
@@ -203,14 +200,7 @@ Function new_gb:t_gb ()
   r.running         = new_bool(True)
   r.paused          = new_bool(False)
   r.speed           = new_number(1.0, 0.0, 10.0)
-  r.fonts           = New t_font[ gb_max_fonts ]
   r.canvas          = new_canvas(400,240)
-  r.images          = New TImage[ gb_max_images ]
-  r.image_paths     = New String[ gb_max_images ]
-  r.sounds          = New TSound[ gb_max_sounds ]
-  r.sound_paths     = New String[ gb_max_sounds ]
-  r.palettes        = New t_palette[ gb_max_palettes ]
-  r.animations      = New t_animation[ gb_max_animations ]
   r.settings        = null
 
   r.autosave_timer  = new_timer(60)
@@ -233,6 +223,7 @@ Function gb_init()
   gb_camera_init()
   gb_console_init()
   gb_controller_init()
+  gb_net_init()
   gbs_init()
 
   gb_editor_init()
@@ -252,6 +243,7 @@ Function gb_load()
 EndFunction
 
 Function gb_start()
+  gb_net_start()
 	gb_testing_start()
 	gb_debug_start()
 EndFunction
@@ -261,6 +253,7 @@ Function gb_update()
   gb_console_update	()
   gb_visual_update	()
   gb_mouse_update		()
+  gb_net_update     ()
 	If bool_neq(gb.console.active)
     gb_controller_update()
     If gb.scene Then scene_update(gb.scene)

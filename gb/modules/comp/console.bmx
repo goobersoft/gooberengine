@@ -8,6 +8,7 @@ include "console/char.bmx"
 
 const gb_console_max_input  :int = 1000
 const gb_console_max_lines  :int = 1000
+const gb_console_max_log    :int = 1000
 const gb_console_chars_x    :int = 80
 const gb_console_chars_y    :int = 24
 
@@ -23,6 +24,10 @@ const gb_console_chars_y    :int = 24
 type t_gb_console
   field active        :t_bool
   field input         :t_mstring
+  field inputs        :t_string[]
+  field output        :t_list
+  field log           :t_list
+  field logpos        :t_int
   field blinktimer    :t_timer
 endtype
 
@@ -30,6 +35,7 @@ function new_gb_console:t_gb_console ()
   local r:t_gb_console = new t_gb_console
   r.active      = new_bool(false)
   r.input       = new_mstring()
+  r.inputs      = new_string_v(gb_console_max_input)
   r.blinktimer  = new_timer(0.5)
   return r
 endfunction
@@ -70,18 +76,6 @@ endfunction
 '' functions ''
 '''''''''''''''
 
-function gb_console_put_char(n:int)
-  
-endfunction
-
-function gb_console_refresh_lines()
-endfunction
-
-function gb_console_add_input_char(s:string)
-endfunction
-
-function gb_console_print_line(s:string)
-endfunction
 
 '' input as string
 function gb_console_out(s:string)
@@ -95,9 +89,14 @@ endfunction
 function gb_console_out(v:float)
 endfunction
 
-function gb_console_log(t:string)
-  print(t)
+'' this function will add the string to the log list.
+function gb_console_log(s:string)
+  list_add_first(gb.console.log, gb_string, new_string(s))
+  if gb.console.log.count.value > gb_console_max_log
+    list_remove_last(gb.console.log)
+  endif
 endfunction
+
 
 '' writes the current console output session to a file.
 '' this is automatically called when the program ends.

@@ -195,6 +195,12 @@ w:float, h:float)
 	return r
 endfunction
 
+function drawstack_draw_tri:t_drawcmd(d:t_drawstack, p1:t_point3, p2:t_point3, p3:t_point3)
+  local r:t_drawcmd = new_drawcmd_tri(p1,p2,p3)
+  drawstack_push(d,r)
+  return r
+endfunction
+
 ''''''''''''
 '' events ''
 ''''''''''''

@@ -345,3 +345,53 @@ function gbs_func_help(s:string[])
 	next
 endfunction
 
+''''
+
+function new_gbscmd_send:t_gbscmd()
+  local r:t_gbscmd = new_gbscmd()
+	r.name = "send"
+	r.cmd = "send"
+	r.aliases = []
+	r.desc = "send string [0] to server"
+	r.func = gbs_func_send
+	return r
+endfunction
+
+function gbs_func_send(s:string[])
+  local t:string = sind(s,0)
+  gb_net_write(t)
+endfunction
+
+'''
+
+function new_gbscmd_recv:t_gbscmd()
+  local r:t_gbscmd = new_gbscmd()
+	r.name = "recv"
+	r.cmd = "recv"
+	r.aliases = []
+	r.desc = "read server string data"
+	r.func = gbs_func_recv
+	return r
+endfunction
+
+function gbs_func_recv(s:string[])
+  local t:string = gb_net_read()
+  dict_write_string(gb.gbs.data,"net/recv",t)
+endfunction
+
+'''
+
+function new_gbscmd_connect:t_gbscmd()
+  local r:t_gbscmd = new_gbscmd()
+	r.name = "connect"
+	r.cmd = "connect"
+	r.aliases = []
+	r.desc = "connect to remote server [0]."
+	r.func = gbs_func_connect
+	return r
+endfunction
+
+function gbs_func_connect(s:string[])
+  local t:int = gb_net_connect(sind(s,0))
+  dict_write_int(gb.gbs.data,"net/connect",t)
+endfunction

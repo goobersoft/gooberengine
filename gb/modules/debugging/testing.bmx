@@ -8,7 +8,7 @@ type t_gb_testing
   field timer     :t_timer
   field list      :t_list
   field jake      :t_jake
-  field mstring   :t_mstring
+  field model     :t_model
 endtype
 
 function new_gb_testing:t_gb_testing ()
@@ -18,7 +18,8 @@ function new_gb_testing:t_gb_testing ()
   r.timer     = new_timer(30)
   r.list      = new_list()
   r.jake      = new_jake()
-  r.mstring   = new_mstring("hello there.")
+  r.model     = new_model_cube(20,12,0,5)
+  
 
   return r
 endfunction
@@ -35,11 +36,6 @@ function gb_testing_load()
 endfunction
 
 function gb_testing_start()
-  mstring_add(gb.testing.mstring, " This is another sentence.")
-  print(mstring_to_string(gb.testing.mstring))
-  print(mstring_length(gb.testing.mstring))
-
-  gb.assets.fonts[-3] = new t_font
 endfunction
 
 function gb_testing_update()
@@ -49,13 +45,18 @@ function gb_testing_update()
   if timer_finished(gb.testing.timer) or keyhit(key_space)
     timer_reset(gb.testing.timer)
     lightcube_reset(gb.testing.lightcube)
+    gb.testing.model = new_model_cube(17.5, 9.5, 0, 5)
   endif
+  point3_add(gb.testing.model.tris[rand(0,11)].points[rand(0,2)], frand(-0.1,0.1), frand(-0.1,0.1), frand(-0.1,0.1))
+
+
 endfunction
 
 function gb_testing_draw()
   lightcube_draw(gb.testing.lightcube, 20, 12)
   gb_graph_draw_tile_text(39,23,1,int(timer_value(gb.testing.timer)))
   jake_draw(gb.testing.jake)
+  model_draw_wire3d(gb.testing.model)
 endfunction
 
 function gb_testing_end()

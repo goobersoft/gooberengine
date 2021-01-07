@@ -1,21 +1,6 @@
-{
-  name : "Example 1 GBS File";
-  date : "2020-12-04";
-  desc : "Parsing GBML and running the CODE block.";
-  code {
-    1     : set    x  %10        ;
-    2     : set    y  %20        ;
-    3     : add    x  *y         ;
-    4     : out   *x             ;
-    5     : rdata  x   1         ;
-    6     : out   *x             ;
-    7     : wdata  2  "11110000" ;
-    here1 : label                ;
-    here2 : out "hello world."   ;
-    here3 : sleep 1              ;
-    here4 : goto here1           ;
-  }
-  data {
-    1 : "10100101";
-  }
-}
+set x 10
+add x 10
+set y "hello world"
+add x y
+goto 1
+stuff

@@ -103,7 +103,7 @@ function gb_assets_load_default_animations()
 	animation_add_frame(a, 1, 0,21,22,2,2, 0.125)
 	animation_add_frame(a, 2, 0,23,22,2,2, 0.125)
 	animation_add_frame(a, 3, 0,25,22,2,2, 0.125)
-	gb.animations[0] = a
+	gb.assets.animations[0] = a
 	
 	a = new_animation(5)
 	animation_add_frame(a, 0, 0,5,20,1,1, 0.05)
@@ -111,23 +111,23 @@ function gb_assets_load_default_animations()
 	animation_add_frame(a, 2, 0,7,20,1,1, 0.05)
 	animation_add_frame(a, 3, 0,8,20,1,1, 0.05)
 	animation_add_frame(a, 4, 0,9,20,1,1, 0.05)
-	gb.animations[1] = a
+	gb.assets.animations[1] = a
 endfunction
 
 function gb_assets_load_default_palettes()
-	gb.palettes[0] = new_palette()
-	palette_set(gb.palettes[0], 0,0,0,0,3)
-	palette_set(gb.palettes[0], 1,1,1,1,3)
-	palette_set(gb.palettes[0], 2,2,2,2,3)
-	palette_set(gb.palettes[0], 3,3,3,3,3)
-	palette_set(gb.palettes[0], 4,2,1,0,3)
-	palette_set(gb.palettes[0], 5,3,2,0,3)
-	palette_set(gb.palettes[0], 6,0,1,0,3)
-	palette_set(gb.palettes[0], 7,1,2,0,3)
-	palette_set(gb.palettes[0], 8,0,1,2,3)
-	palette_set(gb.palettes[0], 9,0,2,3,3)
-	palette_set(gb.palettes[0],10,2,0,1,3)
-	palette_set(gb.palettes[0],11,3,0,2,3)
+	gb.assets.palettes[0] = new_palette()
+	palette_set(gb.assets.palettes[0], 0,0,0,0,3)
+	palette_set(gb.assets.palettes[0], 1,1,1,1,3)
+	palette_set(gb.assets.palettes[0], 2,2,2,2,3)
+	palette_set(gb.assets.palettes[0], 3,3,3,3,3)
+	palette_set(gb.assets.palettes[0], 4,2,1,0,3)
+	palette_set(gb.assets.palettes[0], 5,3,2,0,3)
+	palette_set(gb.assets.palettes[0], 6,0,1,0,3)
+	palette_set(gb.assets.palettes[0], 7,1,2,0,3)
+	palette_set(gb.assets.palettes[0], 8,0,1,2,3)
+	palette_set(gb.assets.palettes[0], 9,0,2,3,3)
+	palette_set(gb.assets.palettes[0],10,2,0,1,3)
+	palette_set(gb.assets.palettes[0],11,3,0,2,3)
 endfunction
 
 '''''''''''''''

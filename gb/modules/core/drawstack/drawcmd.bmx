@@ -1,13 +1,14 @@
 
 Const drawcmd_id_oval						:Int	= 1
 Const drawcmd_id_rect						:Int	= 2
-Const drawcmd_id_tile						:Int 	= 3
-Const drawcmd_id_tile_rect			:Int	= 4
-Const drawcmd_id_tile_box				:Int	= 5
-Const drawcmd_id_tile_boxrect		:Int	= 6
-Const drawcmd_id_tile_text			:Int	= 7
-Const drawcmd_id_tile_window		:Int	= 8
-Const drawcmd_id_tile_line3d		:Int	= 9
+const drawcmd_id_tri            :int  = 3
+Const drawcmd_id_tile						:Int 	= 4
+Const drawcmd_id_tile_rect			:Int	= 5
+Const drawcmd_id_tile_box				:Int	= 6
+Const drawcmd_id_tile_boxrect		:Int	= 7
+Const drawcmd_id_tile_text			:Int	= 8
+Const drawcmd_id_tile_window		:Int	= 9
+Const drawcmd_id_tile_line3d		:Int	= 10
 
 type t_drawcmd
 	Field pos			:Float[]
@@ -104,6 +105,8 @@ function drawcmd_draw(d:t_drawcmd, x:float=0, y:float=0, z:float=0, p:int=true)
 			case drawcmd_id_rect
 				gb_graph_draw_rect3d( d.pos[0]+x, d.pos[1]+y, d.pos[2]+z,
 					float_get(d.params[0]), float_get(d.params[1]) )
+      case drawcmd_id_tri
+        gb_graph_draw_tri3d( t_point3(d.params[0]), t_point3(d.params[1]), t_point3(d.params[2]) )
 			case drawcmd_id_tile
 				gb_graph_draw_tile3d( d.pos[0]+x, d.pos[1]+y, d.pos[2]+z,
 					int_get(d.params[0]), float_get(d.params[1]), float_get(d.params[2]))
@@ -136,6 +139,8 @@ function drawcmd_draw(d:t_drawcmd, x:float=0, y:float=0, z:float=0, p:int=true)
 			case drawcmd_id_rect
 				gb_graph_draw_rect( d.pos[0]+x, d.pos[1]+y,
 					float_get(d.params[0]), float_get(d.params[1]) )
+      case drawcmd_id_tri
+        gb_graph_draw_tri( t_point3(d.params[0]), t_point3(d.params[1]), t_point3(d.params[2]) )
 			case drawcmd_id_tile
 				gb_graph_draw_tile( d.pos[0]+x, d.pos[1]+y,
 					int_get(d.params[0]), float_get(d.params[1]), float_get(d.params[2]))
@@ -184,6 +189,17 @@ Function new_drawcmd_rect :t_drawcmd( x:Float, y:Float, z:Float, w:Float, h:Floa
 	r.pos[2]		= z
 	r.params[0] = new_float(w)
 	r.params[1] = new_float(h)
+	Return r
+EndFunction
+
+Function new_drawcmd_tri:t_drawcmd( p1:t_point3, p2:t_point3, p3:t_point3 )
+	Local r:t_drawcmd = new_drawcmd(drawcmd_id_tri, 3)
+	r.pos[0]		= (p1.x + p2.x + p3.x) / 3
+	r.pos[1]		= (p1.y + p2.y + p3.y) / 3
+	r.pos[2]		= (p1.z + p2.z + p3.z) / 3
+	r.params[0] = p1
+	r.params[1] = p2
+  r.params[2] = p3
 	Return r
 EndFunction
 

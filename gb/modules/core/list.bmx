@@ -78,7 +78,11 @@ function list_remove_first:t_datum(l:t_list)
     l.first = null
     l.last  = null
     int_set(l.count, 0)
+    l.iterator = null
   else
+    if l.iterator and l.iterator.curr = l.first
+      l.iterator = null
+    endif
     r = list_node_data(l.first)
     l.first        = l.first.right
     l.first.left   = null
@@ -94,7 +98,11 @@ function list_remove_last:t_datum(l:t_list)
     l.first = null
     l.last = null
     int_set(l.count, 0)
+    l.iterator = null
   else
+    if l.iterator and l.iterator.curr = l.last
+      l.iterator = null
+    endif
     r = list_node_data(l.last)
     l.last        = l.last.left
     l.last.right  = null
@@ -158,5 +166,13 @@ endfunction
 
 function list_is_iterating:int(l:t_list)
   if (l.iterator) then return true
+  return false
+endfunction
+
+function list_end_iterate:int(l:t_list)
+  if l.iterator
+    l.iterator = null
+    return true
+  endif
   return false
 endfunction

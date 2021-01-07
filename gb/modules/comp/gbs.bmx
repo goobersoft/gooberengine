@@ -53,6 +53,9 @@ function gbs_init()
 	gb.gbs.cmds[counter_inc(u)] = new_gbscmd_sdata()
 	gb.gbs.cmds[counter_inc(u)] = new_gbscmd_playsound()
 	gb.gbs.cmds[counter_inc(u)] = new_gbscmd_help()
+  gb.gbs.cmds[counter_inc(u)] = new_gbscmd_send()
+  gb.gbs.cmds[counter_inc(u)] = new_gbscmd_recv()
+  gb.gbs.cmds[counter_inc(u)] = new_gbscmd_connect()
 endfunction
 
 '''''''''''''''

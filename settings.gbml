@@ -1,5 +1,5 @@
 visual {
-  windowscale : #2.00;
+  windowscale : #4.00;
   fullscreen : @0;
   scanlines {
     active : @0;

@@ -17,7 +17,7 @@ static BBString _s93={
 	2,
 	{32,32}
 };
-static BBString _s173={
+static BBString _s178={
 	&bbStringClass,
 	0x9dfc4b1a7ff6e236,
 	95,
@@ -69,13 +69,6 @@ static BBString _s98={
 	0x47f5c13580c51bb3,
 	4,
 	{32,58,32,94}
-};
-static BBString _s167={
-	&bbStringClass,
-	0xecb3ddad087c54ae,
-	26,
-	{32,84,104,105,115,32,105,115,32,97,110,111,116,104,101,114,32
-	,115,101,110,116,101,110,99,101,46}
 };
 static BBString _s102={
 	&bbStringClass,
@@ -172,6 +165,12 @@ static BBString _s55={
 	0xf1246dec78a245bd,
 	1,
 	{48}
+};
+static BBString _s182={
+	&bbStringClass,
+	0xe5fcf8456e6b317c,
+	5,
+	{53,51,51,53,48}
 };
 static BBString _s54={
 	&bbStringClass,
@@ -275,26 +274,26 @@ static BBString _s2={
 	,97,100,121,32,101,120,105,115,116,115,32,105,110,32,116,104
 	,101,32,109,97,112}
 };
-static BBString _s172={
+static BBString _s177={
 	&bbStringClass,
 	0xbc072ca569c25d2f,
 	3,
 	{67,80,85}
 };
-static BBString _s171={
+static BBString _s176={
 	&bbStringClass,
 	0xd4aa834fc269f4b3,
 	2,
 	{70,58}
 };
-static BBString _s176={
+static BBString _s181={
 	&bbStringClass,
 	0x8d752a74e41cb76,
 	19,
 	{71,111,111,98,101,114,69,110,103,105,110,101,32,48,46,50,46
 	,48,48}
 };
-static BBString _s168={
+static BBString _s173={
 	&bbStringClass,
 	0x1077bc78f36ae96,
 	2,
@@ -312,7 +311,7 @@ static BBString _s88={
 	6,
 	{79,112,101,110,65,76}
 };
-static BBString _s169={
+static BBString _s174={
 	&bbStringClass,
 	0x2f8b4ed5bc862464,
 	2,
@@ -338,7 +337,7 @@ static BBString _s4={
 	{84,104,101,32,115,116,97,99,107,32,105,115,32,101,109,112,116
 	,121}
 };
-static BBString _s170={
+static BBString _s175={
 	&bbStringClass,
 	0x7d2a0922a3d0de87,
 	2,
@@ -387,7 +386,7 @@ static BBString _s65={
 	5,
 	{97,110,103,108,101}
 };
-static BBString _s156={
+static BBString _s164={
 	&bbStringClass,
 	0x366960ed94bf420f,
 	6,
@@ -435,6 +434,19 @@ static BBString _s113={
 	0x939c82e2a34129dc,
 	3,
 	{99,108,115}
+};
+static BBString _s161={
+	&bbStringClass,
+	0x3d5d3daee9ec1b11,
+	7,
+	{99,111,110,110,101,99,116}
+};
+static BBString _s162={
+	&bbStringClass,
+	0x2637c1dd9a794cc9,
+	29,
+	{99,111,110,110,101,99,116,32,116,111,32,114,101,109,111,116,101
+	,32,115,101,114,118,101,114,32,91,48,93,46}
 };
 static BBString _s63={
 	&bbStringClass,
@@ -521,48 +533,48 @@ static BBString _s80={
 	10,
 	{102,117,108,108,115,99,114,101,101,110}
 };
-static BBString _s165={
+static BBString _s172={
 	&bbStringClass,
 	0x2fde024be9d6c705,
 	13,
 	{103,98,47,100,97,116,97,47,102,111,110,116,45}
 };
-static BBString _s160={
+static BBString _s167={
 	&bbStringClass,
 	0x720148c315c80562,
 	29,
 	{103,98,47,109,101,100,105,97,47,105,109,97,103,101,115,47,101
 	,100,105,116,111,114,45,98,103,46,112,110,103}
 };
-static BBString _s159={
+static BBString _s166={
 	&bbStringClass,
 	0xdaeae2ebbd58d8c5,
 	24,
 	{103,98,47,109,101,100,105,97,47,105,109,97,103,101,115,47,103
 	,98,45,48,46,112,110,103}
 };
-static BBString _s161={
+static BBString _s168={
 	&bbStringClass,
 	0xb7d1490c9dbe664d,
 	26,
 	{103,98,47,109,101,100,105,97,47,115,111,117,110,100,115,47,106
 	,97,107,101,45,49,46,111,103,103}
 };
-static BBString _s162={
+static BBString _s169={
 	&bbStringClass,
 	0xa2d9319fca017093,
 	26,
 	{103,98,47,109,101,100,105,97,47,115,111,117,110,100,115,47,106
 	,97,107,101,45,50,46,111,103,103}
 };
-static BBString _s163={
+static BBString _s170={
 	&bbStringClass,
 	0xa01a227825f18573,
 	26,
 	{103,98,47,109,101,100,105,97,47,115,111,117,110,100,115,47,106
 	,97,107,101,45,51,46,111,103,103}
 };
-static BBString _s164={
+static BBString _s171={
 	&bbStringClass,
 	0xa8391a95d32fcc2b,
 	26,
@@ -574,12 +586,6 @@ static BBString _s129={
 	0x87ec4dc54c60c9a0,
 	3,
 	{103,98,115}
-};
-static BBString _s166={
-	&bbStringClass,
-	0xa3a73a85792b89bb,
-	12,
-	{104,101,108,108,111,32,116,104,101,114,101,46}
 };
 static BBString _s153={
 	&bbStringClass,
@@ -605,7 +611,7 @@ static BBString _s23={
 	4,
 	{105,110,116,58}
 };
-static BBString _s157={
+static BBString _s165={
 	&bbStringClass,
 	0x246b1294801f8d95,
 	3,
@@ -713,12 +719,6 @@ static BBString _s143={
 	2,
 	{108,115}
 };
-static BBString _s158={
-	&bbStringClass,
-	0xdee3714151e65fb4,
-	13,
-	{109,114,45,103,111,111,98,101,114,46,99,111,109}
-};
 static BBString _s119={
 	&bbStringClass,
 	0xc9e617a10fddb6bb,
@@ -731,6 +731,18 @@ static BBString _s120={
 	23,
 	{109,117,108,116,105,112,108,121,32,118,97,114,32,91,48,93,32
 	,98,121,32,91,49,93}
+};
+static BBString _s163={
+	&bbStringClass,
+	0x92a5486a584a6b6,
+	11,
+	{110,101,116,47,99,111,110,110,101,99,116}
+};
+static BBString _s160={
+	&bbStringClass,
+	0x546848fdf949d5c9,
+	8,
+	{110,101,116,47,114,101,99,118}
 };
 static BBString _s6={
 	&bbStringClass,
@@ -823,6 +835,19 @@ static BBString _s126={
 	{114,101,97,100,32,102,114,111,109,32,112,97,116,104,32,91,48
 	,93,32,105,110,116,111,32,91,49,93}
 };
+static BBString _s159={
+	&bbStringClass,
+	0xf96bc5608a0b4c1e,
+	23,
+	{114,101,97,100,32,115,101,114,118,101,114,32,115,116,114,105,110
+	,103,32,100,97,116,97}
+};
+static BBString _s158={
+	&bbStringClass,
+	0xd14baaa7bf7e5ffe,
+	4,
+	{114,101,99,118}
+};
 static BBString _s134={
 	&bbStringClass,
 	0xe4e48a2c04fec5ba,
@@ -904,6 +929,19 @@ static BBString _s146={
 	5,
 	{115,100,97,116,97}
 };
+static BBString _s156={
+	&bbStringClass,
+	0xf4623881080f92e0,
+	4,
+	{115,101,110,100}
+};
+static BBString _s157={
+	&bbStringClass,
+	0x70606613216b4847,
+	25,
+	{115,101,110,100,32,115,116,114,105,110,103,32,91,48,93,32,116
+	,111,32,115,101,114,118,101,114}
+};
 static BBString _s115={
 	&bbStringClass,
 	0x40b60d3d6e1bfb8c,
@@ -917,7 +955,7 @@ static BBString _s116={
 	{115,101,116,32,118,97,114,32,91,48,93,32,116,111,32,91,49
 	,93}
 };
-static BBString _s175={
+static BBString _s180={
 	&bbStringClass,
 	0xe553d5c0b64ea175,
 	8,
@@ -1104,7 +1142,7 @@ struct BBDebugScope_11{int kind; const char *name; BBDebugDecl decls[12]; };
 struct BBDebugScope_13{int kind; const char *name; BBDebugDecl decls[14]; };
 struct BBDebugScope_19{int kind; const char *name; BBDebugDecl decls[20]; };
 struct BBDebugScope_2{int kind; const char *name; BBDebugDecl decls[3]; };
-struct BBDebugScope_29{int kind; const char *name; BBDebugDecl decls[30]; };
+struct BBDebugScope_23{int kind; const char *name; BBDebugDecl decls[24]; };
 struct BBDebugScope_3{int kind; const char *name; BBDebugDecl decls[4]; };
 struct BBDebugScope_4{int kind; const char *name; BBDebugDecl decls[5]; };
 struct BBDebugScope_5{int kind; const char *name; BBDebugDecl decls[6]; };
@@ -1926,22 +1964,13 @@ BBOBJECT _m_app_dict_read_data(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_s){
 	}
 	return (BBOBJECT)(&bbNullObject);
 }
-struct brl_socket_TSocket_obj* _m_app_gb_net_socket=(struct brl_socket_TSocket_obj*)(&bbNullObject);
-struct brl_stream_TStream_obj* _m_app_gb_net_stream=(struct brl_stream_TStream_obj*)(&bbNullObject);
 void __m_app_t_gb_New(struct _m_app_t_gb_obj* o) {
 	bbObjectCtor((BBOBJECT)o);
 	o->clas = &_m_app_t_gb;
 	o->__m_app_t_gb_running = (struct _m_app_t_bool_obj*)(&bbNullObject);
 	o->__m_app_t_gb_paused = (struct _m_app_t_bool_obj*)(&bbNullObject);
 	o->__m_app_t_gb_speed = (struct _m_app_t_number_obj*)(&bbNullObject);
-	o->__m_app_t_gb_fonts = (&bbEmptyArray);
 	o->__m_app_t_gb_canvas = (struct _m_app_t_canvas_obj*)(&bbNullObject);
-	o->__m_app_t_gb_images = (&bbEmptyArray);
-	o->__m_app_t_gb_image_paths = (&bbEmptyArray);
-	o->__m_app_t_gb_sounds = (&bbEmptyArray);
-	o->__m_app_t_gb_sound_paths = (&bbEmptyArray);
-	o->__m_app_t_gb_palettes = (&bbEmptyArray);
-	o->__m_app_t_gb_animations = (&bbEmptyArray);
 	o->__m_app_t_gb_settings = (struct _m_app_t_dict_obj*)(&bbNullObject);
 	o->__m_app_t_gb_pulser = (struct _m_app_t_pulser_obj*)(&bbNullObject);
 	o->__m_app_t_gb_autosave_timer = (struct _m_app_t_timer_obj*)(&bbNullObject);
@@ -1957,10 +1986,11 @@ void __m_app_t_gb_New(struct _m_app_t_gb_obj* o) {
 	o->__m_app_t_gb_controller = (struct _m_app_t_gb_controller_obj*)(&bbNullObject);
 	o->__m_app_t_gb_audio = (struct _m_app_t_gb_audio_obj*)(&bbNullObject);
 	o->__m_app_t_gb_gbs = (struct _m_app_t_gbs_obj*)(&bbNullObject);
+	o->__m_app_t_gb_net = (struct _m_app_t_gb_net_obj*)(&bbNullObject);
 	o->__m_app_t_gb_editor = (struct _m_app_t_gb_editor_obj*)(&bbNullObject);
 	o->__m_app_t_gb_testing = (struct _m_app_t_gb_testing_obj*)(&bbNullObject);
 }
-struct BBDebugScope_29 _m_app_t_gb_scope ={
+struct BBDebugScope_23 _m_app_t_gb_scope ={
 	BBDEBUGSCOPE_USERTYPE,
 	"t_gb",
 	{
@@ -1984,51 +2014,9 @@ struct BBDebugScope_29 _m_app_t_gb_scope ={
 		},
 		{
 			BBDEBUGDECL_FIELD,
-			"fonts",
-			"[]:t_font",
-			.field_offset=offsetof(struct _m_app_t_gb_obj,__m_app_t_gb_fonts)
-		},
-		{
-			BBDEBUGDECL_FIELD,
 			"canvas",
 			":t_canvas",
 			.field_offset=offsetof(struct _m_app_t_gb_obj,__m_app_t_gb_canvas)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"images",
-			"[]:TImage",
-			.field_offset=offsetof(struct _m_app_t_gb_obj,__m_app_t_gb_images)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"image_paths",
-			"[]$",
-			.field_offset=offsetof(struct _m_app_t_gb_obj,__m_app_t_gb_image_paths)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"sounds",
-			"[]:TSound",
-			.field_offset=offsetof(struct _m_app_t_gb_obj,__m_app_t_gb_sounds)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"sound_paths",
-			"[]$",
-			.field_offset=offsetof(struct _m_app_t_gb_obj,__m_app_t_gb_sound_paths)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"palettes",
-			"[]:t_palette",
-			.field_offset=offsetof(struct _m_app_t_gb_obj,__m_app_t_gb_palettes)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"animations",
-			"[]:t_animation",
-			.field_offset=offsetof(struct _m_app_t_gb_obj,__m_app_t_gb_animations)
 		},
 		{
 			BBDEBUGDECL_FIELD,
@@ -2119,6 +2107,12 @@ struct BBDebugScope_29 _m_app_t_gb_scope ={
 			"gbs",
 			":t_gbs",
 			.field_offset=offsetof(struct _m_app_t_gb_obj,__m_app_t_gb_gbs)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"net",
+			":t_gb_net",
+			.field_offset=offsetof(struct _m_app_t_gb_obj,__m_app_t_gb_net)
 		},
 		{
 			BBDEBUGDECL_FIELD,
@@ -2284,82 +2278,6 @@ struct _m_app_t_number_obj* _m_app_new_number(BBFLOAT bbt_n,BBFLOAT bbt_l,BBFLOA
 	bbt_r->__m_app_t_number_wrappable =((BBBYTE)_m_app_bool((BBINT)bbt_w));
 	return (struct _m_app_t_number_obj*)bbt_r;
 }
-void __m_app_t_font_New(struct _m_app_t_font_obj* o) {
-	bbObjectCtor((BBOBJECT)o);
-	o->clas = &_m_app_t_font;
-	o->__m_app_t_font_image_id = 0;
-	o->__m_app_t_font_tiles = (struct _m_app_t_ipoint_obj*)(&bbNullObject);
-	o->__m_app_t_font_tilesize = (struct _m_app_t_point_obj*)(&bbNullObject);
-	o->__m_app_t_font_origin = (struct _m_app_t_point_obj*)(&bbNullObject);
-	o->__m_app_t_font_offset = 0;
-	o->__m_app_t_font_spacing = (&bbEmptyArray);
-}
-struct BBDebugScope_7 _m_app_t_font_scope ={
-	BBDEBUGSCOPE_USERTYPE,
-	"t_font",
-	{
-		{
-			BBDEBUGDECL_FIELD,
-			"image_id",
-			"i",
-			.field_offset=offsetof(struct _m_app_t_font_obj,__m_app_t_font_image_id)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"tiles",
-			":t_ipoint",
-			.field_offset=offsetof(struct _m_app_t_font_obj,__m_app_t_font_tiles)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"tilesize",
-			":t_point",
-			.field_offset=offsetof(struct _m_app_t_font_obj,__m_app_t_font_tilesize)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"origin",
-			":t_point",
-			.field_offset=offsetof(struct _m_app_t_font_obj,__m_app_t_font_origin)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"offset",
-			"i",
-			.field_offset=offsetof(struct _m_app_t_font_obj,__m_app_t_font_offset)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"spacing",
-			"[]f",
-			.field_offset=offsetof(struct _m_app_t_font_obj,__m_app_t_font_spacing)
-		},
-		{
-			BBDEBUGDECL_TYPEMETHOD,
-			"New",
-			"()",
-			.var_address=(void*)&__m_app_t_font_New
-		},
-		BBDEBUGDECL_END
-	}
-};
-struct BBClass__m_app_t_font _m_app_t_font={
-	&bbObjectClass,
-	bbObjectFree,
-	(BBDebugScope*)&_m_app_t_font_scope,
-	sizeof(struct _m_app_t_font_obj),
-	(void (*)(BBOBJECT))__m_app_t_font_New,
-	bbObjectDtor,
-	bbObjectToString,
-	bbObjectCompare,
-	bbObjectSendMessage,
-	0,
-	0,
-	offsetof(struct _m_app_t_font_obj,__m_app_t_font_spacing) - offsetof(struct _m_app_t_font_obj,__m_app_t_font_image_id) + sizeof(BBARRAY)
-	,0
-	,offsetof(struct _m_app_t_font_obj,__m_app_t_font_image_id)
-};
-
 void __m_app_t_canvas_New(struct _m_app_t_canvas_obj* o) {
 	bbObjectCtor((BBOBJECT)o);
 	o->clas = &_m_app_t_canvas;
@@ -2616,82 +2534,6 @@ struct _m_app_t_canvas_obj* _m_app_new_canvas(BBINT bbt_x,BBINT bbt_y,BBFLOAT bb
 	bbt_r->__m_app_t_canvas_coldepth =(struct _m_app_t_int_obj*)_m_app_new_int(0);
 	return (struct _m_app_t_canvas_obj*)bbt_r;
 }
-void __m_app_t_animation_New(struct _m_app_t_animation_obj* o) {
-	bbObjectCtor((BBOBJECT)o);
-	o->clas = &_m_app_t_animation;
-	o->__m_app_t_animation_status = (struct _m_app_t_int_obj*)(&bbNullObject);
-	o->__m_app_t_animation_pos = (struct _m_app_t_int_obj*)(&bbNullObject);
-	o->__m_app_t_animation_length = (struct _m_app_t_int_obj*)(&bbNullObject);
-	o->__m_app_t_animation_framedelay = (struct _m_app_t_float_obj*)(&bbNullObject);
-	o->__m_app_t_animation_frames = (&bbEmptyArray);
-	o->__m_app_t_animation_stoptofirst = (struct _m_app_t_bool_obj*)(&bbNullObject);
-}
-struct BBDebugScope_7 _m_app_t_animation_scope ={
-	BBDEBUGSCOPE_USERTYPE,
-	"t_animation",
-	{
-		{
-			BBDEBUGDECL_FIELD,
-			"status",
-			":t_int",
-			.field_offset=offsetof(struct _m_app_t_animation_obj,__m_app_t_animation_status)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"pos",
-			":t_int",
-			.field_offset=offsetof(struct _m_app_t_animation_obj,__m_app_t_animation_pos)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"length",
-			":t_int",
-			.field_offset=offsetof(struct _m_app_t_animation_obj,__m_app_t_animation_length)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"framedelay",
-			":t_float",
-			.field_offset=offsetof(struct _m_app_t_animation_obj,__m_app_t_animation_framedelay)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"frames",
-			"[]:t_animframe",
-			.field_offset=offsetof(struct _m_app_t_animation_obj,__m_app_t_animation_frames)
-		},
-		{
-			BBDEBUGDECL_FIELD,
-			"stoptofirst",
-			":t_bool",
-			.field_offset=offsetof(struct _m_app_t_animation_obj,__m_app_t_animation_stoptofirst)
-		},
-		{
-			BBDEBUGDECL_TYPEMETHOD,
-			"New",
-			"()",
-			.var_address=(void*)&__m_app_t_animation_New
-		},
-		BBDEBUGDECL_END
-	}
-};
-struct BBClass__m_app_t_animation _m_app_t_animation={
-	&bbObjectClass,
-	bbObjectFree,
-	(BBDebugScope*)&_m_app_t_animation_scope,
-	sizeof(struct _m_app_t_animation_obj),
-	(void (*)(BBOBJECT))__m_app_t_animation_New,
-	bbObjectDtor,
-	bbObjectToString,
-	bbObjectCompare,
-	bbObjectSendMessage,
-	0,
-	0,
-	offsetof(struct _m_app_t_animation_obj,__m_app_t_animation_stoptofirst) - offsetof(struct _m_app_t_animation_obj,__m_app_t_animation_status) + sizeof(struct _m_app_t_bool_obj*)
-	,0
-	,offsetof(struct _m_app_t_animation_obj,__m_app_t_animation_status)
-};
-
 void __m_app_t_timer_New(struct _m_app_t_timer_obj* o) {
 	bbObjectCtor((BBOBJECT)o);
 	o->clas = &_m_app_t_timer;
@@ -2802,14 +2644,7 @@ struct _m_app_t_gb_obj* _m_app_new_gb(){
 	bbt_r->__m_app_t_gb_running =(struct _m_app_t_bool_obj*)_m_app_new_bool(1);
 	bbt_r->__m_app_t_gb_paused =(struct _m_app_t_bool_obj*)_m_app_new_bool(0);
 	bbt_r->__m_app_t_gb_speed =(struct _m_app_t_number_obj*)_m_app_new_number(1.0f,0.0f,10.0f,0);
-	bbt_r->__m_app_t_gb_fonts =bbArrayNew1D(":t_font", 10);
 	bbt_r->__m_app_t_gb_canvas =(struct _m_app_t_canvas_obj*)_m_app_new_canvas(400,240,0.00000000f,0.00000000f,0.00000000f,0.00000000f);
-	bbt_r->__m_app_t_gb_images =bbArrayNew1D(":TImage", 100);
-	bbt_r->__m_app_t_gb_image_paths =bbArrayNew1D("$", 100);
-	bbt_r->__m_app_t_gb_sounds =bbArrayNew1D(":TSound", 100);
-	bbt_r->__m_app_t_gb_sound_paths =bbArrayNew1D("$", 100);
-	bbt_r->__m_app_t_gb_palettes =bbArrayNew1D(":t_palette", 10);
-	bbt_r->__m_app_t_gb_animations =bbArrayNew1D(":t_animation", 100);
 	bbt_r->__m_app_t_gb_settings =(struct _m_app_t_dict_obj*)&bbNullObject;
 	bbt_r->__m_app_t_gb_autosave_timer =(struct _m_app_t_timer_obj*)_m_app_new_timer(60.0000000f);
 	bbt_r->__m_app_t_gb_pulser =(struct _m_app_t_pulser_obj*)_m_app_new_pulser(30.0f);
@@ -3270,6 +3105,158 @@ struct BBClass__m_app_t_sound _m_app_t_sound={
 	,offsetof(struct _m_app_t_sound_obj,__m_app_t_sound_source)
 };
 
+void __m_app_t_animation_New(struct _m_app_t_animation_obj* o) {
+	bbObjectCtor((BBOBJECT)o);
+	o->clas = &_m_app_t_animation;
+	o->__m_app_t_animation_status = (struct _m_app_t_int_obj*)(&bbNullObject);
+	o->__m_app_t_animation_pos = (struct _m_app_t_int_obj*)(&bbNullObject);
+	o->__m_app_t_animation_length = (struct _m_app_t_int_obj*)(&bbNullObject);
+	o->__m_app_t_animation_framedelay = (struct _m_app_t_float_obj*)(&bbNullObject);
+	o->__m_app_t_animation_frames = (&bbEmptyArray);
+	o->__m_app_t_animation_stoptofirst = (struct _m_app_t_bool_obj*)(&bbNullObject);
+}
+struct BBDebugScope_7 _m_app_t_animation_scope ={
+	BBDEBUGSCOPE_USERTYPE,
+	"t_animation",
+	{
+		{
+			BBDEBUGDECL_FIELD,
+			"status",
+			":t_int",
+			.field_offset=offsetof(struct _m_app_t_animation_obj,__m_app_t_animation_status)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"pos",
+			":t_int",
+			.field_offset=offsetof(struct _m_app_t_animation_obj,__m_app_t_animation_pos)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"length",
+			":t_int",
+			.field_offset=offsetof(struct _m_app_t_animation_obj,__m_app_t_animation_length)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"framedelay",
+			":t_float",
+			.field_offset=offsetof(struct _m_app_t_animation_obj,__m_app_t_animation_framedelay)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"frames",
+			"[]:t_animframe",
+			.field_offset=offsetof(struct _m_app_t_animation_obj,__m_app_t_animation_frames)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"stoptofirst",
+			":t_bool",
+			.field_offset=offsetof(struct _m_app_t_animation_obj,__m_app_t_animation_stoptofirst)
+		},
+		{
+			BBDEBUGDECL_TYPEMETHOD,
+			"New",
+			"()",
+			.var_address=(void*)&__m_app_t_animation_New
+		},
+		BBDEBUGDECL_END
+	}
+};
+struct BBClass__m_app_t_animation _m_app_t_animation={
+	&bbObjectClass,
+	bbObjectFree,
+	(BBDebugScope*)&_m_app_t_animation_scope,
+	sizeof(struct _m_app_t_animation_obj),
+	(void (*)(BBOBJECT))__m_app_t_animation_New,
+	bbObjectDtor,
+	bbObjectToString,
+	bbObjectCompare,
+	bbObjectSendMessage,
+	0,
+	0,
+	offsetof(struct _m_app_t_animation_obj,__m_app_t_animation_stoptofirst) - offsetof(struct _m_app_t_animation_obj,__m_app_t_animation_status) + sizeof(struct _m_app_t_bool_obj*)
+	,0
+	,offsetof(struct _m_app_t_animation_obj,__m_app_t_animation_status)
+};
+
+void __m_app_t_font_New(struct _m_app_t_font_obj* o) {
+	bbObjectCtor((BBOBJECT)o);
+	o->clas = &_m_app_t_font;
+	o->__m_app_t_font_image_id = 0;
+	o->__m_app_t_font_tiles = (struct _m_app_t_ipoint_obj*)(&bbNullObject);
+	o->__m_app_t_font_tilesize = (struct _m_app_t_point_obj*)(&bbNullObject);
+	o->__m_app_t_font_origin = (struct _m_app_t_point_obj*)(&bbNullObject);
+	o->__m_app_t_font_offset = 0;
+	o->__m_app_t_font_spacing = (&bbEmptyArray);
+}
+struct BBDebugScope_7 _m_app_t_font_scope ={
+	BBDEBUGSCOPE_USERTYPE,
+	"t_font",
+	{
+		{
+			BBDEBUGDECL_FIELD,
+			"image_id",
+			"i",
+			.field_offset=offsetof(struct _m_app_t_font_obj,__m_app_t_font_image_id)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"tiles",
+			":t_ipoint",
+			.field_offset=offsetof(struct _m_app_t_font_obj,__m_app_t_font_tiles)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"tilesize",
+			":t_point",
+			.field_offset=offsetof(struct _m_app_t_font_obj,__m_app_t_font_tilesize)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"origin",
+			":t_point",
+			.field_offset=offsetof(struct _m_app_t_font_obj,__m_app_t_font_origin)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"offset",
+			"i",
+			.field_offset=offsetof(struct _m_app_t_font_obj,__m_app_t_font_offset)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"spacing",
+			"[]f",
+			.field_offset=offsetof(struct _m_app_t_font_obj,__m_app_t_font_spacing)
+		},
+		{
+			BBDEBUGDECL_TYPEMETHOD,
+			"New",
+			"()",
+			.var_address=(void*)&__m_app_t_font_New
+		},
+		BBDEBUGDECL_END
+	}
+};
+struct BBClass__m_app_t_font _m_app_t_font={
+	&bbObjectClass,
+	bbObjectFree,
+	(BBDebugScope*)&_m_app_t_font_scope,
+	sizeof(struct _m_app_t_font_obj),
+	(void (*)(BBOBJECT))__m_app_t_font_New,
+	bbObjectDtor,
+	bbObjectToString,
+	bbObjectCompare,
+	bbObjectSendMessage,
+	0,
+	0,
+	offsetof(struct _m_app_t_font_obj,__m_app_t_font_spacing) - offsetof(struct _m_app_t_font_obj,__m_app_t_font_image_id) + sizeof(BBARRAY)
+	,0
+	,offsetof(struct _m_app_t_font_obj,__m_app_t_font_image_id)
+};
+
 struct _m_app_t_gb_assets_obj* _m_app_new_gb_assets(){
 	struct _m_app_t_gb_assets_obj* bbt_r=(struct _m_app_t_gb_assets_obj*)(struct _m_app_t_gb_assets_obj*)bbObjectNew((BBClass *)&_m_app_t_gb_assets);
 	bbt_r->__m_app_t_gb_assets_images =bbArrayNew1D(":t_image", 100);
@@ -3725,7 +3712,7 @@ struct _m_app_t_gb_visual_obj* _m_app_new_gb_visual(){
 }
 void _m_app_gb_visual_init(){
 	_m_app_gb->__m_app_t_gb_visual =(struct _m_app_t_gb_visual_obj*)_m_app_new_gb_visual();
-	bbAppTitle=&_s176;
+	bbAppTitle=&_s181;
 	brl_graphics_SetGraphicsDriver((struct brl_graphics_TGraphicsDriver_obj*)((struct brl_graphics_TGraphicsDriver_obj*)bbObjectDowncast((BBOBJECT)brl_glmax2d_GLMax2DDriver(),(BBClass*)&brl_graphics_TGraphicsDriver)),2);
 	brl_graphics_Graphics(800,480,0,0,2,-1,-1);
 	brl_max2d_SetBlend(3);
@@ -4372,9 +4359,13 @@ void __m_app_t_gb_console_New(struct _m_app_t_gb_console_obj* o) {
 	o->clas = &_m_app_t_gb_console;
 	o->__m_app_t_gb_console_active = (struct _m_app_t_bool_obj*)(&bbNullObject);
 	o->__m_app_t_gb_console_input = (struct _m_app_t_mstring_obj*)(&bbNullObject);
+	o->__m_app_t_gb_console_inputs = (&bbEmptyArray);
+	o->__m_app_t_gb_console_output = (struct _m_app_t_list_obj*)(&bbNullObject);
+	o->__m_app_t_gb_console_log = (struct _m_app_t_list_obj*)(&bbNullObject);
+	o->__m_app_t_gb_console_logpos = (struct _m_app_t_int_obj*)(&bbNullObject);
 	o->__m_app_t_gb_console_blinktimer = (struct _m_app_t_timer_obj*)(&bbNullObject);
 }
-struct BBDebugScope_4 _m_app_t_gb_console_scope ={
+struct BBDebugScope_8 _m_app_t_gb_console_scope ={
 	BBDEBUGSCOPE_USERTYPE,
 	"t_gb_console",
 	{
@@ -4389,6 +4380,30 @@ struct BBDebugScope_4 _m_app_t_gb_console_scope ={
 			"input",
 			":t_mstring",
 			.field_offset=offsetof(struct _m_app_t_gb_console_obj,__m_app_t_gb_console_input)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"inputs",
+			"[]:t_string",
+			.field_offset=offsetof(struct _m_app_t_gb_console_obj,__m_app_t_gb_console_inputs)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"output",
+			":t_list",
+			.field_offset=offsetof(struct _m_app_t_gb_console_obj,__m_app_t_gb_console_output)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"log",
+			":t_list",
+			.field_offset=offsetof(struct _m_app_t_gb_console_obj,__m_app_t_gb_console_log)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"logpos",
+			":t_int",
+			.field_offset=offsetof(struct _m_app_t_gb_console_obj,__m_app_t_gb_console_logpos)
 		},
 		{
 			BBDEBUGDECL_FIELD,
@@ -4719,10 +4734,27 @@ struct _m_app_t_mstring_obj* _m_app_new_mstring(BBSTRING bbt_s){
 	_m_app_mstring_add((struct _m_app_t_mstring_obj*)bbt_r,bbt_s);
 	return (struct _m_app_t_mstring_obj*)bbt_r;
 }
+struct _m_app_t_string_obj* _m_app_new_string(BBSTRING bbt_v){
+	struct _m_app_t_string_obj* bbt_r=(struct _m_app_t_string_obj*)(struct _m_app_t_string_obj*)bbObjectNew((BBClass *)&_m_app_t_string);
+	bbt_r->__m_app_t_string_value =bbt_v;
+	return (struct _m_app_t_string_obj*)bbt_r;
+}
+BBARRAY _m_app_new_string_v(BBINT bbt_n,BBSTRING bbt_v){
+	BBARRAY bbt_r=bbArrayNew1D(":t_string", bbt_n);
+	{
+		BBINT bbt_i=0;
+		BBINT bbt_=(bbt_n-1);
+		for(;(bbt_i<=bbt_);bbt_i=(bbt_i+1)){
+			((struct _m_app_t_string_obj**)BBARRAYDATA(bbt_r,1))[((BBUINT)bbt_i)]=(struct _m_app_t_string_obj*)_m_app_new_string(bbt_v);
+		}
+	}
+	return bbt_r;
+}
 struct _m_app_t_gb_console_obj* _m_app_new_gb_console(){
 	struct _m_app_t_gb_console_obj* bbt_r=(struct _m_app_t_gb_console_obj*)(struct _m_app_t_gb_console_obj*)bbObjectNew((BBClass *)&_m_app_t_gb_console);
 	bbt_r->__m_app_t_gb_console_active =(struct _m_app_t_bool_obj*)_m_app_new_bool(0);
 	bbt_r->__m_app_t_gb_console_input =(struct _m_app_t_mstring_obj*)_m_app_new_mstring(&bbEmptyString);
+	bbt_r->__m_app_t_gb_console_inputs =_m_app_new_string_v(1000,&bbEmptyString);
 	bbt_r->__m_app_t_gb_console_blinktimer =(struct _m_app_t_timer_obj*)_m_app_new_timer(0.5f);
 	return (struct _m_app_t_gb_console_obj*)bbt_r;
 }
@@ -4834,6 +4866,79 @@ void _m_app_gb_controller_set_default_keymaps(){
 void _m_app_gb_controller_init(){
 	_m_app_gb->__m_app_t_gb_controller =(struct _m_app_t_gb_controller_obj*)_m_app_new_gb_controller();
 	_m_app_gb_controller_set_default_keymaps();
+}
+void __m_app_t_gb_net_New(struct _m_app_t_gb_net_obj* o) {
+	bbObjectCtor((BBOBJECT)o);
+	o->clas = &_m_app_t_gb_net;
+	o->__m_app_t_gb_net_socket = (struct brl_socket_TSocket_obj*)(&bbNullObject);
+	o->__m_app_t_gb_net_stream = (struct brl_stream_TStream_obj*)(&bbNullObject);
+	o->__m_app_t_gb_net_dstinfo = (&bbEmptyArray);
+	o->__m_app_t_gb_net_connected = (struct _m_app_t_bool_obj*)(&bbNullObject);
+}
+struct BBDebugScope_5 _m_app_t_gb_net_scope ={
+	BBDEBUGSCOPE_USERTYPE,
+	"t_gb_net",
+	{
+		{
+			BBDEBUGDECL_FIELD,
+			"socket",
+			":TSocket",
+			.field_offset=offsetof(struct _m_app_t_gb_net_obj,__m_app_t_gb_net_socket)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"stream",
+			":TStream",
+			.field_offset=offsetof(struct _m_app_t_gb_net_obj,__m_app_t_gb_net_stream)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"dstinfo",
+			"[]:TAddrInfo",
+			.field_offset=offsetof(struct _m_app_t_gb_net_obj,__m_app_t_gb_net_dstinfo)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"connected",
+			":t_bool",
+			.field_offset=offsetof(struct _m_app_t_gb_net_obj,__m_app_t_gb_net_connected)
+		},
+		{
+			BBDEBUGDECL_TYPEMETHOD,
+			"New",
+			"()",
+			.var_address=(void*)&__m_app_t_gb_net_New
+		},
+		BBDEBUGDECL_END
+	}
+};
+struct BBClass__m_app_t_gb_net _m_app_t_gb_net={
+	&bbObjectClass,
+	bbObjectFree,
+	(BBDebugScope*)&_m_app_t_gb_net_scope,
+	sizeof(struct _m_app_t_gb_net_obj),
+	(void (*)(BBOBJECT))__m_app_t_gb_net_New,
+	bbObjectDtor,
+	bbObjectToString,
+	bbObjectCompare,
+	bbObjectSendMessage,
+	0,
+	0,
+	offsetof(struct _m_app_t_gb_net_obj,__m_app_t_gb_net_connected) - offsetof(struct _m_app_t_gb_net_obj,__m_app_t_gb_net_socket) + sizeof(struct _m_app_t_bool_obj*)
+	,0
+	,offsetof(struct _m_app_t_gb_net_obj,__m_app_t_gb_net_socket)
+};
+
+struct _m_app_t_gb_net_obj* _m_app_new_gb_net(){
+	struct _m_app_t_gb_net_obj* bbt_r=(struct _m_app_t_gb_net_obj*)(struct _m_app_t_gb_net_obj*)bbObjectNew((BBClass *)&_m_app_t_gb_net);
+	bbt_r->__m_app_t_gb_net_socket =(struct brl_socket_TSocket_obj*)brl_socket_CreateUDPSocket();
+	bbt_r->__m_app_t_gb_net_stream =(struct brl_stream_TStream_obj*)((struct brl_stream_TStream_obj*)bbObjectDowncast((BBOBJECT)brl_socketstream_CreateSocketStream((struct brl_socket_TSocket_obj*)bbt_r->__m_app_t_gb_net_socket ,1),(BBClass*)&brl_stream_TStream));
+	bbt_r->__m_app_t_gb_net_connected =(struct _m_app_t_bool_obj*)_m_app_new_bool(0);
+	return (struct _m_app_t_gb_net_obj*)bbt_r;
+}
+void _m_app_gb_net_init(){
+	_m_app_gb->__m_app_t_gb_net =(struct _m_app_t_gb_net_obj*)_m_app_new_gb_net();
+	brl_socket_BindSocket((struct brl_socket_TSocket_obj*)_m_app_gb->__m_app_t_gb_net ->__m_app_t_gb_net_socket ,53350,2);
 }
 void __m_app_t_gbs_New(struct _m_app_t_gbs_obj* o) {
 	bbObjectCtor((BBOBJECT)o);
@@ -5121,11 +5226,6 @@ void _m_app_dictval_set_double(struct _m_app_t_dictval_obj* bbt_d,BBDOUBLE bbt_v
 	_m_app_dictval_clear((struct _m_app_t_dictval_obj*)bbt_d);
 	bbt_d->__m_app_t_dictval_id =6;
 	bbt_d->__m_app_t_dictval_tdouble =(struct _m_app_t_double_obj*)_m_app_new_double(bbt_v);
-}
-struct _m_app_t_string_obj* _m_app_new_string(BBSTRING bbt_v){
-	struct _m_app_t_string_obj* bbt_r=(struct _m_app_t_string_obj*)(struct _m_app_t_string_obj*)bbObjectNew((BBClass *)&_m_app_t_string);
-	bbt_r->__m_app_t_string_value =bbt_v;
-	return (struct _m_app_t_string_obj*)bbt_r;
 }
 void _m_app_dictval_set_string(struct _m_app_t_dictval_obj* bbt_d,BBSTRING bbt_v){
 	_m_app_dictval_clear((struct _m_app_t_dictval_obj*)bbt_d);
@@ -5896,6 +5996,122 @@ struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_help(){
 	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_help;
 	return (struct _m_app_t_gbscmd_obj*)bbt_r;
 }
+BBINT _m_app_bool_eq(struct _m_app_t_bool_obj* bbt_b,BBINT bbt_v){
+	return (((BBINT)bbt_b->__m_app_t_bool_value )==bbt_v);
+}
+BBINT _m_app_bool_eq2(struct _m_app_t_bool_obj* bbt_b){
+	if(bbt_b->__m_app_t_bool_value !=0){
+		return 1;
+	}else{
+		return 0;
+	}
+}
+void _m_app_gb_net_write(BBSTRING bbt_s){
+	if(_m_app_bool_eq2((struct _m_app_t_bool_obj*)_m_app_gb->__m_app_t_gb_net ->__m_app_t_gb_net_connected )!=0){
+		brl_stream_WriteString((struct brl_stream_TStream_obj*)_m_app_gb->__m_app_t_gb_net ->__m_app_t_gb_net_stream ,bbt_s);
+	}
+}
+void _m_app_gbs_func_send(BBARRAY bbt_s){
+	BBSTRING bbt_t=_m_app_sind(bbt_s,0);
+	_m_app_gb_net_write(bbt_t);
+}
+struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_send(){
+	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
+	bbt_r->__m_app_t_gbscmd_name =&_s156;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s156;
+	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
+	bbt_r->__m_app_t_gbscmd_desc =&_s157;
+	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_send;
+	return (struct _m_app_t_gbscmd_obj*)bbt_r;
+}
+BBSTRING _m_app_gb_net_read(){
+	if(_m_app_bool_eq2((struct _m_app_t_bool_obj*)_m_app_gb->__m_app_t_gb_net ->__m_app_t_gb_net_connected )!=0){
+		BBINT bbt_d=brl_socket_SocketReadAvail((struct brl_socket_TSocket_obj*)_m_app_gb->__m_app_t_gb_net ->__m_app_t_gb_net_socket );
+		BBSTRING bbt_s=brl_stream_ReadString((struct brl_stream_TStream_obj*)_m_app_gb->__m_app_t_gb_net ->__m_app_t_gb_net_stream ,bbt_d);
+		return bbt_s;
+	}
+	return &bbEmptyString;
+}
+BBINT _m_app_dict_write_string(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_s,BBSTRING bbt_v){
+	BBARRAY bbt_w=_m_app_tokenize(bbt_s,&_s39,0);
+	struct _m_app_t_dict_obj* bbt_g=(struct _m_app_t_dict_obj*)&bbNullObject;
+	if((bbt_w->scales[0])==0){
+		return 0;
+	}else{
+		if((bbt_w->scales[0])==1){
+			_m_app_dict_set_string((struct _m_app_t_dict_obj*)bbt_d,((BBSTRING*)BBARRAYDATA(bbt_w,1))[0U],bbt_v);
+			return 1;
+		}else{
+			if((bbt_w->scales[0])>1){
+				bbt_g=(struct _m_app_t_dict_obj*)_m_app_dict_goto_dir((struct _m_app_t_dict_obj*)bbt_d,bbArraySlice("$",bbt_w,0,(bbt_w->scales[0])),1);
+				_m_app_dict_set_string((struct _m_app_t_dict_obj*)bbt_g,((BBSTRING*)BBARRAYDATA(bbt_w,1))[((BBUINT)((bbt_w->scales[0])-1))],bbt_v);
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
+void _m_app_gbs_func_recv(BBARRAY bbt_s){
+	BBSTRING bbt_t=_m_app_gb_net_read();
+	_m_app_dict_write_string((struct _m_app_t_dict_obj*)_m_app_gb->__m_app_t_gb_gbs ->__m_app_t_gbs_data ,&_s160,bbt_t);
+}
+struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_recv(){
+	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
+	bbt_r->__m_app_t_gbscmd_name =&_s158;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s158;
+	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
+	bbt_r->__m_app_t_gbscmd_desc =&_s159;
+	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_recv;
+	return (struct _m_app_t_gbscmd_obj*)bbt_r;
+}
+void _m_app_bool_set(struct _m_app_t_bool_obj* bbt_b,BBINT bbt_v){
+	bbt_b->__m_app_t_bool_value =((BBBYTE)_m_app_bool(bbt_v));
+}
+void _m_app_bool_set2(struct _m_app_t_bool_obj* bbt_b,struct _m_app_t_bool_obj* bbt_t){
+	bbt_b->__m_app_t_bool_value =bbt_t->__m_app_t_bool_value ;
+}
+BBINT _m_app_gb_net_connect(BBSTRING bbt_n){
+	_m_app_gb->__m_app_t_gb_net ->__m_app_t_gb_net_dstinfo =brl_socket_AddrInfo(bbt_n,&_s182,2);
+	BBINT bbt_d=brl_socket_ConnectSocket((struct brl_socket_TSocket_obj*)_m_app_gb->__m_app_t_gb_net ->__m_app_t_gb_net_socket ,(struct pub_stdc_TAddrInfo_obj*)((struct pub_stdc_TAddrInfo_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_net ->__m_app_t_gb_net_dstinfo ,1))[0U]);
+	if(bbt_d!=0){
+		_m_app_bool_set((struct _m_app_t_bool_obj*)_m_app_gb->__m_app_t_gb_net ->__m_app_t_gb_net_connected ,1);
+	}else{
+		_m_app_bool_set((struct _m_app_t_bool_obj*)_m_app_gb->__m_app_t_gb_net ->__m_app_t_gb_net_connected ,0);
+	}
+	return ((BBINT)_m_app_gb->__m_app_t_gb_net ->__m_app_t_gb_net_connected ->__m_app_t_bool_value );
+}
+BBINT _m_app_dict_write_int(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_s,BBINT bbt_v){
+	BBARRAY bbt_w=_m_app_tokenize(bbt_s,&_s39,0);
+	struct _m_app_t_dict_obj* bbt_g=(struct _m_app_t_dict_obj*)&bbNullObject;
+	if((bbt_w->scales[0])==0){
+		return 0;
+	}else{
+		if((bbt_w->scales[0])==1){
+			_m_app_dict_set_int((struct _m_app_t_dict_obj*)bbt_d,((BBSTRING*)BBARRAYDATA(bbt_w,1))[0U],bbt_v);
+			return 1;
+		}else{
+			if((bbt_w->scales[0])>1){
+				bbt_g=(struct _m_app_t_dict_obj*)_m_app_dict_goto_dir((struct _m_app_t_dict_obj*)bbt_d,bbArraySlice("$",bbt_w,0,(bbt_w->scales[0])),1);
+				_m_app_dict_set_int((struct _m_app_t_dict_obj*)bbt_g,((BBSTRING*)BBARRAYDATA(bbt_w,1))[((BBUINT)((bbt_w->scales[0])-1))],bbt_v);
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
+void _m_app_gbs_func_connect(BBARRAY bbt_s){
+	BBINT bbt_t=_m_app_gb_net_connect(_m_app_sind(bbt_s,0));
+	_m_app_dict_write_int((struct _m_app_t_dict_obj*)_m_app_gb->__m_app_t_gb_gbs ->__m_app_t_gbs_data ,&_s163,bbt_t);
+}
+struct _m_app_t_gbscmd_obj* _m_app_new_gbscmd_connect(){
+	struct _m_app_t_gbscmd_obj* bbt_r=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd();
+	bbt_r->__m_app_t_gbscmd_name =&_s161;
+	bbt_r->__m_app_t_gbscmd_cmd =&_s161;
+	bbt_r->__m_app_t_gbscmd_aliases =(&bbEmptyArray);
+	bbt_r->__m_app_t_gbscmd_desc =&_s162;
+	bbt_r->__m_app_t_gbscmd_func =_m_app_gbs_func_connect;
+	return (struct _m_app_t_gbscmd_obj*)bbt_r;
+}
 void _m_app_gbs_init(){
 	_m_app_gb->__m_app_t_gb_gbs =(struct _m_app_t_gbs_obj*)_m_app_new_gbs();
 	struct _m_app_t_counter_obj* bbt_u=(struct _m_app_t_counter_obj*)_m_app_new_counter(-1);
@@ -5916,6 +6132,9 @@ void _m_app_gbs_init(){
 	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_gbs ->__m_app_t_gbs_cmds ,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_sdata();
 	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_gbs ->__m_app_t_gbs_cmds ,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_playsound();
 	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_gbs ->__m_app_t_gbs_cmds ,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_help();
+	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_gbs ->__m_app_t_gbs_cmds ,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_send();
+	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_gbs ->__m_app_t_gbs_cmds ,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_recv();
+	((struct _m_app_t_gbscmd_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_gbs ->__m_app_t_gbs_cmds ,1))[((BBUINT)_m_app_counter_inc((struct _m_app_t_counter_obj*)bbt_u,1))]=(struct _m_app_t_gbscmd_obj*)_m_app_new_gbscmd_connect();
 }
 void __m_app_t_gb_editor_New(struct _m_app_t_gb_editor_obj* o) {
 	bbObjectCtor((BBOBJECT)o);
@@ -5980,7 +6199,7 @@ void __m_app_t_gb_testing_New(struct _m_app_t_gb_testing_obj* o) {
 	o->__m_app_t_gb_testing_timer = (struct _m_app_t_timer_obj*)(&bbNullObject);
 	o->__m_app_t_gb_testing_list = (struct _m_app_t_list_obj*)(&bbNullObject);
 	o->__m_app_t_gb_testing_jake = (struct _m_app_t_jake_obj*)(&bbNullObject);
-	o->__m_app_t_gb_testing_mstring = (struct _m_app_t_mstring_obj*)(&bbNullObject);
+	o->__m_app_t_gb_testing_model = (struct _m_app_t_model_obj*)(&bbNullObject);
 }
 struct BBDebugScope_6 _m_app_t_gb_testing_scope ={
 	BBDEBUGSCOPE_USERTYPE,
@@ -6012,9 +6231,9 @@ struct BBDebugScope_6 _m_app_t_gb_testing_scope ={
 		},
 		{
 			BBDEBUGDECL_FIELD,
-			"mstring",
-			":t_mstring",
-			.field_offset=offsetof(struct _m_app_t_gb_testing_obj,__m_app_t_gb_testing_mstring)
+			"model",
+			":t_model",
+			.field_offset=offsetof(struct _m_app_t_gb_testing_obj,__m_app_t_gb_testing_model)
 		},
 		{
 			BBDEBUGDECL_TYPEMETHOD,
@@ -6037,7 +6256,7 @@ struct BBClass__m_app_t_gb_testing _m_app_t_gb_testing={
 	bbObjectSendMessage,
 	0,
 	0,
-	offsetof(struct _m_app_t_gb_testing_obj,__m_app_t_gb_testing_mstring) - offsetof(struct _m_app_t_gb_testing_obj,__m_app_t_gb_testing_lightcube) + sizeof(struct _m_app_t_mstring_obj*)
+	offsetof(struct _m_app_t_gb_testing_obj,__m_app_t_gb_testing_model) - offsetof(struct _m_app_t_gb_testing_obj,__m_app_t_gb_testing_lightcube) + sizeof(struct _m_app_t_model_obj*)
 	,0
 	,offsetof(struct _m_app_t_gb_testing_obj,__m_app_t_gb_testing_lightcube)
 };
@@ -6469,13 +6688,173 @@ struct _m_app_t_jake_obj* _m_app_new_jake(){
 	bbt_r->__m_app_t_jake_silent =(struct _m_app_t_bool_obj*)_m_app_new_bool(1);
 	return (struct _m_app_t_jake_obj*)bbt_r;
 }
+void __m_app_t_model_New(struct _m_app_t_model_obj* o) {
+	bbObjectCtor((BBOBJECT)o);
+	o->clas = &_m_app_t_model;
+	o->__m_app_t_model_color = (struct _m_app_t_color_obj*)(&bbNullObject);
+	o->__m_app_t_model_center = (struct _m_app_t_point3_obj*)(&bbNullObject);
+	o->__m_app_t_model_points = (&bbEmptyArray);
+	o->__m_app_t_model_tris = (&bbEmptyArray);
+}
+struct BBDebugScope_5 _m_app_t_model_scope ={
+	BBDEBUGSCOPE_USERTYPE,
+	"t_model",
+	{
+		{
+			BBDEBUGDECL_FIELD,
+			"color",
+			":t_color",
+			.field_offset=offsetof(struct _m_app_t_model_obj,__m_app_t_model_color)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"center",
+			":t_point3",
+			.field_offset=offsetof(struct _m_app_t_model_obj,__m_app_t_model_center)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"points",
+			"[]:t_point3",
+			.field_offset=offsetof(struct _m_app_t_model_obj,__m_app_t_model_points)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"tris",
+			"[]:t_tri",
+			.field_offset=offsetof(struct _m_app_t_model_obj,__m_app_t_model_tris)
+		},
+		{
+			BBDEBUGDECL_TYPEMETHOD,
+			"New",
+			"()",
+			.var_address=(void*)&__m_app_t_model_New
+		},
+		BBDEBUGDECL_END
+	}
+};
+struct BBClass__m_app_t_model _m_app_t_model={
+	&bbObjectClass,
+	bbObjectFree,
+	(BBDebugScope*)&_m_app_t_model_scope,
+	sizeof(struct _m_app_t_model_obj),
+	(void (*)(BBOBJECT))__m_app_t_model_New,
+	bbObjectDtor,
+	bbObjectToString,
+	bbObjectCompare,
+	bbObjectSendMessage,
+	0,
+	0,
+	offsetof(struct _m_app_t_model_obj,__m_app_t_model_tris) - offsetof(struct _m_app_t_model_obj,__m_app_t_model_color) + sizeof(BBARRAY)
+	,0
+	,offsetof(struct _m_app_t_model_obj,__m_app_t_model_color)
+};
+
+void __m_app_t_tri_New(struct _m_app_t_tri_obj* o) {
+	bbObjectCtor((BBOBJECT)o);
+	o->clas = &_m_app_t_tri;
+	o->__m_app_t_tri_color = (struct _m_app_t_color_obj*)(&bbNullObject);
+	o->__m_app_t_tri_points = (&bbEmptyArray);
+}
+struct BBDebugScope_3 _m_app_t_tri_scope ={
+	BBDEBUGSCOPE_USERTYPE,
+	"t_tri",
+	{
+		{
+			BBDEBUGDECL_FIELD,
+			"color",
+			":t_color",
+			.field_offset=offsetof(struct _m_app_t_tri_obj,__m_app_t_tri_color)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"points",
+			"[]:t_point3",
+			.field_offset=offsetof(struct _m_app_t_tri_obj,__m_app_t_tri_points)
+		},
+		{
+			BBDEBUGDECL_TYPEMETHOD,
+			"New",
+			"()",
+			.var_address=(void*)&__m_app_t_tri_New
+		},
+		BBDEBUGDECL_END
+	}
+};
+struct BBClass__m_app_t_tri _m_app_t_tri={
+	&bbObjectClass,
+	bbObjectFree,
+	(BBDebugScope*)&_m_app_t_tri_scope,
+	sizeof(struct _m_app_t_tri_obj),
+	(void (*)(BBOBJECT))__m_app_t_tri_New,
+	bbObjectDtor,
+	bbObjectToString,
+	bbObjectCompare,
+	bbObjectSendMessage,
+	0,
+	0,
+	offsetof(struct _m_app_t_tri_obj,__m_app_t_tri_points) - offsetof(struct _m_app_t_tri_obj,__m_app_t_tri_color) + sizeof(BBARRAY)
+	,0
+	,offsetof(struct _m_app_t_tri_obj,__m_app_t_tri_color)
+};
+
+struct _m_app_t_color_obj* _m_app_new_color_random(BBFLOAT bbt_d){
+	return (struct _m_app_t_color_obj*)_m_app_new_color(_m_app_frand(0.00000000f,bbt_d),_m_app_frand(0.00000000f,bbt_d),_m_app_frand(0.00000000f,bbt_d),bbt_d,bbt_d);
+}
+struct _m_app_t_tri_obj* _m_app_new_tri(struct _m_app_t_point3_obj* bbt_p1,struct _m_app_t_point3_obj* bbt_p2,struct _m_app_t_point3_obj* bbt_p3,struct _m_app_t_color_obj* bbt_c){
+	struct _m_app_t_tri_obj* bbt_r=(struct _m_app_t_tri_obj*)(struct _m_app_t_tri_obj*)bbObjectNew((BBClass *)&_m_app_t_tri);
+	if(((BBObject*)bbt_c)!= &bbNullObject){
+		bbt_r->__m_app_t_tri_color =(struct _m_app_t_color_obj*)bbt_c;
+	}else{
+		bbt_r->__m_app_t_tri_color =(struct _m_app_t_color_obj*)_m_app_new_color(3.00000000f,3.00000000f,3.00000000f,3.00000000f,3.0f);
+	}
+	bbt_r->__m_app_t_tri_points =bbArrayNew1D(":t_point3", 3);
+	((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_r->__m_app_t_tri_points ,1))[0U]=(struct _m_app_t_point3_obj*)bbt_p1;
+	((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_r->__m_app_t_tri_points ,1))[1U]=(struct _m_app_t_point3_obj*)bbt_p2;
+	((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_r->__m_app_t_tri_points ,1))[2U]=(struct _m_app_t_point3_obj*)bbt_p3;
+	return (struct _m_app_t_tri_obj*)bbt_r;
+}
+struct _m_app_t_model_obj* _m_app_new_model_cube(BBFLOAT bbt_x,BBFLOAT bbt_y,BBFLOAT bbt_z,BBFLOAT bbt_s,struct _m_app_t_color_obj* bbt_c){
+	struct _m_app_t_model_obj* bbt_r=(struct _m_app_t_model_obj*)(struct _m_app_t_model_obj*)bbObjectNew((BBClass *)&_m_app_t_model);
+	BBARRAY bbt_p=bbArrayNew1D(":t_point3", 8);
+	((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[0U]=(struct _m_app_t_point3_obj*)_m_app_new_point3(bbt_x,bbt_y,bbt_z);
+	((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[1U]=(struct _m_app_t_point3_obj*)_m_app_new_point3((bbt_x+bbt_s),bbt_y,bbt_z);
+	((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[2U]=(struct _m_app_t_point3_obj*)_m_app_new_point3(bbt_x,(bbt_y+bbt_s),bbt_z);
+	((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[3U]=(struct _m_app_t_point3_obj*)_m_app_new_point3((bbt_x+bbt_s),(bbt_y+bbt_s),bbt_z);
+	((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[4U]=(struct _m_app_t_point3_obj*)_m_app_new_point3(bbt_x,bbt_y,(bbt_z+bbt_s));
+	((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[5U]=(struct _m_app_t_point3_obj*)_m_app_new_point3((bbt_x+bbt_s),bbt_y,(bbt_z+bbt_s));
+	((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[6U]=(struct _m_app_t_point3_obj*)_m_app_new_point3(bbt_x,(bbt_y+bbt_s),(bbt_z+bbt_s));
+	((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[7U]=(struct _m_app_t_point3_obj*)_m_app_new_point3((bbt_x+bbt_s),(bbt_y+bbt_s),(bbt_z+bbt_s));
+	bbt_r->__m_app_t_model_points =bbt_p;
+	BBARRAY bbt_t=bbArrayNew1D(":t_tri", 12);
+	((struct _m_app_t_tri_obj**)BBARRAYDATA(bbt_t,1))[0U]=(struct _m_app_t_tri_obj*)_m_app_new_tri((struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[0U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[1U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[2U],(struct _m_app_t_color_obj*)_m_app_new_color_random(3.00000000f));
+	((struct _m_app_t_tri_obj**)BBARRAYDATA(bbt_t,1))[1U]=(struct _m_app_t_tri_obj*)_m_app_new_tri((struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[1U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[2U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[3U],(struct _m_app_t_color_obj*)_m_app_new_color_random(3.00000000f));
+	((struct _m_app_t_tri_obj**)BBARRAYDATA(bbt_t,1))[2U]=(struct _m_app_t_tri_obj*)_m_app_new_tri((struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[1U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[5U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[3U],(struct _m_app_t_color_obj*)_m_app_new_color_random(3.00000000f));
+	((struct _m_app_t_tri_obj**)BBARRAYDATA(bbt_t,1))[3U]=(struct _m_app_t_tri_obj*)_m_app_new_tri((struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[5U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[3U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[7U],(struct _m_app_t_color_obj*)_m_app_new_color_random(3.00000000f));
+	((struct _m_app_t_tri_obj**)BBARRAYDATA(bbt_t,1))[4U]=(struct _m_app_t_tri_obj*)_m_app_new_tri((struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[5U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[4U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[7U],(struct _m_app_t_color_obj*)_m_app_new_color_random(3.00000000f));
+	((struct _m_app_t_tri_obj**)BBARRAYDATA(bbt_t,1))[5U]=(struct _m_app_t_tri_obj*)_m_app_new_tri((struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[4U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[7U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[6U],(struct _m_app_t_color_obj*)_m_app_new_color_random(3.00000000f));
+	((struct _m_app_t_tri_obj**)BBARRAYDATA(bbt_t,1))[6U]=(struct _m_app_t_tri_obj*)_m_app_new_tri((struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[4U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[0U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[6U],(struct _m_app_t_color_obj*)_m_app_new_color_random(3.00000000f));
+	((struct _m_app_t_tri_obj**)BBARRAYDATA(bbt_t,1))[7U]=(struct _m_app_t_tri_obj*)_m_app_new_tri((struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[0U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[6U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[2U],(struct _m_app_t_color_obj*)_m_app_new_color_random(3.00000000f));
+	((struct _m_app_t_tri_obj**)BBARRAYDATA(bbt_t,1))[8U]=(struct _m_app_t_tri_obj*)_m_app_new_tri((struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[0U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[1U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[4U],(struct _m_app_t_color_obj*)_m_app_new_color_random(3.00000000f));
+	((struct _m_app_t_tri_obj**)BBARRAYDATA(bbt_t,1))[9U]=(struct _m_app_t_tri_obj*)_m_app_new_tri((struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[1U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[4U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[5U],(struct _m_app_t_color_obj*)_m_app_new_color_random(3.00000000f));
+	((struct _m_app_t_tri_obj**)BBARRAYDATA(bbt_t,1))[10U]=(struct _m_app_t_tri_obj*)_m_app_new_tri((struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[3U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[2U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[7U],(struct _m_app_t_color_obj*)_m_app_new_color_random(3.00000000f));
+	((struct _m_app_t_tri_obj**)BBARRAYDATA(bbt_t,1))[11U]=(struct _m_app_t_tri_obj*)_m_app_new_tri((struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[2U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[7U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_p,1))[6U],(struct _m_app_t_color_obj*)_m_app_new_color_random(3.00000000f));
+	bbt_r->__m_app_t_model_tris =bbt_t;
+	bbt_r->__m_app_t_model_center =(struct _m_app_t_point3_obj*)_m_app_new_point3((bbt_x+(bbt_s/2.00000000f)),(bbt_y+(bbt_s/2.00000000f)),(bbt_z+(bbt_s/2.00000000f)));
+	if(((BBObject*)bbt_c)!= &bbNullObject){
+		bbt_r->__m_app_t_model_color =(struct _m_app_t_color_obj*)bbt_c;
+	}else{
+		bbt_r->__m_app_t_model_color =(struct _m_app_t_color_obj*)_m_app_new_color(3.00000000f,3.00000000f,3.00000000f,3.00000000f,3.0f);
+	}
+	return (struct _m_app_t_model_obj*)bbt_r;
+}
 struct _m_app_t_gb_testing_obj* _m_app_new_gb_testing(){
 	struct _m_app_t_gb_testing_obj* bbt_r=(struct _m_app_t_gb_testing_obj*)(struct _m_app_t_gb_testing_obj*)bbObjectNew((BBClass *)&_m_app_t_gb_testing);
 	bbt_r->__m_app_t_gb_testing_lightcube =(struct _m_app_t_lightcube_obj*)_m_app_new_lightcube(0);
 	bbt_r->__m_app_t_gb_testing_timer =(struct _m_app_t_timer_obj*)_m_app_new_timer(30.0000000f);
 	bbt_r->__m_app_t_gb_testing_list =(struct _m_app_t_list_obj*)_m_app_new_list();
 	bbt_r->__m_app_t_gb_testing_jake =(struct _m_app_t_jake_obj*)_m_app_new_jake();
-	bbt_r->__m_app_t_gb_testing_mstring =(struct _m_app_t_mstring_obj*)_m_app_new_mstring(&_s166);
+	bbt_r->__m_app_t_gb_testing_model =(struct _m_app_t_model_obj*)_m_app_new_model_cube(20.0000000f,12.0000000f,0.00000000f,5.00000000f,(struct _m_app_t_color_obj*)&bbNullObject);
 	return (struct _m_app_t_gb_testing_obj*)bbt_r;
 }
 void _m_app_gb_testing_init(){
@@ -6492,6 +6871,7 @@ void _m_app_gb_init(){
 	_m_app_gb_camera_init();
 	_m_app_gb_console_init();
 	_m_app_gb_controller_init();
+	_m_app_gb_net_init();
 	_m_app_gbs_init();
 	_m_app_gb_editor_init();
 	_m_app_gb_testing_init();
@@ -6511,8 +6891,8 @@ void _m_app_gb_assets_load_image(BBINT bbt_n,BBSTRING bbt_s){
 	((struct _m_app_t_image_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_assets ->__m_app_t_gb_assets_images ,1))[((BBUINT)bbt_n)]=(struct _m_app_t_image_obj*)bbt_u;
 }
 void _m_app_gb_assets_load_default_images(){
-	_m_app_gb_assets_load_image(0,&_s159);
-	_m_app_gb_assets_load_image(1,&_s160);
+	_m_app_gb_assets_load_image(0,&_s166);
+	_m_app_gb_assets_load_image(1,&_s167);
 }
 struct _m_app_t_sound_obj* _m_app_new_sound(BBSTRING bbt_p){
 	struct _m_app_t_sound_obj* bbt_r=(struct _m_app_t_sound_obj*)(struct _m_app_t_sound_obj*)bbObjectNew((BBClass *)&_m_app_t_sound);
@@ -6526,10 +6906,10 @@ void _m_app_gb_assets_load_sound(BBINT bbt_n,BBSTRING bbt_s){
 	((struct _m_app_t_sound_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_assets ->__m_app_t_gb_assets_sounds ,1))[((BBUINT)bbt_n)]=(struct _m_app_t_sound_obj*)bbt_u;
 }
 void _m_app_gb_assets_load_default_sounds(){
-	_m_app_gb_assets_load_sound(90,&_s161);
-	_m_app_gb_assets_load_sound(91,&_s162);
-	_m_app_gb_assets_load_sound(92,&_s163);
-	_m_app_gb_assets_load_sound(93,&_s164);
+	_m_app_gb_assets_load_sound(90,&_s168);
+	_m_app_gb_assets_load_sound(91,&_s169);
+	_m_app_gb_assets_load_sound(92,&_s170);
+	_m_app_gb_assets_load_sound(93,&_s171);
 }
 BBINT _m_app_dictval_get_int(struct _m_app_t_dictval_obj* bbt_d){
 	if(bbt_d->__m_app_t_dictval_id ==3){
@@ -6738,7 +7118,7 @@ void _m_app_gb_assets_load_default_fonts(){
 	{
 		BBINT bbt_i=0;
 		for(;(bbt_i<=2);bbt_i=(bbt_i+1)){
-			((struct _m_app_t_font_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_assets ->__m_app_t_gb_assets_fonts ,1))[((BBUINT)bbt_i)]=(struct _m_app_t_font_obj*)_m_app_load_font(bbStringConcat(&_s165,bbStringFromInt(bbt_i)));
+			((struct _m_app_t_font_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_assets ->__m_app_t_gb_assets_fonts ,1))[((BBUINT)bbt_i)]=(struct _m_app_t_font_obj*)_m_app_load_font(bbStringConcat(&_s172,bbStringFromInt(bbt_i)));
 		}
 	}
 }
@@ -6830,33 +7210,33 @@ void _m_app_gb_assets_load_default_animations(){
 	_m_app_animation_add_frame2((struct _m_app_t_animation_obj*)bbt_a,1,0,21.0000000f,22.0000000f,2.00000000f,2.00000000f,0.125f);
 	_m_app_animation_add_frame2((struct _m_app_t_animation_obj*)bbt_a,2,0,23.0000000f,22.0000000f,2.00000000f,2.00000000f,0.125f);
 	_m_app_animation_add_frame2((struct _m_app_t_animation_obj*)bbt_a,3,0,25.0000000f,22.0000000f,2.00000000f,2.00000000f,0.125f);
-	((struct _m_app_t_animation_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_animations ,1))[0U]=(struct _m_app_t_animation_obj*)bbt_a;
+	((struct _m_app_t_animation_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_assets ->__m_app_t_gb_assets_animations ,1))[0U]=(struct _m_app_t_animation_obj*)bbt_a;
 	bbt_a=(struct _m_app_t_animation_obj*)_m_app_new_animation(5,0);
 	_m_app_animation_add_frame2((struct _m_app_t_animation_obj*)bbt_a,0,0,5.00000000f,20.0000000f,1.00000000f,1.00000000f,0.05f);
 	_m_app_animation_add_frame2((struct _m_app_t_animation_obj*)bbt_a,1,0,6.00000000f,20.0000000f,1.00000000f,1.00000000f,0.05f);
 	_m_app_animation_add_frame2((struct _m_app_t_animation_obj*)bbt_a,2,0,7.00000000f,20.0000000f,1.00000000f,1.00000000f,0.05f);
 	_m_app_animation_add_frame2((struct _m_app_t_animation_obj*)bbt_a,3,0,8.00000000f,20.0000000f,1.00000000f,1.00000000f,0.05f);
 	_m_app_animation_add_frame2((struct _m_app_t_animation_obj*)bbt_a,4,0,9.00000000f,20.0000000f,1.00000000f,1.00000000f,0.05f);
-	((struct _m_app_t_animation_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_animations ,1))[1U]=(struct _m_app_t_animation_obj*)bbt_a;
+	((struct _m_app_t_animation_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_assets ->__m_app_t_gb_assets_animations ,1))[1U]=(struct _m_app_t_animation_obj*)bbt_a;
 }
 void _m_app_palette_set(struct _m_app_t_palette_obj* bbt_p,BBINT bbt_n,BBFLOAT bbt_r,BBFLOAT bbt_g,BBFLOAT bbt_b,BBFLOAT bbt_a){
 	bbt_n=_m_app_iclamp(bbt_n,0,255);
 	_m_app_color_set((struct _m_app_t_color_obj*)((struct _m_app_t_color_obj**)BBARRAYDATA(bbt_p->__m_app_t_palette_data ,1))[((BBUINT)bbt_n)],bbt_r,bbt_g,bbt_b,bbt_a);
 }
 void _m_app_gb_assets_load_default_palettes(){
-	((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_palettes ,1))[0U]=(struct _m_app_t_palette_obj*)_m_app_new_palette();
-	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_palettes ,1))[0U],0,0.00000000f,0.00000000f,0.00000000f,3.00000000f);
-	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_palettes ,1))[0U],1,1.00000000f,1.00000000f,1.00000000f,3.00000000f);
-	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_palettes ,1))[0U],2,2.00000000f,2.00000000f,2.00000000f,3.00000000f);
-	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_palettes ,1))[0U],3,3.00000000f,3.00000000f,3.00000000f,3.00000000f);
-	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_palettes ,1))[0U],4,2.00000000f,1.00000000f,0.00000000f,3.00000000f);
-	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_palettes ,1))[0U],5,3.00000000f,2.00000000f,0.00000000f,3.00000000f);
-	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_palettes ,1))[0U],6,0.00000000f,1.00000000f,0.00000000f,3.00000000f);
-	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_palettes ,1))[0U],7,1.00000000f,2.00000000f,0.00000000f,3.00000000f);
-	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_palettes ,1))[0U],8,0.00000000f,1.00000000f,2.00000000f,3.00000000f);
-	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_palettes ,1))[0U],9,0.00000000f,2.00000000f,3.00000000f,3.00000000f);
-	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_palettes ,1))[0U],10,2.00000000f,0.00000000f,1.00000000f,3.00000000f);
-	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_palettes ,1))[0U],11,3.00000000f,0.00000000f,2.00000000f,3.00000000f);
+	((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_assets ->__m_app_t_gb_assets_palettes ,1))[0U]=(struct _m_app_t_palette_obj*)_m_app_new_palette();
+	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_assets ->__m_app_t_gb_assets_palettes ,1))[0U],0,0.00000000f,0.00000000f,0.00000000f,3.00000000f);
+	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_assets ->__m_app_t_gb_assets_palettes ,1))[0U],1,1.00000000f,1.00000000f,1.00000000f,3.00000000f);
+	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_assets ->__m_app_t_gb_assets_palettes ,1))[0U],2,2.00000000f,2.00000000f,2.00000000f,3.00000000f);
+	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_assets ->__m_app_t_gb_assets_palettes ,1))[0U],3,3.00000000f,3.00000000f,3.00000000f,3.00000000f);
+	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_assets ->__m_app_t_gb_assets_palettes ,1))[0U],4,2.00000000f,1.00000000f,0.00000000f,3.00000000f);
+	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_assets ->__m_app_t_gb_assets_palettes ,1))[0U],5,3.00000000f,2.00000000f,0.00000000f,3.00000000f);
+	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_assets ->__m_app_t_gb_assets_palettes ,1))[0U],6,0.00000000f,1.00000000f,0.00000000f,3.00000000f);
+	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_assets ->__m_app_t_gb_assets_palettes ,1))[0U],7,1.00000000f,2.00000000f,0.00000000f,3.00000000f);
+	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_assets ->__m_app_t_gb_assets_palettes ,1))[0U],8,0.00000000f,1.00000000f,2.00000000f,3.00000000f);
+	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_assets ->__m_app_t_gb_assets_palettes ,1))[0U],9,0.00000000f,2.00000000f,3.00000000f,3.00000000f);
+	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_assets ->__m_app_t_gb_assets_palettes ,1))[0U],10,2.00000000f,0.00000000f,1.00000000f,3.00000000f);
+	_m_app_palette_set((struct _m_app_t_palette_obj*)((struct _m_app_t_palette_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_assets ->__m_app_t_gb_assets_palettes ,1))[0U],11,3.00000000f,0.00000000f,2.00000000f,3.00000000f);
 }
 void _m_app_gb_assets_load(){
 	_m_app_gb_assets_load_default_images();
@@ -6867,7 +7247,7 @@ void _m_app_gb_assets_load(){
 	_m_app_gb_assets_load_default_fonts();
 }
 struct _m_app_t_dict_obj* _m_app_gb_load_settings(){
-	struct _m_app_t_dict_obj* bbt_u=(struct _m_app_t_dict_obj*)_m_app_gbml_load(&_s175);
+	struct _m_app_t_dict_obj* bbt_u=(struct _m_app_t_dict_obj*)_m_app_gbml_load(&_s180);
 	if(((BBObject*)bbt_u)!= &bbNullObject){
 		_m_app_gb->__m_app_t_gb_settings =(struct _m_app_t_dict_obj*)bbt_u;
 	}else{
@@ -6911,22 +7291,6 @@ BBBYTE _m_app_dict_read_byte(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_s){
 		}
 	}
 	return 0;
-}
-void _m_app_bool_set(struct _m_app_t_bool_obj* bbt_b,BBINT bbt_v){
-	bbt_b->__m_app_t_bool_value =((BBBYTE)_m_app_bool(bbt_v));
-}
-void _m_app_bool_set2(struct _m_app_t_bool_obj* bbt_b,struct _m_app_t_bool_obj* bbt_t){
-	bbt_b->__m_app_t_bool_value =bbt_t->__m_app_t_bool_value ;
-}
-BBINT _m_app_bool_eq(struct _m_app_t_bool_obj* bbt_b,BBINT bbt_v){
-	return (((BBINT)bbt_b->__m_app_t_bool_value )==bbt_v);
-}
-BBINT _m_app_bool_eq2(struct _m_app_t_bool_obj* bbt_b){
-	if(bbt_b->__m_app_t_bool_value !=0){
-		return 1;
-	}else{
-		return 0;
-	}
 }
 void _m_app_point_set(struct _m_app_t_point_obj* bbt_p,BBFLOAT bbt_x,BBFLOAT bbt_y){
 	bbt_p->__m_app_t_point_x =bbt_x;
@@ -7028,74 +7392,14 @@ void _m_app_gb_load(){
 void _m_app_event_load(){
 	_m_app_gb_load();
 }
-struct _m_app_t_list_iterator_obj* _m_app_new_list_iterator(struct _m_app_t_list_obj* bbt_l){
-	struct _m_app_t_list_iterator_obj* bbt_r=(struct _m_app_t_list_iterator_obj*)(struct _m_app_t_list_iterator_obj*)bbObjectNew((BBClass *)&_m_app_t_list_iterator);
-	bbt_r->__m_app_t_list_iterator_curr =(struct _m_app_t_list_node_obj*)bbt_l->__m_app_t_list_first ;
-	return (struct _m_app_t_list_iterator_obj*)bbt_r;
-}
-struct _m_app_t_datum_obj* _m_app_list_iterator_curr(struct _m_app_t_list_iterator_obj* bbt_l){
-	if(((BBObject*)bbt_l->__m_app_t_list_iterator_curr )!= &bbNullObject){
-		return (struct _m_app_t_datum_obj*)bbt_l->__m_app_t_list_iterator_curr ->__m_app_t_list_node_data ;
-	}
-	return (struct _m_app_t_datum_obj*)(&bbNullObject);
-}
-struct _m_app_t_datum_obj* _m_app_list_iterator_right(struct _m_app_t_list_iterator_obj* bbt_l){
-	if(((BBObject*)bbt_l->__m_app_t_list_iterator_curr )!= &bbNullObject){
-		bbt_l->__m_app_t_list_iterator_curr =(struct _m_app_t_list_node_obj*)bbt_l->__m_app_t_list_iterator_curr ->__m_app_t_list_node_right ;
-	}
-	return (struct _m_app_t_datum_obj*)_m_app_list_iterator_curr((struct _m_app_t_list_iterator_obj*)bbt_l);
-}
-struct _m_app_t_datum_obj* _m_app_list_iterate_datum(struct _m_app_t_list_obj* bbt_l){
-	if(!(((BBObject*)bbt_l->__m_app_t_list_iterator )!= &bbNullObject)){
-		if(bbt_l->__m_app_t_list_count ->__m_app_t_int_value >0){
-			bbt_l->__m_app_t_list_iterator =(struct _m_app_t_list_iterator_obj*)_m_app_new_list_iterator((struct _m_app_t_list_obj*)bbt_l);
-			return (struct _m_app_t_datum_obj*)_m_app_list_iterator_curr((struct _m_app_t_list_iterator_obj*)bbt_l->__m_app_t_list_iterator );
-		}
-	}else{
-		_m_app_list_iterator_right((struct _m_app_t_list_iterator_obj*)bbt_l->__m_app_t_list_iterator );
-		if(((BBObject*)bbt_l->__m_app_t_list_iterator ->__m_app_t_list_iterator_curr )!= &bbNullObject){
-			return (struct _m_app_t_datum_obj*)_m_app_list_iterator_curr((struct _m_app_t_list_iterator_obj*)bbt_l->__m_app_t_list_iterator );
-		}else{
-			bbt_l->__m_app_t_list_iterator =(struct _m_app_t_list_iterator_obj*)&bbNullObject;
-		}
-	}
-	return (struct _m_app_t_datum_obj*)(&bbNullObject);
-}
-BBOBJECT _m_app_list_iterate(struct _m_app_t_list_obj* bbt_l){
-	struct _m_app_t_datum_obj* bbt_d=(struct _m_app_t_datum_obj*)_m_app_list_iterate_datum((struct _m_app_t_list_obj*)bbt_l);
-	if(((BBObject*)bbt_d)!= &bbNullObject){
-		return (BBOBJECT)bbt_d->__m_app_t_datum_value ;
-	}
-	return (BBOBJECT)(&bbNullObject);
-}
-BBSTRING _m_app_astr(BBARRAY bbt_b){
-	return bbStringFromCString((BBBYTE*)BBARRAYDATA(bbt_b,1));
-}
-BBSTRING _m_app_mstring_to_string(struct _m_app_t_mstring_obj* bbt_m){
-	BBARRAY bbt_a=bbArrayNew1D("b", bbt_m->__m_app_t_mstring_chars ->__m_app_t_list_count ->__m_app_t_int_value );
-	if((bbt_a->scales[0])>0){
-		{
-			BBINT bbt_i=0;
-			BBINT bbt_=((bbt_a->scales[0])-1);
-			for(;(bbt_i<=bbt_);bbt_i=(bbt_i+1)){
-				((BBBYTE*)BBARRAYDATA(bbt_a,1))[((BBUINT)bbt_i)]=_m_app_byte_get2((BBOBJECT)_m_app_list_iterate((struct _m_app_t_list_obj*)bbt_m->__m_app_t_mstring_chars ));
-			}
-		}
-	}
-	return _m_app_astr(bbt_a);
-}
-BBINT _m_app_mstring_length(struct _m_app_t_mstring_obj* bbt_m){
-	return bbt_m->__m_app_t_mstring_chars ->__m_app_t_list_count ->__m_app_t_int_value ;
+void _m_app_gb_net_start(){
 }
 void _m_app_gb_testing_start(){
-	_m_app_mstring_add((struct _m_app_t_mstring_obj*)_m_app_gb->__m_app_t_gb_testing ->__m_app_t_gb_testing_mstring ,&_s167);
-	brl_standardio_Print(_m_app_mstring_to_string((struct _m_app_t_mstring_obj*)_m_app_gb->__m_app_t_gb_testing ->__m_app_t_gb_testing_mstring ));
-	brl_standardio_Print(bbStringFromInt(_m_app_mstring_length((struct _m_app_t_mstring_obj*)_m_app_gb->__m_app_t_gb_testing ->__m_app_t_gb_testing_mstring )));
-	((struct _m_app_t_font_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_assets ->__m_app_t_gb_assets_fonts ,1))[-3U]=(struct _m_app_t_font_obj*)(struct _m_app_t_font_obj*)bbObjectNew((BBClass *)&_m_app_t_font);
 }
 void _m_app_gb_debug_start(){
 }
 void _m_app_gb_start(){
+	_m_app_gb_net_start();
 	_m_app_gb_testing_start();
 	_m_app_gb_debug_start();
 }
@@ -7289,6 +7593,8 @@ void _m_app_gb_mouse_update(){
 	}
 	_m_app_point_set((struct _m_app_t_point_obj*)_m_app_gb->__m_app_t_gb_mouse ->__m_app_t_gb_mouse_clickdiff ,(_m_app_gb->__m_app_t_gb_mouse ->__m_app_t_gb_mouse_pos ->__m_app_t_point_x -_m_app_gb->__m_app_t_gb_mouse ->__m_app_t_gb_mouse_clickpos ->__m_app_t_point_x ),(_m_app_gb->__m_app_t_gb_mouse ->__m_app_t_gb_mouse_pos ->__m_app_t_point_y -_m_app_gb->__m_app_t_gb_mouse ->__m_app_t_gb_mouse_clickpos ->__m_app_t_point_y ));
 }
+void _m_app_gb_net_update(){
+}
 BBINT _m_app_bool_neq(struct _m_app_t_bool_obj* bbt_b,BBINT bbt_v){
 	return (((BBINT)bbt_b->__m_app_t_bool_value )!=bbt_v);
 }
@@ -7410,7 +7716,7 @@ BBINT _m_app_timer_finished(struct _m_app_t_timer_obj* bbt_t){
 	return _m_app_number_eq((struct _m_app_t_number_obj*)bbt_t->__m_app_t_timer_value ,0.00000000f);
 }
 void _m_app_gb_save_settings(){
-	_m_app_gbml_save((struct _m_app_t_dict_obj*)_m_app_gb->__m_app_t_gb_settings ,&_s175);
+	_m_app_gbml_save((struct _m_app_t_dict_obj*)_m_app_gb->__m_app_t_gb_settings ,&_s180);
 }
 void _m_app_timer_reset(struct _m_app_t_timer_obj* bbt_t){
 	_m_app_number_to_high((struct _m_app_t_number_obj*)bbt_t->__m_app_t_timer_value );
@@ -7612,7 +7918,9 @@ void _m_app_gb_testing_update(){
 	if((_m_app_timer_finished((struct _m_app_t_timer_obj*)_m_app_gb->__m_app_t_gb_testing ->__m_app_t_gb_testing_timer )!=0) || (brl_polledinput_KeyHit(32)!=0)){
 		_m_app_timer_reset((struct _m_app_t_timer_obj*)_m_app_gb->__m_app_t_gb_testing ->__m_app_t_gb_testing_timer );
 		_m_app_lightcube_reset((struct _m_app_t_lightcube_obj*)_m_app_gb->__m_app_t_gb_testing ->__m_app_t_gb_testing_lightcube );
+		_m_app_gb->__m_app_t_gb_testing ->__m_app_t_gb_testing_model =(struct _m_app_t_model_obj*)_m_app_new_model_cube(17.5f,9.5f,0.00000000f,5.00000000f,(struct _m_app_t_color_obj*)&bbNullObject);
 	}
+	_m_app_point3_add((struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(((struct _m_app_t_tri_obj**)BBARRAYDATA(_m_app_gb->__m_app_t_gb_testing ->__m_app_t_gb_testing_model ->__m_app_t_model_tris ,1))[((BBUINT)brl_random_Rand(0,11))]->__m_app_t_tri_points ,1))[((BBUINT)brl_random_Rand(0,2))],_m_app_frand(-0.1f,0.1f),_m_app_frand(-0.1f,0.1f),_m_app_frand(-0.1f,0.1f));
 }
 void _m_app_gb_debug_update(){
 	BBFLOAT bbt_d=_m_app_gb_delta(1.00000000f);
@@ -7646,6 +7954,7 @@ void _m_app_gb_update(){
 	_m_app_gb_console_update();
 	_m_app_gb_visual_update();
 	_m_app_gb_mouse_update();
+	_m_app_gb_net_update();
 	if(_m_app_bool_neq2((struct _m_app_t_bool_obj*)_m_app_gb->__m_app_t_gb_console ->__m_app_t_gb_console_active )!=0){
 		_m_app_gb_controller_update();
 		if(((BBObject*)_m_app_gb->__m_app_t_gb_scene )!= &bbNullObject){
@@ -7701,6 +8010,7 @@ void _m_app_gb_graph_prepare(){
 		}
 	}
 	brl_max2d_SetColor(_m_app_roundint(_m_app_gb->__m_app_t_gb_graph ->__m_app_t_gb_graph_color ->__m_app_t_color_r *85.0000000f),_m_app_roundint(_m_app_gb->__m_app_t_gb_graph ->__m_app_t_gb_graph_color ->__m_app_t_color_g *85.0000000f),_m_app_roundint(_m_app_gb->__m_app_t_gb_graph ->__m_app_t_gb_graph_color ->__m_app_t_color_b *85.0000000f));
+	brl_max2d_SetLineWidth(_m_app_gb->__m_app_t_gb_graph ->__m_app_t_gb_graph_drawscale ->__m_app_t_point_x );
 	brl_max2d_SetAlpha(_m_app_gb->__m_app_t_gb_graph ->__m_app_t_gb_graph_color ->__m_app_t_color_a /3.00000000f);
 	brl_max2d_SetRotation((_m_app_wrap((_m_app_gb->__m_app_t_gb_graph ->__m_app_t_gb_graph_angle ->__m_app_t_number_value -_m_app_gb->__m_app_t_gb_camera ->__m_app_t_gb_camera_angle ->__m_app_t_point3_z ),0.00000000f,1000.00000f)/1000.00000f)*360.000000f);
 	_m_app_gb_graph_calc_viewport();
@@ -7913,7 +8223,7 @@ struct _m_app_t_drawcmd_obj* _m_app_new_drawcmd(BBINT bbt_id,BBINT bbt_p){
 	return (struct _m_app_t_drawcmd_obj*)bbt_r;
 }
 struct _m_app_t_drawcmd_obj* _m_app_new_drawcmd_tile(BBFLOAT bbt_x,BBFLOAT bbt_y,BBFLOAT bbt_z,BBINT bbt_im,BBFLOAT bbt_ix,BBFLOAT bbt_iy){
-	struct _m_app_t_drawcmd_obj* bbt_r=(struct _m_app_t_drawcmd_obj*)_m_app_new_drawcmd(3,3);
+	struct _m_app_t_drawcmd_obj* bbt_r=(struct _m_app_t_drawcmd_obj*)_m_app_new_drawcmd(4,3);
 	((BBFLOAT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_pos ,1))[0U]=bbt_x;
 	((BBFLOAT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_pos ,1))[1U]=bbt_y;
 	((BBFLOAT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_pos ,1))[2U]=bbt_z;
@@ -8122,6 +8432,20 @@ void _m_app_gb_graph_draw_rect3d(BBFLOAT bbt_x,BBFLOAT bbt_y,BBFLOAT bbt_z,BBFLO
 		brl_max2d_DrawRect(_m_app_gb_graph_calc_x3d(bbt_x,bbt_z),_m_app_gb_graph_calc_y3d(bbt_y,bbt_z),_m_app_gb_graph_calc_w3d(bbt_w,bbt_z),_m_app_gb_graph_calc_h3d(bbt_h,bbt_z));
 	}
 }
+void _m_app_gb_graph_draw_tri3d(struct _m_app_t_point3_obj* bbt_p1,struct _m_app_t_point3_obj* bbt_p2,struct _m_app_t_point3_obj* bbt_p3){
+	BBFLOAT bbt_z=(((bbt_p1->__m_app_t_point3_z +bbt_p2->__m_app_t_point3_z )+bbt_p3->__m_app_t_point3_z )/3.00000000f);
+	BBARRAY bbt_t=bbArrayNew1D("f", 6);
+	if(_m_app_gb_graph_within_zrange(bbt_z)!=0){
+		_m_app_gb_graph_prepare();
+		((BBFLOAT*)BBARRAYDATA(bbt_t,1))[0U]=_m_app_gb_graph_calc_x3d(bbt_p1->__m_app_t_point3_x ,bbt_p1->__m_app_t_point3_z );
+		((BBFLOAT*)BBARRAYDATA(bbt_t,1))[1U]=_m_app_gb_graph_calc_y3d(bbt_p1->__m_app_t_point3_y ,bbt_p1->__m_app_t_point3_z );
+		((BBFLOAT*)BBARRAYDATA(bbt_t,1))[2U]=_m_app_gb_graph_calc_x3d(bbt_p2->__m_app_t_point3_x ,bbt_p2->__m_app_t_point3_z );
+		((BBFLOAT*)BBARRAYDATA(bbt_t,1))[3U]=_m_app_gb_graph_calc_y3d(bbt_p2->__m_app_t_point3_y ,bbt_p2->__m_app_t_point3_z );
+		((BBFLOAT*)BBARRAYDATA(bbt_t,1))[4U]=_m_app_gb_graph_calc_x3d(bbt_p3->__m_app_t_point3_x ,bbt_p3->__m_app_t_point3_z );
+		((BBFLOAT*)BBARRAYDATA(bbt_t,1))[5U]=_m_app_gb_graph_calc_y3d(bbt_p3->__m_app_t_point3_y ,bbt_p3->__m_app_t_point3_z );
+		brl_max2d_DrawPoly(bbt_t);
+	}
+}
 void _m_app_gb_graph_draw_tile3d(BBFLOAT bbt_x,BBFLOAT bbt_y,BBFLOAT bbt_z,BBINT bbt_im,BBFLOAT bbt_ix,BBFLOAT bbt_iy){
 	if(_m_app_gb_graph_within_zrange(bbt_z)!=0){
 		_m_app_gb_graph_prepare();
@@ -8240,6 +8564,17 @@ void _m_app_gb_graph_draw_tile_window3d(BBFLOAT bbt_x,BBFLOAT bbt_y,BBFLOAT bbt_
 void _m_app_gb_graph_draw_oval(BBFLOAT bbt_x,BBFLOAT bbt_y,BBFLOAT bbt_w,BBFLOAT bbt_h){
 	_m_app_gb_graph_prepare();
 	brl_max2d_DrawOval(_m_app_gb_graph_calc_x(bbt_x),_m_app_gb_graph_calc_y(bbt_y),_m_app_gb_graph_calc_w(bbt_w),_m_app_gb_graph_calc_h(bbt_h));
+}
+void _m_app_gb_graph_draw_tri(struct _m_app_t_point3_obj* bbt_p1,struct _m_app_t_point3_obj* bbt_p2,struct _m_app_t_point3_obj* bbt_p3){
+	_m_app_gb_graph_prepare();
+	BBARRAY bbt_t=bbArrayNew1D("f", 6);
+	((BBFLOAT*)BBARRAYDATA(bbt_t,1))[0U]=_m_app_gb_graph_calc_x(bbt_p1->__m_app_t_point3_x );
+	((BBFLOAT*)BBARRAYDATA(bbt_t,1))[1U]=_m_app_gb_graph_calc_y(bbt_p1->__m_app_t_point3_y );
+	((BBFLOAT*)BBARRAYDATA(bbt_t,1))[2U]=_m_app_gb_graph_calc_x(bbt_p2->__m_app_t_point3_x );
+	((BBFLOAT*)BBARRAYDATA(bbt_t,1))[3U]=_m_app_gb_graph_calc_y(bbt_p2->__m_app_t_point3_y );
+	((BBFLOAT*)BBARRAYDATA(bbt_t,1))[4U]=_m_app_gb_graph_calc_x(bbt_p3->__m_app_t_point3_x );
+	((BBFLOAT*)BBARRAYDATA(bbt_t,1))[5U]=_m_app_gb_graph_calc_y(bbt_p3->__m_app_t_point3_y );
+	brl_max2d_DrawPoly(bbt_t);
 }
 void _m_app_gb_graph_draw_tile(BBFLOAT bbt_x,BBFLOAT bbt_y,BBINT bbt_im,BBFLOAT bbt_ix,BBFLOAT bbt_iy){
 	_m_app_gb_graph_prepare();
@@ -8371,22 +8706,26 @@ void _m_app_drawcmd_draw(struct _m_app_t_drawcmd_obj* bbt_d,BBFLOAT bbt_x,BBFLOA
 				_m_app_gb_graph_draw_rect3d((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[2U]+bbt_z),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]));
 			}else{
 				if(bbt_==3){
-					_m_app_gb_graph_draw_tile3d((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[2U]+bbt_z),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U]));
+					_m_app_gb_graph_draw_tri3d((struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj*)bbObjectDowncast((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U],(BBClass*)&_m_app_t_point3)),(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj*)bbObjectDowncast((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U],(BBClass*)&_m_app_t_point3)),(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj*)bbObjectDowncast((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U],(BBClass*)&_m_app_t_point3)));
 				}else{
 					if(bbt_==4){
-						_m_app_gb_graph_draw_tile_rect3d((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[2U]+bbt_z),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[3U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[4U]));
+						_m_app_gb_graph_draw_tile3d((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[2U]+bbt_z),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U]));
 					}else{
 						if(bbt_==5){
-							_m_app_gb_graph_draw_tile_box3d((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[2U]+bbt_z),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[3U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[4U]));
+							_m_app_gb_graph_draw_tile_rect3d((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[2U]+bbt_z),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[3U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[4U]));
 						}else{
 							if(bbt_==6){
-								_m_app_gb_graph_draw_tile_boxrect3d((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[2U]+bbt_z),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[3U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[4U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[5U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[6U]));
+								_m_app_gb_graph_draw_tile_box3d((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[2U]+bbt_z),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[3U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[4U]));
 							}else{
 								if(bbt_==7){
-									_m_app_gb_graph_draw_tile_text3d((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[2U]+bbt_z),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_string_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]));
+									_m_app_gb_graph_draw_tile_boxrect3d((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[2U]+bbt_z),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[3U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[4U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[5U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[6U]));
 								}else{
 									if(bbt_==8){
-										_m_app_gb_graph_draw_tile_window3d((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[2U]+bbt_z),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[3U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[4U]));
+										_m_app_gb_graph_draw_tile_text3d((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[2U]+bbt_z),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_string_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]));
+									}else{
+										if(bbt_==9){
+											_m_app_gb_graph_draw_tile_window3d((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[2U]+bbt_z),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[3U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[4U]));
+										}
 									}
 								}
 							}
@@ -8404,22 +8743,26 @@ void _m_app_drawcmd_draw(struct _m_app_t_drawcmd_obj* bbt_d,BBFLOAT bbt_x,BBFLOA
 				_m_app_gb_graph_draw_rect((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]));
 			}else{
 				if(bbt_2==3){
-					_m_app_gb_graph_draw_tile((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U]));
+					_m_app_gb_graph_draw_tri((struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj*)bbObjectDowncast((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U],(BBClass*)&_m_app_t_point3)),(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj*)bbObjectDowncast((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U],(BBClass*)&_m_app_t_point3)),(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj*)bbObjectDowncast((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U],(BBClass*)&_m_app_t_point3)));
 				}else{
 					if(bbt_2==4){
-						_m_app_gb_graph_draw_tile_rect((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[3U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[4U]));
+						_m_app_gb_graph_draw_tile((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U]));
 					}else{
 						if(bbt_2==5){
-							_m_app_gb_graph_draw_tile_box((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[3U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[4U]));
+							_m_app_gb_graph_draw_tile_rect((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[3U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[4U]));
 						}else{
 							if(bbt_2==6){
-								_m_app_gb_graph_draw_tile_boxrect((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[3U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[4U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[5U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[6U]));
+								_m_app_gb_graph_draw_tile_box((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[3U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[4U]));
 							}else{
 								if(bbt_2==7){
-									_m_app_gb_graph_draw_tile_text((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_string_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]));
+									_m_app_gb_graph_draw_tile_boxrect((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[3U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[4U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[5U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[6U]));
 								}else{
 									if(bbt_2==8){
-										_m_app_gb_graph_draw_tile_window((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[3U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[4U]),0);
+										_m_app_gb_graph_draw_tile_text((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_string_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]));
+									}else{
+										if(bbt_2==9){
+											_m_app_gb_graph_draw_tile_window((((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[0U]+bbt_x),(((BBFLOAT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_pos ,1))[1U]+bbt_y),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[0U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[1U]),_m_app_float_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[2U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[3U]),_m_app_int_get2((BBOBJECT)((BBOBJECT*)BBARRAYDATA(bbt_d->__m_app_t_drawcmd_params ,1))[4U]),0);
+										}
 									}
 								}
 							}
@@ -8517,10 +8860,32 @@ void _m_app_jake_draw(struct _m_app_t_jake_obj* bbt_j,BBFLOAT bbt_x,BBFLOAT bbt_
 		_m_app_gb_graph_draw_tile_box(bbt_j->__m_app_t_jake_pos ->__m_app_t_point3_x ,bbt_j->__m_app_t_jake_pos ->__m_app_t_point3_y ,0,(10.0000000f+(_m_app_ffloor(bbt_j->__m_app_t_jake_anim ->__m_app_t_number_value )*2.00000000f)),19.0000000f,2.00000000f,2.00000000f);
 	}
 }
+void _m_app_gb_graph_draw_line3d(BBFLOAT bbt_x1,BBFLOAT bbt_y1,BBFLOAT bbt_z1,BBFLOAT bbt_x2,BBFLOAT bbt_y2,BBFLOAT bbt_z2){
+	_m_app_gb_graph_prepare();
+	brl_max2d_DrawLine(_m_app_gb_graph_calc_x3d(bbt_x1,bbt_z1),_m_app_gb_graph_calc_y3d(bbt_y1,bbt_z1),_m_app_gb_graph_calc_x3d(bbt_x2,bbt_z2),_m_app_gb_graph_calc_y3d(bbt_y2,bbt_z2),1);
+}
+void _m_app_gb_graph_draw_tri_wire3d(struct _m_app_t_point3_obj* bbt_p1,struct _m_app_t_point3_obj* bbt_p2,struct _m_app_t_point3_obj* bbt_p3){
+	_m_app_gb_graph_draw_line3d(bbt_p1->__m_app_t_point3_x ,bbt_p1->__m_app_t_point3_y ,bbt_p1->__m_app_t_point3_z ,bbt_p2->__m_app_t_point3_x ,bbt_p2->__m_app_t_point3_y ,bbt_p2->__m_app_t_point3_z );
+	_m_app_gb_graph_draw_line3d(bbt_p2->__m_app_t_point3_x ,bbt_p2->__m_app_t_point3_y ,bbt_p2->__m_app_t_point3_z ,bbt_p3->__m_app_t_point3_x ,bbt_p3->__m_app_t_point3_y ,bbt_p3->__m_app_t_point3_z );
+	_m_app_gb_graph_draw_line3d(bbt_p3->__m_app_t_point3_x ,bbt_p3->__m_app_t_point3_y ,bbt_p3->__m_app_t_point3_z ,bbt_p1->__m_app_t_point3_x ,bbt_p1->__m_app_t_point3_y ,bbt_p1->__m_app_t_point3_z );
+}
+void _m_app_model_draw_wire3d(struct _m_app_t_model_obj* bbt_m){
+	_m_app_gb_graph_set_mode(1);
+	{
+		BBINT bbt_i=0;
+		BBINT bbt_=((bbt_m->__m_app_t_model_tris ->scales[0])-1);
+		for(;(bbt_i<=bbt_);bbt_i=(bbt_i+1)){
+			_m_app_gb_graph_set_color2((struct _m_app_t_color_obj*)((struct _m_app_t_tri_obj**)BBARRAYDATA(bbt_m->__m_app_t_model_tris ,1))[((BBUINT)bbt_i)]->__m_app_t_tri_color );
+			_m_app_gb_graph_draw_tri_wire3d((struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(((struct _m_app_t_tri_obj**)BBARRAYDATA(bbt_m->__m_app_t_model_tris ,1))[((BBUINT)bbt_i)]->__m_app_t_tri_points ,1))[0U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(((struct _m_app_t_tri_obj**)BBARRAYDATA(bbt_m->__m_app_t_model_tris ,1))[((BBUINT)bbt_i)]->__m_app_t_tri_points ,1))[1U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(((struct _m_app_t_tri_obj**)BBARRAYDATA(bbt_m->__m_app_t_model_tris ,1))[((BBUINT)bbt_i)]->__m_app_t_tri_points ,1))[2U]);
+		}
+	}
+	_m_app_gb_graph_reset();
+}
 void _m_app_gb_testing_draw(){
 	_m_app_lightcube_draw((struct _m_app_t_lightcube_obj*)_m_app_gb->__m_app_t_gb_testing ->__m_app_t_gb_testing_lightcube ,20.0000000f,12.0000000f);
 	_m_app_gb_graph_draw_tile_text(39.0000000f,23.0000000f,1,bbStringFromInt((BBINT)_m_app_timer_value((struct _m_app_t_timer_obj*)_m_app_gb->__m_app_t_gb_testing ->__m_app_t_gb_testing_timer )));
 	_m_app_jake_draw((struct _m_app_t_jake_obj*)_m_app_gb->__m_app_t_gb_testing ->__m_app_t_gb_testing_jake ,0.00000000f,0.00000000f);
+	_m_app_model_draw_wire3d((struct _m_app_t_model_obj*)_m_app_gb->__m_app_t_gb_testing ->__m_app_t_gb_testing_model );
 }
 void _m_app_gb_visual_set_virtual_scale(BBFLOAT bbt_f){
 	_m_app_float_set((struct _m_app_t_float_obj*)_m_app_gb->__m_app_t_gb_visual ->__m_app_t_gb_visual_virtualscale ,bbt_f);
@@ -8591,11 +8956,11 @@ void _m_app_gb_debug_draw_panel(){
 	}else{
 		if(bbt_==1.00000000f){
 			_m_app_gb_graph_draw_tile_rect(0.00000000f,0.00000000f,0,27.0000000f,23.0000000f,40,1);
-			_m_app_gb_graph_draw_tile_text(0.00000000f,0.00000000f,1,bbStringConcat(&_s168,bbStringFromSizet(bbGCMemAlloced())));
+			_m_app_gb_graph_draw_tile_text(0.00000000f,0.00000000f,1,bbStringConcat(&_s173,bbStringFromSizet(bbGCMemAlloced())));
 			_m_app_gb_graph_draw_tile_text(6.00000000f,0.00000000f,1,bbStringConcat(bbStringConcat(bbStringFromInt((BBINT)_m_app_gb_mouse_virtual_tile_x()),&_s36),bbStringFromInt((BBINT)_m_app_gb_mouse_virtual_tile_y())));
-			_m_app_gb_graph_draw_tile_text(9.00000000f,0.00000000f,1,bbStringConcat(&_s169,bbStringFromInt(_m_app_gb->__m_app_t_gb_graph ->__m_app_t_gb_graph_pixelmode ->__m_app_t_bool_value )));
-			_m_app_gb_graph_draw_tile_text(11.0000000f,0.00000000f,1,bbStringConcat(&_s170,bbStringFromInt((BBINT)_m_app_gb->__m_app_t_gb_visual ->__m_app_t_gb_visual_windowscale ->__m_app_t_float_value )));
-			_m_app_gb_graph_draw_tile_text(13.0000000f,0.00000000f,1,bbStringConcat(&_s171,bbStringFromLong(_m_app_gb->__m_app_t_gb_timing ->__m_app_t_gb_timing_fps ->__m_app_t_gb_timing_fps_value ->__m_app_t_long_value )));
+			_m_app_gb_graph_draw_tile_text(9.00000000f,0.00000000f,1,bbStringConcat(&_s174,bbStringFromInt(_m_app_gb->__m_app_t_gb_graph ->__m_app_t_gb_graph_pixelmode ->__m_app_t_bool_value )));
+			_m_app_gb_graph_draw_tile_text(11.0000000f,0.00000000f,1,bbStringConcat(&_s175,bbStringFromInt((BBINT)_m_app_gb->__m_app_t_gb_visual ->__m_app_t_gb_visual_windowscale ->__m_app_t_float_value )));
+			_m_app_gb_graph_draw_tile_text(13.0000000f,0.00000000f,1,bbStringConcat(&_s176,bbStringFromLong(_m_app_gb->__m_app_t_gb_timing ->__m_app_t_gb_timing_fps ->__m_app_t_gb_timing_fps_value ->__m_app_t_long_value )));
 			_m_app_gb_graph_draw_tile_text(16.0000000f,0.00000000f,1,_m_app_stopwatch_tostring((struct _m_app_t_stopwatch_obj*)_m_app_gb->__m_app_t_gb_timing ->__m_app_t_gb_timing_stopwatch ));
 			BBFLOAT bbt_u=0.00000000f;
 			{
@@ -8629,7 +8994,7 @@ void _m_app_gb_debug_draw_panel(){
 		}else{
 			if(bbt_==2.00000000f){
 				_m_app_gb_graph_draw_tile_rect(0.00000000f,0.00000000f,0,27.0000000f,23.0000000f,40,1);
-				_m_app_gb_graph_draw_tile_text(0.00000000f,0.00000000f,1,bbStringConcat(&_s172,_m_app_gb_cpu_string(1)));
+				_m_app_gb_graph_draw_tile_text(0.00000000f,0.00000000f,1,bbStringConcat(&_s177,_m_app_gb_cpu_string(1)));
 				_m_app_gb_graph_draw_tile(39.0000000f,0.00000000f,0,29.0000000f,2.00000000f);
 			}else{
 				if(bbt_==3.00000000f){
@@ -9865,6 +10230,75 @@ struct BBClass__m_app_t_gbs_node _m_app_t_gbs_node={
 	,offsetof(struct _m_app_t_gbs_node_obj,__m_app_t_gbs_node_id)
 };
 
+void __m_app_t_gb_net_ip_New(struct _m_app_t_gb_net_ip_obj* o) {
+	bbObjectCtor((BBOBJECT)o);
+	o->clas = &_m_app_t_gb_net_ip;
+	o->__m_app_t_gb_net_ip_a = 0;
+	o->__m_app_t_gb_net_ip_b = 0;
+	o->__m_app_t_gb_net_ip_c = 0;
+	o->__m_app_t_gb_net_ip_d = 0;
+	o->__m_app_t_gb_net_ip_port = 0;
+}
+struct BBDebugScope_6 _m_app_t_gb_net_ip_scope ={
+	BBDEBUGSCOPE_USERTYPE,
+	"t_gb_net_ip",
+	{
+		{
+			BBDEBUGDECL_FIELD,
+			"a",
+			"b",
+			.field_offset=offsetof(struct _m_app_t_gb_net_ip_obj,__m_app_t_gb_net_ip_a)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"b",
+			"b",
+			.field_offset=offsetof(struct _m_app_t_gb_net_ip_obj,__m_app_t_gb_net_ip_b)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"c",
+			"b",
+			.field_offset=offsetof(struct _m_app_t_gb_net_ip_obj,__m_app_t_gb_net_ip_c)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"d",
+			"b",
+			.field_offset=offsetof(struct _m_app_t_gb_net_ip_obj,__m_app_t_gb_net_ip_d)
+		},
+		{
+			BBDEBUGDECL_FIELD,
+			"port",
+			"s",
+			.field_offset=offsetof(struct _m_app_t_gb_net_ip_obj,__m_app_t_gb_net_ip_port)
+		},
+		{
+			BBDEBUGDECL_TYPEMETHOD,
+			"New",
+			"()",
+			.var_address=(void*)&__m_app_t_gb_net_ip_New
+		},
+		BBDEBUGDECL_END
+	}
+};
+struct BBClass__m_app_t_gb_net_ip _m_app_t_gb_net_ip={
+	&bbObjectClass,
+	bbObjectFree,
+	(BBDebugScope*)&_m_app_t_gb_net_ip_scope,
+	sizeof(struct _m_app_t_gb_net_ip_obj),
+	(void (*)(BBOBJECT))__m_app_t_gb_net_ip_New,
+	bbObjectDtor,
+	bbObjectToString,
+	bbObjectCompare,
+	bbObjectSendMessage,
+	0,
+	0,
+	offsetof(struct _m_app_t_gb_net_ip_obj,__m_app_t_gb_net_ip_port) - offsetof(struct _m_app_t_gb_net_ip_obj,__m_app_t_gb_net_ip_a) + sizeof(BBSHORT)
+	,0
+	,offsetof(struct _m_app_t_gb_net_ip_obj,__m_app_t_gb_net_ip_a)
+};
+
 struct _m_app_t_datum_obj* _m_app_new_datum_bool(BBINT bbt_v){
 	BBOBJECT bbt_r=(BBOBJECT)_m_app_new_bool(bbt_v);
 	return (struct _m_app_t_datum_obj*)_m_app_new_datum((BBOBJECT)bbt_r,&_s12);
@@ -10453,17 +10887,6 @@ BBINT _m_app_double_lte(struct _m_app_t_double_obj* bbt_b,BBDOUBLE bbt_v){
 	}else{
 		return 0;
 	}
-}
-BBARRAY _m_app_new_string_v(BBINT bbt_n,BBSTRING bbt_v){
-	BBARRAY bbt_r=bbArrayNew1D(":t_string", bbt_n);
-	{
-		BBINT bbt_i=0;
-		BBINT bbt_=(bbt_n-1);
-		for(;(bbt_i<=bbt_);bbt_i=(bbt_i+1)){
-			((struct _m_app_t_string_obj**)BBARRAYDATA(bbt_r,1))[((BBUINT)bbt_i)]=(struct _m_app_t_string_obj*)_m_app_new_string(bbt_v);
-		}
-	}
-	return bbt_r;
 }
 BBINT _m_app_string_length(struct _m_app_t_string_obj* bbt_s){
 	return (bbt_s->__m_app_t_string_value )->length;
@@ -11229,6 +11652,9 @@ BBARRAY _m_app_sarray3(BBINT bbt_x,BBINT bbt_y,BBINT bbt_z,BBSTRING bbt_v){
 		}
 	}
 	return bbt_r;
+}
+BBSTRING _m_app_astr(BBARRAY bbt_b){
+	return bbStringFromCString((BBBYTE*)BBARRAYDATA(bbt_b,1));
 }
 BBFLOAT _m_app_froundint(BBFLOAT bbt_f){
 	return ((BBFLOAT)_m_app_roundint(bbt_f));
@@ -12270,6 +12696,23 @@ struct _m_app_t_list_node_obj* _m_app_list_node_right(struct _m_app_t_list_node_
 struct _m_app_t_datum_obj* _m_app_list_node_data(struct _m_app_t_list_node_obj* bbt_l){
 	return (struct _m_app_t_datum_obj*)bbt_l->__m_app_t_list_node_data ;
 }
+struct _m_app_t_list_iterator_obj* _m_app_new_list_iterator(struct _m_app_t_list_obj* bbt_l){
+	struct _m_app_t_list_iterator_obj* bbt_r=(struct _m_app_t_list_iterator_obj*)(struct _m_app_t_list_iterator_obj*)bbObjectNew((BBClass *)&_m_app_t_list_iterator);
+	bbt_r->__m_app_t_list_iterator_curr =(struct _m_app_t_list_node_obj*)bbt_l->__m_app_t_list_first ;
+	return (struct _m_app_t_list_iterator_obj*)bbt_r;
+}
+struct _m_app_t_datum_obj* _m_app_list_iterator_curr(struct _m_app_t_list_iterator_obj* bbt_l){
+	if(((BBObject*)bbt_l->__m_app_t_list_iterator_curr )!= &bbNullObject){
+		return (struct _m_app_t_datum_obj*)bbt_l->__m_app_t_list_iterator_curr ->__m_app_t_list_node_data ;
+	}
+	return (struct _m_app_t_datum_obj*)(&bbNullObject);
+}
+struct _m_app_t_datum_obj* _m_app_list_iterator_right(struct _m_app_t_list_iterator_obj* bbt_l){
+	if(((BBObject*)bbt_l->__m_app_t_list_iterator_curr )!= &bbNullObject){
+		bbt_l->__m_app_t_list_iterator_curr =(struct _m_app_t_list_node_obj*)bbt_l->__m_app_t_list_iterator_curr ->__m_app_t_list_node_right ;
+	}
+	return (struct _m_app_t_datum_obj*)_m_app_list_iterator_curr((struct _m_app_t_list_iterator_obj*)bbt_l);
+}
 struct _m_app_t_datum_obj* _m_app_list_iterator_left(struct _m_app_t_list_iterator_obj* bbt_l){
 	if(((BBObject*)bbt_l->__m_app_t_list_iterator_curr )!= &bbNullObject){
 		bbt_l->__m_app_t_list_iterator_curr =(struct _m_app_t_list_node_obj*)bbt_l->__m_app_t_list_iterator_curr ->__m_app_t_list_node_right ;
@@ -12298,7 +12741,11 @@ struct _m_app_t_datum_obj* _m_app_list_remove_first(struct _m_app_t_list_obj* bb
 		bbt_l->__m_app_t_list_first =(struct _m_app_t_list_node_obj*)&bbNullObject;
 		bbt_l->__m_app_t_list_last =(struct _m_app_t_list_node_obj*)&bbNullObject;
 		_m_app_int_set((struct _m_app_t_int_obj*)bbt_l->__m_app_t_list_count ,0);
+		bbt_l->__m_app_t_list_iterator =(struct _m_app_t_list_iterator_obj*)&bbNullObject;
 	}else{
+		if((((BBObject*)bbt_l->__m_app_t_list_iterator )!= &bbNullObject) && (bbt_l->__m_app_t_list_iterator ->__m_app_t_list_iterator_curr ==bbt_l->__m_app_t_list_first )){
+			bbt_l->__m_app_t_list_iterator =(struct _m_app_t_list_iterator_obj*)&bbNullObject;
+		}
 		bbt_r=(struct _m_app_t_datum_obj*)_m_app_list_node_data((struct _m_app_t_list_node_obj*)bbt_l->__m_app_t_list_first );
 		bbt_l->__m_app_t_list_first =(struct _m_app_t_list_node_obj*)bbt_l->__m_app_t_list_first ->__m_app_t_list_node_right ;
 		bbt_l->__m_app_t_list_first ->__m_app_t_list_node_left =(struct _m_app_t_list_node_obj*)&bbNullObject;
@@ -12313,7 +12760,11 @@ struct _m_app_t_datum_obj* _m_app_list_remove_last(struct _m_app_t_list_obj* bbt
 		bbt_l->__m_app_t_list_first =(struct _m_app_t_list_node_obj*)&bbNullObject;
 		bbt_l->__m_app_t_list_last =(struct _m_app_t_list_node_obj*)&bbNullObject;
 		_m_app_int_set((struct _m_app_t_int_obj*)bbt_l->__m_app_t_list_count ,0);
+		bbt_l->__m_app_t_list_iterator =(struct _m_app_t_list_iterator_obj*)&bbNullObject;
 	}else{
+		if((((BBObject*)bbt_l->__m_app_t_list_iterator )!= &bbNullObject) && (bbt_l->__m_app_t_list_iterator ->__m_app_t_list_iterator_curr ==bbt_l->__m_app_t_list_last )){
+			bbt_l->__m_app_t_list_iterator =(struct _m_app_t_list_iterator_obj*)&bbNullObject;
+		}
 		bbt_r=(struct _m_app_t_datum_obj*)_m_app_list_node_data((struct _m_app_t_list_node_obj*)bbt_l->__m_app_t_list_last );
 		bbt_l->__m_app_t_list_last =(struct _m_app_t_list_node_obj*)bbt_l->__m_app_t_list_last ->__m_app_t_list_node_left ;
 		bbt_l->__m_app_t_list_last ->__m_app_t_list_node_right =(struct _m_app_t_list_node_obj*)&bbNullObject;
@@ -12347,8 +12798,38 @@ BBSTRING _m_app_list_to_string(struct _m_app_t_list_obj* bbt_l){
 	bbt_r=bbStringConcat(bbt_r,&_s53);
 	return bbt_r;
 }
+struct _m_app_t_datum_obj* _m_app_list_iterate_datum(struct _m_app_t_list_obj* bbt_l){
+	if(!(((BBObject*)bbt_l->__m_app_t_list_iterator )!= &bbNullObject)){
+		if(bbt_l->__m_app_t_list_count ->__m_app_t_int_value >0){
+			bbt_l->__m_app_t_list_iterator =(struct _m_app_t_list_iterator_obj*)_m_app_new_list_iterator((struct _m_app_t_list_obj*)bbt_l);
+			return (struct _m_app_t_datum_obj*)_m_app_list_iterator_curr((struct _m_app_t_list_iterator_obj*)bbt_l->__m_app_t_list_iterator );
+		}
+	}else{
+		_m_app_list_iterator_right((struct _m_app_t_list_iterator_obj*)bbt_l->__m_app_t_list_iterator );
+		if(((BBObject*)bbt_l->__m_app_t_list_iterator ->__m_app_t_list_iterator_curr )!= &bbNullObject){
+			return (struct _m_app_t_datum_obj*)_m_app_list_iterator_curr((struct _m_app_t_list_iterator_obj*)bbt_l->__m_app_t_list_iterator );
+		}else{
+			bbt_l->__m_app_t_list_iterator =(struct _m_app_t_list_iterator_obj*)&bbNullObject;
+		}
+	}
+	return (struct _m_app_t_datum_obj*)(&bbNullObject);
+}
+BBOBJECT _m_app_list_iterate(struct _m_app_t_list_obj* bbt_l){
+	struct _m_app_t_datum_obj* bbt_d=(struct _m_app_t_datum_obj*)_m_app_list_iterate_datum((struct _m_app_t_list_obj*)bbt_l);
+	if(((BBObject*)bbt_d)!= &bbNullObject){
+		return (BBOBJECT)bbt_d->__m_app_t_datum_value ;
+	}
+	return (BBOBJECT)(&bbNullObject);
+}
 BBINT _m_app_list_is_iterating(struct _m_app_t_list_obj* bbt_l){
 	if(((BBObject*)bbt_l->__m_app_t_list_iterator )!= &bbNullObject){
+		return 1;
+	}
+	return 0;
+}
+BBINT _m_app_list_end_iterate(struct _m_app_t_list_obj* bbt_l){
+	if(((BBObject*)bbt_l->__m_app_t_list_iterator )!= &bbNullObject){
+		bbt_l->__m_app_t_list_iterator =(struct _m_app_t_list_iterator_obj*)&bbNullObject;
 		return 1;
 	}
 	return 0;
@@ -12380,20 +12861,6 @@ struct _m_app_t_color_obj* _m_app_new_color_from_rgba(BBINT bbt_ii){
 }
 struct _m_app_t_color_obj* _m_app_clone_color(struct _m_app_t_color_obj* bbt_c){
 	return (struct _m_app_t_color_obj*)_m_app_new_color(bbt_c->__m_app_t_color_r ,bbt_c->__m_app_t_color_g ,bbt_c->__m_app_t_color_b ,bbt_c->__m_app_t_color_a ,bbt_c->__m_app_t_color_depth );
-}
-void _m_app_color_fit_to_depth(struct _m_app_t_color_obj* bbt_c){
-	if(bbt_c->__m_app_t_color_depth >=2.00000000f){
-		BBFLOAT bbt_q=(3.00000000f/(bbt_c->__m_app_t_color_depth -1.00000000f));
-	}
-}
-void _m_app_color_set_depth(struct _m_app_t_color_obj* bbt_c,BBINT bbt_d){
-	if(bbt_d<=0){
-		bbt_c->__m_app_t_color_depth =0.00000000f;
-	}else{
-		if(bbt_d>=2){
-			bbt_c->__m_app_t_color_depth =((BBFLOAT)bbt_d);
-		}
-	}
 }
 void _m_app_color_set_c(struct _m_app_t_color_obj* bbt_c,struct _m_app_t_color_obj* bbt_d){
 	bbt_c->__m_app_t_color_r =bbt_d->__m_app_t_color_r ;
@@ -12630,25 +13097,6 @@ BBINT _m_app_dict_write_short(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_s,BBS
 	}
 	return 0;
 }
-BBINT _m_app_dict_write_int(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_s,BBINT bbt_v){
-	BBARRAY bbt_w=_m_app_tokenize(bbt_s,&_s39,0);
-	struct _m_app_t_dict_obj* bbt_g=(struct _m_app_t_dict_obj*)&bbNullObject;
-	if((bbt_w->scales[0])==0){
-		return 0;
-	}else{
-		if((bbt_w->scales[0])==1){
-			_m_app_dict_set_int((struct _m_app_t_dict_obj*)bbt_d,((BBSTRING*)BBARRAYDATA(bbt_w,1))[0U],bbt_v);
-			return 1;
-		}else{
-			if((bbt_w->scales[0])>1){
-				bbt_g=(struct _m_app_t_dict_obj*)_m_app_dict_goto_dir((struct _m_app_t_dict_obj*)bbt_d,bbArraySlice("$",bbt_w,0,(bbt_w->scales[0])),1);
-				_m_app_dict_set_int((struct _m_app_t_dict_obj*)bbt_g,((BBSTRING*)BBARRAYDATA(bbt_w,1))[((BBUINT)((bbt_w->scales[0])-1))],bbt_v);
-				return 1;
-			}
-		}
-	}
-	return 0;
-}
 BBINT _m_app_dict_write_long(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_s,BBLONG bbt_v){
 	BBARRAY bbt_w=_m_app_tokenize(bbt_s,&_s39,0);
 	struct _m_app_t_dict_obj* bbt_g=(struct _m_app_t_dict_obj*)&bbNullObject;
@@ -12700,25 +13148,6 @@ BBINT _m_app_dict_write_double(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_s,BB
 			if((bbt_w->scales[0])>1){
 				bbt_g=(struct _m_app_t_dict_obj*)_m_app_dict_goto_dir((struct _m_app_t_dict_obj*)bbt_d,bbArraySlice("$",bbt_w,0,(bbt_w->scales[0])),1);
 				_m_app_dict_set_double((struct _m_app_t_dict_obj*)bbt_g,((BBSTRING*)BBARRAYDATA(bbt_w,1))[((BBUINT)((bbt_w->scales[0])-1))],bbt_v);
-				return 1;
-			}
-		}
-	}
-	return 0;
-}
-BBINT _m_app_dict_write_string(struct _m_app_t_dict_obj* bbt_d,BBSTRING bbt_s,BBSTRING bbt_v){
-	BBARRAY bbt_w=_m_app_tokenize(bbt_s,&_s39,0);
-	struct _m_app_t_dict_obj* bbt_g=(struct _m_app_t_dict_obj*)&bbNullObject;
-	if((bbt_w->scales[0])==0){
-		return 0;
-	}else{
-		if((bbt_w->scales[0])==1){
-			_m_app_dict_set_string((struct _m_app_t_dict_obj*)bbt_d,((BBSTRING*)BBARRAYDATA(bbt_w,1))[0U],bbt_v);
-			return 1;
-		}else{
-			if((bbt_w->scales[0])>1){
-				bbt_g=(struct _m_app_t_dict_obj*)_m_app_dict_goto_dir((struct _m_app_t_dict_obj*)bbt_d,bbArraySlice("$",bbt_w,0,(bbt_w->scales[0])),1);
-				_m_app_dict_set_string((struct _m_app_t_dict_obj*)bbt_g,((BBSTRING*)BBARRAYDATA(bbt_w,1))[((BBUINT)((bbt_w->scales[0])-1))],bbt_v);
 				return 1;
 			}
 		}
@@ -13423,8 +13852,18 @@ struct _m_app_t_drawcmd_obj* _m_app_new_drawcmd_rect(BBFLOAT bbt_x,BBFLOAT bbt_y
 	((BBOBJECT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_params ,1))[1U]=(BBOBJECT)_m_app_new_float(bbt_h);
 	return (struct _m_app_t_drawcmd_obj*)bbt_r;
 }
+struct _m_app_t_drawcmd_obj* _m_app_new_drawcmd_tri(struct _m_app_t_point3_obj* bbt_p1,struct _m_app_t_point3_obj* bbt_p2,struct _m_app_t_point3_obj* bbt_p3){
+	struct _m_app_t_drawcmd_obj* bbt_r=(struct _m_app_t_drawcmd_obj*)_m_app_new_drawcmd(3,3);
+	((BBFLOAT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_pos ,1))[0U]=(((bbt_p1->__m_app_t_point3_x +bbt_p2->__m_app_t_point3_x )+bbt_p3->__m_app_t_point3_x )/3.00000000f);
+	((BBFLOAT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_pos ,1))[1U]=(((bbt_p1->__m_app_t_point3_y +bbt_p2->__m_app_t_point3_y )+bbt_p3->__m_app_t_point3_y )/3.00000000f);
+	((BBFLOAT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_pos ,1))[2U]=(((bbt_p1->__m_app_t_point3_z +bbt_p2->__m_app_t_point3_z )+bbt_p3->__m_app_t_point3_z )/3.00000000f);
+	((BBOBJECT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_params ,1))[0U]=(BBOBJECT)bbt_p1;
+	((BBOBJECT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_params ,1))[1U]=(BBOBJECT)bbt_p2;
+	((BBOBJECT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_params ,1))[2U]=(BBOBJECT)bbt_p3;
+	return (struct _m_app_t_drawcmd_obj*)bbt_r;
+}
 struct _m_app_t_drawcmd_obj* _m_app_new_drawcmd_tile_rect(BBFLOAT bbt_x,BBFLOAT bbt_y,BBFLOAT bbt_z,BBINT bbt_im,BBFLOAT bbt_ix,BBFLOAT bbt_iy,BBINT bbt_iw,BBINT bbt_ih){
-	struct _m_app_t_drawcmd_obj* bbt_r=(struct _m_app_t_drawcmd_obj*)_m_app_new_drawcmd(4,5);
+	struct _m_app_t_drawcmd_obj* bbt_r=(struct _m_app_t_drawcmd_obj*)_m_app_new_drawcmd(5,5);
 	((BBFLOAT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_pos ,1))[0U]=bbt_x;
 	((BBFLOAT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_pos ,1))[1U]=bbt_y;
 	((BBFLOAT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_pos ,1))[2U]=bbt_z;
@@ -13436,7 +13875,7 @@ struct _m_app_t_drawcmd_obj* _m_app_new_drawcmd_tile_rect(BBFLOAT bbt_x,BBFLOAT 
 	return (struct _m_app_t_drawcmd_obj*)bbt_r;
 }
 struct _m_app_t_drawcmd_obj* _m_app_new_drawcmd_tile_box(BBFLOAT bbt_x,BBFLOAT bbt_y,BBFLOAT bbt_z,BBINT bbt_im,BBFLOAT bbt_ix,BBFLOAT bbt_iy,BBFLOAT bbt_iw,BBFLOAT bbt_ih){
-	struct _m_app_t_drawcmd_obj* bbt_r=(struct _m_app_t_drawcmd_obj*)_m_app_new_drawcmd(5,5);
+	struct _m_app_t_drawcmd_obj* bbt_r=(struct _m_app_t_drawcmd_obj*)_m_app_new_drawcmd(6,5);
 	((BBFLOAT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_pos ,1))[0U]=bbt_x;
 	((BBFLOAT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_pos ,1))[1U]=bbt_y;
 	((BBFLOAT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_pos ,1))[2U]=bbt_z;
@@ -13448,7 +13887,7 @@ struct _m_app_t_drawcmd_obj* _m_app_new_drawcmd_tile_box(BBFLOAT bbt_x,BBFLOAT b
 	return (struct _m_app_t_drawcmd_obj*)bbt_r;
 }
 struct _m_app_t_drawcmd_obj* _m_app_new_drawcmd_tile_boxrect(BBFLOAT bbt_x,BBFLOAT bbt_y,BBFLOAT bbt_z,BBINT bbt_im,BBFLOAT bbt_ix,BBFLOAT bbt_iy,BBFLOAT bbt_iw,BBFLOAT bbt_ih,BBINT bbt_rx,BBINT bbt_ry){
-	struct _m_app_t_drawcmd_obj* bbt_r=(struct _m_app_t_drawcmd_obj*)_m_app_new_drawcmd(6,7);
+	struct _m_app_t_drawcmd_obj* bbt_r=(struct _m_app_t_drawcmd_obj*)_m_app_new_drawcmd(7,7);
 	((BBFLOAT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_pos ,1))[0U]=bbt_x;
 	((BBFLOAT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_pos ,1))[1U]=bbt_y;
 	((BBFLOAT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_pos ,1))[2U]=bbt_z;
@@ -13462,7 +13901,7 @@ struct _m_app_t_drawcmd_obj* _m_app_new_drawcmd_tile_boxrect(BBFLOAT bbt_x,BBFLO
 	return (struct _m_app_t_drawcmd_obj*)bbt_r;
 }
 struct _m_app_t_drawcmd_obj* _m_app_new_drawcmd_tile_text(BBFLOAT bbt_x,BBFLOAT bbt_y,BBFLOAT bbt_z,BBINT bbt_im,BBSTRING bbt_s){
-	struct _m_app_t_drawcmd_obj* bbt_r=(struct _m_app_t_drawcmd_obj*)_m_app_new_drawcmd(7,2);
+	struct _m_app_t_drawcmd_obj* bbt_r=(struct _m_app_t_drawcmd_obj*)_m_app_new_drawcmd(8,2);
 	((BBFLOAT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_pos ,1))[0U]=bbt_x;
 	((BBFLOAT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_pos ,1))[1U]=bbt_y;
 	((BBFLOAT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_pos ,1))[2U]=bbt_z;
@@ -13471,7 +13910,7 @@ struct _m_app_t_drawcmd_obj* _m_app_new_drawcmd_tile_text(BBFLOAT bbt_x,BBFLOAT 
 	return (struct _m_app_t_drawcmd_obj*)bbt_r;
 }
 struct _m_app_t_drawcmd_obj* _m_app_new_drawcmd_tile_window(BBFLOAT bbt_x,BBFLOAT bbt_y,BBFLOAT bbt_z,BBINT bbt_im,BBFLOAT bbt_ix,BBFLOAT bbt_iy,BBINT bbt_tw,BBINT bbt_th){
-	struct _m_app_t_drawcmd_obj* bbt_r=(struct _m_app_t_drawcmd_obj*)_m_app_new_drawcmd(8,5);
+	struct _m_app_t_drawcmd_obj* bbt_r=(struct _m_app_t_drawcmd_obj*)_m_app_new_drawcmd(9,5);
 	((BBFLOAT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_pos ,1))[0U]=bbt_x;
 	((BBFLOAT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_pos ,1))[1U]=bbt_y;
 	((BBFLOAT*)BBARRAYDATA(bbt_r->__m_app_t_drawcmd_pos ,1))[2U]=bbt_z;
@@ -13551,6 +13990,11 @@ struct _m_app_t_drawcmd_obj* _m_app_drawstack_draw_rect(struct _m_app_t_drawstac
 }
 struct _m_app_t_drawcmd_obj* _m_app_drawstack_draw_oval(struct _m_app_t_drawstack_obj* bbt_d,BBFLOAT bbt_x,BBFLOAT bbt_y,BBFLOAT bbt_z,BBFLOAT bbt_w,BBFLOAT bbt_h){
 	struct _m_app_t_drawcmd_obj* bbt_r=(struct _m_app_t_drawcmd_obj*)_m_app_new_drawcmd_oval(bbt_x,bbt_y,bbt_z,bbt_w,bbt_h);
+	_m_app_drawstack_push((struct _m_app_t_drawstack_obj*)bbt_d,(struct _m_app_t_drawcmd_obj*)bbt_r);
+	return (struct _m_app_t_drawcmd_obj*)bbt_r;
+}
+struct _m_app_t_drawcmd_obj* _m_app_drawstack_draw_tri(struct _m_app_t_drawstack_obj* bbt_d,struct _m_app_t_point3_obj* bbt_p1,struct _m_app_t_point3_obj* bbt_p2,struct _m_app_t_point3_obj* bbt_p3){
+	struct _m_app_t_drawcmd_obj* bbt_r=(struct _m_app_t_drawcmd_obj*)_m_app_new_drawcmd_tri((struct _m_app_t_point3_obj*)bbt_p1,(struct _m_app_t_point3_obj*)bbt_p2,(struct _m_app_t_point3_obj*)bbt_p3);
 	_m_app_drawstack_push((struct _m_app_t_drawstack_obj*)bbt_d,(struct _m_app_t_drawcmd_obj*)bbt_r);
 	return (struct _m_app_t_drawcmd_obj*)bbt_r;
 }
@@ -13690,6 +14134,22 @@ void _m_app_mstring_type_seek(struct _m_app_t_mstring_obj* bbt_m,BBINT bbt_n){
 			bbt_d=(bbt_d+1);
 		}
 	}
+}
+BBINT _m_app_mstring_length(struct _m_app_t_mstring_obj* bbt_m){
+	return bbt_m->__m_app_t_mstring_chars ->__m_app_t_list_count ->__m_app_t_int_value ;
+}
+BBSTRING _m_app_mstring_to_string(struct _m_app_t_mstring_obj* bbt_m){
+	BBARRAY bbt_a=bbArrayNew1D("b", bbt_m->__m_app_t_mstring_chars ->__m_app_t_list_count ->__m_app_t_int_value );
+	if((bbt_a->scales[0])>0){
+		{
+			BBINT bbt_i=0;
+			BBINT bbt_=((bbt_a->scales[0])-1);
+			for(;(bbt_i<=bbt_);bbt_i=(bbt_i+1)){
+				((BBBYTE*)BBARRAYDATA(bbt_a,1))[((BBUINT)bbt_i)]=_m_app_byte_get2((BBOBJECT)_m_app_list_iterate((struct _m_app_t_list_obj*)bbt_m->__m_app_t_mstring_chars ));
+			}
+		}
+	}
+	return _m_app_astr(bbt_a);
 }
 struct _m_app_t_ibox_obj* _m_app_animation_get_current_frame(struct _m_app_t_animation_obj* bbt_a){
 	if(_m_app_int_neq((struct _m_app_t_int_obj*)bbt_a->__m_app_t_animation_pos ,-1)!=0){
@@ -14106,6 +14566,63 @@ void _m_app_sprite_draw3d(struct _m_app_t_sprite_obj* bbt_s,BBFLOAT bbt_x,BBFLOA
 	_m_app_gb_graph_draw_tile_box3d((bbt_s->__m_app_t_sprite_pos ->__m_app_t_point3_x +bbt_x),(bbt_s->__m_app_t_sprite_pos ->__m_app_t_point3_y +bbt_y),(bbt_s->__m_app_t_sprite_pos ->__m_app_t_point3_z +bbt_z),bbt_s->__m_app_t_sprite_ibox ->__m_app_t_ibox_id ,bbt_s->__m_app_t_sprite_ibox ->__m_app_t_ibox_x ,bbt_s->__m_app_t_sprite_ibox ->__m_app_t_ibox_y ,bbt_s->__m_app_t_sprite_ibox ->__m_app_t_ibox_w ,bbt_s->__m_app_t_sprite_ibox ->__m_app_t_ibox_h );
 	_m_app_gb_graph_reset();
 }
+void _m_app_gb_graph_draw_line(BBFLOAT bbt_x1,BBFLOAT bbt_y1,BBFLOAT bbt_x2,BBFLOAT bbt_y2){
+	_m_app_gb_graph_prepare();
+	brl_max2d_DrawLine(_m_app_gb_graph_calc_x(bbt_x1),_m_app_gb_graph_calc_y(bbt_y1),_m_app_gb_graph_calc_x(bbt_x2),_m_app_gb_graph_calc_y(bbt_y2),1);
+}
+void _m_app_gb_graph_draw_tri_wire(struct _m_app_t_point3_obj* bbt_p1,struct _m_app_t_point3_obj* bbt_p2,struct _m_app_t_point3_obj* bbt_p3){
+	_m_app_gb_graph_draw_line(bbt_p1->__m_app_t_point3_x ,bbt_p1->__m_app_t_point3_y ,bbt_p2->__m_app_t_point3_x ,bbt_p2->__m_app_t_point3_y );
+	_m_app_gb_graph_draw_line(bbt_p2->__m_app_t_point3_x ,bbt_p2->__m_app_t_point3_y ,bbt_p3->__m_app_t_point3_x ,bbt_p3->__m_app_t_point3_y );
+	_m_app_gb_graph_draw_line(bbt_p3->__m_app_t_point3_x ,bbt_p3->__m_app_t_point3_y ,bbt_p1->__m_app_t_point3_x ,bbt_p1->__m_app_t_point3_y );
+}
+void _m_app_model_draw_wire(struct _m_app_t_model_obj* bbt_m){
+	_m_app_gb_graph_set_mode(1);
+	{
+		BBINT bbt_i=0;
+		BBINT bbt_=((bbt_m->__m_app_t_model_tris ->scales[0])-1);
+		for(;(bbt_i<=bbt_);bbt_i=(bbt_i+1)){
+			_m_app_gb_graph_set_color2((struct _m_app_t_color_obj*)((struct _m_app_t_tri_obj**)BBARRAYDATA(bbt_m->__m_app_t_model_tris ,1))[((BBUINT)bbt_i)]->__m_app_t_tri_color );
+			_m_app_gb_graph_draw_tri_wire((struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(((struct _m_app_t_tri_obj**)BBARRAYDATA(bbt_m->__m_app_t_model_tris ,1))[((BBUINT)bbt_i)]->__m_app_t_tri_points ,1))[0U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(((struct _m_app_t_tri_obj**)BBARRAYDATA(bbt_m->__m_app_t_model_tris ,1))[((BBUINT)bbt_i)]->__m_app_t_tri_points ,1))[1U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(((struct _m_app_t_tri_obj**)BBARRAYDATA(bbt_m->__m_app_t_model_tris ,1))[((BBUINT)bbt_i)]->__m_app_t_tri_points ,1))[2U]);
+		}
+	}
+	_m_app_gb_graph_reset();
+}
+void _m_app_model_draw(struct _m_app_t_model_obj* bbt_m){
+}
+void _m_app_model_draw3d(struct _m_app_t_model_obj* bbt_m){
+}
+void _m_app_model_calc_center(){
+}
+void _m_app_tri_draw(struct _m_app_t_tri_obj* bbt_t){
+	_m_app_gb_graph_draw_tri((struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[0U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[1U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[2U]);
+}
+void _m_app_tri_draw3d(struct _m_app_t_tri_obj* bbt_t){
+	_m_app_gb_graph_draw_tri3d((struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[0U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[1U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[2U]);
+}
+void _m_app_tri_draw_wire(struct _m_app_t_tri_obj* bbt_t){
+	_m_app_gb_graph_draw_tri_wire((struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[0U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[1U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[2U]);
+}
+void _m_app_tri_draw_wire3d(struct _m_app_t_tri_obj* bbt_t){
+	_m_app_gb_graph_draw_tri_wire3d((struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[0U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[1U],(struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[2U]);
+}
+struct _m_app_t_point3_obj* _m_app_tri_center(struct _m_app_t_tri_obj* bbt_t){
+	BBFLOAT bbt_xx=(((((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[0U]->__m_app_t_point3_x +((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[1U]->__m_app_t_point3_x )+((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[2U]->__m_app_t_point3_x )/3.00000000f);
+	BBFLOAT bbt_yy=(((((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[0U]->__m_app_t_point3_y +((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[1U]->__m_app_t_point3_y )+((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[2U]->__m_app_t_point3_y )/3.00000000f);
+	BBFLOAT bbt_zz=(((((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[0U]->__m_app_t_point3_z +((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[1U]->__m_app_t_point3_z )+((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[2U]->__m_app_t_point3_z )/3.00000000f);
+	return (struct _m_app_t_point3_obj*)_m_app_new_point3(bbt_xx,bbt_yy,bbt_zz);
+}
+struct _m_app_t_point3_obj* _m_app_tri_get_point(struct _m_app_t_tri_obj* bbt_t,BBINT bbt_n){
+	return (struct _m_app_t_point3_obj*)((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[((BBUINT)_m_app_iclamp(bbt_n,0,2))];
+}
+void _m_app_tri_set_point(struct _m_app_t_tri_obj* bbt_t,BBINT bbt_n,struct _m_app_t_point3_obj* bbt_p){
+	((struct _m_app_t_point3_obj**)BBARRAYDATA(bbt_t->__m_app_t_tri_points ,1))[((BBUINT)_m_app_iclamp(bbt_n,0,2))]=(struct _m_app_t_point3_obj*)bbt_p;
+}
+struct _m_app_t_color_obj* _m_app_tri_get_color(struct _m_app_t_tri_obj* bbt_t){
+	return (struct _m_app_t_color_obj*)bbt_t->__m_app_t_tri_color ;
+}
+void _m_app_tri_set_color(struct _m_app_t_tri_obj* bbt_t,struct _m_app_t_color_obj* bbt_c){
+	bbt_t->__m_app_t_tri_color =(struct _m_app_t_color_obj*)bbt_c;
+}
 struct _m_app_t_button_obj* _m_app_new_button(BBINT bbt_tx,BBINT bbt_ty){
 	bbt_tx=_m_app_ilow(bbt_tx,2);
 	bbt_ty=_m_app_ilow(bbt_ty,2);
@@ -14302,17 +14819,6 @@ void _m_app_gb_graph_swap_cls_color(){
 	_m_app_gb->__m_app_t_gb_graph ->__m_app_t_gb_graph_clscolor =(struct _m_app_t_color_obj*)bbt_c2;
 	_m_app_gb->__m_app_t_gb_graph ->__m_app_t_gb_graph_swapcolor =(struct _m_app_t_color_obj*)bbt_c1;
 }
-void _m_app_gb_graph_draw_line(BBFLOAT bbt_x1,BBFLOAT bbt_y1,BBFLOAT bbt_x2,BBFLOAT bbt_y2){
-	_m_app_gb_graph_prepare();
-	brl_max2d_DrawLine(_m_app_gb_graph_calc_x(bbt_x1),_m_app_gb_graph_calc_y(bbt_y1),_m_app_gb_graph_calc_x(bbt_x2),_m_app_gb_graph_calc_y(bbt_y2),1);
-}
-void _m_app_gb_graph_draw_box(BBFLOAT bbt_x,BBFLOAT bbt_y,BBFLOAT bbt_w,BBFLOAT bbt_h){
-	_m_app_gb_graph_prepare();
-	brl_max2d_DrawLine(_m_app_gb_graph_calc_x(bbt_x),_m_app_gb_graph_calc_y(bbt_y),_m_app_gb_graph_calc_x(bbt_x+bbt_w),_m_app_gb_graph_calc_y(bbt_y),1);
-	brl_max2d_DrawLine(_m_app_gb_graph_calc_x(bbt_x),_m_app_gb_graph_calc_y(bbt_y+bbt_h),_m_app_gb_graph_calc_x(bbt_x+bbt_w),_m_app_gb_graph_calc_y(bbt_y+bbt_h),1);
-	brl_max2d_DrawLine(_m_app_gb_graph_calc_x(bbt_x),_m_app_gb_graph_calc_y(bbt_y),_m_app_gb_graph_calc_x(bbt_x),_m_app_gb_graph_calc_y(bbt_y+bbt_h),1);
-	brl_max2d_DrawLine(_m_app_gb_graph_calc_x(bbt_x+bbt_w),_m_app_gb_graph_calc_y(bbt_y),_m_app_gb_graph_calc_x(bbt_x+bbt_w),_m_app_gb_graph_calc_y(bbt_y+bbt_h),1);
-}
 void _m_app_gb_graph_draw_ibox(BBFLOAT bbt_x,BBFLOAT bbt_y,struct _m_app_t_ibox_obj* bbt_m){
 	_m_app_gb_graph_draw_tile_box(bbt_x,bbt_y,bbt_m->__m_app_t_ibox_id ,bbt_m->__m_app_t_ibox_x ,bbt_m->__m_app_t_ibox_y ,bbt_m->__m_app_t_ibox_w ,bbt_m->__m_app_t_ibox_h );
 }
@@ -14435,16 +14941,11 @@ void _m_app_gb_console_char_v_draw(BBARRAY bbt_c,BBFLOAT bbt_x,BBFLOAT bbt_y){
 }
 void _m_app_gb_console_char_vv_draw(BBARRAY bbt_c,BBFLOAT bbt_x,BBFLOAT bbt_y){
 }
-void _m_app_gb_console_put_char(BBINT bbt_n){
-}
-void _m_app_gb_console_refresh_lines(){
-}
-void _m_app_gb_console_add_input_char(BBSTRING bbt_s){
-}
-void _m_app_gb_console_print_line(BBSTRING bbt_s){
-}
-void _m_app_gb_console_log(BBSTRING bbt_t){
-	brl_standardio_Print(bbt_t);
+void _m_app_gb_console_log(BBSTRING bbt_s){
+	_m_app_list_add_first((struct _m_app_t_list_obj*)_m_app_gb->__m_app_t_gb_console ->__m_app_t_gb_console_log ,&_s19,(BBOBJECT)_m_app_new_string(bbt_s),0.0f);
+	if(_m_app_gb->__m_app_t_gb_console ->__m_app_t_gb_console_log ->__m_app_t_list_count ->__m_app_t_int_value >1000){
+		_m_app_list_remove_last((struct _m_app_t_list_obj*)_m_app_gb->__m_app_t_gb_console ->__m_app_t_gb_console_log );
+	}
 }
 void _m_app_gb_console_to_file(BBSTRING bbt_s){
 }
@@ -14530,8 +15031,8 @@ void _m_app_gbs_node_set_param(struct _m_app_t_gbs_node_obj* bbt_n,BBINT bbt_p,B
 }
 struct _m_app_t_gbs_node_obj* _m_app_new_gbs_node_assign(BBSTRING bbt_n,BBSTRING bbt_v){
 	struct _m_app_t_gbs_node_obj* bbt_r=(struct _m_app_t_gbs_node_obj*)_m_app_new_gbs_node(1);
-	bbt_r->__m_app_t_gbs_node_keyword =&_s156;
-	BBSTRING bbt_[]={&_s115,&_s157};
+	bbt_r->__m_app_t_gbs_node_keyword =&_s164;
+	BBSTRING bbt_[]={&_s115,&_s165};
 	BBARRAY bbt_2 = bbArrayFromData("$",2,bbt_);
 	bbt_r->__m_app_t_gbs_node_aliases =bbt_2;
 	BBOBJECT bbt_3[]={_m_app_new_string(&bbEmptyString),_m_app_new_dictval()};
@@ -14573,10 +15074,49 @@ void _m_app_gbs_interpret(BBSTRING bbt_s,struct _m_app_t_dict_obj* bbt_d){
 		}
 	}
 }
-void _m_app_gb_net_init(){
-	_m_app_gb_net_socket=(struct brl_socket_TSocket_obj*)brl_socket_CreateUDPSocket();
-	brl_socket_BindSocket((struct brl_socket_TSocket_obj*)_m_app_gb_net_socket,53350,2);
-	_m_app_gb_net_stream=(struct brl_stream_TStream_obj*)((struct brl_stream_TStream_obj*)bbObjectDowncast((BBOBJECT)brl_socketstream_CreateSocketStream((struct brl_socket_TSocket_obj*)_m_app_gb_net_socket,0),(BBClass*)&brl_stream_TStream));
+void _m_app_gb_net_ip_set(struct _m_app_t_gb_net_ip_obj* bbt_u,BBBYTE bbt_a,BBBYTE bbt_b,BBBYTE bbt_c,BBBYTE bbt_d,BBSHORT bbt_p){
+	bbt_u->__m_app_t_gb_net_ip_a =bbt_a;
+	bbt_u->__m_app_t_gb_net_ip_b =bbt_b;
+	bbt_u->__m_app_t_gb_net_ip_c =bbt_c;
+	bbt_u->__m_app_t_gb_net_ip_d =bbt_d;
+	bbt_u->__m_app_t_gb_net_ip_port =bbt_p;
+}
+struct _m_app_t_gb_net_ip_obj* _m_app_new_gb_net_ip(BBBYTE bbt_a,BBBYTE bbt_b,BBBYTE bbt_c,BBBYTE bbt_d,BBSHORT bbt_p){
+	struct _m_app_t_gb_net_ip_obj* bbt_r=(struct _m_app_t_gb_net_ip_obj*)(struct _m_app_t_gb_net_ip_obj*)bbObjectAtomicNew((BBClass *)&_m_app_t_gb_net_ip);
+	_m_app_gb_net_ip_set((struct _m_app_t_gb_net_ip_obj*)bbt_r,bbt_a,bbt_b,bbt_c,bbt_d,bbt_p);
+	return (struct _m_app_t_gb_net_ip_obj*)bbt_r;
+}
+struct _m_app_t_gb_net_ip_obj* _m_app_new_gb_net_ip2(BBSTRING bbt_s){
+	BBARRAY bbt_v=_m_app_tokenize(bbt_s,&_s34,1);
+	struct _m_app_t_gb_net_ip_obj* bbt_r=(struct _m_app_t_gb_net_ip_obj*)(struct _m_app_t_gb_net_ip_obj*)bbObjectAtomicNew((BBClass *)&_m_app_t_gb_net_ip);
+	bbt_r->__m_app_t_gb_net_ip_a =((BBBYTE)bbStringToInt(((BBSTRING*)BBARRAYDATA(bbt_v,1))[0U]));
+	bbt_r->__m_app_t_gb_net_ip_b =((BBBYTE)bbStringToInt(((BBSTRING*)BBARRAYDATA(bbt_v,1))[1U]));
+	bbt_r->__m_app_t_gb_net_ip_c =((BBBYTE)bbStringToInt(((BBSTRING*)BBARRAYDATA(bbt_v,1))[2U]));
+	bbt_r->__m_app_t_gb_net_ip_d =((BBBYTE)bbStringToInt(((BBSTRING*)BBARRAYDATA(bbt_v,1))[3U]));
+	return (struct _m_app_t_gb_net_ip_obj*)bbt_r;
+}
+void _m_app_gb_net_ip_set_ip(struct _m_app_t_gb_net_ip_obj* bbt_u,BBBYTE bbt_a,BBBYTE bbt_b,BBBYTE bbt_c,BBBYTE bbt_d){
+	bbt_u->__m_app_t_gb_net_ip_a =bbt_a;
+	bbt_u->__m_app_t_gb_net_ip_b =bbt_b;
+	bbt_u->__m_app_t_gb_net_ip_c =bbt_c;
+	bbt_u->__m_app_t_gb_net_ip_d =bbt_d;
+}
+void _m_app_gb_net_ip_set_port(struct _m_app_t_gb_net_ip_obj* bbt_b,BBSHORT bbt_p){
+	bbt_b->__m_app_t_gb_net_ip_port =bbt_p;
+}
+BBSTRING _m_app_gb_net_ip_to_string(struct _m_app_t_gb_net_ip_obj* bbt_b,BBINT bbt_p){
+	if(bbt_p!=0){
+		return bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(bbStringFromInt(bbt_b->__m_app_t_gb_net_ip_a ),&_s34),bbStringFromInt(bbt_b->__m_app_t_gb_net_ip_b )),&_s34),bbStringFromInt(bbt_b->__m_app_t_gb_net_ip_c )),&_s34),bbStringFromInt(bbt_b->__m_app_t_gb_net_ip_d )),&_s34),bbStringFromInt(bbt_b->__m_app_t_gb_net_ip_port ));
+	}else{
+		return bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(bbStringConcat(bbStringFromInt(bbt_b->__m_app_t_gb_net_ip_a ),&_s34),bbStringFromInt(bbt_b->__m_app_t_gb_net_ip_b )),&_s34),bbStringFromInt(bbt_b->__m_app_t_gb_net_ip_c )),&_s34),bbStringFromInt(bbt_b->__m_app_t_gb_net_ip_d ));
+	}
+}
+BBINT _m_app_gb_net_ip_to_int(struct _m_app_t_gb_net_ip_obj* bbt_b){
+	return _m_app_rgba(bbt_b->__m_app_t_gb_net_ip_a ,bbt_b->__m_app_t_gb_net_ip_b ,bbt_b->__m_app_t_gb_net_ip_c ,bbt_b->__m_app_t_gb_net_ip_d );
+}
+void _m_app_gb_net_end(){
+	brl_stream_CloseStream((struct brl_stream_TStream_obj*)_m_app_gb->__m_app_t_gb_net ->__m_app_t_gb_net_stream );
+	brl_socket_CloseSocket((struct brl_socket_TSocket_obj*)_m_app_gb->__m_app_t_gb_net ->__m_app_t_gb_net_socket );
 }
 struct brl_audio_TSound_obj* _m_app_gb_assets_get_sound(BBINT bbt_n){
 	bbt_n=_m_app_iclamp(bbt_n,0,100);
@@ -14678,11 +15218,9 @@ int _bb_main(){
 		bbObjectRegisterType((BBCLASS)&_m_app_t_gb);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_bool);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_number);
-		bbObjectRegisterType((BBCLASS)&_m_app_t_font);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_canvas);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_color);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_palette);
-		bbObjectRegisterType((BBCLASS)&_m_app_t_animation);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_timer);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_pulser);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_gb_timing);
@@ -14692,6 +15230,8 @@ int _bb_main(){
 		bbObjectRegisterType((BBCLASS)&_m_app_t_gb_assets);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_image);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_sound);
+		bbObjectRegisterType((BBCLASS)&_m_app_t_animation);
+		bbObjectRegisterType((BBCLASS)&_m_app_t_font);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_gb_visual);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_gb_visual_letterbox);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_rect);
@@ -14711,6 +15251,7 @@ int _bb_main(){
 		bbObjectRegisterType((BBCLASS)&_m_app_t_list_node);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_list_iterator);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_gb_controller);
+		bbObjectRegisterType((BBCLASS)&_m_app_t_gb_net);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_gbs);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_gbscmd);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_counter);
@@ -14722,6 +15263,8 @@ int _bb_main(){
 		bbObjectRegisterType((BBCLASS)&_m_app_t_drawstack_node);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_ibox);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_jake);
+		bbObjectRegisterType((BBCLASS)&_m_app_t_model);
+		bbObjectRegisterType((BBCLASS)&_m_app_t_tri);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_ipoint);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_animframe);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_scene);
@@ -14744,6 +15287,7 @@ int _bb_main(){
 		bbObjectRegisterType((BBCLASS)&_m_app_t_gb_console_char);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_gbs_var);
 		bbObjectRegisterType((BBCLASS)&_m_app_t_gbs_node);
+		bbObjectRegisterType((BBCLASS)&_m_app_t_gb_net_ip);
 		_m_app_datum_get=_m_app_datum_value;
 		_m_app_rgba=_m_app_argb;
 		_m_app_rgba_r=_m_app_argb_a;

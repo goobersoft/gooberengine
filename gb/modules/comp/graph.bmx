@@ -101,6 +101,7 @@ function gb_graph_prepare()
 
 	setcolor( roundint(gb.graph.color.r*85), roundint(gb.graph.color.g*85),
 		roundint(gb.graph.color.b*85))
+  setlinewidth( gb.graph.drawscale.x )
 	setalpha( gb.graph.color.a/3 )
 	'setorigin( gb_graph_offset.x, gb_graph_offset.y )
 	setrotation( wrap(gb.graph.angle.value-gb.camera.angle.z,0,1000) / 1000 * 360 )
@@ -377,12 +378,12 @@ function gb_graph_draw_line(x1:float, y1:float, x2:float, y2:float)
 		gb_graph_calc_x(x2), gb_graph_calc_y(y2))
 endfunction
 
-function gb_graph_draw_box(x:float, y:float, w:float, h:float)
-	gb_graph_prepare()
-	DrawLine( gb_graph_calc_x(x), gb_graph_calc_y(y), gb_graph_calc_x(x+w), gb_graph_calc_y(y) )
-	DrawLine( gb_graph_calc_x(x), gb_graph_calc_y(y+h), gb_graph_calc_x(x+w), gb_graph_calc_y(y+h) )
-	DrawLine( gb_graph_calc_x(x), gb_graph_calc_y(y), gb_graph_calc_x(x), gb_graph_calc_y(y+h) )
-	DrawLine( gb_graph_calc_x(x+w), gb_graph_calc_y(y), gb_graph_calc_x(x+w), gb_graph_calc_y(y+h) )
+function gb_graph_draw_line3d( x1:float, y1:float, z1:float, x2:float, y2:float, z2:float)
+  gb_graph_prepare()
+  drawline( ..
+    gb_graph_calc_x3d(x1,z1), gb_graph_calc_y3d(y1,z1),
+    gb_graph_calc_x3d(x2,z2), gb_graph_calc_y3d(y2,z2) ..
+  )
 endfunction
 
 function gb_graph_draw_oval(x:float, y:float, w:float, h:float)
@@ -407,6 +408,45 @@ function gb_graph_draw_rect3d( x:float, y:float, z:float, w:float, h:float )
 		gb_graph_prepare()
 		DrawRect( gb_graph_calc_x3d(x,z), gb_graph_calc_y3d(y,z), gb_graph_calc_w3d(w,z), gb_graph_calc_h3d(h,z) )
 	endif
+endfunction
+
+function gb_graph_draw_tri(p1:t_point3, p2:t_point3, p3:t_point3)
+  gb_graph_prepare()
+  local t:float[] = new float[6]
+  t[0] = gb_graph_calc_x(p1.x)
+  t[1] = gb_graph_calc_y(p1.y)
+  t[2] = gb_graph_calc_x(p2.x)
+  t[3] = gb_graph_calc_y(p2.y)
+  t[4] = gb_graph_calc_x(p3.x)
+  t[5] = gb_graph_calc_y(p3.y)
+  drawpoly( t )
+endfunction
+
+function gb_graph_draw_tri3d(p1:t_point3, p2:t_point3, p3:t_point3)
+  local z:float = (p1.z + p2.z + p3.z) / 3
+  local t:float[] = new float[6]
+  If gb_graph_within_zrange(z)
+    gb_graph_prepare()
+    t[0] = gb_graph_calc_x3d(p1.x, p1.z)
+    t[1] = gb_graph_calc_y3d(p1.y, p1.z)
+    t[2] = gb_graph_calc_x3d(p2.x, p2.z)
+    t[3] = gb_graph_calc_y3d(p2.y, p2.z)
+    t[4] = gb_graph_calc_x3d(p3.x, p3.z)
+    t[5] = gb_graph_calc_y3d(p3.y, p3.z)
+    drawpoly( t )
+  endif
+endfunction
+
+function gb_graph_draw_tri_wire(p1:t_point3, p2:t_point3, p3:t_point3)
+  gb_graph_draw_line(p1.x, p1.y, p2.x, p2.y)
+  gb_graph_draw_line(p2.x, p2.y, p3.x, p3.y)
+  gb_graph_draw_line(p3.x, p3.y, p1.x, p1.y)
+endfunction
+
+function gb_graph_draw_tri_wire3d(p1:t_point3, p2:t_point3, p3:t_point3)
+  gb_graph_draw_line3d(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z)
+  gb_graph_draw_line3d(p2.x, p2.y, p2.z, p3.x, p3.y, p3.z)
+  gb_graph_draw_line3d(p3.x, p3.y, p3.z, p1.x, p1.y, p1.z)
 endfunction
 
 '' draw an image using an index.

@@ -23,6 +23,10 @@ function new_color:t_color(r:float=3, g:float=3, b:float=3, a:float=3, d:float=3
 	return u
 endfunction
 
+function new_color_random:t_color(d:float=3)
+  return new_color( frand(0,d), frand(0,d), frand(0,d), d, d )
+endfunction
+
 '' Creates a color based on a 32-bit ARGB value.
 '' Because RGBA 
 function new_color_from_argb:t_color (ii:int)
@@ -52,20 +56,6 @@ endfunction
 '''''''''''''''
 '' functions ''
 '''''''''''''''
-
-function color_fit_to_depth(c:t_color)
-  if c.depth >= 2
-    local q:float = 3 / (c.depth-1)
-  endif
-endfunction
-
-function color_set_depth(c:t_color, d:int=0)
-  if d <= 0
-    c.depth = 0
-  elseif d >= 2
-    c.depth = d
-  endif
-endfunction
 
 function color_set(c:t_color, r:float, g:float, b:float, a:float=3)
 	c.r = clamp(r,0,c.depth)
