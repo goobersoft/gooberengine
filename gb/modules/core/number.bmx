@@ -8,6 +8,7 @@ Type t_number
 	Field low					:Float
 	Field high				:Float
 	Field wrappable		:Byte
+  method get:float(); return value; endmethod
 endtype
 
 function new_number:t_number(n:float=0, l:float=0, h:float=100, w:byte=false)
@@ -145,6 +146,7 @@ Type t_inumber
 	Field low					:int
 	Field high				:int
 	Field wrappable		:Byte
+  method get:int(); return value; endmethod
 endtype
 
 function new_inumber:t_inumber(n:int=0, l:int=0, h:int=100, w:byte=false)

@@ -144,7 +144,7 @@ function lightcube_draw3d(a:t_lightcube, x:float=0, y:float=0, z:float=0)
 		xx = i / 100
 		yy = (i / 10) mod 10
 		zz = i mod 10
-		drawcmd_set_color( u, (float(xx)/15), (float(yy)/15), (float(zz)/15))
+		drawcmd_set_color( u, (float(xx)/10*gb.graph.clscolor.a/3), (float(yy)/10*gb.graph.clscolor.a/3), (float(zz)/10*gb.graph.clscolor.a/3))
 		drawcmd_set_mode( u, gb_graph_mode_add )
 	next
 	drawstack_draw3d(a.drawstack, x,y,z)

@@ -1,4 +1,10 @@
 
+''''''''''''''''
+'' Color Type ''
+''''''''''''''''
+''  class:    primitive
+''  mutable:  yes
+
 ''''''''''
 '' type ''
 ''''''''''
@@ -9,6 +15,7 @@ type t_color
 	field b:float
 	field a:float
   field depth:float
+  method get:int (); return color_to_argb(self); endmethod
 endtype
 
 '' Creates a new color.
@@ -57,6 +64,15 @@ endfunction
 '' functions ''
 '''''''''''''''
 
+function color_randomize( c:t_color, r:float=3, g:float=3, b:float=3, a:float=0 )
+  c.r = frand(0,r)
+  c.g = frand(0,g)
+  c.b = frand(0,b)
+  if a > 0
+    c.a = frand(0,a)
+  endif
+endfunction
+
 function color_set(c:t_color, r:float, g:float, b:float, a:float=3)
 	c.r = clamp(r,0,c.depth)
 	c.g = clamp(g,0,c.depth)
@@ -64,7 +80,7 @@ function color_set(c:t_color, r:float, g:float, b:float, a:float=3)
 	c.a = clamp(a,0,c.depth)
 endfunction
 
-function color_set_c(c:t_color, d:t_color)
+function color_set(c:t_color, d:t_color)
 	c.r = d.r
 	c.g = d.g
 	c.b = d.b
@@ -162,17 +178,8 @@ endfunction
 '' special blending modes ''
 ''''''''''''''''''''''''''''
 
-function color_blend_alpha( c:t_color, r:float, g:float, b:float, a:float=3 )
-	local u:float = high(c.a+a,c.depth)
-	local v:float = a/3
-	c.r = c.r + ((r - c.r) * v)
-	c.g = c.g + ((g - c.g) * v)
-	c.b = c.b + ((b - c.b) * v)
-	c.a = u
-endfunction
-
-function color_blend_alpha_c( c:t_color, d:t_color)
-	local u:float = high(c.a+d.a,c.depth)
+function color_blend_alpha( c:t_color, d:t_color)
+	local u:float = clamp(c.a+d.a, 0, c.depth)
 	local v:float = d.a/3
 	c.r = c.r + ((d.r - c.r) * v)
 	c.g = c.g + ((d.g - c.g) * v)
@@ -180,46 +187,32 @@ function color_blend_alpha_c( c:t_color, d:t_color)
 	c.a = u
 endfunction
 
-function color_blend_add(c:t_color, r:float, g:float, b:float, a:float=3)
-	c.r = high(c.r+r,c.depth)
-	c.g = high(c.g+g,c.depth)
-	c.b = high(c.b+b,c.depth)
-	c.a = high(c.a+a,c.depth)
+function color_blend_add( c:t_color, d:t_color )
+	c.r = clamp(c.r + d.r, 0, c.depth)
+	c.g = clamp(c.g + d.g, 0, c.depth)
+	c.b = clamp(c.b + d.b, 0, c.depth)
+	c.a = clamp(c.a + d.a, 0, c.depth)
 endfunction
 
-function color_blend_add_c( c:t_color, d:t_color )
-	c.r = high(c.r + d.r,c.depth)
-	c.g = high(c.g + d.g,c.depth)
-	c.b = high(c.b + d.b,c.depth)
-	c.a = high(c.a + d.a,c.depth)
+function color_blend_mul( c:t_color, d:t_color )
+	c.r = clamp(c.r * (d.r/c.depth),0,c.depth)
+	c.g = clamp(c.g * (d.g/c.depth),0,c.depth)
+	c.b = clamp(c.b * (d.b/c.depth),0,c.depth)
+	c.a = clamp(c.a * (d.a/c.depth),0,c.depth)
 endfunction
 
-function color_blend_multiply( c:t_color, r:float, g:float, b:float, a:float=3)
-	c.r = c.r * (r/c.depth)
-	c.g = c.g * (g/c.depth)
-	c.b = c.b * (b/c.depth)
-	c.a = c.a * (a/c.depth)
+function color_blend_sub( c:t_color, d:t_color )
+	c.r = clamp(c.r-d.r,0,c.depth)
+	c.g = clamp(c.g-d.g,0,c.depth)
+	c.b = clamp(c.b-d.b,0,c.depth)
+	c.a = clamp(c.a-d.a,0,c.depth)
 endfunction
 
-function color_blend_multiply_c( c:t_color, d:t_color )
-	c.r = c.r * (d.r/c.depth)
-	c.g = c.g * (d.g/c.depth)
-	c.b = c.b * (d.b/c.depth)
-	c.a = c.a * (d.a/c.depth)
-endfunction
-
-function color_blend_sub(c:t_color, r:float, g:float, b:float, a:float=3)
-	c.r = low(c.r-r,0)
-	c.g = low(c.g-g,0)
-	c.b = low(c.b-b,0)
-	c.a = low(c.a-a,0)
-endfunction
-
-function color_blend_sub_c( c:t_color, d:t_color )
-	c.r = low(c.r-d.r,0)
-	c.g = low(c.g-d.g,0)
-	c.b = low(c.b-d.b,0)
-	c.a = low(c.a-d.a,0)
+function color_blend_div( c:t_color, d:t_color )
+	c.r = clamp(c.r/low(d.r,0.0001),0,c.depth)
+	c.g = clamp(c.g/low(d.r,0.0001),0,c.depth)
+	c.b = clamp(c.b/low(d.r,0.0001),0,c.depth)
+	c.a = clamp(c.a/low(d.r,0.0001),0,c.depth)
 endfunction
 
 function color_blend_custom( c:t_color, d:t_color, f(c:t_color, d:t_color) )

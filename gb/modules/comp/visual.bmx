@@ -28,7 +28,6 @@ type t_gb_visual
   field pixelscale    :t_float
   field letterbox     :t_gb_visual_letterbox
   field scanlines     :t_gb_visual_scanlines
-  field screenshot_id :t_int
 endtype
 
 function new_gb_visual:t_gb_visual ()
@@ -39,7 +38,6 @@ function new_gb_visual:t_gb_visual ()
 	r.pixelscale		      = new_float(2.0)
   r.letterbox           = new_gb_visual_letterbox()
   r.scanlines           = new_gb_visual_scanlines()
-  r.screenshot_id       = new_int(0)
   return r
 endfunction
 
@@ -69,7 +67,6 @@ function gb_visual_load()
 	bool_set    (gb.visual.scanlines.active,    dict_read_byte(u,"visual/scanlines/active"))
 	number_set  (gb.visual.scanlines.style,     dict_read_byte(u,"visual/scanlines/style"))
 	number_set  (gb.visual.scanlines.thick,     dict_read_byte(u,"visual/scanlines/thick"))
-	int_set     (gb.visual.screenshot_id,       dict_read_int(u,"visual/screenshot-id"))
 endfunction
 
 function gb_visual_update()
@@ -87,9 +84,6 @@ function gb_visual_update()
 	if keyhit(key_f4)
 		gb_visual_set_fullscreen( bool_nt(gb.visual.fullscreen) )
 	endif
-  if keyhit(key_f12)
-    gb_visual_take_screenshot()
-  endif
 endfunction
 
 function gb_visual_draw(x:float=0, y:float=0)
@@ -112,7 +106,6 @@ function gb_visual_end()
 	dict_write_byte		(d,"scanlines/active",gb.visual.scanlines.active.value)
 	dict_write_byte		(d,"scanlines/thick",byte(gb.visual.scanlines.thick.value))
 	dict_write_byte		(d,"scanlines/style",byte(gb.visual.scanlines.style.value))
-  dict_set_int      (d,"screenshot-id",int(gb.visual.screenshot_id.value))
 	dict_set_dir		  (gb.settings,"visual",d)
 endfunction
 
@@ -199,17 +192,6 @@ function gb_visual_set_window_scale(n:float)
 	hidemouse()
 	bool_set(gb.visual.fullscreen, false)
 	gb_visual_refresh()
-endfunction
-
-function gb_visual_take_screenshot()
-  local u:timage = createimage(int(gb.visual.letterbox.rect.w),
-    int(gb.visual.letterbox.rect.h),DYNAMICIMAGE)
-  grabimage         (u,int(gb.visual.letterbox.rect.x), int(gb.visual.letterbox.rect.y))
-  local ss:string   = "./screenshots/" + rpad(string(gb.visual.screenshot_id.value),3,"0") + ".png"
-  int_add           (gb.visual.screenshot_id,1)
-  local x:tpixmap   = lockimage(u)
-  local m:int       = savepixmappng(x,ss,0)
-  unlockimage       (u)
 endfunction
 
 

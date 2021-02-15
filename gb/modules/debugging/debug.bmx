@@ -42,10 +42,10 @@ function gb_debug_update()
 		bool_toggle(gb.graph.pixelmode)
 	endif
 	if keydown(key_f7)
-		number_add(gb.speed,-0.05)
+		number_add(gb.timing.speed,-0.05)
 	endif
 	if keydown(key_f8)
-		number_add(gb.speed,0.05)
+		number_add(gb.timing.speed,0.05)
 	endif
 	if keyhit(key_f5)
 		bool_toggle(gb.visual.scanlines.active)
@@ -108,8 +108,8 @@ function gb_debug_draw_panel()
           gb_graph_draw_tile(25+i,0,0,22,2)
         endif
       next
-      gb_graph_draw_tile(25+gb.speed.value,0,0,23,3)
-      gb_graph_draw_tile_text(36,0,1,strdec(gb.speed.value))
+      gb_graph_draw_tile(25+gb.timing.speed.value,0,0,23,3)
+      gb_graph_draw_tile_text(36,0,1,strdec(gb.timing.speed.value))
       gb_graph_draw_tile(39,0,0,28,2)
     case 2
       gb_graph_draw_tile_rect(0,0,0,27,23,40,1)

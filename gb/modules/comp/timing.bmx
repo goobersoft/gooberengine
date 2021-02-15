@@ -12,6 +12,8 @@ Type t_gb_timing
   Field fps           :t_gb_timing_fps
   Field deltatime     :t_gb_timing_deltatime
   Field stopwatch     :t_stopwatch
+  field uptime        :t_float
+  field speed         :t_number
 EndType
 
 Function new_gb_timing:t_gb_timing ()
@@ -21,6 +23,8 @@ Function new_gb_timing:t_gb_timing ()
   r.fps         = new_gb_timing_fps()
   r.deltatime   = new_gb_timing_deltatime()
   r.stopwatch   = new_stopwatch()
+  r.uptime      = new_float(0)
+  r.speed       = new_number(1,0,10)
   Return r
 EndFunction
 
@@ -54,17 +58,19 @@ Function gb_timing_update()
 	float_set(gb.timing.deltatime.sdiff, Float(long_get(gb.timing.deltatime.mdiff))/1000)
 	
 	stopwatch_update(gb.timing.stopwatch)
+  float_add(gb.timing.uptime, gb_delta())
 EndFunction
 
 '''''''''''''''
 '' functions ''
 '''''''''''''''
 
-Function gb_get_deltatime:Float()
-	Return gb.timing.deltatime.sdiff.value
-EndFunction
+function gb_uptime:float()
+  return gb.timing.uptime.get()
+endfunction
+
 Function gb_delta:Float(n:float=1)
-  Return gb.timing.deltatime.sdiff.value * n
+  Return gb.timing.deltatime.sdiff.value * n * gb.timing.speed.value
 EndFunction
 
 function gb_cpu:float()
@@ -83,7 +89,5 @@ function gb_cpu_string:string(t:int)
   endif
 endfunction
 
-Function gb_get_virtual_deltatime:Float()
-	Return gb.timing.deltatime.sdiff.value * gb.speed.value
-EndFunction
+
 

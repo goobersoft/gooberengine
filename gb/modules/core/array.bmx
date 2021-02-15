@@ -1,7 +1,9 @@
 
+
 type t_array
   field length :t_int
   field data   :t_datum[]
+  method get:t_datum[](); return data; endmethod
 endtype
 
 function new_array(l:int)
@@ -14,6 +16,20 @@ function new_array(l:int)
       r.data[i] = new_datum()
     next
   endif
+endfunction
+
+function new_array_v:t_array[](x:int, y:int)
+  x = ilow(x,0)
+  y = ilow(y,0)
+  local r:t_array[] = new t_array[x]
+  for local i:int = 0 to x-1
+    r[i] = new t_array
+    r[i].length = new_int(y)
+    for local k:int = 0 to y-1
+      r[i].data[k] = new_datum()
+    next
+  next
+  return r
 endfunction
 
 '' setters

@@ -1,31 +1,46 @@
 
-''  depth:
-''    if 0, colors in the canvas are not rounded.
-''    if 2 or more, colors are rounded based on intervals
-''      (4 = 4-tone color, 16 'bits' total) 
+
+
+
+''''''''''
+'' type ''
+''''''''''
 
 type t_canvas
-	field width		  :t_int
-	field height	  :t_int
-	field data		  :t_color[,]
-  field coldepth  :t_int
-  field palette   :t_palette
-	field image		  :timage
+	field width		    :t_int
+	field height	    :t_int
+	field pixels		  :t_color[][]
+  field depths      :t_float[][]
+  field coldepth    :t_float
+  field palette     :t_palette
+	field image		    :timage
+  method get:timage()
+    return image
+  endmethod
 endtype
+
+'''''''''
+'' new ''
+'''''''''
 
 function new_canvas:t_canvas(x:int, y:int, rr:float=0, gg:float=0, bb:float=0, aa:float=0)
 	local r:t_canvas = new t_canvas
 	r.width 		= new_int(ilow(x,10))
 	r.height 		= new_int(ilow(y,10))
-	r.data 			= new t_color[r.width.value, r.height.value]
+	r.pixels 		= new t_color[r.width.value][]
+  r.depths    = new t_float[r.width.value][]
 	for local i:int = 0 to r.width.value-1
+    r.pixels[i] = new t_color[r.height.value]
+    r.depths[i] = new t_float[r.height.value]
 		for local j:int = 0 to r.height.value-1
-			r.data[i,j] = new_color(rr,gg,bb,aa)
+			r.pixels[i][j] = new_color(rr,gg,bb,aa)
+      r.depths[i][j] = new_float(0)
 		next
 	next
 	r.image     = createimage(r.width.value, r.height.value, 1, DYNAMICIMAGE)
   r.palette   = new_palette()
-  r.coldepth  = new_int(0)
+  r.coldepth  = new_float(3)
+  canvas_sync(r)
 	return r
 endfunction
 
@@ -47,12 +62,15 @@ function new_canvas_from_image:t_canvas( u:t_image )
       rr = float(argb_r(ii)) / 255 * 3
       gg = float(argb_g(ii)) / 255 * 3
       bb = float(argb_b(ii)) / 255 * 3
-      r.data[i,j] = new_color(rr,gg,bb,aa)
+      r.pixels[i][j] = new_color(rr,gg,bb,aa)
 		next
 	next
 	r.image     = createimage(r.width.value, r.height.value, 1, DYNAMICIMAGE)
   r.palette   = new_palette()
+  
+  '' If you don't sync this at least once, the new image will have garbage pixels.
   canvas_sync(r)
+
 	return r
 endfunction
 
@@ -64,12 +82,18 @@ endfunction
 '' functions ''
 '''''''''''''''
 
+function canvas_get_pixel:t_color(c:t_canvas, x:int, y:int)
+  if ipoint_in_irect( x, y, 0, 0, c.width.get(), c.height.get() )
+    return c.pixels[x][y]
+  endif
+endfunction
+
 function canvas_sync(c:t_canvas)
 	local u:tpixmap = lockimage(c.image)
 	local x:int = 0
 	for local i:int = 0 to c.width.value-1
 		for local j:int = 0 to c.height.value-1
-			x = color_to_argb(c.data[i,j])
+			x = color_to_argb(c.pixels[i][j])
 			writepixel(u,i,j,x)
 		next
 	next
@@ -78,193 +102,55 @@ endfunction
 function canvas_cls(c:t_canvas)
 	for local i:int = 0 to c.width.value-1
 		for local j:int = 0 to c.height.value-1
-			color_set(c.data[i,j], 0, 0, 0, 0)
+			color_set(c.pixels[i][j], 0, 0, 0, 0)
+      float_set(c.depths[i][j], 0)
 		next
 	next
 endfunction
+
+function canvas_set_palette()
+endfunction
+
 
 '''''''''''''''''''''''
 '' drawing functions ''
 '''''''''''''''''''''''
 
-function canvas_draw_dot(c:t_canvas, x:int, y:int, rr:float, gg:float, bb:float, aa:float=3)
-	x = iwrap(x,0,c.width.value-1)
-	y = iwrap(y,0,c.height.value-1)
-  if in_irange( x, 0, c.width.value ) and in_irange( y, 0, c.height.value )
-    color_set(c.data[x,y], rr, gg, bb, aa)
+function canvas_plot(c:t_canvas, x:int, y:int, d:t_color)
+  if ipoint_in_irect(x,y,0,0,c.width.get(),c.height.get())
+    color_set(c.pixels[x][y], d)
   endif
 endfunction
 
-function canvas_draw_dot_c(c:t_canvas, x:int, y:int, d:t_color)
-	x = iwrap(x,0,c.width.value-1)
-	y = iwrap(y,0,c.height.value-1)
-  if in_irange( x, 0, c.width.value ) and in_irange( y, 0, c.height.value )
-	  color_set_c(c.data[x,y], d)
+function canvas_plot_alpha(c:t_canvas, x:int, y:int, d:t_color)
+  if ipoint_in_irect(x,y,0,0,c.width.get(),c.height.get())
+    color_blend_alpha(c.pixels[x][y], d)
   endif
 endfunction
 
-function canvas_draw_rect_c( c:t_canvas, x:int, y:int, w:int, h:int, d:t_color)
-	x = iwrap(x,0,c.width.value-1)
-	y = iwrap(y,0,c.height.value-1)
-	w = iclamp(w,0,c.width.value-x)
-	h = iclamp(h,0,c.height.value-y)
-	for local i:int = 0 to w-1
-		for local j:int = 0 to h-1
-      if in_irange( x+i, 0, c.width.value ) and in_irange( y+j, 0, c.height.value )
-			  color_set_c( c.data[x+i,y+j], d )
-      endif
-		next
-	next
+function canvas_plot_add(c:t_canvas, x:int, y:int, d:t_color)
+  if ipoint_in_irect(x,y,0,0,c.width.get(),c.height.get())
+    color_blend_add(c.pixels[x][y], d)
+  endif
 endfunction
 
-'''''''''''''''''''''''
-'' blending commands ''
-'''''''''''''''''''''''
-
-function canvas_blend( c:t_canvas, x:int, y:int, d:t_canvas )
-	local ux:int = d.width.value
-	local uy:int = d.height.value
-	for local i:int = 0 to ux-1
-		for local j:int = 0 to uy-1
-			if ipoint_in_irect(x+i, y+j, 0, 0, c.width.value, c.height.value)
-				color_set_c( c.data[x+i, y+j], d.data[i,j])
-			endif
-		next
-	next
+function canvas_plot_sub(c:t_canvas, x:int, y:int, d:t_color)
+  if ipoint_in_irect(x,y,0,0,c.width.get(),c.height.get())
+    color_blend_sub(c.pixels[x][y], d)
+  endif
 endfunction
 
-function canvas_blend_part( c:t_canvas, x:int, y:int, d:t_canvas,
-dx:int, dy:int, dw:int, dh:int )
-	for local i:int = 0 to dw-1
-		for local j:int = 0 to dh-1
-			if ipoint_in_irect( x+i, y+j, 0, 0, c.width.value, c.height.value )
-				color_set_c( c.data[x+i, y+j], d.data[i+dx, j+dy] )
-			endif
-		next
-	next
+function canvas_plot_mul(c:t_canvas, x:int, y:int, d:t_color)
+  if ipoint_in_irect(x,y,0,0,c.width.get(),c.height.get())
+    color_blend_mul(c.pixels[x][y], d)
+  endif
 endfunction
 
-function canvas_blend_alpha( c:t_canvas, x:int, y:int, d:t_canvas )
-	local ux:int = d.width.value
-	local uy:int = d.height.value
-	for local i:int = 0 to ux-1
-		for local j:int = 0 to uy-1
-			if ipoint_in_irect(x+i, y+j, 0, 0, c.width.value, c.height.value)
-				color_blend_alpha_c( c.data[x+i, y+j], d.data[i,j])
-			endif
-		next
-	next
+function canvas_plot_div(c:t_canvas, x:int, y:int, d:t_color)
+  if ipoint_in_irect(x,y,0,0,c.width.get(),c.height.get())
+    color_blend_div(c.pixels[x][y], d)
+  endif
 endfunction
-
-function canvas_blend_alpha_part( c:t_canvas, x:int, y:int, d:t_canvas,
-dx:int, dy:int, dw:int, dh:int )
-	dx = iclamp(dx,0,d.width.value-1)
-	dy = iclamp(dy,0,d.height.value-1)
-	dw = iclamp(dw,1,d.width.value-dx)
-	dh = iclamp(dh,1,d.height.value-dy)
-	for local i:int = 0 to dw-1
-		for local j:int = 0 to dh-1
-			if ipoint_in_irect( x+i, y+j, 0, 0, c.width.value, c.height.value )
-				color_blend_alpha_c( c.data[x+i, y+j], d.data[i+dx, j+dy] )
-			endif
-		next
-	next
-endfunction
-
-function canvas_blend_add( c:t_canvas, x:int, y:int, d:t_canvas )
-	local ux:int = d.width.value
-	local uy:int = d.height.value
-	for local i:int = 0 to ux-1
-		for local j:int = 0 to uy-1
-			if ipoint_in_irect(x+i, y+j, 0, 0, c.width.value, c.height.value)
-				color_blend_add_c( c.data[x+i, y+j], d.data[i,j])
-			endif
-		next
-	next
-endfunction
-
-function canvas_blend_add_part( c:t_canvas, x:int, y:int, d:t_canvas,
-dx:int, dy:int, dw:int, dh:int )
-	dx = iclamp(dx,0,d.width.value-1)
-	dy = iclamp(dy,0,d.height.value-1)
-	dw = iclamp(dw,1,d.width.value-dx)
-	dh = iclamp(dh,1,d.height.value-dy)
-	for local i:int = 0 to dw-1
-		for local j:int = 0 to dh-1
-			if ipoint_in_irect( x+i, y+j, 0, 0, c.width.value, c.height.value )
-				color_blend_add_c( c.data[x+i, y+j], d.data[i+dx, j+dy] )
-			endif
-		next
-	next
-endfunction
-
-function canvas_blend_multiply( c:t_canvas, x:int, y:int, d:t_canvas )
-	local ux:int = d.width.value
-	local uy:int = d.height.value
-	for local i:int = 0 to ux-1
-		for local j:int = 0 to uy-1
-			if ipoint_in_irect(x+i, y+j, 0, 0, c.width.value, c.height.value)
-				color_blend_multiply_c( c.data[x+i, y+j], d.data[i,j])
-			endif
-		next
-	next
-endfunction
-
-function canvas_blend_multiply_part( c:t_canvas, x:int, y:int, d:t_canvas,
-dx:int, dy:int, dw:int, dh:int )
-	dx = iclamp(dx,0,d.width.value-1)
-	dy = iclamp(dy,0,d.height.value-1)
-	dw = iclamp(dw,1,d.width.value-dx)
-	dh = iclamp(dh,1,d.height.value-dy)
-	for local i:int = 0 to dw-1
-		for local j:int = 0 to dh-1
-			if ipoint_in_irect( x+i, y+j, 0, 0, c.width.value, c.height.value )
-				color_blend_multiply_c( c.data[x+i, y+j], d.data[i+dx, j+dy] )
-			endif
-		next
-	next
-endfunction
-
-function canvas_blend_sub( c:t_canvas, x:int, y:int, d:t_canvas )
-	local ux:int = d.width.value
-	local uy:int = d.height.value
-	for local i:int = 0 to ux-1
-		for local j:int = 0 to uy-1
-			if ipoint_in_irect(x+i, y+j, 0, 0, c.width.value, c.height.value)
-				color_blend_sub_c( c.data[x+i, y+j], d.data[i,j])
-			endif
-		next
-	next
-endfunction
-
-function canvas_blend_sub_part( c:t_canvas, x:int, y:int, d:t_canvas,
-dx:int, dy:int, dw:int, dh:int )
-	dx = iclamp(dx,0,d.width.value-1)
-	dy = iclamp(dy,0,d.height.value-1)
-	dw = iclamp(dw,1,d.width.value-dx)
-	dh = iclamp(dh,1,d.height.value-dy)
-	for local i:int = 0 to dw-1
-		for local j:int = 0 to dh-1
-			if ipoint_in_irect( x+i, y+j, 0, 0, c.width.value, c.height.value )
-				color_blend_sub_c( c.data[x+i, y+j], d.data[i+dx, j+dy] )
-			endif
-		next
-	next
-endfunction
-
-function canvas_blend_custom( c:t_canvas, x:int, y:int, d:t_canvas,
-f(c:t_color, d:t_color))
-	local ux:int = d.width.value
-	local uy:int = d.height.value
-	for local i:int = 0 to ux-1
-		for local j:int = 0 to uy-1
-			if ipoint_in_irect(x+i, y+j, 0, 0, c.width.value, c.height.value)
-				color_blend_custom( c.data[x+i, y+j], d.data[i,j], f)
-			endif
-		next
-	next
-endfunction
-
 
 ''''''''''''
 '' events ''
@@ -272,4 +158,11 @@ endfunction
 
 function canvas_draw( c:t_canvas, x:float=0, y:float=0 )
 	gb_graph_draw_image( x, y, c.image )
+endfunction
+
+''''''''''''''''''''''''
+'' saving screenshots ''
+''''''''''''''''''''''''
+
+function canvas_save_screenshot()
 endfunction

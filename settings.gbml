@@ -3,8 +3,7 @@ visual {
   fullscreen : @0;
   scanlines {
     active : @0;
-    thick : @0;
+    thick : @2;
     style : @0;
   }
-  screenshot-id : %0;
 }

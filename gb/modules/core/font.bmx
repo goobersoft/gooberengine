@@ -41,7 +41,7 @@ function load_font:t_font (s:string)
   )
   if dict_get_type (d, "spacing") = "dir"
     for local i:int = 0 to 99
-      r.spacing[i] = dict_read_float( d, string(i) )
+      r.spacing[i] = dict_read_float( d, "spacing/" + string(i) )
     next
   endif
 

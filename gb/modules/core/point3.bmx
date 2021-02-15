@@ -31,16 +31,34 @@ function point3_set(p:t_point3, x:float, y:float,z:float)
 	p.z = z
 endfunction
 
+function point3_set(p:t_point3, q:t_point3)
+	p.x = q.x
+	p.y = q.y
+	p.z = q.z
+endfunction
+
 function point3_add(p:t_point3, x:float, y:float, z:float)
 	p.x = p.x + x
 	p.y = p.y + y
 	p.z = p.z + z
 endfunction
 
+function point3_add(p:t_point3, q:t_point3)
+  p.x = p.x + q.x
+  p.y = p.y + q.y
+  p.z = p.z + q.z
+endfunction
+
 function point3_mul(p:t_point3, x:float, y:float, z:float)
 	p.x = p.x * x
 	p.y = p.y * y
 	p.z = p.z * z
+endfunction
+
+function point3_mul(p:t_point3, q:t_point3)
+	p.x = p.x * q.x
+	p.y = p.y * q.y
+	p.z = p.z * q.z
 endfunction
 
 function point3_div(p:t_point3, x:float, y:float, z:float)
@@ -51,12 +69,29 @@ function point3_div(p:t_point3, x:float, y:float, z:float)
 	endif
 endfunction
 
+function point3_div(p:t_point3, q:t_point3)
+	if (q.x <> 0) and (q.y <> 0) and (q.z <> 0)
+		p.x = p.x / q.x
+		p.y = p.y / q.y
+		p.z = p.z / q.z
+	endif
+endfunction
+
 function point3_eq:int(p:t_point3, x:float, y:float, z:float)
 	if (p.x = x) and (p.y = y) and (p.z = z) return true else return false
 endfunction
 
+function point3_eq:int(p:t_point3, q:t_point3)
+	if (p.x = q.x) and (p.y = q.y) and (p.z = q.z) return true else return false
+endfunction
+
+
 function point3_neq:int(p:t_point3, x:float, y:float, z:float)
 	if (p.x <> x) and (p.y <> y) and (p.z <> z) return true else return false
+endfunction
+
+function point3_neq:int(p:t_point3, q:t_point3)
+	if (p.x <> q.x) and (p.y <> q.y) and (p.z <> q.z) return true else return false
 endfunction
 
 function point3_to_string:string(p:t_point3)
@@ -95,23 +130,29 @@ function ipoint3_set(p:t_ipoint3, x:int, y:int,z:int)
 	p.z = z
 endfunction
 
-function ipoint3_add(p:t_ipoint3, x:int, y:int, z:int)
-	p.x = p.x + x
-	p.y = p.y + y
-	p.z = p.z + z
+function ipoint3_set(p:t_ipoint3, q:t_point3)
+	p.x = q.x
+	p.y = q.y
+	p.z = q.z
 endfunction
 
-function ipoint3_mul(p:t_ipoint3, x:int, y:int, z:int)
-	p.x = p.x * x
-	p.y = p.y * y
-	p.z = p.z * z
+function ipoint3_add(p:t_ipoint3, q:t_point3)
+	p.x = p.x + q.x
+	p.y = p.y + q.y
+	p.z = p.z + q.z
 endfunction
 
-function ipoint3_div(p:t_ipoint3, x:int, y:int, z:int)
-	if (x <> 0) and (y <> 0) and (z <> 0)
-		p.x = p.x / x
-		p.y = p.y / y
-		p.z = p.z / z
+function ipoint3_mul(p:t_ipoint3, q:t_point3)
+	p.x = p.x * q.x
+	p.y = p.y * q.y
+	p.z = p.z * q.z
+endfunction
+
+function ipoint3_div(p:t_ipoint3, q:t_point3)
+	if (q.x <> 0) and (q.y <> 0) and (q.z <> 0)
+		p.x = p.x / q.x
+		p.y = p.y / q.y
+		p.z = p.z / q.z
 	endif
 endfunction
 
@@ -119,8 +160,12 @@ function ipoint3_eq:int(p:t_ipoint3, x:int, y:int, z:int)
 	if (p.x = x) and (p.y = y) and (p.z = z) return true else return false
 endfunction
 
-function ipoint3_neq:int(p:t_ipoint3, x:int, y:int, z:int)
-	if (p.x <> x) and (p.y <> y) and (p.z <> z) return true else return false
+function ipoint3_eq:int(p:t_ipoint3, q:t_point3)
+	if (p.x = q.x) and (p.y = q.y) and (p.z = q.z) return true else return false
+endfunction
+
+function ipoint3_neq:int(p:t_ipoint3, q:t_point3)
+	if (p.x <> q.x) and (p.y <> q.y) and (p.z <> q.z) return true else return false
 endfunction
 
 function ipoint3_to_string:string(p:t_ipoint3)

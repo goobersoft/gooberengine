@@ -111,6 +111,33 @@ function list_remove_last:t_datum(l:t_list)
   return r
 endfunction
 
+function list_remove(l:t_list, o:object)
+  if l.count.value > 0
+    local d:t_list_node = l.first
+    local i:int = 0
+    while d <> null
+
+      if d.data.value.tostring() = o.tostring()
+        if i = 0
+          list_remove_first(l)
+          d = null
+        elseif i = l.count.value-1
+          list_remove_last(l)
+          d = null
+        else
+          d.left.right = d.right
+          d.right.left = d.left
+          int_add      (l.count, -1)
+          l.iterator = null
+          d = null
+        endif
+      endif
+      if d then d = d.right
+      i = i + 1
+    wend 
+  endif
+endfunction
+
 '''''''''''''
 
 function list_clear(l:t_list)

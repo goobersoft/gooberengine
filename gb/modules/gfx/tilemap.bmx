@@ -53,6 +53,10 @@ function tilemap_draw3d(t:t_tilemap, x:float=0, y:float=0, z:float=0)
   next
 endfunction
 
+'' plot = to canvas, not to screen.
+function tilemap_plot(t:t_tilemap, x:float=0, y:float=0)
+endfunction
+
 '''''''''''''''
 '' functions ''
 '''''''''''''''

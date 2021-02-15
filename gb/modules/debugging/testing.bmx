@@ -1,25 +1,17 @@
 
+
 ''''''''''
 '' type ''
 ''''''''''
 
 type t_gb_testing
-  field lightcube :t_lightcube
-  field timer     :t_timer
-  field list      :t_list
-  field jake      :t_jake
-  field model     :t_model
+  field gball :t_gball
 endtype
 
 function new_gb_testing:t_gb_testing ()
   local r:t_gb_testing = new t_gb_testing
 
-  r.lightcube = new_lightcube()
-  r.timer     = new_timer(30)
-  r.list      = new_list()
-  r.jake      = new_jake()
-  r.model     = new_model_cube(20,12,0,5)
-  
+  r.gball = new_gball()
 
   return r
 endfunction
@@ -36,27 +28,23 @@ function gb_testing_load()
 endfunction
 
 function gb_testing_start()
+  local c:t_color = new_color_random()
+  for local i:int = 0 to 399
+    for local j:int = 0 to 239
+      color_set(c, float(j)/240.0*3,0,0,3)
+      gb_canvas_plot(i,j,c)
+    next
+  next
+  gb_canvas_sync()
 endfunction
 
 function gb_testing_update()
-  lightcube_update(gb.testing.lightcube)
-  timer_update(gb.testing.timer)
-  jake_update(gb.testing.jake)
-  if timer_finished(gb.testing.timer) or keyhit(key_space)
-    timer_reset(gb.testing.timer)
-    lightcube_reset(gb.testing.lightcube)
-    gb.testing.model = new_model_cube(17.5, 9.5, 0, 5)
-  endif
-  point3_add(gb.testing.model.tris[rand(0,11)].points[rand(0,2)], frand(-0.1,0.1), frand(-0.1,0.1), frand(-0.1,0.1))
-
-
+  gball_update( gb.testing.gball )
 endfunction
 
 function gb_testing_draw()
-  lightcube_draw(gb.testing.lightcube, 20, 12)
-  gb_graph_draw_tile_text(39,23,1,int(timer_value(gb.testing.timer)))
-  jake_draw(gb.testing.jake)
-  model_draw_wire3d(gb.testing.model)
+  gball_draw( gb.testing.gball, 10, 10 )
+  gb_graph_draw_tile_text(0,23,1,"Make sure you shake it up real good with spacebar!");
 endfunction
 
 function gb_testing_end()

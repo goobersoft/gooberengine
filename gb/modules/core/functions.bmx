@@ -2,58 +2,75 @@
 Function empty()
 EndFunction
 
-'''''''''''''''''''''''''''''''''''''''''''''''
-'' Ensuring default values in case of "null" ''
-'''''''''''''''''''''''''''''''''''''''''''''''
-''	These functions will
+''''''''''''''''''''''''
+'' ternary operations ''
+''''''''''''''''''''''''
 
-function def:byte(i:byte=0, o:byte=0, c:byte=-1)
-	if (i = c)
-		return o
-	endif
-	return i
+function expr:byte(n:int, a:byte, b:byte)
+  if n then return a else return b
 endfunction
 
-function def:short(i:short=0, o:short=0, c:short=-1)
-	if (i = c)
-		return o
-	endif
-	return i
+function expr:short(n:int, a:short, b:short)
+  if n then return a else return b
 endfunction
 
-function def:int(i:int=0, o:int=0, c:int=-1)
-	if (i = c)
-		return o
-	endif
-	return i
+function expr:int(n:int, a:int, b:int)
+  if n then return a else return b
 endfunction
 
-function def:long(i:long=0, o:long=0, c:long=-1)
-	if (i = c)
-		return o
-	endif
-	return i
+function expr:long(n:int, a:long, b:long)
+  if n then return a else return b
 endfunction
 
-function def:float(i:float=0, o:float=0, c:float=-1)
-	if (i = c)
-		return o
-	endif
-	return i
+function expr:float(n:int, a:float, b:float)
+  if n then return a else return b
 endfunction
 
-function def:double(i:double=0, o:double=0, c:double=-1)
-	if (i = c)
-		return o
-	endif
-	return i
+function expr:double(n:int, a:double, b:double)
+  if n then return a else return b
 endfunction
 
-function def:string(i:string="", o:string="", c:string=null)
-	if (i = c)
-		return o
-	endif
-	return i
+function expr:object(n:int, a:object, b:object)
+  if n then return a else return b
+endfunction
+
+
+
+
+'''''''''''''
+'' picking ''
+'''''''''''''
+
+function pick:byte( a:byte[] )
+  return a[rand(0,len(a)-1)]
+endfunction
+
+function pick:short( a:short[] )
+  return a[rand(0,len(a)-1)]
+endfunction
+
+function pick:int( a:int[] )
+  return a[rand(0,len(a)-1)]
+endfunction
+
+function pick:long( a:long[] )
+  return a[rand(0,len(a)-1)]
+endfunction
+
+function pick:float( a:float[])
+  return a[rand(0,len(a)-1)]
+endfunction
+
+function pick:double( a:double[])
+  return a[rand(0,len(a)-1)]
+endfunction
+
+function pick:string( a:string[] )
+  return a[rand(0,len(a)-1)]
+endfunction
+
+function pick:object( a:object[] )
+  return a[rand(0,len(a)-1)]
 endfunction
 
 '''''''''''''''''''''''''''''
@@ -167,6 +184,7 @@ EndFunction
 
 '''''''''''''''''''''''''''''''''''''''''
 
+'' return the first element of an array
 function car:string (s:string[])
 	if len(s) > 0
 		return s[0]
@@ -174,6 +192,7 @@ function car:string (s:string[])
 	return null
 endfunction
 
+'' return the rest of the array that is not the first element.
 function cdr:string[] (s:string[])
 	if len(s) > 1
 		return s[1..]
@@ -181,6 +200,7 @@ function cdr:string[] (s:string[])
 	return []
 endfunction
 
+'' returns an index from a string array, I think?
 function sind:string (s:string[], n:int)
 	if len(s) > 0
 		if in_irange(n,0,len(s))
@@ -190,22 +210,14 @@ function sind:string (s:string[], n:int)
 	return null
 endfunction
 
+'' increases an integer by b - does this by reference.
 function inc:int(n:int ptr)
 	n = n + 1
 endfunction
 
+'' decreases an integer by n - does this by reference.
 function dec:int(n:int ptr)
 	n = n - 1
-endfunction
-
-function addr:float(a:float, m:float)
-	if (a > m) then return m-a
-	return 0.0
-endfunction
-
-function iaddr:float(a:int, m:int)
-	if (a > m) then return m-a
-	return 0
 endfunction
 
 function low:float( a:float, b:float )
@@ -269,13 +281,6 @@ EndFunction
 Function prob:Int (r:Float)
 	r = clamp(r,0,100)
 	If ((RndFloat()*100) <= r)
-		Return True
-	EndIf
-	Return False
-EndFunction
-
-Function icmp:Int (a:Int, b:Int)
-	If (a = b)
 		Return True
 	EndIf
 	Return False
@@ -519,20 +524,28 @@ Function icube_in_icube:int( x1:Int, y1:Int, z1:Int, sx1:Int, sy1:Int, sz1:Int, 
 	Return u
 EndFunction
 
-Function dist2d:Float( x1:Float, y1:Float, x2:Float=0, y2:Float=0 )
-	Return Sqr( pow( x1+x2, 2 ) + pow( y1+y2, 2 ) )
+Function dist2d:Float ( x1:Float, y1:Float, x2:Float=0, y2:Float=0 )
+	Return Sqr( pow( x2-x1, 2 ) + pow( y2-y1, 2 ) )
 EndFunction
-Global dist:Float( x1:Float, y1:Float, x2:Float=0, y2:Float=0 ) = dist2d
+Global dist:Float ( x1:Float, y1:Float, x2:Float=0, y2:Float=0 ) = dist2d
 
-Function dist3d:Float( x1:Float, y1:Float, z1:Float, x2:Float=0, y2:Float=0, z2:Float=0)
-	Return Sqr( pow(x1+x2,2) + pow(y1+y2,2) + pow(z1+z2,2) )
+Function dist3d:Float ( x1:Float, y1:Float, z1:Float, x2:Float=0, y2:Float=0, z2:Float=0)
+	Return Sqr( pow(x2-x1,2) + pow(y2-y1,2) + pow(z2-z1,2) )
 EndFunction
 
-function idist2d:int( x1:int, y1:int, x2:int, y2:int )
+function dist4d:float ( x1:float, y1:float, z1:float, w1:float, x2:float=0, y2:float=0, z2:float=0, w2:float=0)
+  Return Sqr( pow(x2-x1,2) + pow(y2-y1,2) + pow(z2-z1,2) + pow(w2-w1,2) )
+endfunction
+
+function idist2d:int ( x1:int, y1:int, x2:int, y2:int )
 	return abs(x2-x1) + abs(y2-y1)
 endfunction
 
-function idist3d :int( x1:int, y1:int, z1:int, x2:int, y2:int, z2:int )
+function idist3d:int ( x1:int, y1:int, z1:int, x2:int, y2:int, z2:int )
+	return abs(x2-x1) + abs(y2-y1) + abs(z2-z1)
+endfunction
+
+function idist4d:int ( x1:int, y1:int, z1:int, w1:int, x2:int, y2:int, z2:int, w2:int )
 	return abs(x2-x1) + abs(y2-y1) + abs(z2-z1)
 endfunction
 
@@ -561,6 +574,10 @@ endfunction
 
 function acosf:float( f:float )
 	return float(acos(f))/180*500
+endfunction
+
+function atanf:float( y:float, x:float )
+  return float(atan2(y,x))/360*1000
 endfunction
 
 '' ---------------------
@@ -1069,4 +1086,6 @@ function cut:string[](s:string, n:int=80)
 endfunction
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
 

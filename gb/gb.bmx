@@ -49,7 +49,6 @@ Include "modules/core/color.bmx"
 Include "modules/core/palette.bmx"
 Include "modules/core/timer.bmx"
 Include "modules/core/dict.bmx"
-Include "modules/core/tag.bmx"
 Include "modules/core/counter.bmx"
 Include "modules/core/canvas.bmx"
 Include "modules/core/image.bmx"
@@ -58,10 +57,10 @@ Include "modules/core/logchain.bmx"
 Include "modules/core/drawstack.bmx"
 Include "modules/core/pulser.bmx"
 Include "modules/core/array.bmx"
-Include "modules/core/transition.bmx"
 Include "modules/core/scene.bmx"
 include "modules/core/world.bmx"
 include "modules/core/mstring.bmx"
+include "modules/core/script.bmx"
 
 '' gfx modules
 Include "modules/gfx/animation.bmx"
@@ -72,6 +71,7 @@ Include "modules/gfx/tilemap.bmx"
 Include "modules/gfx/sprite.bmx"
 include "modules/gfx/model.bmx"
 include "modules/gfx/tri.bmx"
+Include "modules/gfx/transition.bmx"
 
 '' ui objects
 Include "modules/ui/button.bmx"
@@ -85,11 +85,11 @@ Include "modules/comp/controller.bmx"
 Include "modules/comp/camera.bmx"
 Include "modules/comp/gbml.bmx"
 Include "modules/comp/graph.bmx"
+include "modules/comp/canvas.bmx"
 Include "modules/comp/console.bmx"
 Include "modules/comp/mouse.bmx"
 Include "modules/comp/gbs.bmx"
 Include "modules/comp/net.bmx"
-
 Include "modules/comp/assets.bmx"
 
 '' debugging
@@ -156,8 +156,6 @@ const gb_string :string = "string"
 Type t_gb
   Field running         :t_bool
   Field paused          :t_bool
-  Field speed           :t_number
-  Field canvas          :t_canvas
   Field settings        :t_dict
   
 
@@ -171,6 +169,7 @@ Type t_gb
   Field assets          :t_gb_assets
   Field visual          :t_gb_visual
   Field graph           :t_gb_graph
+  Field canvas          :t_gb_canvas
   Field mouse           :t_gb_mouse
   Field console         :t_gb_console
   Field debug           :t_gb_debug
@@ -199,8 +198,6 @@ Function new_gb:t_gb ()
   Local r:t_gb      = New t_gb
   r.running         = new_bool(True)
   r.paused          = new_bool(False)
-  r.speed           = new_number(1.0, 0.0, 10.0)
-  r.canvas          = new_canvas(400,240)
   r.settings        = null
 
   r.autosave_timer  = new_timer(60)
@@ -216,8 +213,10 @@ Function gb_init()
   gb = new_gb()
   gb_timing_init()
   gb_assets_init()
+  gb_audio_init()
   gb_visual_init()
   gb_graph_init()
+  gb_canvas_init()
   gb_mouse_init()
   gb_debug_init()
   gb_camera_init()
@@ -252,6 +251,7 @@ Function gb_update()
 	gb_timing_update	()
   gb_console_update	()
   gb_visual_update	()
+  gb_canvas_update  ()
   gb_mouse_update		()
   gb_net_update     ()
 	If bool_neq(gb.console.active)
@@ -275,7 +275,7 @@ Function gb_draw()
   gb_graph_draw     ()
 	gb_debug_draw_bg	()
 	If gb.scene Then scene_draw(gb.scene)
-  canvas_draw       (gb.canvas)
+  gb_canvas_draw    ()
   gb_editor_draw    ()
 	gb_testing_draw		()
 	gb_visual_draw		()
@@ -299,13 +299,15 @@ Function gb_stop()
 	bool_set(gb.running, False)
 EndFunction
 
-Function gb_set_speed(n:Float)
-	number_set(gb.speed, n)
-EndFunction
-
 Function gb_pause(b:Byte=True)
 	bool_set( gb.paused, bool(b) )
 EndFunction
+
+function gb_switch_scene(s:t_scene)
+  scene_end(gb.scene)
+  gb.scene = s
+  scene_init(gb.scene)
+endfunction
 
 '''''''''''''''''''''''''''''''''''''''''''
 '' saving and loading GBML settings file ''

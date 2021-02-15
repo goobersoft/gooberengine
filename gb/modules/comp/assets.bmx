@@ -25,6 +25,7 @@ endfunction
 
 function gb_assets_init()
   gb.assets = new_gb_assets()
+  autoimageflags(0)
 endfunction
 
 function gb_assets_load()
@@ -79,7 +80,8 @@ endfunction
 
 function gb_assets_load_default_images()
 	gb_assets_load_image(0,"gb/media/images/gb-0.png")
-  gb_assets_load_image(1,"gb/media/images/editor-bg.png")
+  gb_assets_load_image(1,"gb/media/images/gb-1.png")
+  gb_assets_load_image(2,"gb/media/images/editor-bg.png")
 endfunction
 
 function gb_assets_load_default_sounds()
@@ -87,6 +89,8 @@ function gb_assets_load_default_sounds()
 	gb_assets_load_sound(91,"gb/media/sounds/jake-2.ogg")
 	gb_assets_load_sound(92,"gb/media/sounds/jake-3.ogg")
 	gb_assets_load_sound(93,"gb/media/sounds/jake-4.ogg")
+  gb_assets_load_sound(80,"gb/media/instruments/silence.ogg")
+  gb_assets_load_sound(81,"gb/media/instruments/sawtooth.ogg")
 endfunction
 
 function gb_assets_load_default_fonts()

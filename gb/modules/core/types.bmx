@@ -7,13 +7,18 @@
 
 type t_datum
   field id        :string
+  field ref       :string
   field value     :object
+  method get:object(); return value; endmethod
 endtype
 
-function new_datum:t_datum (d:object=null, s:string="null")
+function new_datum:t_datum (d:object=null, id:string="datum")
   local r:t_datum = new t_datum
   r.value     = d
-  r.id        = s
+  r.id        = id
+  if d
+    r.ref       = d.tostring()
+  endif
   return r
 endfunction
 
@@ -59,11 +64,14 @@ endfunction
 
 function datum_set_value(o:t_datum, d:object)
   o.value = d
+  if d
+    o.ref = d.tostring()
+  endif
 endfunction
 function datum_set_id(o:t_datum, s:string)
   o.id = s
 endfunction
-function datum_set(o:t_datum, d:object, s:string)
+function datum_set(o:t_datum, d:object, s:string=null)
   datum_set_value(o,d)
   if s <> null
     datum_set_id(o,s)
@@ -77,6 +85,10 @@ global datum_get:object(o:t_datum) = datum_value
 
 function datum_id:string(o:t_datum)
   return o.id
+endfunction
+
+function datum_ref:string(o:t_datum)
+  return o.ref
 endfunction
 
 function datum_to_string:string(d:t_datum)
@@ -107,11 +119,7 @@ function datum_to_string:string(d:t_datum)
         local u:t_string = t_string(d.value)
         return "string:" + string_to_string(u)
       default
-        if d.value
-          return "datum: " + datum_to_string(t_datum(d.value))
-        else
-          return "datum: null"
-        endif
+        return d.id + ":" + d.ref
     endselect
   endif
   return ""
@@ -122,7 +130,9 @@ endfunction
 ''''''''''
 
 Type t_bool
-	Field value :Byte
+	Field value :byte
+  method get:int(); return int(value); endmethod
+  method set(n:int); self.value = bool(n); endmethod
 endtype
 
 function new_bool:t_bool ( n:int=false )
@@ -185,6 +195,7 @@ endfunction
 
 Type t_byte
 	Field value :Byte
+  method get:byte(); return value; endmethod
 endtype
 
 function new_byte:t_byte ( v:int )
@@ -287,6 +298,7 @@ endfunction
 
 Type t_short
 	Field value :short
+  method get:short(); return value; endmethod
 endtype
 
 function new_short:t_short ( v:int )
@@ -389,6 +401,7 @@ endfunction
 
 Type t_int
 	Field value :int
+  method get:int(); return value; endmethod
 endtype
 
 function new_int:t_int ( v:int )
@@ -491,6 +504,7 @@ endfunction
 
 Type t_long
 	Field value :long
+  method get:long(); return value; endmethod
 endtype
 
 function new_long:t_long ( v:long )
@@ -585,6 +599,7 @@ endfunction
 
 Type t_float
 	Field value :float
+  method get:float(); return value; endmethod
 endtype
 
 function new_float:t_float ( v:float )
@@ -671,6 +686,7 @@ endfunction
 
 Type t_double
 	Field value :double
+  method get:double(); return value; endmethod
 endtype
 
 function new_double:t_double ( v:double )
@@ -757,6 +773,7 @@ endfunction
 
 type t_string
 	field value :string
+  method get:string(); return value; endmethod
 endtype
 
 function new_string:t_string ( v:string )
@@ -822,3 +839,5 @@ endfunction
 function string_to_string:string(s:t_string)
   return s.value
 endfunction
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''

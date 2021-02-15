@@ -7,6 +7,7 @@ Import sdl.sdl
 ''''''''''''''
 
 include "gb/gb.bmx"
+include "gf/gf.bmx"
 
 ''''''''''''
 '' Events ''
@@ -14,26 +15,32 @@ include "gb/gb.bmx"
 
 function event_init()
 	gb_init()
+  gf_init()
 endfunction
 
 function event_load()
 	gb_load()
+  gf_load()
 endfunction
 
 function event_start()
 	gb_start()
+  gf_start()
 endfunction
 
 function event_update()
 	gb_update()
+  gf_update()
 endfunction
 
 function event_draw()
 	gb_draw()
+  gf_draw()
 endfunction
 
 function event_end()
 	gb_end()
+  gf_end()
 endfunction
 
 function event_main()
