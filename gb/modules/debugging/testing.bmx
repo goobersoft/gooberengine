@@ -1,27 +1,14 @@
 
 
-''''''''''
-'' type ''
-''''''''''
-
-type t_gb_testing
-  field gball :t_gball
-endtype
-
-function new_gb_testing:t_gb_testing ()
-  local r:t_gb_testing = new t_gb_testing
-
-  r.gball = new_gball()
-
-  return r
-endfunction
+'''''''''''''
+'' globals ''
+'''''''''''''
 
 ''''''''''''
 '' Events ''
 ''''''''''''
 
 function gb_testing_init()
-	gb.testing = new_gb_testing()
 endfunction
 
 function gb_testing_load()
@@ -39,12 +26,10 @@ function gb_testing_start()
 endfunction
 
 function gb_testing_update()
-  gball_update( gb.testing.gball )
+  
 endfunction
 
 function gb_testing_draw()
-  gball_draw( gb.testing.gball, 10, 10 )
-  gb_graph_draw_tile_text(0,23,1,"Make sure you shake it up real good with spacebar!");
 endfunction
 
 function gb_testing_end()

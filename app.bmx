@@ -34,8 +34,9 @@ function event_update()
 endfunction
 
 function event_draw()
-	gb_draw()
+	gb_draw_1()
   gf_draw()
+  gb_draw_2()
 endfunction
 
 function event_end()
@@ -47,7 +48,7 @@ function event_main()
   event_init()
   event_load()
   event_start()
-  while bool_eq(gb.running,true) and appterminate()=false
+  while bool_eq(gb_running,true) and appterminate()=false
     event_update()
     event_draw()
     flip(1)

@@ -1,10 +1,10 @@
-include "dict/dictval.bmx"
+
 
 type t_dict
 	field length 		:int
 	field	pos 			:int
 	field keys			:string[]
-	field values		:t_dictval[]
+	field values		:t_dict_val[]
 endtype
 
 function new_dict:t_dict()
@@ -12,7 +12,7 @@ function new_dict:t_dict()
 	r.length 		= 0
 	r.pos 			= undefined
 	r.keys			= new string[0]
-	r.values		= new t_dictval[0]
+	r.values		= new t_dict_val[0]
 	return r
 endfunction
 
@@ -36,7 +36,7 @@ function dict_expand(d:t_dict)
 	d.values	= d.values[..d.length]
 endfunction
 
-function dict_find:t_dictval(d:t_dict, k:string=null)
+function dict_find:t_dict_val(d:t_dict, k:string=null)
 	if (d.length = 0)
 		return null
 	else
@@ -90,7 +90,7 @@ endfunction
 '' setters ''
 '''''''''''''
 
-function dict_set_val:t_dictval(d:t_dict, k:string, v:t_dictval)
+function dict_set_val:t_dict_val(d:t_dict, k:string, v:t_dict_val)
 	dict_lencheck(d)
 	local u:int = dict_find_pos(d,k)
 	if (u = undefined) then u = dict_find_pos(d,null)
@@ -99,93 +99,93 @@ function dict_set_val:t_dictval(d:t_dict, k:string, v:t_dictval)
 	return d.values[u]
 endfunction
 
-function dict_set_byte:t_dictval(d:t_dict, k:string, v:byte)
+function dict_set_byte:t_dict_val(d:t_dict, k:string, v:byte)
 	dict_lencheck(d)
 	local u:int = dict_find_pos(d,k)
 	if (u = undefined) then u = dict_find_pos(d,null)
 	d.keys[u] = k
-	d.values[u] = new_dictval()
-	dictval_set_byte(d.values[u], v)
+	d.values[u] = new_dict_val()
+	dict_val_set_byte(d.values[u], v)
 	return d.values[u]
 endfunction
 
-function dict_set_short:t_dictval(d:t_dict, k:string, v:short)
+function dict_set_short:t_dict_val(d:t_dict, k:string, v:short)
 	dict_lencheck(d)
 	local u:int = dict_find_pos(d,k)
 	if (u = undefined) then u = dict_find_pos(d,null)
 	d.keys[u] = k
-	d.values[u] = new_dictval()
-	dictval_set_short(d.values[u], v)
+	d.values[u] = new_dict_val()
+	dict_val_set_short(d.values[u], v)
 	return d.values[u]
 endfunction
 
-function dict_set_int:t_dictval(d:t_dict, k:string, v:int)
+function dict_set_int:t_dict_val(d:t_dict, k:string, v:int)
 	dict_lencheck(d)
 	local u:int = dict_find_pos(d,k)
 	if (u = undefined) then u = dict_find_pos(d,null)
 	d.keys[u] = k
-	d.values[u] = new_dictval()
-	dictval_set_int(d.values[u], v)
+	d.values[u] = new_dict_val()
+	dict_val_set_int(d.values[u], v)
 	return d.values[u]
 endfunction
 
-function dict_set_long:t_dictval(d:t_dict, k:string, v:long)
+function dict_set_long:t_dict_val(d:t_dict, k:string, v:long)
 	dict_lencheck(d)
 	local u:int = dict_find_pos(d,k)
 	if (u = undefined) then u = dict_find_pos(d,null)
 	d.keys[u] = k
-	d.values[u] = new_dictval()
-	dictval_set_long(d.values[u], v)
+	d.values[u] = new_dict_val()
+	dict_val_set_long(d.values[u], v)
 	return d.values[u]
 endfunction
 
-function dict_set_float:t_dictval(d:t_dict, k:string, v:float)
+function dict_set_float:t_dict_val(d:t_dict, k:string, v:float)
 	dict_lencheck(d)
 	local u:int = dict_find_pos(d,k)
 	if (u = undefined) then u = dict_find_pos(d,null)
 	d.keys[u] = k
-	d.values[u] = new_dictval()
-	dictval_set_float(d.values[u], v)
+	d.values[u] = new_dict_val()
+	dict_val_set_float(d.values[u], v)
 	return d.values[u]
 endfunction
 
-function dict_set_double:t_dictval(d:t_dict, k:string, v:double)
+function dict_set_double:t_dict_val(d:t_dict, k:string, v:double)
 	dict_lencheck(d)
 	local u:int = dict_find_pos(d,k)
 	if (u = undefined) then u = dict_find_pos(d,null)
 	d.keys[u] = k
-	d.values[u] = new_dictval()
-	dictval_set_double(d.values[u], v)
+	d.values[u] = new_dict_val()
+	dict_val_set_double(d.values[u], v)
 	return d.values[u]
 endfunction
 
-function dict_set_string:t_dictval(d:t_dict, k:string, v:string)
+function dict_set_string:t_dict_val(d:t_dict, k:string, v:string)
 	dict_lencheck(d)
 	local u:int = dict_find_pos(d,k)
 	if (u = undefined) then u = dict_find_pos(d,null)
 	d.keys[u] = k
-	d.values[u] = new_dictval()
-	dictval_set_string(d.values[u], v)
+	d.values[u] = new_dict_val()
+	dict_val_set_string(d.values[u], v)
 	return d.values[u]
 endfunction
 
-function dict_set_dir:t_dictval(d:t_dict, k:string, t:t_dict=null)
+function dict_set_dir:t_dict_val(d:t_dict, k:string, t:t_dict=null)
 	dict_lencheck(d)
 	local u:int = dict_find_pos(d,k)
 	if (u = undefined) then u = dict_find_pos(d,null)
 	d.keys[u] = k
-	d.values[u] = new_dictval()
-	dictval_set_dir(d.values[u],t)
+	d.values[u] = new_dict_val()
+	dict_val_set_dir(d.values[u],t)
 	return d.values[u]
 endfunction
 
-function dict_set_data:t_dictval ( d:t_dict, k:string, v:object )
+function dict_set_data:t_dict_val ( d:t_dict, k:string, v:object )
   dict_lencheck(d)
 	local u:int = dict_find_pos(d,k)
 	if (u = undefined) then u = dict_find_pos(d,null)
 	d.keys[u] = k
-	d.values[u] = new_dictval()
-	dictval_set_data(d.values[u], v)
+	d.values[u] = new_dict_val()
+	dict_val_set_data(d.values[u], v)
 	return d.values[u]
 endfunction
 
@@ -196,7 +196,7 @@ endfunction
 function dict_get_byte:byte(d:t_dict, k:string)
 	local u:int = dict_find_pos(d,k)
 	if (u <> undefined)
-		return dictval_get_byte(d.values[u])
+		return dict_val_get_byte(d.values[u])
 	endif
 	return 0
 endfunction
@@ -204,7 +204,7 @@ endfunction
 function dict_get_short:short(d:t_dict, k:string)
 	local u:int = dict_find_pos(d,k)
 	if (u <> undefined)
-		return dictval_get_short(d.values[u])
+		return dict_val_get_short(d.values[u])
 	endif
 	return 0
 endfunction
@@ -212,7 +212,7 @@ endfunction
 function dict_get_int:int(d:t_dict, k:string)
 	local u:int = dict_find_pos(d,k)
 	if (u <> undefined)
-		return dictval_get_int(d.values[u])
+		return dict_val_get_int(d.values[u])
 	endif
 	return 0
 endfunction
@@ -220,7 +220,7 @@ endfunction
 function dict_get_long:long(d:t_dict, k:string)
 	local u:int = dict_find_pos(d,k)
 	if (u <> undefined)
-		return dictval_get_long(d.values[u])
+		return dict_val_get_long(d.values[u])
 	endif
 	return 0
 endfunction
@@ -228,7 +228,7 @@ endfunction
 function dict_get_float:float(d:t_dict, k:string)
 	local u:int = dict_find_pos(d,k)
 	if (u <> undefined)
-		return dictval_get_float(d.values[u])
+		return dict_val_get_float(d.values[u])
 	endif
 	return 0
 endfunction
@@ -236,7 +236,7 @@ endfunction
 function dict_get_double:double(d:t_dict, k:string)
 	local u:int = dict_find_pos(d,k)
 	if (u <> undefined)
-		return dictval_get_double(d.values[u])
+		return dict_val_get_double(d.values[u])
 	endif
 	return 0
 endfunction
@@ -244,7 +244,7 @@ endfunction
 function dict_get_string:string(d:t_dict, k:string)
 	local u:int = dict_find_pos(d,k)
 	if (u <> undefined)
-		return dictval_get_string(d.values[u])
+		return dict_val_get_string(d.values[u])
 	endif
 	return 0
 endfunction
@@ -252,7 +252,7 @@ endfunction
 function dict_get_dir:t_dict(d:t_dict, k:string)
 	local u:int = dict_find_pos(d,k)
 	if (u <> undefined)
-		return dictval_get_dir(d.values[u])
+		return dict_val_get_dir(d.values[u])
 	endif
 	return null
 endfunction
@@ -260,7 +260,7 @@ endfunction
 function dict_get_data:object(d:t_dict, k:string)
 	local u:int = dict_find_pos(d,k)
 	if (u <> undefined)
-		return dictval_get_data(d.values[u])
+		return dict_val_get_data(d.values[u])
 	endif
 	return null
 endfunction
@@ -268,7 +268,7 @@ endfunction
 function dict_get_id:int(d:t_dict, k:string)
 	local u:int = dict_find_pos(d,k)
 	if (u <> undefined)
-		return dictval_get_id(d.values[u])
+		return dict_val_get_id(d.values[u])
 	endif
 	return undefined
 endfunction
@@ -277,23 +277,23 @@ function dict_get_type:string( d:t_dict, k:string )
 	local u:int = dict_find_pos(d,k)
 	if (u <> undefined)
 		select d.values[u].id
-			case dictval_id_byte
+			case dict_val_id_byte
 				return "byte"
-			case dictval_id_short
+			case dict_val_id_short
 				return "short"
-			case dictval_id_int
+			case dict_val_id_int
 				return "int"
-			case dictval_id_long
+			case dict_val_id_long
 				return "long"
-			case dictval_id_float
+			case dict_val_id_float
 				return "float"
-			case dictval_id_double
+			case dict_val_id_double
 				return "double"
-			case dictval_id_string
+			case dict_val_id_string
 				return "string"
-			case dictval_id_dir
+			case dict_val_id_dir
 				return "dir"
-      case dictval_id_data
+      case dict_val_id_data
         return "data"
       default
         return "null"
@@ -306,7 +306,7 @@ endfunction
 '' writing ''
 '''''''''''''
 
-function dict_write_val:int( d:t_dict, s:string, v:t_dictval )
+function dict_write_val:int( d:t_dict, s:string, v:t_dict_val )
 	local w:string[] = tokenize(s,"/",false)
 	local g:t_dict = null
 	if (w.length = 0)

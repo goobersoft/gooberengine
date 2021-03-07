@@ -131,7 +131,7 @@ function lightcube_draw( a:t_lightcube, x:float=0, y:float=0 )
 endfunction
 
 function lightcube_draw3d(a:t_lightcube, x:float=0, y:float=0, z:float=0)
-	local u:t_drawcmd
+	local u:t_drawstack_cmd
 	local xx:int = 0
 	local yy:int = 0
 	local zz:int = 0
@@ -144,8 +144,8 @@ function lightcube_draw3d(a:t_lightcube, x:float=0, y:float=0, z:float=0)
 		xx = i / 100
 		yy = (i / 10) mod 10
 		zz = i mod 10
-		drawcmd_set_color( u, (float(xx)/10*gb.graph.clscolor.a/3), (float(yy)/10*gb.graph.clscolor.a/3), (float(zz)/10*gb.graph.clscolor.a/3))
-		drawcmd_set_mode( u, gb_graph_mode_add )
+		drawstack_cmd_set_color( u, (float(xx)/10*gb_graph_clscolor.a/3), (float(yy)/10*gb_graph_clscolor.a/3), (float(zz)/10*gb_graph_clscolor.a/3))
+		drawstack_cmd_set_mode( u, gb_graph_mode_add )
 	next
 	drawstack_draw3d(a.drawstack, x,y,z)
 endfunction

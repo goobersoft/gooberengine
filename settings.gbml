@@ -3,7 +3,7 @@ visual {
   fullscreen : @0;
   scanlines {
     active : @0;
-    thick : @2;
-    style : @0;
+    thick : @3;
+    style : @1;
   }
 }

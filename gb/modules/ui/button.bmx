@@ -7,6 +7,10 @@ const button_state_normal			:int = 0
 const button_state_hover			:int = 1
 const button_state_press			:int = 2
 
+''''''''''
+'' type ''
+''''''''''
+
 type t_button
 	field rect 					:t_rect
 	field ibox					:t_ibox
@@ -68,8 +72,8 @@ endfunction
 ''''''''''''
 
 function button_update(b:t_button, d:float)
-	local mx:float 	= gb_mouse_virtual_tile_x()
-	local my:float 	= gb_mouse_virtual_tile_y()
+	local mx:float 	= gb_mouse_tile_x()
+	local my:float 	= gb_mouse_tile_y()
 	local mc:int 		= gb_mouse_pressed()
 	
 	number_add(b.presstime, -d)

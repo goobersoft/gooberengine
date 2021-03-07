@@ -1,5 +1,5 @@
 
-include "drawstack/drawcmd.bmx"
+
 
 '''''''''''
 '' nodes ''
@@ -7,10 +7,10 @@ include "drawstack/drawcmd.bmx"
 
 type t_drawstack_node
 	field link 	:t_drawstack_node
-	field data	:t_drawcmd
+	field data	:t_drawstack_cmd
 endtype
 
-function new_drawstack_node:t_drawstack_node(d:t_drawcmd)
+function new_drawstack_node:t_drawstack_node(d:t_drawstack_cmd)
 	local r:t_drawstack_node = new t_drawstack_node
 	r.link = null
 	r.data = d
@@ -42,7 +42,7 @@ endfunction
 '' functions ''
 '''''''''''''''
 
-function drawstack_push(d:t_drawstack, m:t_drawcmd)
+function drawstack_push(d:t_drawstack, m:t_drawstack_cmd)
 	local t	 	:t_drawstack_node = new_drawstack_node(m)
 	local v	 	:t_drawstack_node
 	local vl 	:t_drawstack_node
@@ -82,8 +82,8 @@ function drawstack_push(d:t_drawstack, m:t_drawcmd)
 	endif
 endfunction
 
-function drawstack_pop:t_drawcmd(d:t_drawstack)
-	local r :t_drawcmd
+function drawstack_pop:t_drawstack_cmd(d:t_drawstack)
+	local r :t_drawstack_cmd
 	if (d.first)
 		r = d.first.data
 		if (d.first.link)
@@ -101,51 +101,51 @@ endfunction
 '' drawing commands ''
 ''''''''''''''''''''''
 
-function drawstack_draw_tile:t_drawcmd( d:t_drawstack, x:float, y:float, z:float,
+function drawstack_draw_tile:t_drawstack_cmd( d:t_drawstack, x:float, y:float, z:float,
 im:int, ix:float, iy:float )
-	local r:t_drawcmd = new_drawcmd_tile(x,y,z,im,ix,iy)
+	local r:t_drawstack_cmd = new_drawstack_cmd_tile(x,y,z,im,ix,iy)
 	drawstack_push(d,r)
 	return r
 endfunction
 
-function drawstack_draw_tile_rect:t_drawcmd( d:t_drawstack, x:float, y:float, z:float,
+function drawstack_draw_tile_rect:t_drawstack_cmd( d:t_drawstack, x:float, y:float, z:float,
 im:int, ix:float, iy:float, rx:int, ry:int)
-	local r:t_drawcmd = new_drawcmd_tile_rect(x,y,z,im,ix,iy,rx,ry)
+	local r:t_drawstack_cmd = new_drawstack_cmd_tile_rect(x,y,z,im,ix,iy,rx,ry)
 	drawstack_push(d,r)
 	return r
 endfunction
 
-function drawstack_draw_tile_box:t_drawcmd( d:t_drawstack, x:float, y:float, z:float,
+function drawstack_draw_tile_box:t_drawstack_cmd( d:t_drawstack, x:float, y:float, z:float,
 im:int, ix:float, iy:float, iw:float, ih:float)
-	local r:t_drawcmd = new_drawcmd_tile_box(x,y,z,im,ix,iy,iw,ih)
+	local r:t_drawstack_cmd = new_drawstack_cmd_tile_box(x,y,z,im,ix,iy,iw,ih)
 	drawstack_push(d,r)
 	return r
 endfunction
 
-function drawstack_draw_tile_boxrect:t_drawcmd( d:t_drawstack, x:float, y:float, z:float,
+function drawstack_draw_tile_boxrect:t_drawstack_cmd( d:t_drawstack, x:float, y:float, z:float,
 im:int, ix:float, iy:float, iw:float, ih:float, rx:int, ry:int)
-	local r:t_drawcmd = new_drawcmd_tile_boxrect(x,y,z,im,ix,iy,iw,ih,rx,ry)
+	local r:t_drawstack_cmd = new_drawstack_cmd_tile_boxrect(x,y,z,im,ix,iy,iw,ih,rx,ry)
 	drawstack_push(d,r)
 	return r
 endfunction
 
-function drawstack_draw_tile_text:t_drawcmd( d:t_drawstack, x:float, y:float, z:float,
+function drawstack_draw_tile_text:t_drawstack_cmd( d:t_drawstack, x:float, y:float, z:float,
 im:int, s:string)
-	local r:t_drawcmd = new_drawcmd_tile_text(x,y,z,im,s)
+	local r:t_drawstack_cmd = new_drawstack_cmd_tile_text(x,y,z,im,s)
 	drawstack_push(d,r)
 	return r
 endfunction
 
-function drawstack_draw_tile_window:t_drawcmd( d:t_drawstack, x:float, y:float, z:float,
+function drawstack_draw_tile_window:t_drawstack_cmd( d:t_drawstack, x:float, y:float, z:float,
 im:int, ix:float, iy:float, tw:int, th:int)
-	local r:t_drawcmd = new_drawcmd_tile_window(x,y,z,im,ix,iy,tw,th)
+	local r:t_drawstack_cmd = new_drawstack_cmd_tile_window(x,y,z,im,ix,iy,tw,th)
 	drawstack_push(d,r)
 	return r
 endfunction
 
-function drawstack_draw_sprite:t_drawcmd( d:t_drawstack, x:float, y:float, z:float,
+function drawstack_draw_sprite:t_drawstack_cmd( d:t_drawstack, x:float, y:float, z:float,
 s:t_sprite)
-	local r:t_drawcmd = new_drawcmd_tile_box(s.pos.x, s.pos.y, s.pos.z,
+	local r:t_drawstack_cmd = new_drawstack_cmd_tile_box(s.pos.x, s.pos.y, s.pos.z,
 		s.ibox.id, s.ibox.x, s.ibox.y, s.ibox.w, s.ibox.h)
 	r.color[0] 	= s.color.r
 	r.color[1] 	= s.color.g
@@ -161,7 +161,7 @@ s:t_sprite)
 	return r
 endfunction
 
-function drawstack_draw_tilemap:t_drawcmd(d:t_drawstack,x:float,y:float,z:float,t:t_tilemap)
+function drawstack_draw_tilemap:t_drawstack_cmd(d:t_drawstack,x:float,y:float,z:float,t:t_tilemap)
 endfunction
 
 function drawstack_draw_tile_line(d:t_drawstack,x:float,y:float,z:float,
@@ -181,22 +181,22 @@ x2:float, y2:float, z2:float, im:int, ix:float, iy:float, s:int)
 	next
 endfunction
 
-function drawstack_draw_rect:t_drawcmd(d:t_drawstack, x:float, y:float, z:float,
+function drawstack_draw_rect:t_drawstack_cmd(d:t_drawstack, x:float, y:float, z:float,
 w:float, h:float)
-	local r:t_drawcmd = new_drawcmd_rect(x,y,z,w,h)
+	local r:t_drawstack_cmd = new_drawstack_cmd_rect(x,y,z,w,h)
 	drawstack_push(d,r)
 	return r
 endfunction
 
-function drawstack_draw_oval:t_drawcmd(d:t_drawstack, x:float, y:float, z:float,
+function drawstack_draw_oval:t_drawstack_cmd(d:t_drawstack, x:float, y:float, z:float,
 w:float, h:float)
-	local r:t_drawcmd = new_drawcmd_oval(x,y,z,w,h)
+	local r:t_drawstack_cmd = new_drawstack_cmd_oval(x,y,z,w,h)
 	drawstack_push(d,r)
 	return r
 endfunction
 
-function drawstack_draw_tri:t_drawcmd(d:t_drawstack, p1:t_point3, p2:t_point3, p3:t_point3)
-  local r:t_drawcmd = new_drawcmd_tri(p1,p2,p3)
+function drawstack_draw_tri:t_drawstack_cmd(d:t_drawstack, p1:t_point3, p2:t_point3, p3:t_point3)
+  local r:t_drawstack_cmd = new_drawstack_cmd_tri(p1,p2,p3)
   drawstack_push(d,r)
   return r
 endfunction
@@ -210,9 +210,9 @@ function drawstack_update(a:t_drawstack)
 endfunction
 
 function drawstack_draw3d(d:t_drawstack, x:float=0, y:float=0, z:float=0)
-	local u:t_drawcmd = drawstack_pop(d)
+	local u:t_drawstack_cmd = drawstack_pop(d)
 	while (u)
-		drawcmd_draw(u, x,y,z, d.perspec.value)
+		drawstack_cmd_draw(u, x,y,z, d.perspec.value)
 		u = drawstack_pop(d)
 	wend
 	gb_graph_reset()

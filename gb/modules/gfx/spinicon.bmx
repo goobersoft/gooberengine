@@ -57,7 +57,7 @@ function spinicon_update(s:t_spinicon)
 endfunction
 
 function spinicon_draw(s:t_spinicon, x:float=0, y:float=0)
-	gb_graph_set_handle(gb.graph.scale.x/2, gb.graph.scale.y/2)
+	gb_graph_set_handle(gb_graph_scale.x/2, gb_graph_scale.y/2)
 	gb_graph_set_angle( s.angle.value )
   gb_graph_set_alpha( s.fade.value/1000 * 3 )
 	for local i:int = 0 to s.iconlength.value-1

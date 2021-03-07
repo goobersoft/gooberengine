@@ -77,108 +77,76 @@ endfunction
 '' finding stuff in arrays ''
 '''''''''''''''''''''''''''''
 
-Function find:Int ( a:Byte[], d:Byte=0 )
-	If (a)
-		If (a.length > 0)
-			For Local i:Int = 0 To a.length
-				If (a[i] = d)
-					Return i
-				EndIf
-			Next
-		EndIf
-	EndIf
+Function find:Int ( a:Byte[], d:Byte=0, c:int=0 )
+	local u:int = 0
+  while u < a.length
+    if a[c] = d return u
+    c = (c + 1) mod a.length
+  wend
 	Return -1
 EndFunction
 
-Function find:Int ( a:Short[], d:Short=0 )
-	If (a)
-		If (a.length > 0)
-			For Local i:Int = 0 To a.length
-				If (a[i] = d)
-					Return i
-				EndIf
-			Next
-		EndIf
-	EndIf
+Function find:Int ( a:Short[], d:Short=0, c:int=0 )
+	local u:int = 0
+  while u < a.length
+    if a[c] = d return u
+    c = (c + 1) mod a.length
+  wend
 	Return -1
 EndFunction
 
-Function find:Int ( a:Int[], d:Int=0 )
-	If (a)
-		If (a.length > 0)
-			For Local i:Int = 0 To a.length
-				If (a[i] = d)
-					Return i
-				EndIf
-			Next
-		EndIf
-	EndIf
+Function find:Int ( a:Int[], d:Int=0, c:int=0 )
+	local u:int = 0
+  while u < a.length
+    if a[c] = d return u
+    c = (c + 1) mod a.length
+  wend
 	Return -1
 EndFunction
 
-Function find:Int ( a:Long[], d:Long=0 )
-	If (a)
-		If (a.length > 0)
-			For Local i:Int = 0 To a.length
-				If (a[i] = d)
-					Return i
-				EndIf
-			Next
-		EndIf
-	EndIf
+Function find:Int ( a:Long[], d:Long=0, c:int=0 )
+	local u:int = 0
+  while u < a.length
+    if a[c] = d return u
+    c = (c + 1) mod a.length
+  wend
 	Return -1
 EndFunction
 
-Function find:Int ( a:Float[], d:Float=0.0 )
-	If (a)
-		If (a.length > 0)
-			For Local i:Int = 0 To a.length
-				If (a[i] = d)
-					Return i
-				EndIf
-			Next
-		EndIf
-	EndIf
+Function find:Int ( a:Float[], d:Float=0.0, c:int=0 )
+	local u:int = 0
+  while u < a.length
+    if a[c] = d return u
+    c = (c + 1) mod a.length
+  wend
 	Return -1
 EndFunction
 
-Function find:Int ( a:Double[], d:Double=0.0 )
-	If (a)
-		If (a.length > 0)
-			For Local i:Int = 0 To a.length
-				If (a[i] = d)
-					Return i
-				EndIf
-			Next
-		EndIf
-	EndIf
+Function find:Int ( a:Double[], d:Double=0.0, c:int=0 )
+	local u:int = 0
+  while u < a.length
+    if a[c] = d return u
+    c = (c + 1) mod a.length
+  wend
 	Return -1
 EndFunction
 
-Function find:Int ( a:String[], d:String="" )
-	If (a)
-		If (a.length > 0)
-			For Local i:Int = 0 To a.length
-				If (a[i] = d)
-					Return i
-				EndIf
-			Next
-		EndIf
-	EndIf
+Function find:Int ( a:String[], d:String="", c:int=0 )
+	local u:int = 0
+  while u < a.length
+    if a[c] = d return u
+    c = (c + 1) mod a.length
+  wend
 	Return -1
 EndFunction
 
 '' generic object finding function to check memory addresses
-Function find:Int ( a:Object[], d:Object=Null )
-	If (a)
-		If (a.length > 0)
-			For Local i:Int = 0 To a.length
-				If (a[i] = d)
-					Return i
-				EndIf
-			Next
-		EndIf
-	EndIf
+Function find:Int ( a:Object[], d:Object=Null, c:int=0 )
+	local u:int = 0
+  while u < a.length
+    if a[c] = d return u
+    c = (c + 1) mod a.length
+  wend
 	Return -1
 EndFunction
 

@@ -43,24 +43,26 @@ Include "modules/core/rect.bmx"
 Include "modules/core/cube.bmx"
 Include "modules/core/font.bmx"
 Include "modules/core/ibox.bmx"
+include "modules/core/list_iterator.bmx"
+include "modules/core/list_node.bmx"
 include "modules/core/list.bmx"
 Include "modules/core/stopwatch.bmx"
 Include "modules/core/color.bmx"
 Include "modules/core/palette.bmx"
 Include "modules/core/timer.bmx"
+Include "modules/core/dict_val.bmx"
 Include "modules/core/dict.bmx"
 Include "modules/core/counter.bmx"
 Include "modules/core/canvas.bmx"
 Include "modules/core/image.bmx"
 Include "modules/core/sound.bmx"
 Include "modules/core/logchain.bmx"
+include "modules/core/drawstack_cmd.bmx"
 Include "modules/core/drawstack.bmx"
 Include "modules/core/pulser.bmx"
 Include "modules/core/array.bmx"
 Include "modules/core/scene.bmx"
-include "modules/core/world.bmx"
 include "modules/core/mstring.bmx"
-include "modules/core/script.bmx"
 
 '' gfx modules
 Include "modules/gfx/animation.bmx"
@@ -78,23 +80,24 @@ Include "modules/ui/button.bmx"
 
 
 '' object components
-Include "modules/comp/visual.bmx"
-Include "modules/comp/audio.bmx"
-Include "modules/comp/timing.bmx"
-Include "modules/comp/controller.bmx"
-Include "modules/comp/camera.bmx"
-Include "modules/comp/gbml.bmx"
-Include "modules/comp/graph.bmx"
-include "modules/comp/canvas.bmx"
-Include "modules/comp/console.bmx"
-Include "modules/comp/mouse.bmx"
-Include "modules/comp/gbs.bmx"
-Include "modules/comp/net.bmx"
-Include "modules/comp/assets.bmx"
+Include "modules/components/visual.bmx"
+Include "modules/components/audio.bmx"
+Include "modules/components/timing.bmx"
+Include "modules/components/controller.bmx"
+Include "modules/components/camera.bmx"
+Include "modules/components/gbml.bmx"
+Include "modules/components/graph.bmx"
+include "modules/components/canvas.bmx"
+Include "modules/components/console.bmx"
+Include "modules/components/mouse.bmx"
+Include "modules/components/gbs.bmx"
+Include "modules/components/assets.bmx"
+Include "modules/components/debug.bmx"
+include "modules/components/world_entity.bmx"
+include "modules/components/world.bmx"
 
 '' debugging
 Include "modules/debugging/testing.bmx"
-Include "modules/debugging/debug.bmx"
 
 '' editor
 Include "modules/editor/editor.bmx"
@@ -149,68 +152,28 @@ const gb_float  :string = "float"
 const gb_double :string = "double"
 const gb_string :string = "string"
 
-''''''''''
-'' type ''
-''''''''''
-
-Type t_gb
-  Field running         :t_bool
-  Field paused          :t_bool
-  Field settings        :t_dict
-  
-
-  ''  updatables
-  Field pulser          :t_pulser
-  Field autosave_timer  :t_timer
-  Field scene           :t_scene
-
-  ''  components (these will be initialized in their
-  ''  own functions not in NEW
-  Field assets          :t_gb_assets
-  Field visual          :t_gb_visual
-  Field graph           :t_gb_graph
-  Field canvas          :t_gb_canvas
-  Field mouse           :t_gb_mouse
-  Field console         :t_gb_console
-  Field debug           :t_gb_debug
-  Field camera          :t_gb_camera
-  Field timing          :t_gb_timing
-  Field controller      :t_gb_controller
-  Field audio           :t_gb_audio
-  Field gbs             :t_gbs
-  field net             :t_gb_net
-
-  Field editor          :t_gb_editor
-  Field testing         :t_gb_testing
-EndType
-
 '''''''''''''
 '' globals ''
 '''''''''''''
 
-Global gb:t_gb
-
-'''''''''
-'' new ''
-'''''''''
-
-Function new_gb:t_gb ()
-  Local r:t_gb      = New t_gb
-  r.running         = new_bool(True)
-  r.paused          = new_bool(False)
-  r.settings        = null
-
-  r.autosave_timer  = new_timer(60)
-  r.pulser          = new_pulser()
-  Return r
-EndFunction
+global gb_running         :t_bool
+global gb_paused          :t_bool
+global gb_settings        :t_dict
+global gb_pulser          :t_pulser
+global gb_autosave_timer  :t_timer
+global gb_scene           :t_scene
 
 ''''''''''''
 '' events ''
 ''''''''''''
 
 Function gb_init()
-  gb = new_gb()
+  gb_running        = new_bool(true)
+  gb_paused         = new_bool(false)
+  gb_settings       = null
+  gb_autosave_timer = new_timer(60)
+  gb_pulser         = new_pulser()
+
   gb_timing_init()
   gb_assets_init()
   gb_audio_init()
@@ -222,7 +185,6 @@ Function gb_init()
   gb_camera_init()
   gb_console_init()
   gb_controller_init()
-  gb_net_init()
   gbs_init()
 
   gb_editor_init()
@@ -230,9 +192,9 @@ Function gb_init()
 EndFunction
 
 Function gb_load()
+  gb_load_settings()
+  
   gb_assets_load()
-	gb_load_settings()
-	gb_console_load()
 	gb_visual_load()
 	gb_assets_load()
 	gb_debug_load()
@@ -242,7 +204,6 @@ Function gb_load()
 EndFunction
 
 Function gb_start()
-  gb_net_start()
 	gb_testing_start()
 	gb_debug_start()
 EndFunction
@@ -253,34 +214,33 @@ Function gb_update()
   gb_visual_update	()
   gb_canvas_update  ()
   gb_mouse_update		()
-  gb_net_update     ()
-	If bool_neq(gb.console.active)
-    gb_controller_update()
-    If gb.scene Then scene_update(gb.scene)
-  EndIf
+  gb_controller_update()
+  If gb_scene Then scene_update(gb_scene)
 	
-	timer_update(gb.autosave_timer)
-	If timer_finished(gb.autosave_timer)
+	timer_update(gb_autosave_timer)
+	If timer_finished(gb_autosave_timer)
 		gb_save_settings()
-		timer_reset(gb.autosave_timer)
+		timer_reset(gb_autosave_timer)
 	EndIf
 
-  pulser_update(gb.pulser)
+  pulser_update(gb_pulser)
   gb_editor_update  ()
 	gb_testing_update	()
 	gb_debug_update		()
 EndFunction
 
-Function gb_draw()
+Function gb_draw_1()
   gb_graph_draw     ()
 	gb_debug_draw_bg	()
-	If gb.scene Then scene_draw(gb.scene)
+	If gb_scene Then scene_draw(gb_scene)
   gb_canvas_draw    ()
   gb_editor_draw    ()
 	gb_testing_draw		()
 	gb_visual_draw		()
+endfunction
+
+function gb_draw_2()
 	gb_debug_draw_fg	()
-	gb_console_draw		()
 	gb_mouse_draw			()
 EndFunction
 
@@ -296,17 +256,17 @@ EndFunction
 '''''''''''''''
 
 Function gb_stop()
-	bool_set(gb.running, False)
+	bool_set(gb_running, False)
 EndFunction
 
 Function gb_pause(b:Byte=True)
-	bool_set( gb.paused, bool(b) )
+	bool_set( gb_paused, bool(b) )
 EndFunction
 
 function gb_switch_scene(s:t_scene)
-  scene_end(gb.scene)
-  gb.scene = s
-  scene_init(gb.scene)
+  scene_end(gb_scene)
+  gb_scene = s
+  scene_init(gb_scene)
 endfunction
 
 '''''''''''''''''''''''''''''''''''''''''''
@@ -316,12 +276,12 @@ endfunction
 Function gb_load_settings:t_dict ()
 	Local u:t_dict = gbml_load("settings")
 	If (u)
-    gb.settings = u
+    gb_settings = u
   Else
-    gb.settings = new_dict()
+    gb_settings = new_dict()
   EndIf
 EndFunction
 
 Function gb_save_settings()
-	gbml_save(gb.settings,"settings")
+	gbml_save(gb_settings,"settings")
 EndFunction

@@ -1,9 +1,20 @@
 
+''''''''''''''
+'' includes ''
+''''''''''''''
+
 '' random things
 include "modules/misc/gball.bmx"
+include "modules/misc/redskull.bmx"
 
 '' testing module.
 include "modules/testing/testing.bmx"
+
+
+
+''''''''''''
+'' events ''
+''''''''''''
 
 function gf_init()
   gf_testing_init()
