@@ -1,0 +1,7 @@
+#!/bin/bash
+clear
+echo "-----------------------------------------------------"
+echo "-- COMPILING...                                    --"
+echo "-----------------------------------------------------"
+echo ""
+gcc main.c -lSDL2 -lSDL2_mixer -lSDL2_image -o app
