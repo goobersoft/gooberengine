@@ -41,8 +41,8 @@ int clamp(int n, int l, int h) {
 int wrap(int n, int l, int h) {
   if (l>h)           swap(ref(l),ref(h));
   if (l==h)          return l;
-  while (n<(h-l))    n += (h-l);
-  while (n>=(h-l))   n -= (h-l);
+  while (n<l)    n += (h-l);
+  while (n>=h)   n -= (h-l);
   return n;
 }
 
@@ -136,9 +136,11 @@ char * sdl_pixelformat_str( uint_t f ) {
 // rng //
 /////////
 
-#define rnd(a,b) (a+(rand()%(b-a)))
-#define prob(x)  (rnd(0,101)<x)
-#define sqr(a)   (a*a)
+#define rnd(a,b)     (a+(rand()%(b-a)))
+#define chance(x,y)  (rnd(0,y)<x)
+#define prob(x)      chance(x,100)
+#define sqr(a)       (a*a)
+#define bool(x)      (x&1)
 
 
 fixed_t ceiled( fixed_t a, int d ) {

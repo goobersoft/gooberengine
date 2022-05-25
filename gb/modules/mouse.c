@@ -7,6 +7,8 @@
 
 type() {
 
+  bool_t  visible;
+
   point_t pos;
   point_t pos_old;
   point_t pos_diff;
@@ -17,6 +19,7 @@ type() {
 
 } mouse_t;
 
+#define mouse_visible(self)    (self->visible)
 #define mouse_pos(self)        (&self->pos)
 #define mouse_pos_old(self)    (&self->pos_old)
 #define mouse_pos_diff(self)   (&self->pos_diff)
@@ -50,6 +53,16 @@ mouse_t * mouse() {
 ///////////////
 // functions //
 ///////////////
+
+void mouse_set_visible( mouse_t * self, bool_t b ) {
+  mouse_visible(self) = bool(b);
+  if (mouse_visible(self)==true()) {
+    SDL_ShowCursor(SDL_DISABLE);
+  }
+  else {
+    SDL_ShowCursor(SDL_ENABLE);
+  }
+}
 
 void mouse_set_image( mouse_t * self, image_t * u ) {
   mouse_image(self) = u;

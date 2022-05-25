@@ -140,6 +140,8 @@ void graph_draw_dot( graph_t * self, int x, int y ) {
   SDL_RenderDrawPoint(graph_renderer(self), x, y);
 }
 
+
+
 void graph_draw_dot_c( graph_t * self, int x, int y, color_t c ) {
   graph_set_color(self,c);
   graph_draw_dot(self,x,y);
@@ -172,12 +174,6 @@ void graph_draw_circle( graph_t * self, int x, int y, int r ) {
   if (r == 1) {
     graph_draw_dot( self, x, y );
   }
-  // draw a small diamind (5 pixels) if r is 2
-  else if (r == 2) {
-    graph_draw_dot( self, x, y-1 );
-    graph_draw_hl ( self, x-1, y, 3);
-    graph_draw_dot( self, x, y+1 );
-  }
   // otherwise...
   else {
     loop(i,-r,r) {
@@ -191,16 +187,10 @@ void graph_draw_circle( graph_t * self, int x, int y, int r ) {
 }
 
 void graph_draw_circle_line( graph_t * self, int x, int y, int r ) {
-    if (r<=0) return;
+  if (r<=0) return;
   // just draw a dot if the r is 1
   if (r == 1) {
     graph_draw_dot( self, x, y );
-  }
-  // draw a small diamind (5 pixels) if r is 2
-  else if (r == 2) {
-    graph_draw_dot( self, x, y-1 );
-    graph_draw_hl ( self, x-1, y, 3);
-    graph_draw_dot( self, x, y+1 );
   }
   // otherwise...
   else {
@@ -216,6 +206,49 @@ void graph_draw_circle_line( graph_t * self, int x, int y, int r ) {
   }
 }
 
+void graph_draw_circle_dots( graph_t * self, int x, int y, int r, int ct, int rt ) {
+  if (r<=0) return;
+  if (r==1) {
+    graph_draw_dot( self, x, y );
+  }
+  else {
+    int rx = 0;
+    int ry = 0;
+    loop(i,0,ct) {
+      rx = x + frac(r,1000,sine(rt + frac(i,ct,1000)));
+      ry = y + frac(r,1000,cosine(rt + frac(i,ct,1000)));
+      graph_draw_dot(self,rx,ry);
+    } 
+  }
+}
+
+void graph_draw_circle_spray( graph_t * self, int x, int y, int r, int p ) {
+  if (r<=0) return;
+  // just draw a dot if the r is 1
+  if (r == 1) {
+    graph_draw_dot( self, x, y );
+  }
+  // otherwise...
+  else {
+    loop(i,-r,r) {
+      loop(j,-r,r) {
+        if (sqroot(sqr(i)+sqr(j)) < r) {
+          if prob(p) graph_draw_dot(self, x+i, y+j);
+        }
+      }
+    }
+  }
+}
+
+void graph_draw_rect_spray( graph_t * self, int x, int y, int w, int h, int p ) {
+  loop(i,0,w) {
+    loop(j,0,h) {
+      if (prob(p)) {
+        graph_draw_dot( self, x+i, y+j );
+      }
+    }
+  }
+}
 
 void graph_draw_image( graph_t * self, image_t * u, int x, int y ) {
   graph_set_src_rect(self, 0, 0, image_width(u), image_height(u));
@@ -233,17 +266,21 @@ void graph_draw_text( graph_t * self, int x, int y, char * t ) {
   
 }
 
+
+
 ///////////////////////////////////
 // specific module drawing stuff //
 ///////////////////////////////////
 
 void graph_draw_mouse( graph_t * self, mouse_t * m ) {
-  point_t * pp = mouse_pos(m);
-  point_t * mp = mouse_image_pos(m);
-  point_t * ms = mouse_image_size(m);
-  graph_draw_image_sub( self, mouse_image(m),
-    point_x(pp)/visual_scale(graph_visual(self)), 
-    point_y(pp)/visual_scale(graph_visual(self)), point_x(mp), point_y(mp), point_x(ms), point_y(ms) ); 
+  if (mouse_visible(m)) {
+    point_t * pp = mouse_pos(m);
+    point_t * mp = mouse_image_pos(m);
+    point_t * ms = mouse_image_size(m);
+    graph_draw_image_sub( self, mouse_image(m),
+      point_x(pp)/visual_scale(graph_visual(self)), 
+      point_y(pp)/visual_scale(graph_visual(self)), point_x(mp), point_y(mp), point_x(ms), point_y(ms) ); 
+  }
 }
 
 void graph_draw_colormap( graph_t * self, colormap_t * c, int x, int y ) {

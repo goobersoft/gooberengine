@@ -3,9 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "/usr/include/SDL2/SDL.h"
-#include "/usr/include/SDL2/SDL_mixer.h"
-#include "/usr/include/SDL2/SDL_image.h"
+#include </usr/include/SDL2/SDL.h>
+#include </usr/include/SDL2/SDL_mixer.h>
+#include </usr/include/SDL2/SDL_image.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 #include "gb/gb.c"
 
@@ -26,7 +28,6 @@ int main(int c, char ** v) {
   while (gb_running()) {
     gb_update();
     gb_draw();
-    SDL_Delay(10);
   }
   gb_quit();
   SDL_Quit();

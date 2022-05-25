@@ -121,7 +121,7 @@ void gb_load() {
   mouse_image(gb_mouse()) = assets_get_image(gb_assets(),0);
   point_set( mouse_image_pos(gb_mouse()), tile10(4), tile10(20) );
   point_set( mouse_image_size(gb_mouse()), tile10(1), tile10(1) );
-  SDL_ShowCursor(SDL_DISABLE);
+  mouse_set_visible(gb_mouse(),false());
   // debug
   debug_load();
 }
