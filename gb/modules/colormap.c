@@ -78,6 +78,30 @@ void colormap_plot( colormap_t * self, int x, int y, color_t c ) {
   }
 }
 
+void colormap_plot_add( colormap_t * self, int x, int y, color_t c ) {
+  int uu = 0;
+  if (inrect(x,y,0,0,colormap_width(self),colormap_height(self))) {
+    uu = y*point_x(colormap_size(self)) + x;
+    colormap_data(self)[uu] = color_add(colormap_data(self)[uu],c);
+  }
+}
+
+void colormap_plot_sub( colormap_t * self, int x, int y, color_t c ) {
+  int uu = 0;
+  if (inrect(x,y,0,0,colormap_width(self),colormap_height(self))) {
+    uu = y*point_x(colormap_size(self)) + x;
+    colormap_data(self)[uu] = color_sub(colormap_data(self)[uu],c);
+  }
+}
+
+void colormap_plot_mask( colormap_t * self, int x, int y, color_t c ) {
+  int uu = 0;
+  if (inrect(x,y,0,0,colormap_width(self),colormap_height(self))) {
+    uu = y*point_x(colormap_size(self)) + x;
+    colormap_data(self)[uu] = color_mask(colormap_data(self)[uu],c);
+  }
+}
+
 // fill the colormap with a color index. You may specify -1
 // to make it transparent
 void colormap_fill( colormap_t * self, color_t c ) {

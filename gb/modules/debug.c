@@ -28,10 +28,9 @@ void debug_init() {
 }
 
 void debug_load() {
-  image_t * uu = assets_get_image(gb_assets(),3);
-  debug_colormap = colormap_from_image( uu );
   //debug_colormap = colormap(100,100);
   debug_image = assets_get_image(gb_assets(),0);
+  debug_colormap = colormap_from_image( debug_image );
 }
 
 void debug_update() {
@@ -52,10 +51,7 @@ void debug_draw_pre() {
 */
 
 void debug_draw_pre() {
-
-  graph_set_color( gb_graph(), color(0,0,0) );
-  graph_draw_rect_spray( gb_graph(), 0, 0, 400, 240, 5 );
-
+  static int cls = 0;
   static int _init = 0;
   static int xs[4];
   static int ys[4];
@@ -63,6 +59,7 @@ void debug_draw_pre() {
   static int yv[4];
   static color_t cc;
   if (_init == 0) {
+    cls = color(3,3,3);
     loop(i,0,4) {
       xs[i] = 1000*rnd(0,400);
       ys[i] = 1000*rnd(0,240);
@@ -72,6 +69,7 @@ void debug_draw_pre() {
     cc = rnd(1,64);
     _init = 1;
   }
+
   loop(i,0,4) {
 
     xs[i]+=xv[i];
@@ -84,16 +82,36 @@ void debug_draw_pre() {
       yv[i] = -yv[i];
       ys[i] = clamp(ys[i],0,239999);
     }
-
-    graph_set_color( gb_graph(), cc );
-    loop(i,0,4) {
-      graph_draw_line( gb_graph(), xs[i]/1000, ys[i]/1000, xs[(i+1)%4]/1000, ys[(i+1)%4]/1000 );
-    }
-    if (chance(1,1000)) cc = rnd(1,64);
   }
 
+  
+  graph_set_clip( gb_graph(), 100, 60, 200, 120 );
+
+  graph_set_mode( gb_graph(), graph_mode_sub() );
+  graph_set_color( gb_graph(), color(1,1,1) );
+  graph_draw_rect_spray( gb_graph(), 0, 0, 400, 240, 5 );
+  
+
+  graph_set_mode( gb_graph(), graph_mode_normal() );
+  graph_set_color( gb_graph(), cc );
+  loop(i,0,4) {
+    graph_draw_line( gb_graph(), xs[i]/1000, ys[i]/1000, xs[(i+1)%4]/1000, ys[(i+1)%4]/1000 );
+  }
+
+  
+
+  if (chance(1,1000)) cc  = rnd(1,64);
+  if (chance(1,1000)) cls = color(rnd(0,3),rnd(0,3),rnd(0,3)); 
+  //log("%d",timing_fps(gb_timing()));
 }
 
+
+/*
+void debug_draw_pre() {
+  graph_set_mode( gb_graph(), graph_mode_add() );
+  graph_draw_colormap_sub( gb_graph(), debug_colormap, rnd(0,400), rnd(0,240), rnd(0,390), rnd(0,230), 10, 10 );
+}
+*/
 void debug_draw_post() {
 
 }

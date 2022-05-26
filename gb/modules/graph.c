@@ -17,6 +17,11 @@ byte_t _graph_transvals[] = {
   bin(_0000_0000_0000_0000)
 };
 
+#define graph_mode_normal()  0
+#define graph_mode_add()     1
+#define graph_mode_sub()     2
+#define graph_mode_mask()    3
+
 //////////
 // type //
 //////////
@@ -31,6 +36,12 @@ type() {
   color_t      color;
   // the cls color
   color_t      color_cls;
+  // the drawing mode
+  int          mode;
+
+  point_t      clip_pos;
+  point_t      clip_size;
+
   // A link to the font in Assets
   font_t     * font;
   // palette for rendering (color IDs)
@@ -51,6 +62,13 @@ type() {
 #define graph_renderer(self)   (self->renderer)
 #define graph_color(self)      (self->color)
 #define graph_color_cls(self)  (self->color_cls)
+#define graph_clip_pos(self)   (&self->clip_pos)
+#define graph_clip_size(self)  (&self->clip_size)  
+#define graph_clip_x(self)     (self->clip_pos.x)
+#define graph_clip_y(self)     (self->clip_pos.y)
+#define graph_clip_w(self)     (self->clip_size.x)
+#define graph_clip_h(self)     (self->clip_size.y)
+#define graph_mode(self)       (self->mode)
 #define graph_font(self)       (self->font)
 #define graph_palette(self)    (self->palette)
 #define graph_trans(self)      (self->trans)
@@ -74,6 +92,10 @@ graph_t * graph( visual_t * v ) {
 
   graph_color(r)      = color(3,3,3);
   graph_color_cls(r)  = color(0,0,0);
+  graph_mode(r)       = graph_mode_normal();
+
+  point_set( graph_clip_pos(r),0,0);
+  point_set( graph_clip_size(r),400,240); 
 
   graph_data(r)       = colormap( visual_screen_width(), visual_screen_height() );
 
@@ -105,6 +127,19 @@ void graph_set_color( graph_t * self, color_t c ) {
 
 void graph_set_cls_color( graph_t * self, color_t c ) {
   graph_color_cls(self) = c;
+}
+
+void graph_set_mode( graph_t * self, int m ) {
+  graph_mode(self) = m;
+}
+
+void graph_set_clip( graph_t * self, int x, int y, int w, int h ) {
+  point_set( graph_clip_pos(self), x, y );
+  point_set( graph_clip_size(self), w, h );
+}
+
+void graph_reset_clip( graph_t * self ) {
+  graph_set_clip(self,0,0,400,240);
 }
 
 void graph_set_src_rect( graph_t * self, int x, int y, int w, int h ) {
@@ -151,15 +186,24 @@ color_t graph_get_pixel( graph_t * self, int x, int y ) {
 // since there's no alpha in GB's 64 color palette, dithering
 // is applied instead.
 void graph_draw_dot( graph_t * self, int x, int y ) {
-  colormap_plot( graph_data(self), x, y, graph_color(self) );
+  if (inrect(x,y,graph_clip_x(self),graph_clip_y(self),graph_clip_w(self),graph_clip_h(self))) {
+    switch(graph_mode(self)) {
+      case graph_mode_normal(): colormap_plot( graph_data(self), x, y, graph_color(self) );      break;
+      case graph_mode_add():    colormap_plot_add( graph_data(self), x, y, graph_color(self) );  break;
+      case graph_mode_sub():    colormap_plot_sub( graph_data(self), x, y, graph_color(self) );  break;
+      case graph_mode_mask():   colormap_plot_mask( graph_data(self), x, y, graph_color(self) ); break;
+    }
+  }
   //SDL_RenderDrawPoint(graph_renderer(self), x, y);
 }
 
 
 
 void graph_draw_dot_c( graph_t * self, int x, int y, color_t c ) {
-  graph_set_color(self,c);
-  graph_draw_dot(self,x,y);
+  if (c>=0) {
+    graph_set_color(self,c);
+    graph_draw_dot(self,x,y);
+  }
 }
 
 void graph_draw_hl( graph_t * self, int x, int y, int w ) {
@@ -353,7 +397,11 @@ void graph_draw_colormap( graph_t * self, int x, int y, colormap_t * c ) {
 }
 
 void graph_draw_colormap_sub( graph_t * self, colormap_t * c, int dx, int dy, int sx, int sy, int sw, int sh ) {
-
+  loop(i,0,sw) {
+    loop(j,0,sh) {
+      graph_draw_dot_c( self, dx+i, dy+j, colormap_get_pixel(c,sx+i,sy+j) );
+    }
+  }
 }
 
 ////////////

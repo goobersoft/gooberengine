@@ -45,3 +45,27 @@ int color_b(color_t c) {
   if (c==-1) return -1;
   return (c&3);
 }
+
+color_t color_add( color_t c1, color_t c2 ) {
+  return color(
+    clamp(color_r(c1) + color_r(c2),0,3),
+    clamp(color_g(c1) + color_g(c2),0,3),
+    clamp(color_b(c1) + color_b(c2),0,3)
+  );
+}
+
+color_t color_sub( color_t c1, color_t c2 ) {
+  return color(
+    clamp(color_r(c1) - color_r(c2),0,3),
+    clamp(color_g(c1) - color_g(c2),0,3),
+    clamp(color_b(c1) - color_b(c2),0,3)
+  );
+}
+
+color_t color_mask( color_t c1, color_t c2 ) {
+  return color(
+    high(color_r(c2),color_r(c1)),
+    high(color_g(c2),color_g(c1)),
+    high(color_b(c2),color_b(c1))
+  );
+}
