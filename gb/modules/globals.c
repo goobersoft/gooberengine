@@ -55,6 +55,9 @@ typedef unsigned short uword_t;
 typedef unsigned int   uint_t;
 typedef unsigned long  ulong_t;
 
+#define int2ptr(x)    ((void*)(size_t)(x))
+#define ptr2int(x)    ((int)(size_t)(x))
+
 // using calloc() will zero the entire memory block.
 // I would always use this over malloc just in case of garbage data
 #define alloc(x)     calloc(sizeof(x),1)
@@ -91,7 +94,9 @@ typedef unsigned long  ulong_t;
 
 #define loop(i,a,b)     for(int i=a;i<b;i++)
 
+
 #define type()            typedef struct
+#define union()           typedef union
 #define null()            NULL
 
 #define layer_top(x)      (1000+x)
