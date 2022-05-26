@@ -21,6 +21,8 @@
 #include "modules/functions.c"
 #include "modules/functions_sine.c"
 #include "modules/functions_sqroot.c"
+#include "modules/tag.c"
+#include "modules/list.c"
 // specific
 #include "modules/string.c"
 #include "modules/point.c"
@@ -38,6 +40,7 @@
 #include "modules/assets.c"
 #include "modules/graph.c"
 #include "modules/timing.c"
+#include "modules/gbs.c"
 
 #include "modules/sprite.c"
 #include "modules/scene.c"

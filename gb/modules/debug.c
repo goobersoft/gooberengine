@@ -6,12 +6,25 @@
 
 colormap_t * debug_colormap;
 image_t *    debug_image;
+list_t *     debug_list;
+int          debug_data;
 
 ////////////
 // events //
 ////////////
 
 void debug_init() {
+
+  list_t * l = list();
+  loop(i,0,10) {
+    list_add_last(l,int2ptr(i*10));
+  }
+
+  // l: list
+  // d: void * pointer name
+  foreach(l,d) {
+    log("%d",ptr2int(d));
+  }
 }
 
 void debug_load() {
@@ -22,7 +35,6 @@ void debug_load() {
 }
 
 void debug_update() {
-  //log("%d\n",timing_fps(gb_timing()));
 }
 
 /*
