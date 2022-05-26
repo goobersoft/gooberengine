@@ -10,8 +10,10 @@ typedef struct {
 
 } colormap_t;
 
-#define colormap_size(self) (self->size)
-#define colormap_data(self) (self->data)
+#define colormap_size(self)   (self->size)
+#define colormap_width(self)  (self->size->x)
+#define colormap_height(self) (self->size->y)
+#define colormap_data(self)   (self->data)
 
 /////////
 // new //
@@ -69,6 +71,12 @@ void free_colormap( colormap_t * self ) {
 ///////////////
 // functions //
 ///////////////
+
+void colormap_plot( colormap_t * self, int x, int y, color_t c ) {
+  if (inrect(x,y,0,0,colormap_width(self),colormap_height(self))) {
+    colormap_data(self)[y*point_x(colormap_size(self)) + x] = c;
+  }
+}
 
 // fill the colormap with a color index. You may specify -1
 // to make it transparent

@@ -38,6 +38,9 @@ type() {
   // transparency level
   byte_t       trans;
 
+  // color data (colormap)
+  colormap_t * data;
+
   // internal rectangles used for drawing
   SDL_Rect  rect_src;
   SDL_Rect  rect_dst;
@@ -53,9 +56,10 @@ type() {
 #define graph_trans(self)      (self->trans)
 #define graph_rect_src(self)   (&self->rect_src)
 #define graph_rect_dst(self)   (&self->rect_dst)
+#define graph_data(self)       (self->data)
 
-#define graph_texture_width()  400
-#define graph_texture_height() 240
+#define graph_width(self)  colormap_width(graph_data(self))
+#define graph_height(self) colormap_height(graph_data(self))
 
 
 /////////
@@ -70,6 +74,8 @@ graph_t * graph( visual_t * v ) {
 
   graph_color(r)      = color(3,3,3);
   graph_color_cls(r)  = color(0,0,0);
+
+  graph_data(r)       = colormap( visual_screen_width(), visual_screen_height() );
 
   return r;
 }
@@ -124,20 +130,29 @@ void graph_set_trans( graph_t * self, int t ) {
 ///////////////////////
 
 void graph_cls( graph_t * self ) {
+  colormap_fill(graph_data(self),graph_color_cls(self));
+  /*
   SDL_SetRenderDrawColor( graph_renderer(self),
     85*color_r(graph_color_cls(self)),
     85*color_g(graph_color_cls(self)),
     85*color_b(graph_color_cls(self)),
     255 );
+  
   graph_set_dst_rect( self, 0, 0, visual_screen_width(), visual_screen_height() );
   SDL_RenderFillRect(graph_renderer(self),graph_rect_dst(self));
+  */
+}
+
+color_t graph_get_pixel( graph_t * self, int x, int y ) {
+  colormap_get_pixel(graph_data(self), x, y);
 }
 
 // this is primarily used for certain transparent rendering.
 // since there's no alpha in GB's 64 color palette, dithering
 // is applied instead.
 void graph_draw_dot( graph_t * self, int x, int y ) {
-  SDL_RenderDrawPoint(graph_renderer(self), x, y);
+  colormap_plot( graph_data(self), x, y, graph_color(self) );
+  //SDL_RenderDrawPoint(graph_renderer(self), x, y);
 }
 
 
@@ -148,22 +163,41 @@ void graph_draw_dot_c( graph_t * self, int x, int y, color_t c ) {
 }
 
 void graph_draw_hl( graph_t * self, int x, int y, int w ) {
-  SDL_RenderDrawLine(graph_renderer(self), x, y, x+w, y);
+  loop(i,0,w) {
+    graph_draw_dot(self,x+i,y);
+  }
+  //SDL_RenderDrawLine(graph_renderer(self), x, y, x+w, y);
 }
 
 void graph_draw_vl( graph_t * self, int x, int y, int h ) {
-  SDL_RenderDrawLine(graph_renderer(self), x, y, x, y+h);
+  loop(j,0,h) {
+    graph_draw_dot(self,x,y+j);
+  }
+  //SDL_RenderDrawLine(graph_renderer(self), x, y, x, y+h);
 }
 
 
 void graph_draw_rect( graph_t * self, int x, int y, int w, int h ) {
-  graph_set_dst_rect(self,x,y,w,h);
-  SDL_RenderFillRect(graph_renderer(self),graph_rect_dst(self));
+  loop(i,0,w) {
+    loop(j,0,h) {
+      graph_draw_dot(self,x+i,y+j);
+    }
+  }
+  //graph_set_dst_rect(self,x,y,w,h);
+  //SDL_RenderFillRect(graph_renderer(self),graph_rect_dst(self));
 }
 
 void graph_draw_rect_line( graph_t * self, int x, int y, int w, int h ) {
-  graph_set_dst_rect(self,x,y,w,h);
-  SDL_RenderDrawRect(graph_renderer(self),graph_rect_dst(self));
+  loop(i,0,w) {
+    loop(j,0,h) {
+      if ((i==0) or (j==0) or (i==w-1) or (j==h-1)) {
+        graph_draw_dot(self,x+i,y+j);
+      }
+    }
+  }
+  
+  //graph_set_dst_rect(self,x,y,w,h);
+  //SDL_RenderDrawRect(graph_renderer(self),graph_rect_dst(self));
 }
 
 
@@ -215,8 +249,8 @@ void graph_draw_circle_dots( graph_t * self, int x, int y, int r, int ct, int rt
     int rx = 0;
     int ry = 0;
     loop(i,0,ct) {
-      rx = x + frac(r,1000,sine(rt + frac(i,ct,1000)));
-      ry = y + frac(r,1000,cosine(rt + frac(i,ct,1000)));
+      rx = x + frac(r,1000,rounded(sine(rt + frac(i,ct,1000)),10));
+      ry = y + frac(r,1000,rounded(cosine(rt + frac(i,ct,1000)),10));
       graph_draw_dot(self,rx,ry);
     } 
   }
@@ -247,6 +281,33 @@ void graph_draw_rect_spray( graph_t * self, int x, int y, int w, int h, int p ) 
         graph_draw_dot( self, x+i, y+j );
       }
     }
+  }
+}
+
+void graph_draw_replace( graph_t * self, int x, int y, int w, int h, color_t rs, color_t rd ) {
+  loop(i,0,w) {
+    loop(j,0,h) {
+      color_t u = graph_get_pixel( self, x+i, y+j );
+      if (u==rs) {
+        graph_draw_dot_c(self,x+i,y+j,rd);
+      }
+    }
+  }
+}
+
+void graph_draw_line( graph_t * self, int x1, int y1, int x2, int y2 ) {
+  int dx = x2-x1;
+  int dy = y2-y1;
+  int uu = sqroot( sqr(dx) + sqr(dy) );
+  
+  int vv = 0;
+  int rx = 0;
+  int ry = 0;
+  loop(i,0,uu) {
+    vv = rounded(frac(i,uu,1000),1000);
+    rx = x1 + (dx*i/uu);
+    ry = y1 + (dy*i/uu);
+    graph_draw_dot( self, rx, ry );
   }
 }
 
@@ -283,7 +344,7 @@ void graph_draw_mouse( graph_t * self, mouse_t * m ) {
   }
 }
 
-void graph_draw_colormap( graph_t * self, colormap_t * c, int x, int y ) {
+void graph_draw_colormap( graph_t * self, int x, int y, colormap_t * c ) {
   loop(i,0,c->size->x) {
     loop(j,0,c->size->y) {
       graph_draw_dot_c(self,x+i,y+j,colormap_get_pixel(c,i,j));
@@ -293,4 +354,19 @@ void graph_draw_colormap( graph_t * self, colormap_t * c, int x, int y ) {
 
 void graph_draw_colormap_sub( graph_t * self, colormap_t * c, int dx, int dy, int sx, int sy, int sw, int sh ) {
 
+}
+
+////////////
+// events //
+////////////
+
+void graph_present( graph_t * self ) {
+  color_t c;
+  loop(i,0,graph_width(self)) {
+    loop(j,0,graph_height(self)) {
+      c = colormap_get_pixel(graph_data(self),i,j);
+      SDL_SetRenderDrawColor(graph_renderer(self),color_r(c)*85, color_g(c)*85, color_b(c)*85, 255);
+      SDL_RenderDrawPoint(graph_renderer(self),i,j);
+    }
+  }
 }

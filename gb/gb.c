@@ -165,6 +165,7 @@ void gb_draw() {
   // do some debug drawing at the end of everything else
   debug_draw_post();
   // present the screen
+  graph_present(gb_graph());
   visual_draw(gb_visual());
 }
 
