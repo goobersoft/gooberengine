@@ -40,40 +40,46 @@ void debug_draw_pre() {
 */
 
 void debug_draw_pre() {
-  //graph_cls( gb_graph() );
-  graph_set_color( gb_graph(), 0 );
-  //graph_draw_rect_spray( gb_graph(), 0, 0, 400, 240, 4 );
-  
-  static int x   = 0;
-  static int x2  = 0;
-  static int c   = 0;
-  static int cs  = 0;
-  static int cls = 0;
-  x = wrap(x+5+prob(50),0,1000);
-  x2 = wrap(x2+2+prob(50),0,1000);
-  cs += 1;
-  if (cs==1) {
-    cs = 0;
-    c = wrap(c+1,1,4);
+
+  graph_set_color( gb_graph(), color(0,0,0) );
+  graph_draw_rect_spray( gb_graph(), 0, 0, 400, 240, 5 );
+
+  static int _init = 0;
+  static int xs[4];
+  static int ys[4];
+  static int xv[4];
+  static int yv[4];
+  static color_t cc;
+  if (_init == 0) {
+    loop(i,0,4) {
+      xs[i] = 1000*rnd(0,400);
+      ys[i] = 1000*rnd(0,240);
+      xv[i] = rnd(-2000,2000);
+      yv[i] = rnd(-2000,2000);
+    }
+    cc = rnd(1,64);
+    _init = 1;
   }
-  /*
-  graph_set_color( gb_graph(), color(0,3,0) );
-  int xx = frac(sine(x2),1000,20);
-  graph_draw_circle_dots( gb_graph(), 200, 160 - xx, 20 + xx, 5, x );
-  */
-  static int x1 = rnd(0,400);
-  static int x2 = rnd(0,400);
-  if (prob(1)) {
-    graph_set_color( gb_graph(), color_random() );
-    graph_draw_line( gb_graph(), rnd(0,400), rnd(0,240), rnd(0,400), rnd(0,240) );
+  loop(i,0,4) {
+
+    xs[i]+=xv[i];
+    if (!inrange(xs[i],0,400000)) {
+      xv[i] = -xv[i];
+      xs[i] = clamp(xs[i],0,3999999);
+    }
+    ys[i]+=yv[i];
+    if (!inrange(ys[i],0,240000)) {
+      yv[i] = -yv[i];
+      ys[i] = clamp(ys[i],0,239999);
+    }
+
+    graph_set_color( gb_graph(), cc );
+    loop(i,0,4) {
+      graph_draw_line( gb_graph(), xs[i]/1000, ys[i]/1000, xs[(i+1)%4]/1000, ys[(i+1)%4]/1000 );
+    }
+    if (chance(1,1000)) cc = rnd(1,64);
   }
 
-  /*
-  cls = (cls+3) % 240;
-  graph_draw_replace( gb_graph(),0,cls,400,3,color(0,1,0),color(0,0,0));
-  graph_draw_replace( gb_graph(),0,cls,400,3,color(0,2,0),color(0,1,0));
-  graph_draw_replace( gb_graph(),0,cls,400,3,color(0,3,0),color(0,2,0));
-  */
 }
 
 void debug_draw_post() {
