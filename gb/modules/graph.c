@@ -200,7 +200,7 @@ void graph_draw_dot( graph_t * self, int x, int y ) {
 
 
 void graph_draw_dot_c( graph_t * self, int x, int y, color_t c ) {
-  if (c>=0) {
+  if (color_a(c)==1) {
     graph_set_color(self,c);
     graph_draw_dot(self,x,y);
   }
@@ -332,7 +332,7 @@ void graph_draw_replace( graph_t * self, int x, int y, int w, int h, color_t rs,
   loop(i,0,w) {
     loop(j,0,h) {
       color_t u = graph_get_pixel( self, x+i, y+j );
-      if (u==rs) {
+      if (color_eq(u,rs)) {
         graph_draw_dot_c(self,x+i,y+j,rd);
       }
     }

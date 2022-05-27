@@ -5,7 +5,12 @@
 ///////////
 
 // it's just an int!!
-typedef int color_t;
+type() {
+  byte_t r:2;
+  byte_t g:2;
+  byte_t b:2;
+  byte_t a:1;
+} color_t;
 
 ////////////
 // Colors //
@@ -15,50 +20,64 @@ typedef int color_t;
 // transparent color is treated as -1
 
 color_t color(int r, int g, int b) {
-  int rt = 0;
-  // if ((r <= 0) || (g <= 0) || (b <= 0)) {
-  if ( lt(r,0) or lt(g,0) or lt(b,0)  ) {
-    return -1;
-  }
-  else {
-    rt = ((r&3)<<4) | ((g&3)<<2) | (b&3);
-  }
+  r = clamp(r,0,3);
+  g = clamp(g,0,3);
+  b = clamp(b,0,3);
+  
+  color_t rr;
+
+  rr.r = r;
+  rr.g = g;
+  rr.b = b;
+  rr.a = true();
+
+  return rr;
 }
 
-#define color_random() rnd(-1,64)
+color_t color__rgba(int r, int g, int b, int a) {
+  r = clamp(r,0,3);
+  g = clamp(g,0,3);
+  b = clamp(b,0,3);
+  a = clamp(a,0,1);
+  
+  color_t rr;
 
+  rr.r = r;
+  rr.g = g;
+  rr.b = b;
+  rr.a = a;
 
-// returns the red color component
-int color_r(color_t c) {
-  if (c==-1) return -1;
-  return (c&(3<<4))>>4;
+  return rr;
 }
 
-// returns the green color component
-int color_g(color_t c) {
-  if (c==-1) return -1;
-  return (c&(3<<2))>>2;
+color_t color__trans() {
+  return color__rgba(0,0,0,0);
 }
 
-// returns the blue color component
-int color_b(color_t c) {
-  if (c==-1) return -1;
-  return (c&3);
+#define color_random()  color(rnd(0,4),rnd(0,4),rnd(0,4))
+#define color_r(c)      c.r
+#define color_g(c)      c.g
+#define color_b(c)      c.b
+#define color_a(c)      c.a
+#define color_trans(c)  color_a(c)
+
+int color_eq(color_t a, color_t b) {
+  return (a.r==b.r) && (a.g==b.g) && (a.b==b.b);
 }
 
 color_t color_add( color_t c1, color_t c2 ) {
   return color(
-    clamp(color_r(c1) + color_r(c2),0,3),
-    clamp(color_g(c1) + color_g(c2),0,3),
-    clamp(color_b(c1) + color_b(c2),0,3)
+    color_r(c1) + color_r(c2),
+    color_g(c1) + color_g(c2),
+    color_b(c1) + color_b(c2)
   );
 }
 
 color_t color_sub( color_t c1, color_t c2 ) {
   return color(
-    clamp(color_r(c1) - color_r(c2),0,3),
-    clamp(color_g(c1) - color_g(c2),0,3),
-    clamp(color_b(c1) - color_b(c2),0,3)
+    color_r(c1) - color_r(c2),
+    color_g(c1) - color_g(c2),
+    color_b(c1) - color_b(c2)
   );
 }
 

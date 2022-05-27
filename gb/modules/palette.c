@@ -23,7 +23,7 @@ typedef struct {
 
 palette_t * palette() {
   palette_t * r     = alloc(palette_t);
-  palette_colors(r) = array(palette_size(),0);
+  palette_colors(r) = allocv(color_t,palette_size());
   return r;
 }
 

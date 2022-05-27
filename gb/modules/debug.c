@@ -51,22 +51,23 @@ void debug_draw_pre() {
 */
 
 void debug_draw_pre() {
-  static int cls = 0;
+  static color_t cls;
+  static color_t cc;
   static int _init = 0;
   static int xs[4];
   static int ys[4];
   static int xv[4];
   static int yv[4];
-  static color_t cc;
+  
   if (_init == 0) {
     cls = color(3,3,3);
+    cc = color_random();
     loop(i,0,4) {
       xs[i] = 1000*rnd(0,400);
       ys[i] = 1000*rnd(0,240);
       xv[i] = rnd(-2000,2000);
       yv[i] = rnd(-2000,2000);
     }
-    cc = rnd(1,64);
     _init = 1;
   }
 
@@ -100,8 +101,8 @@ void debug_draw_pre() {
 
   
 
-  if (chance(1,1000)) cc  = rnd(1,64);
-  if (chance(1,1000)) cls = color(rnd(0,3),rnd(0,3),rnd(0,3)); 
+  if (chance(1,1000)) cc  = color_random();
+  if (chance(1,1000)) cls = color_random(); 
   //log("%d",timing_fps(gb_timing()));
 }
 

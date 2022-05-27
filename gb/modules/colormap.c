@@ -25,7 +25,7 @@ colormap_t * colormap( int x, int y ) {
   colormap_t * r = alloc(colormap_t);
 
   colormap_size(r) = point(x,y);
-  colormap_data(r) = array(x*y,0);
+  colormap_data(r) = allocv(color_t,x*y);
   return r;
 }
 
@@ -50,7 +50,7 @@ colormap_t * colormap_from_image( image_t * u ) {
       ca = rounded(ca,85)/85;
       aa = (j*sx) + i;
       if (ca<3) {
-        colormap_data(r)[aa] = -1;
+        colormap_data(r)[aa] = color__trans();
       }
       else {
         colormap_data(r)[aa] = color( cr, cg, cb );
@@ -63,9 +63,9 @@ colormap_t * colormap_from_image( image_t * u ) {
 }
 
 void free_colormap( colormap_t * self ) {
-  free_array( colormap_data(self) );
-  free_point( colormap_size(self) );
-  free(self);
+  free( colormap_data(self) );
+  free( colormap_size(self) );
+  free( self );
 }
 
 ///////////////
@@ -114,5 +114,5 @@ color_t colormap_get_pixel( colormap_t * self, int x, int y ) {
   if (inrect(x,y,0,0,self->size->x,self->size->y)) {
     return colormap_data(self)[y*point_x(colormap_size(self)) + x];
   }
-  return -1;
+  return color__trans();
 }
