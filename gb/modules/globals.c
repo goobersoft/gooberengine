@@ -46,8 +46,10 @@
 // converts a float to a fixed point integer.
 #define ftoi(f) ((int)f*1000)
 
-// typedefs
+#define xstr(x) str(x)
+#define str(x)  #x
 
+// typedefs
 typedef size_t         index_t;
 typedef unsigned char  bool_t;
 typedef unsigned char  byte_t;
@@ -107,7 +109,6 @@ typedef unsigned long  ulong_t;
 
 #define pi()              3141
 
-#define bin(f)      0xf
 #define _1111       f
 #define _1110       e
 #define _1101       d
@@ -124,6 +125,8 @@ typedef unsigned long  ulong_t;
 #define _0010       2
 #define _0001       1
 #define _0000       0
+#define bin(u)      0x##u
+
 
 #define tile8(x)    (8*x)
 #define tile10(x)   (10*x)

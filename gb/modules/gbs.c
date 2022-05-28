@@ -1,4 +1,21 @@
 
+/////////////////////////
+// gooberscript system //
+/////////////////////////
+/*
+  Gooberscript is not interpreted.
+  Instead it uses friendly function names:
+
+  SetSpritePosition 2 4
+  Set x 10
+  Set y 20
+  Add x y
+  Print x          // 30
+  
+  The semicolon at the end is omitted as well
+*/
+
+
 ////////////////////
 // gbs node types //
 ////////////////////

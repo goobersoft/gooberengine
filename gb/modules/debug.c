@@ -15,6 +15,8 @@ int          debug_data;
 
 void debug_init() {
 
+  log("%d",bin(10101));
+
   list_t * l = list();
   loop(i,0,10) {
     list_add_last(l,int2ptr(i*10));
@@ -86,12 +88,14 @@ void debug_draw_pre() {
   }
 
   
-  graph_set_clip( gb_graph(), 100, 60, 200, 120 );
+  //graph_set_clip( gb_graph(), 100, 60, 200, 120 );
 
+  
   graph_set_mode( gb_graph(), graph_mode_sub() );
   graph_set_color( gb_graph(), color(1,1,1) );
   graph_draw_rect_spray( gb_graph(), 0, 0, 400, 240, 5 );
   
+  //graph_cls(gb_graph());
 
   graph_set_mode( gb_graph(), graph_mode_normal() );
   graph_set_color( gb_graph(), cc );

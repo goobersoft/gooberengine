@@ -1,11 +1,6 @@
 
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <sys/time.h>
-
-// submodules stack
+//  submodules stack
+//  ----------------
 //  instead of using header files, GB64 uses a source stack.
 //  this means that the modules that come after it have access
 //  to the data and information of all previous modules in the
@@ -15,39 +10,42 @@
 //  and not to have too many cyclic references. Typically one module
 //  will depend on one or modules defined before it.
 
-// generic
-#include "modules/globals.c"
-#include "modules/types.c"
-#include "modules/functions.c"
-#include "modules/functions_sine.c"
-#include "modules/functions_sqroot.c"
-#include "modules/tag.c"
-#include "modules/list.c"
-// specific
-#include "modules/string.c"
-#include "modules/point.c"
-#include "modules/stack.c"
-#include "modules/number.c"
-#include "modules/color.c"
-#include "modules/image.c"
-#include "modules/palette.c"
-#include "modules/colormap.c"
-#include "modules/mouse.c"
-#include "modules/sound.c"
-#include "modules/font.c"
-#include "modules/board.c"
-#include "modules/visual.c"
-#include "modules/assets.c"
-#include "modules/graph.c"
-#include "modules/timing.c"
-#include "modules/gbs.c"
+/////////////
+// modules //
+/////////////
 
-#include "modules/sprite.c"
-#include "modules/scene.c"
+#include "modules/globals.c"            // includes many macro definitions
+#include "modules/types.c"              // complex numerical types
+#include "modules/functions.c"          // core functions
+#include "modules/functions_sine.c"     // sine and cosine function
+#include "modules/functions_sqroot.c"   // sqroot function
+//#include "modules/rng.c"                // implementation of mersenne twister in 
+#include "modules/tag.c"                // descriptive tag
+#include "modules/list.c"               // linked list data type
+#include "modules/string.c"             // helper function for immutable strings
+#include "modules/point.c"              // 2d integer point
+#include "modules/stack.c"              // LIFO-style stack object
+#include "modules/number.c"             // integer number with min and max bounds
+#include "modules/color.c"              // 6-bit color with transparency bit
+#include "modules/image.c"              // uses SDL2_image
+#include "modules/palette.c"            // storage of a list of 6-bit colors.
+#include "modules/colormap.c"           // a 2d array of colors
+#include "modules/mouse.c"              // mouse interface
+#include "modules/sound.c"              // sound interface
+#include "modules/font.c"               // bitmap fonts which utilize image colormaps
+#include "modules/board.c"              // drawing durfaces
+#include "modules/visual.c"             // window and renderer interface
+#include "modules/assets.c"             // asset container object (sound/image/font)
+#include "modules/graph.c"              // drawing interface
+#include "modules/alarm.c"              // timers
+#include "modules/timing.c"             // fps/timing interface
+#include "modules/gbs.c"                // GooberScript
+#include "modules/sprite.c"             // instanced object with a reference to a colormap
+#include "modules/scene.c"              // scene base object
 
 
 /////////////
-// globals //
+// gb type //
 /////////////
 
 typedef struct {
