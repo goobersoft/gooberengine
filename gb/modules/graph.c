@@ -244,20 +244,66 @@ void graph_plot_stencil( graph_t * self, int x, int y, bool_t s ) {
   }
 }
 
+// true if opaque (cannot draw), false if transparent (can draw)
+bool_t graph_get_pixel_stencil( graph_t * self, int x, int y ) {
+  if (inrect(x,y,0,0,graph_width(),graph_height())) {
+    return graph_data_stencil(self)[(graph_width()*y)+x];
+  }
+}
+
+int graph_get_pixel_depth( graph_t * self, int x, int y ) {
+  if (inrect(x,y,0,0,graph_width(),graph_height())) {
+    return graph_data_stencil(self)[(graph_width()*y)+x];
+  }
+}
+
 // this is primarily used for certain transparent rendering.
 // since there's no alpha in GB's 64 color palette, dithering
 // is applied instead.
 void graph_draw_dot( graph_t * self, int x, int y ) {
   if (inrect(x,y,graph_clip_x(self),graph_clip_y(self),graph_clip_w(self),graph_clip_h(self))) {
-    switch(graph_mode(self)) {
-      case graph_mode_normal():  colormap_plot      ( graph_data(self), x, y, graph_color(self) ); break;
-      case graph_mode_add():     colormap_plot_add  ( graph_data(self), x, y, graph_color(self) ); break;
-      case graph_mode_sub():     colormap_plot_sub  ( graph_data(self), x, y, graph_color(self) ); break;
-      case graph_mode_high():    colormap_plot_high ( graph_data(self), x, y, graph_color(self) ); break;
-      case graph_mode_low():     colormap_plot_low  ( graph_data(self), x, y, graph_color(self) ); break;
-      case graph_mode_avg():     colormap_plot_avg  ( graph_data(self), x, y, graph_color(self) ); break;
-      case graph_mode_depth():   graph_plot_depth   ( self, x, y, graph_depth(self)   );           break;
-      case graph_mode_stencil(): graph_plot_stencil ( self, x, y, graph_stencil(self) );           break;
+
+    int u = graph_mode(self);
+
+    if (u==graph_mode_normal()) {
+      if (graph_get_pixel_stencil(self,x,y)==false()) {
+        colormap_plot( graph_data(self), x, y, graph_color(self) );
+      }
+    }
+    else if (u==graph_mode_add()) {
+      if (graph_get_pixel_stencil(self,x,y)==false()) {
+        colormap_plot_add( graph_data(self), x, y, graph_color(self) );
+      }
+    }
+    else if (u==graph_mode_sub()) {
+      if (graph_get_pixel_stencil(self,x,y)==false()) {
+        colormap_plot_sub( graph_data(self), x, y, graph_color(self) );
+      }
+    }
+    else if (u==graph_mode_high()) {
+      if (graph_get_pixel_stencil(self,x,y)==false()) {
+        colormap_plot_high( graph_data(self), x, y, graph_color(self) );
+      }
+    }
+    else if (u==graph_mode_low()) {
+      if (graph_get_pixel_stencil(self,x,y)==false()) {
+        colormap_plot_low( graph_data(self), x, y, graph_color(self) );
+      }
+    }
+    else if (u==graph_mode_avg()) {
+      if (graph_get_pixel_stencil(self,x,y)==false()) {
+        colormap_plot_avg( graph_data(self), x, y, graph_color(self) );
+      }
+    }
+
+    else if (u==graph_mode_depth()) {
+      if (graph_depth(self) < graph_get_pixel_depth(self,x,y)) {
+        graph_plot_depth(self,x,y,graph_depth(self));
+      }
+    }
+
+    else if (u==graph_mode_stencil()) {
+      graph_plot_stencil(self,x,y,graph_stencil(self));
     }
   }
   //SDL_RenderDrawPoint(graph_renderer(self), x, y);

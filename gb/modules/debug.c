@@ -46,45 +46,8 @@ void debug_draw_pre() {
 */
 
 void debug_draw_pre() {
-  static int sx = 0;
-  static int tm = 0;
-  static int ssx = 0;
-  static int ssy = 0;
-  static int wrp = 0;
+  graph_set_mode( gb_graph(), graph_mode_stencil() );
 
-  //wrp = (wrp + 10) % 240;
-
-  
-  //graph_set_clip(gb_graph(), 100, 60, 200, 120);
-  
-  wrp = (wrp + 1) % 6;
-  if (wrp==0) {
-    graph_set_mode( gb_graph(), graph_mode_sub() );
-    graph_set_color( gb_graph(), color(1,1,1) );
-    graph_draw_rect_dither_even( gb_graph(), 0, 0, 400, 240 );
-  }
-  else if (wrp==3) {
-    graph_set_mode( gb_graph(), graph_mode_sub() );
-    graph_set_color( gb_graph(), color(1,1,1) );
-    graph_draw_rect_dither_odd( gb_graph(), 0, 0, 400, 240 );
-  }
-  //graph_draw_rect_spray( gb_graph(), 0, 0, 400, 240, 3 );
-  //graph_draw_rect( gb_graph(), 0, wrp, 400, 10 );
-  //graph_draw_rect( gb_graph(), 0, rnd(0,240), 400, 1 );
-  //graph_draw_circle_spray( gb_graph(), rnd(0,400), rnd(0,240), rnd(30,50), 75 );
-  /*
-  graph_set_mode( gb_graph(), graph_mode_add() );
-  loop(i,0,1) {
-    tm = wrap(tm+386,0,1000);
-    sx = 60 + frac(60,sine(tm),1000);
-    ssx = tile10(rnd(0,40));
-    ssy = tile10(rnd(0,24));
-    graph_draw_colormap_sub_ex( gb_graph(), debug_colormap, rnd(0,400), rnd(0,240), sx, sx, ssx, ssy, 10, 10 );
-  }
-  */
-  graph_set_mode( gb_graph(), graph_mode_add() );
-  graph_set_color(gb_graph(),color_random());
-  graph_draw_triangle_line(gb_graph(),rnd(0,400),rnd(0,240),rnd(0,400),rnd(0,240),rnd(0,400),rnd(0,240));
 }
 
 
@@ -96,7 +59,17 @@ void debug_draw_pre() {
 }
 */
 void debug_draw_post() {
+  graph_set_mode(gb_graph(),graph_mode_stencil());
+  graph_draw_rect(gb_graph(),0,0,200,120);
+  graph_draw_rect(gb_graph(),200,120,200,120);
+  graph_draw_circle(gb_graph(),200,120,50);
+  graph_set_stencil(gb_graph(),false());
+  graph_draw_circle(gb_graph(),200,120,40);
+  graph_set_stencil(gb_graph(),true());
 
+  graph_set_mode(gb_graph(),graph_mode_normal());
+  graph_set_color(gb_graph(),color_random());
+  graph_draw_triangle_line(gb_graph(),rnd(0,400),rnd(0,240),rnd(0,400),rnd(0,240),rnd(0,400),rnd(0,240));
 }
 
 void debug_quit() {
