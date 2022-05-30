@@ -81,10 +81,26 @@ color_t color_sub( color_t c1, color_t c2 ) {
   );
 }
 
-color_t color_mask( color_t c1, color_t c2 ) {
+color_t color_high( color_t c1, color_t c2 ) {
   return color(
-    high(color_r(c2),color_r(c1)),
-    high(color_g(c2),color_g(c1)),
-    high(color_b(c2),color_b(c1))
+    high(color_r(c1),color_r(c2)),
+    high(color_g(c1),color_g(c2)),
+    high(color_b(c1),color_b(c2))
+  );
+}
+
+color_t color_low( color_t c1, color_t c2 ) {
+  return color(
+    low(color_r(c1),color_r(c2)),
+    low(color_g(c1),color_g(c2)),
+    low(color_b(c1),color_b(c2))
+  );
+}
+
+color_t color_avg( color_t c1, color_t c2 ) {
+  return color(
+    (color_r(c1)+color_r(c2))/2,
+    (color_g(c1)+color_g(c2))/2,
+    (color_b(c1)+color_b(c2))/2
   );
 }

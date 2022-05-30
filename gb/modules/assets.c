@@ -121,6 +121,12 @@ void assets_load( assets_t * self, visual_t * v ) {
   assets_set_image(self,2,image("gb/media/images/editor-bg.png",visual_renderer(v)));
   assets_set_image(self,3,image("gb/media/images/test.png",visual_renderer(v)));
 
+  // load sounds
+  assets_set_sound(self,0,sound("gb/media/sounds/jake-1.ogg"));
+  assets_set_sound(self,1,sound("gb/media/sounds/jake-2.ogg"));
+  assets_set_sound(self,2,sound("gb/media/sounds/jake-3.ogg"));
+  assets_set_sound(self,3,sound("gb/media/sounds/jake-4.ogg"));
+
   // load font 1
   font_t * f = font( assets_get_image(self,0) );
   font_set_pos         ( f, 0, 100  );

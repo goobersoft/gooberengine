@@ -63,8 +63,8 @@ int * resize(int * a, int os, int ns) {
 // the equation is a * p / b
 // uses a long for temporary storage.
 int frac(int a, int b, int p) {
-  long r = (a * p);
-  r = r / b;
+  long r = (a * b);
+  r = r / p;
   return (int)r;
 }
 
@@ -139,8 +139,11 @@ char * sdl_pixelformat_str( uint_t f ) {
 #define rnd(a,b)     (a+(rand()%(b-a)))
 #define chance(x,y)  (rnd(0,y)<x)
 #define prob(x)      chance(x,100)
-#define sqr(a)       (a*a)
+#define sqr(a)       ((a)*(a))
 #define bool(x)      (x&1)
+
+#define dist(x1,y1,x2,y2) \
+  sqroot(sqr(x2-x1)+sqr(y2-y1))
 
 
 fixed_t ceiled( fixed_t a, int d ) {

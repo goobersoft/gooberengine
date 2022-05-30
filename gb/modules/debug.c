@@ -6,6 +6,7 @@
 
 colormap_t * debug_colormap;
 image_t *    debug_image;
+sound_t *    debug_sound;
 list_t *     debug_list;
 int          debug_data;
 
@@ -14,19 +15,6 @@ int          debug_data;
 ////////////
 
 void debug_init() {
-
-  log("%d",bin(10101));
-
-  list_t * l = list();
-  loop(i,0,10) {
-    list_add_last(l,int2ptr(i*10));
-  }
-
-  // l: list
-  // d: void * pointer name
-  foreach(l,d) {
-    log("%d",ptr2int(d));
-  }
 }
 
 void debug_load() {
@@ -36,6 +24,11 @@ void debug_load() {
 }
 
 void debug_update() {
+  int rn;
+  if (prob(1)) {
+    rn = rnd(0,4);
+    audio_play(gb_audio(),assets_get_sound(gb_assets(),rn),rn);
+  }
 }
 
 /*
@@ -53,62 +46,47 @@ void debug_draw_pre() {
 */
 
 void debug_draw_pre() {
-  static color_t cls;
-  static color_t cc;
-  static int _init = 0;
-  static int xs[4];
-  static int ys[4];
-  static int xv[4];
-  static int yv[4];
+  static int sx = 0;
+  static int tm = 0;
+  static int ssx = 0;
+  static int ssy = 0;
+  static int wrp = 0;
+
+  //wrp = (wrp + 10) % 240;
+
   
-  if (_init == 0) {
-    cls = color(3,3,3);
-    cc = color_random();
-    loop(i,0,4) {
-      xs[i] = 1000*rnd(0,400);
-      ys[i] = 1000*rnd(0,240);
-      xv[i] = rnd(-2000,2000);
-      yv[i] = rnd(-2000,2000);
-    }
-    _init = 1;
+  //graph_set_clip(gb_graph(), 100, 60, 200, 120);
+  
+  wrp = (wrp + 1) % 6;
+  if (wrp==0) {
+    graph_set_mode( gb_graph(), graph_mode_sub() );
+    graph_set_color( gb_graph(), color(1,1,1) );
+    graph_draw_rect_dither_even( gb_graph(), 0, 0, 400, 240 );
   }
-
-  loop(i,0,4) {
-
-    xs[i]+=xv[i];
-    if (!inrange(xs[i],0,400000)) {
-      xv[i] = -xv[i];
-      xs[i] = clamp(xs[i],0,3999999);
-    }
-    ys[i]+=yv[i];
-    if (!inrange(ys[i],0,240000)) {
-      yv[i] = -yv[i];
-      ys[i] = clamp(ys[i],0,239999);
-    }
+  else if (wrp==3) {
+    graph_set_mode( gb_graph(), graph_mode_sub() );
+    graph_set_color( gb_graph(), color(1,1,1) );
+    graph_draw_rect_dither_odd( gb_graph(), 0, 0, 400, 240 );
   }
-
-  
-  //graph_set_clip( gb_graph(), 100, 60, 200, 120 );
-
-  
-  graph_set_mode( gb_graph(), graph_mode_sub() );
-  graph_set_color( gb_graph(), color(1,1,1) );
-  graph_draw_rect_spray( gb_graph(), 0, 0, 400, 240, 5 );
-  
-  //graph_cls(gb_graph());
-
-  graph_set_mode( gb_graph(), graph_mode_normal() );
-  graph_set_color( gb_graph(), cc );
-  loop(i,0,4) {
-    graph_draw_line( gb_graph(), xs[i]/1000, ys[i]/1000, xs[(i+1)%4]/1000, ys[(i+1)%4]/1000 );
+  //graph_draw_rect_spray( gb_graph(), 0, 0, 400, 240, 3 );
+  //graph_draw_rect( gb_graph(), 0, wrp, 400, 10 );
+  //graph_draw_rect( gb_graph(), 0, rnd(0,240), 400, 1 );
+  //graph_draw_circle_spray( gb_graph(), rnd(0,400), rnd(0,240), rnd(30,50), 75 );
+  /*
+  graph_set_mode( gb_graph(), graph_mode_add() );
+  loop(i,0,1) {
+    tm = wrap(tm+386,0,1000);
+    sx = 60 + frac(60,sine(tm),1000);
+    ssx = tile10(rnd(0,40));
+    ssy = tile10(rnd(0,24));
+    graph_draw_colormap_sub_ex( gb_graph(), debug_colormap, rnd(0,400), rnd(0,240), sx, sx, ssx, ssy, 10, 10 );
   }
-
-  
-
-  if (chance(1,1000)) cc  = color_random();
-  if (chance(1,1000)) cls = color_random(); 
-  //log("%d",timing_fps(gb_timing()));
+  */
+  graph_set_mode( gb_graph(), graph_mode_add() );
+  graph_set_color(gb_graph(),color_random());
+  graph_draw_triangle_line(gb_graph(),rnd(0,400),rnd(0,240),rnd(0,400),rnd(0,240),rnd(0,400),rnd(0,240));
 }
+
 
 
 /*

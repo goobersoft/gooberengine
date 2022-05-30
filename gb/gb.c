@@ -36,6 +36,7 @@
 #include "modules/board.c"              // drawing durfaces
 #include "modules/visual.c"             // window and renderer interface
 #include "modules/assets.c"             // asset container object (sound/image/font)
+#include "modules/audio.c"              // audio mixer
 #include "modules/graph.c"              // drawing interface
 #include "modules/alarm.c"              // timers
 #include "modules/timing.c"             // fps/timing interface
@@ -57,6 +58,7 @@ typedef struct {
   graph_t     * graph;
   assets_t    * assets;
   mouse_t     * mouse;
+  audio_t     * audio;
   
 } gb_t;
 
@@ -80,6 +82,7 @@ gb_t * gb;
 #define gb_timing()  (gb->timing)
 #define gb_graph()   (gb->graph)
 #define gb_mouse()   (gb->mouse)
+#define gb_audio()   (gb->audio)
 
 //////////////////////////
 // special debug module //
@@ -104,6 +107,7 @@ void gb_init() {
   gb_timing()   = timing();
   gb_assets()   = assets();
   gb_mouse()    = mouse();
+  gb_audio()    = audio();
   gb_graph()    = graph(gb_visual());
 
   ///////////////

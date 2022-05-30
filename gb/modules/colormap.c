@@ -94,11 +94,27 @@ void colormap_plot_sub( colormap_t * self, int x, int y, color_t c ) {
   }
 }
 
-void colormap_plot_mask( colormap_t * self, int x, int y, color_t c ) {
+void colormap_plot_high( colormap_t * self, int x, int y, color_t c ) {
   int uu = 0;
   if (inrect(x,y,0,0,colormap_width(self),colormap_height(self))) {
     uu = y*point_x(colormap_size(self)) + x;
-    colormap_data(self)[uu] = color_mask(colormap_data(self)[uu],c);
+    colormap_data(self)[uu] = color_high(colormap_data(self)[uu],c);
+  }
+}
+
+void colormap_plot_low( colormap_t * self, int x, int y, color_t c ) {
+  int uu = 0;
+  if (inrect(x,y,0,0,colormap_width(self),colormap_height(self))) {
+    uu = y*point_x(colormap_size(self)) + x;
+    colormap_data(self)[uu] = color_low(colormap_data(self)[uu],c);
+  }
+}
+
+void colormap_plot_avg( colormap_t * self, int x, int y, color_t c ) {
+  int uu = 0;
+  if (inrect(x,y,0,0,colormap_width(self),colormap_height(self))) {
+    uu = y*point_x(colormap_size(self)) + x;
+    colormap_data(self)[uu] = color_avg(colormap_data(self)[uu],c);
   }
 }
 
