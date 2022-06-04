@@ -50,6 +50,8 @@ type() {
   color_t      color_cls;
   // current depth
   int          depth;
+  // depth enable flag
+  bool_t       depth_enabled;
   // depth clear
   int          depth_cls;
   // current stencil
@@ -82,15 +84,16 @@ type() {
 
 } graph_t;
 
-#define graph_visual(self)       (self->visual)
-#define graph_renderer(self)     (self->renderer)
+#define graph_visual(self)        (self->visual)
+#define graph_renderer(self)      (self->renderer)
 
-#define graph_color(self)        (self->color)
-#define graph_color_cls(self)    (self->color_cls)
-#define graph_depth(self)        (self->depth)
-#define graph_depth_cls(self)    (self->depth_cls)
-#define graph_stencil(self)      (self->stencil)
-#define graph_stencil_cls(self)  (self->stencil_cls)
+#define graph_color(self)         (self->color)
+#define graph_color_cls(self)     (self->color_cls)
+#define graph_depth(self)         (self->depth)
+#define graph_depth_cls(self)     (self->depth_cls)
+#define graph_depth_enabled(self) (self->depth_enabled)
+#define graph_stencil(self)       (self->stencil)
+#define graph_stencil_cls(self)   (self->stencil_cls)
 
 #define graph_clip_pos(self)     (&self->clip_pos)
 #define graph_clip_size(self)    (&self->clip_size)  
@@ -116,23 +119,29 @@ type() {
 graph_t * graph( visual_t * v ) {
   graph_t * r = alloc(graph_t);
   
-  graph_visual(r)      = v;
-  graph_renderer(r)    = visual_renderer(v);
+  graph_visual(r)        = v;
+  graph_renderer(r)      = visual_renderer(v);
 
-  graph_color(r)       = color(3,3,3);
-  graph_color_cls(r)   = color(0,0,0);
-  graph_depth(r)       = 0;
-  graph_depth_cls(r)   = graph_depth_cls_d();
-  graph_stencil(r)     = true();
-  graph_stencil_cls(r) = false();
-  graph_mode(r)        = graph_mode_normal();
+  graph_color(r)         = color(3,3,3);
+  graph_color_cls(r)     = color(0,0,0);
+  graph_depth(r)         = 0;
+  graph_depth_enabled(r) = true();
+  graph_depth_cls(r)     = graph_depth_cls_d();
+  graph_stencil(r)       = true();
+  graph_stencil_cls(r)   = false();
+  graph_mode(r)          = graph_mode_normal();
 
   point_set( graph_clip_pos(r),0,0);
   point_set( graph_clip_size(r),400,240); 
 
   graph_data(r)         = colormap( graph_width(), graph_height() );
-  graph_data_depth(r)   = array( graph_width() * graph_height(), graph_depth_cls_d() );
+  //graph_data_depth(r)   = array( graph_width() * graph_height(), graph_depth_cls_d() );
   graph_data_stencil(r) = allocv( bool_t, graph_width() * graph_height() );
+
+  graph_data_depth(r) = allocv(int,graph_area());
+  loop(i,0,graph_area()) {
+    graph_data_depth(r)[i] = graph_depth_cls_d();
+  }
 
   return r;
 }
@@ -151,15 +160,6 @@ void free_graph(graph_t * self) {
 
 void graph_set_color( graph_t * self, color_t c ) {
   graph_color(self) = c;
-  /*
-  int rr, gg, bb;
-  rr = color_r(c)*85;
-  gg = color_g(c)*85;
-  bb = color_b(c)*85;
-  //log("%d %d %d" nl(), rr, gg, bb);
-  //SDL_Delay(250);
-  SDL_SetRenderDrawColor( graph_renderer(self), rr, gg, bb, 255 );
-  */
 }
 
 void graph_set_cls_color( graph_t * self, color_t c ) {
@@ -168,6 +168,10 @@ void graph_set_cls_color( graph_t * self, color_t c ) {
 
 void graph_set_depth( graph_t * self, int d ) {
   graph_depth(self) = d;
+}
+
+void graph_enable_depth( graph_t * self, bool_t d ) {
+  graph_depth_enabled(self) = bool(d);
 }
 
 void graph_set_cls_depth( graph_t * self, int d ) {
@@ -195,20 +199,6 @@ void graph_reset_clip( graph_t * self ) {
   graph_set_clip(self,0,0,400,240);
 }
 
-void graph_set_src_rect( graph_t * self, int x, int y, int w, int h ) {
-  graph_rect_src(self)->x = x;
-  graph_rect_src(self)->y = y;
-  graph_rect_src(self)->w = w;
-  graph_rect_src(self)->h = h;
-}
-
-void graph_set_dst_rect( graph_t * self, int x, int y, int w, int h ) {
-  graph_rect_dst(self)->x = x;
-  graph_rect_dst(self)->y = y;
-  graph_rect_dst(self)->w = w;
-  graph_rect_dst(self)->h = h;
-}
-
 void graph_set_trans( graph_t * self, int t ) {
   graph_trans(self) = clamp(t,0,4);
 }
@@ -218,6 +208,7 @@ void graph_set_trans( graph_t * self, int t ) {
 ///////////////////////
 
 void graph_cls( graph_t * self ) {
+  static int _i = false();
   // clear the color data
   colormap_fill(graph_data(self),graph_color_cls(self));
   loop(i,0,graph_area()) {
@@ -253,7 +244,7 @@ bool_t graph_get_pixel_stencil( graph_t * self, int x, int y ) {
 
 int graph_get_pixel_depth( graph_t * self, int x, int y ) {
   if (inrect(x,y,0,0,graph_width(),graph_height())) {
-    return graph_data_stencil(self)[(graph_width()*y)+x];
+    return graph_data_depth(self)[(graph_width()*y)+x];
   }
 }
 
@@ -267,32 +258,62 @@ void graph_draw_dot( graph_t * self, int x, int y ) {
 
     if (u==graph_mode_normal()) {
       if (graph_get_pixel_stencil(self,x,y)==false()) {
-        colormap_plot( graph_data(self), x, y, graph_color(self) );
+        if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
+          colormap_plot( graph_data(self), x, y, graph_color(self) );
+          if (graph_depth_enabled(self)==true()) {
+            graph_plot_depth(self,x,y,graph_depth(self));
+          }
+        }
       }
     }
     else if (u==graph_mode_add()) {
       if (graph_get_pixel_stencil(self,x,y)==false()) {
-        colormap_plot_add( graph_data(self), x, y, graph_color(self) );
+        if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
+          colormap_plot_add( graph_data(self), x, y, graph_color(self) );
+          if (graph_depth_enabled(self)==true()) {
+            graph_plot_depth(self,x,y,graph_depth(self));
+          }
+        }
       }
     }
     else if (u==graph_mode_sub()) {
       if (graph_get_pixel_stencil(self,x,y)==false()) {
-        colormap_plot_sub( graph_data(self), x, y, graph_color(self) );
+        if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
+          colormap_plot_sub( graph_data(self), x, y, graph_color(self) );
+          if (graph_depth_enabled(self)==true()) {
+            graph_plot_depth(self,x,y,graph_depth(self));
+          }
+        }
       }
     }
     else if (u==graph_mode_high()) {
       if (graph_get_pixel_stencil(self,x,y)==false()) {
-        colormap_plot_high( graph_data(self), x, y, graph_color(self) );
+        if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
+          colormap_plot_high( graph_data(self), x, y, graph_color(self) );
+          if (graph_depth_enabled(self)==true()) {
+            graph_plot_depth(self,x,y,graph_depth(self));
+          }
+        }
       }
     }
     else if (u==graph_mode_low()) {
       if (graph_get_pixel_stencil(self,x,y)==false()) {
-        colormap_plot_low( graph_data(self), x, y, graph_color(self) );
+        if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
+          colormap_plot_low( graph_data(self), x, y, graph_color(self) );
+          if (graph_depth_enabled(self)==true()) {
+            graph_plot_depth(self,x,y,graph_depth(self));
+          }
+        }
       }
     }
     else if (u==graph_mode_avg()) {
       if (graph_get_pixel_stencil(self,x,y)==false()) {
-        colormap_plot_avg( graph_data(self), x, y, graph_color(self) );
+        if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
+          colormap_plot_avg( graph_data(self), x, y, graph_color(self) );
+          if (graph_depth_enabled(self)==true()) {
+            graph_plot_depth(self,x,y,graph_depth(self));
+          }
+        }
       }
     }
 
@@ -466,6 +487,7 @@ void graph_draw_line( graph_t * self, int x1, int y1, int x2, int y2 ) {
   }
 }
 
+/*
 void graph_draw_image( graph_t * self, image_t * u, int x, int y ) {
   graph_set_src_rect(self, 0, 0, image_width(u), image_height(u));
   graph_set_dst_rect(self, x, y, image_width(u), image_height(u));
@@ -477,6 +499,7 @@ void graph_draw_image_sub( graph_t * self, image_t * u, int dx, int dy, int sx, 
   graph_set_dst_rect(self, dx, dy, sw, sh);
   SDL_RenderCopy( graph_renderer(self), image_texture(u), graph_rect_src(self), graph_rect_dst(self) );
 }
+*/
 
 void graph_draw_text( graph_t * self, int x, int y, char * t ) {
   
@@ -503,7 +526,7 @@ void graph_draw_rect_dither_odd( graph_t * self, int x, int y, int w, int h ) {
 }
 
 void graph_draw_rect_dither( graph_t * self, int x, int y, int w, int h, bool_t o ) {
-  if (o) {
+  if (o>0) {
     graph_draw_rect_dither_odd(self,x,y,w,h);
   }
   else {
@@ -543,9 +566,7 @@ void graph_draw_mouse( graph_t * self, mouse_t * m ) {
     point_t * pp = mouse_pos(m);
     point_t * mp = mouse_image_pos(m);
     point_t * ms = mouse_image_size(m);
-    graph_draw_image_sub( self, mouse_image(m),
-      point_x(pp)/visual_scale(graph_visual(self)), 
-      point_y(pp)/visual_scale(graph_visual(self)), point_x(mp), point_y(mp), point_x(ms), point_y(ms) ); 
+    //graph_draw_colormap_sub( self, mouse_colormap(m), mouse_x(m), mouse_y(m), 10, 10 );
   }
 }
 

@@ -20,6 +20,7 @@ void debug_init() {
 void debug_load() {
   debug_image     = assets_get_image(gb_assets(),0);
   debug_colormap  = colormap_from_image( debug_image );
+  graph_cls(gb_graph());
 }
 
 void debug_update() {
@@ -34,19 +35,26 @@ void debug_draw_pre() {
 }
 
 void debug_draw_post() {
-  graph_set_mode(gb_graph(),graph_mode_stencil());
-  graph_draw_rect(gb_graph(),0,0,200,120);
-  graph_draw_rect(gb_graph(),200,120,200,120);
-  graph_draw_circle(gb_graph(),200,120,50);
-  graph_set_stencil(gb_graph(),false());
-  graph_draw_colormap_sub_ex(gb_graph(),debug_colormap,180,95,40,40,100,190,20,20);
-  graph_set_stencil(gb_graph(),true());
+  static int _f = 0;
 
-  loop(i,0,1) {
-    graph_set_mode(gb_graph(),graph_mode_normal());
-    graph_set_color(gb_graph(),color_random());
-    graph_draw_triangle_line(gb_graph(),rnd(0,400),rnd(0,240),rnd(0,400),rnd(0,240),rnd(0,400),rnd(0,240));
+  graph_set_mode           ( gb_graph(), graph_mode_normal() );
+  graph_set_color          ( gb_graph(), color_random() );
+  //graph_set_depth          ( gb_graph(), rnd(0,1000000) );
+  graph_draw_triangle_line ( gb_graph(), rnd(0,400), rnd(0,240), rnd(0,400), rnd(0,240), rnd(0,400), rnd(0,240));
+  
+  graph_enable_depth ( gb_graph(), false() );
+  graph_set_depth    ( gb_graph(), 0 );
+  graph_set_mode     ( gb_graph(), graph_mode_sub() );
+  graph_set_color    ( gb_graph(), color(1,1,1) );
+  if (_f==3) {
+    graph_draw_rect_dither( gb_graph(), 0, 0, 400, 240, false() );
   }
+  else if (_f==6) { 
+    graph_draw_rect_dither( gb_graph(), 0, 0, 400, 240, true() );
+    _f = 0;
+  }
+  _f += 1;
+  graph_enable_depth( gb_graph(), true() );
 }
 
 void debug_quit() {
