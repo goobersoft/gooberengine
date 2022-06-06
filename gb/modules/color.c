@@ -19,34 +19,21 @@ type() {
 // RR GG BB <-- each color channel is two bits.
 // transparent color is treated as -1
 
-color_t color(int r, int g, int b) {
-  r = clamp(r,0,3);
-  g = clamp(g,0,3);
-  b = clamp(b,0,3);
-  
+color_t color(int r, int g, int b) {  
   color_t rr;
-
-  rr.r = r;
-  rr.g = g;
-  rr.b = b;
+  rr.r = clamp(r,0,3);
+  rr.g = clamp(g,0,3);
+  rr.b = clamp(b,0,3);
   rr.a = true();
-
   return rr;
 }
 
 color_t color__rgba(int r, int g, int b, int a) {
-  r = clamp(r,0,3);
-  g = clamp(g,0,3);
-  b = clamp(b,0,3);
-  a = clamp(a,0,1);
-  
   color_t rr;
-
-  rr.r = r;
-  rr.g = g;
-  rr.b = b;
-  rr.a = a;
-
+  rr.r = clamp(r,0,3);
+  rr.g = clamp(g,0,3);
+  rr.b = clamp(b,0,3);
+  rr.a = clamp(a,0,1);
   return rr;
 }
 

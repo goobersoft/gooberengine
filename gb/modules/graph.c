@@ -48,6 +48,9 @@ type() {
   color_t      color;
   // the cls color
   color_t      color_cls;
+  // flip x/y
+  bool_t       flip_x;
+  bool_t       flip_y;
   // current depth
   int          depth;
   // depth enable flag
@@ -87,6 +90,8 @@ type() {
 #define graph_visual(self)        (self->visual)
 #define graph_renderer(self)      (self->renderer)
 
+#define graph_flip_x(self)        (self->flip_x)
+#define graph_flip_y(self)        (self->flip_y)
 #define graph_color(self)         (self->color)
 #define graph_color_cls(self)     (self->color_cls)
 #define graph_depth(self)         (self->depth)
@@ -122,6 +127,8 @@ graph_t * graph( visual_t * v ) {
   graph_visual(r)        = v;
   graph_renderer(r)      = visual_renderer(v);
 
+  graph_flip_x(r)        = false();
+  graph_flip_y(r)        = false();
   graph_color(r)         = color(3,3,3);
   graph_color_cls(r)     = color(0,0,0);
   graph_depth(r)         = 0;
@@ -157,6 +164,11 @@ void free_graph(graph_t * self) {
 ///////////////
 // functions //
 ///////////////
+
+void graph_set_flip( graph_t * self, bool_t x, bool_t y ) {
+  graph_flip_x(self) = x;
+  graph_flip_y(self) = y;
+}
 
 void graph_set_color( graph_t * self, color_t c ) {
   graph_color(self) = c;
@@ -561,15 +573,22 @@ void graph_draw_triangle_line( graph_t * self, int x1, int y1, int x2, int y2, i
 // specific module drawing stuff //
 ///////////////////////////////////
 
-void graph_draw_mouse( graph_t * self, mouse_t * m ) {
-  if (mouse_visible(m)) {
-    point_t * pp = mouse_pos(m);
-    point_t * mp = mouse_image_pos(m);
-    point_t * ms = mouse_image_size(m);
-    //graph_draw_colormap_sub( self, mouse_colormap(m), mouse_x(m), mouse_y(m), 10, 10 );
+// TODO: flipping code.
+
+
+void graph_draw_colormap( graph_t * self, int x, int y, colormap_t * c ) {
+  int sx = graph_flip_x(self)==true() ? c->size->x-1 : 0;
+  int sy = graph_flip_y(self)==true() ? c->size->y-1 : 0;
+  int dx = graph_flip_x(self)==true() ? -1 : 1;
+  int dy = graph_flip_y(self)==true() ? -1 : 1;
+  loop(i,0,c->size->x) {
+    loop(j,0,c->size->y) {
+      graph_draw_dot_c(self,sx+(i*dx),sy+(j*dy),colormap_get_pixel(c,i,j));
+    }
   }
 }
 
+/*
 void graph_draw_colormap( graph_t * self, int x, int y, colormap_t * c ) {
   loop(i,0,c->size->x) {
     loop(j,0,c->size->y) {
@@ -577,7 +596,7 @@ void graph_draw_colormap( graph_t * self, int x, int y, colormap_t * c ) {
     }
   }
 }
-
+*/
 void graph_draw_colormap_sub( graph_t * self, colormap_t * c, int dx, int dy, int sx, int sy, int sw, int sh ) {
   loop(i,0,sw) {
     loop(j,0,sh) {
@@ -595,6 +614,15 @@ void graph_draw_colormap_sub_ex( graph_t * self, colormap_t * c, int dx, int dy,
       ddy = j*sw/dh; 
       graph_draw_dot_c( self, dx+i, dy+j, colormap_get_pixel(c,sx+ddx,sy+ddy) );
     }
+  }
+}
+
+void graph_draw_mouse( graph_t * self, mouse_t * m ) {
+  if (mouse_visible(m)) {
+    point_t * pp = mouse_pos(m);
+    point_t * mp = mouse_image_pos(m);
+    point_t * ms = mouse_image_size(m);
+    //graph_draw_colormap_sub( self, mouse_colormap(m), mouse_x(m), mouse_y(m), 10, 10 );
   }
 }
 

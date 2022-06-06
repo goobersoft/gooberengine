@@ -142,6 +142,20 @@ void * list_remove_last( list_t * self ) {
 /////////////
 // foreach //
 /////////////
+// usage:
+//
+//  list: the list to iterate through
+//  ptr:  the exposed pointer for manipulation
+//
+//  foreach(list,ptr) {
+//    // do things with the pointer here. example
+//    char * p = (char*)ptr;
+//    log("%s",p);
+//    strcpy(p,"Hello world.");
+//  }
+//
+//  it's not a good idea to use foreach() more than one at a time.
+
 
 listnode_t * _foreach_listnode;
 void       * _foreach_data;

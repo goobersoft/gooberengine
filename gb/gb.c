@@ -43,6 +43,8 @@
 #include "modules/gbs.c"                // GooberScript
 #include "modules/sprite.c"             // instanced object with a reference to a colormap
 #include "modules/scene.c"              // scene base object
+#include "modules/controller.c"         // gamepads
+#include "modules/network.c"            // networking (TCP/UDP)
 
 
 /////////////
@@ -51,14 +53,15 @@
 
 typedef struct {
 
-  int           running;
-  int           paused;
-  visual_t    * visual;
-  timing_t    * timing;
-  graph_t     * graph;
-  assets_t    * assets;
-  mouse_t     * mouse;
-  audio_t     * audio;
+  int            running;
+  int            paused;
+  visual_t     * visual;
+  timing_t     * timing;
+  graph_t      * graph;
+  assets_t     * assets;
+  mouse_t      * mouse;
+  audio_t      * audio;
+  controller_t * controller;
   
 } gb_t;
 
@@ -74,15 +77,16 @@ gb_t * gb;
 
 // these are essentially convenience getters
 // also I hate using the -> operator.
-#define gb()         (gb)
-#define gb_assets()  (gb->assets)
-#define gb_running() (gb->running)
-#define gb_paused()  (gb->paused)
-#define gb_visual()  (gb->visual)
-#define gb_timing()  (gb->timing)
-#define gb_graph()   (gb->graph)
-#define gb_mouse()   (gb->mouse)
-#define gb_audio()   (gb->audio)
+#define gb()            (gb)
+#define gb_assets()     (gb->assets)
+#define gb_running()    (gb->running)
+#define gb_paused()     (gb->paused)
+#define gb_visual()     (gb->visual)
+#define gb_timing()     (gb->timing)
+#define gb_graph()      (gb->graph)
+#define gb_mouse()      (gb->mouse)
+#define gb_audio()      (gb->audio)
+#define gb_controller() (gb->controller)
 
 //////////////////////////
 // special debug module //
@@ -100,15 +104,16 @@ void gb_init() {
 
   // the master object does not have an allocation function.
   // instead it is done here in init()
-  gb()          = alloc(gb_t);
-  gb_running()  = true();
-  gb_paused()   = false();
-  gb_visual()   = visual();
-  gb_timing()   = timing();
-  gb_assets()   = assets();
-  gb_mouse()    = mouse();
-  gb_audio()    = audio();
-  gb_graph()    = graph(gb_visual());
+  gb()             = alloc(gb_t);
+  gb_running()     = true();
+  gb_paused()      = false();
+  gb_visual()      = visual();
+  gb_timing()      = timing();
+  gb_assets()      = assets();
+  gb_mouse()       = mouse();
+  gb_audio()       = audio();
+  gb_graph()       = graph(gb_visual());
+  gb_controller()  = controller();
 
   ///////////////
   // debugging //
@@ -121,7 +126,7 @@ void gb_init() {
 void gb_load() {
   // load the default assets
   assets_load(gb_assets(),gb_visual());
-  
+
   // set the mouse's icon
   mouse_image(gb_mouse()) = assets_get_image(gb_assets(),0);
   point_set( mouse_image_pos(gb_mouse()), tile10(4), tile10(20) );
@@ -133,10 +138,15 @@ void gb_load() {
 
 void gb_update() {
 
-  // update timing module to be right before everything
-  // is updated
+  ////////////
+  // timing //
+  ////////////
+
   timing_update(gb_timing());
-  // log("%ld" nl(), timing_diff(gb_timing()));
+
+  ////////////////
+  // sdl events //
+  ////////////////
 
   SDL_Event e;
   while (SDL_PollEvent(&e)) {
@@ -145,18 +155,19 @@ void gb_update() {
       gb_running() = false();
     }
   }
+  
+  /////////////
+  // modules //
+  /////////////
 
-  // all of the module events go here.
-  mouse_update(gb_mouse());
-  // finally, debug
+  mouse_update      (gb_mouse());
+  controller_update (gb_controller());
+  
+  ///////////
+  // debug //
+  ///////////
+
   debug_update();
-
-  // update the timing module again to get the amount of time
-  // that has passed since everything updated.
-  // the difference will be used to determine the amount to
-  // sleep for.
-  // timing_update(gb_timing());
-  // log("%ld" nl(), tick_delay()-timing_diff(gb_timing()));
 }
 
 void gb_draw() {
