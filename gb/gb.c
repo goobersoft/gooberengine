@@ -110,7 +110,7 @@ void gb_init() {
   gb_visual()      = visual();
   gb_timing()      = timing();
   gb_assets()      = assets();
-  gb_mouse()       = mouse();
+  gb_mouse()       = mouse(null());
   gb_audio()       = audio();
   gb_graph()       = graph(gb_visual());
   gb_controller()  = controller();
@@ -128,10 +128,10 @@ void gb_load() {
   assets_load(gb_assets(),gb_visual());
 
   // set the mouse's icon
-  mouse_image(gb_mouse()) = assets_get_image(gb_assets(),0);
-  point_set( mouse_image_pos(gb_mouse()), tile10(4), tile10(20) );
-  point_set( mouse_image_size(gb_mouse()), tile10(1), tile10(1) );
-  mouse_set_visible(gb_mouse(),false());
+  mouse_colormap(gb_mouse())      = assets_get_colormap(gb_assets(),0);
+  mouse_set_colormap_rect         (gb_mouse(),40,200,10,10);
+  mouse_set_visible               (gb_mouse(),false());
+
   // debug
   debug_load();
 }

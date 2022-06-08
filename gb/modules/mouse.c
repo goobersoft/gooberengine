@@ -13,19 +13,22 @@ type() {
   point_t pos_old;
   point_t pos_diff;
 
-  image_t * image;
-  point_t image_pos;
-  point_t image_size;
+  colormap_t * colormap;
+  point_t colormap_pos;
+  point_t colormap_size;
 
 } mouse_t;
 
-#define mouse_visible(self)    (self->visible)
-#define mouse_pos(self)        (&self->pos)
-#define mouse_pos_old(self)    (&self->pos_old)
-#define mouse_pos_diff(self)   (&self->pos_diff)
-#define mouse_image(self)      (self->image)
-#define mouse_image_pos(self)  (&self->image_pos)
-#define mouse_image_size(self) (&self->image_size)
+#define mouse_visible(self)       (self->visible)
+#define mouse_pos(self)           (&self->pos)
+#define mouse_pos_old(self)       (&self->pos_old)
+#define mouse_pos_diff(self)      (&self->pos_diff)
+#define mouse_colormap(self)      (self->colormap)
+#define mouse_colormap_pos(self)  (&self->colormap_pos)
+#define mouse_colormap_size(self) (&self->colormap_size)
+
+#define mouse_x(self) (self->pos.x)
+#define mouse_y(self) (self->pos.y)
 
 /////////
 // new //
@@ -38,9 +41,16 @@ void mouse_init( mouse_t * self ) {
 
 }
 
-mouse_t * mouse() {
+mouse_t * mouse( colormap_t * c ) {
   mouse_t * r = alloc(mouse_t);
-  mouse_init(r);
+  mouse_visible(r) = true();
+  point_set(mouse_pos(r), 0,0);
+  point_set(mouse_pos_old(r), 0,0);
+  point_set(mouse_pos_diff(r), 0,0);
+  
+  mouse_colormap(r) = c;
+  point_set(mouse_colormap_pos(r),  0,0);
+  point_set(mouse_colormap_size(r), 10,10);
   return r;
 }
 
@@ -64,17 +74,15 @@ void mouse_set_visible( mouse_t * self, bool_t b ) {
   }
 }
 
-void mouse_set_image( mouse_t * self, image_t * u ) {
-  mouse_image(self) = u;
+void mouse_set_colormap( mouse_t * self, colormap_t * c ) {
+  mouse_colormap(self) = c;
 }
 
-void mouse_set_image_pos( mouse_t * self, int x, int y ) {
-  point_set( mouse_image_pos(self), x, y );
+void mouse_set_colormap_rect( mouse_t * self, int x, int y, int w, int h ) {
+  point_set(mouse_colormap_pos(self),x,y);
+  point_set(mouse_colormap_size(self),w,h);
 }
 
-void mouse_set_image_size( mouse_t * self, int w, int h ) {
-  point_set( mouse_image_pos(self), w, h );
-}
 
 ////////////
 // events //

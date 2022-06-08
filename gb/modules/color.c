@@ -37,6 +37,20 @@ color_t color__rgba(int r, int g, int b, int a) {
   return rr;
 }
 
+color_t color__index( int id ) {
+  color_t rr;
+  rr.r = id % 4;
+  rr.g = id / 4;
+  rr.b = id / 16;
+  rr.a = true();
+  return rr;
+}
+
+fnptr(
+  color_by_index, color__index,
+  color_t, (int)
+);
+
 color_t color__trans() {
   return color__rgba(0,0,0,0);
 }

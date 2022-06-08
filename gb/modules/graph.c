@@ -70,7 +70,10 @@ type() {
   // A link to the font in Assets
   font_t     * font;
   // palette for rendering (color IDs)
-  palette_t    palette;
+  // this is a pointer to the default palette on init
+  palette_t  * palette;
+  // default palette
+  palette_t  * palette_default;
   // transparency level
   byte_t       trans;
 
@@ -90,31 +93,32 @@ type() {
 #define graph_visual(self)        (self->visual)
 #define graph_renderer(self)      (self->renderer)
 
-#define graph_flip_x(self)        (self->flip_x)
-#define graph_flip_y(self)        (self->flip_y)
-#define graph_color(self)         (self->color)
-#define graph_color_cls(self)     (self->color_cls)
-#define graph_depth(self)         (self->depth)
-#define graph_depth_cls(self)     (self->depth_cls)
-#define graph_depth_enabled(self) (self->depth_enabled)
-#define graph_stencil(self)       (self->stencil)
-#define graph_stencil_cls(self)   (self->stencil_cls)
+#define graph_flip_x(self)          (self->flip_x)
+#define graph_flip_y(self)          (self->flip_y)
+#define graph_color(self)           (self->color)
+#define graph_color_cls(self)       (self->color_cls)
+#define graph_depth(self)           (self->depth)
+#define graph_depth_cls(self)       (self->depth_cls)
+#define graph_depth_enabled(self)   (self->depth_enabled)
+#define graph_stencil(self)         (self->stencil)
+#define graph_stencil_cls(self)     (self->stencil_cls)
 
-#define graph_clip_pos(self)     (&self->clip_pos)
-#define graph_clip_size(self)    (&self->clip_size)  
-#define graph_clip_x(self)       (self->clip_pos.x)
-#define graph_clip_y(self)       (self->clip_pos.y)
-#define graph_clip_w(self)       (self->clip_size.x)
-#define graph_clip_h(self)       (self->clip_size.y)
-#define graph_mode(self)         (self->mode)
-#define graph_font(self)         (self->font)
-#define graph_palette(self)      (self->palette)
-#define graph_trans(self)        (self->trans)
-#define graph_rect_src(self)     (&self->rect_src)
-#define graph_rect_dst(self)     (&self->rect_dst)
-#define graph_data(self)         (self->data)
-#define graph_data_depth(self)   (self->data_depth)
-#define graph_data_stencil(self) (self->data_stencil)
+#define graph_clip_pos(self)        (&self->clip_pos)
+#define graph_clip_size(self)       (&self->clip_size)  
+#define graph_clip_x(self)          (self->clip_pos.x)
+#define graph_clip_y(self)          (self->clip_pos.y)
+#define graph_clip_w(self)          (self->clip_size.x)
+#define graph_clip_h(self)          (self->clip_size.y)
+#define graph_mode(self)            (self->mode)
+#define graph_font(self)            (self->font)
+#define graph_palette(self)         (self->palette)
+#define graph_palette_default(self) (self->palette_default)
+#define graph_trans(self)           (self->trans)
+#define graph_rect_src(self)        (&self->rect_src)
+#define graph_rect_dst(self)        (&self->rect_dst)
+#define graph_data(self)            (self->data)
+#define graph_data_depth(self)      (self->data_depth)
+#define graph_data_stencil(self)    (self->data_stencil)
 
 
 /////////
@@ -137,6 +141,9 @@ graph_t * graph( visual_t * v ) {
   graph_stencil(r)       = true();
   graph_stencil_cls(r)   = false();
   graph_mode(r)          = graph_mode_normal();
+
+  graph_palette(r)         = palette();
+  graph_palette_default(r) = graph_palette(r);
 
   point_set( graph_clip_pos(r),0,0);
   point_set( graph_clip_size(r),400,240); 
@@ -165,17 +172,31 @@ void free_graph(graph_t * self) {
 // functions //
 ///////////////
 
+int _graph_calc_palette_index( color_t c ) {
+  return (c.b*16) + (c.g*4) + c.r;
+}
+
 void graph_set_flip( graph_t * self, bool_t x, bool_t y ) {
   graph_flip_x(self) = x;
   graph_flip_y(self) = y;
 }
 
+/*
 void graph_set_color( graph_t * self, color_t c ) {
   graph_color(self) = c;
 }
 
 void graph_set_cls_color( graph_t * self, color_t c ) {
   graph_color_cls(self) = c;
+}
+*/
+
+void graph_set_color( graph_t * self, color_t c ) {
+  graph_color(self) = palette_colors(graph_palette(self))[_graph_calc_palette_index(c)];
+}
+
+void graph_set_cls_color( graph_t * self, color_t c ) {
+  graph_color_cls(self) = palette_colors(graph_palette(self))[_graph_calc_palette_index(c)];
 }
 
 void graph_set_depth( graph_t * self, int d ) {
@@ -213,6 +234,15 @@ void graph_reset_clip( graph_t * self ) {
 
 void graph_set_trans( graph_t * self, int t ) {
   graph_trans(self) = clamp(t,0,4);
+}
+
+void graph_set_palette( graph_t * self, palette_t * p ) {
+  if (p == null()) {
+    graph_palette(self) = graph_palette_default(self);
+  }
+  else {
+    graph_palette(self) = p;
+  }
 }
 
 ///////////////////////
@@ -588,41 +618,49 @@ void graph_draw_colormap( graph_t * self, int x, int y, colormap_t * c ) {
   }
 }
 
-/*
-void graph_draw_colormap( graph_t * self, int x, int y, colormap_t * c ) {
-  loop(i,0,c->size->x) {
-    loop(j,0,c->size->y) {
-      graph_draw_dot_c(self,x+i,y+j,colormap_get_pixel(c,i,j));
-    }
-  }
-}
-*/
-void graph_draw_colormap_sub( graph_t * self, colormap_t * c, int dx, int dy, int sx, int sy, int sw, int sh ) {
+void graph_draw_colormap_sub( graph_t * self, int dx, int dy, colormap_t * c, int sx, int sy, int sw, int sh ) {
+  int ssx = graph_flip_x(self)==true() ? sw-1 : 0;
+  int ssy = graph_flip_y(self)==true() ? sh-1 : 0;
+  int ddx = graph_flip_x(self)==true() ? -1 : 1;
+  int ddy = graph_flip_y(self)==true() ? -1 : 1;
   loop(i,0,sw) {
     loop(j,0,sh) {
-      graph_draw_dot_c( self, dx+i, dy+j, colormap_get_pixel(c,sx+i,sy+j) );
+      graph_draw_dot_c( self, ssx + dx + (i*ddx), ssy + dy + (j*ddy), colormap_get_pixel(c,sx+i,sy+j) );
     }
   }
 }
 
-void graph_draw_colormap_sub_ex( graph_t * self, colormap_t * c, int dx, int dy, int dw, int dh, int sx, int sy, int sw, int sh ) {
+void graph_draw_colormap_sub_ex( graph_t * self, int dx, int dy, int dw, int dh, colormap_t * c, int sx, int sy, int sw, int sh ) {
+  int sssx = graph_flip_x(self)==true() ? sw-1 : 0;
+  int sssy = graph_flip_y(self)==true() ? sh-1 : 0;
+  int dddx = graph_flip_x(self)==true() ? -1 : 1;
+  int dddy = graph_flip_y(self)==true() ? -1 : 1;
   int ddx;
   int ddy;
   loop(i,0,dw) {
     loop(j,0,dh) {
       ddx = i*sw/dw;
       ddy = j*sw/dh; 
-      graph_draw_dot_c( self, dx+i, dy+j, colormap_get_pixel(c,sx+ddx,sy+ddy) );
+      graph_draw_dot_c( self, sssx + dx + (i*dddx), sssy + dy + (j*dddy), colormap_get_pixel(c,sx+ddx,sy+ddy) );
     }
   }
 }
 
+// points 1, 2, 3, 4 are the points of a quad in clockwise motion.
+// you may move the points in any order you like to get rotation,
+// flipping, scaling, etc.
+void graph_draw_colormap_sub_quad( graph_t * self,
+  int dx1, int dy1, int dx2, int dy2, int dx3, int dy3, int dx4, int dy4,
+  colormap_t * c, int sx, int sy, int sw, int sh) {
+
+
+}
+
 void graph_draw_mouse( graph_t * self, mouse_t * m ) {
-  if (mouse_visible(m)) {
-    point_t * pp = mouse_pos(m);
-    point_t * mp = mouse_image_pos(m);
-    point_t * ms = mouse_image_size(m);
-    //graph_draw_colormap_sub( self, mouse_colormap(m), mouse_x(m), mouse_y(m), 10, 10 );
+  if (mouse_visible(m)==true()) {
+    graph_set_mode(self,graph_mode_normal());
+    graph_set_flip(self,false(),false());
+    graph_draw_colormap_sub( self, mouse_x(m)/3, mouse_y(m)/3, mouse_colormap(m), 40, 200, 10, 10 );
   }
 }
 
