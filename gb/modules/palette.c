@@ -3,7 +3,8 @@
 // consts //
 ////////////
 
-#define palette_max_colors() 64
+#define palette_max_colors()   65
+#define palette_index_trans()  palette_max_colors()-1
 
 ////////////
 // struct //
@@ -38,6 +39,7 @@ palette_t * palette() {
       cb += 1;
     }
   }
+  palette_colors(r)[palette_index_trans()] = color_trans();
   return r;
 }
 
@@ -48,6 +50,7 @@ palette_t * palette__grayscale() {
     cg = i%4;
     palette_colors(r)[i] = color(cg,cg,cg);
   }
+  palette_colors(r)[palette_index_trans()] = color_trans();
   return r;
 }
 
@@ -71,7 +74,7 @@ palette_t * palette__gameboy() {
     cg = _cl[i%4];
     palette_colors(r)[i] = cg;
   }
-
+  palette_colors(r)[palette_index_trans()] = color_trans();
   return r;
 }
 
@@ -80,16 +83,8 @@ palette_t * palette__random() {
   loop(i,0,palette_max_colors()) {
     palette_colors(r)[i] = color_random();
   }
+  palette_colors(r)[palette_index_trans()] = color_trans();
   return r;
-}
-
-/////////
-// del //
-/////////
-
-void free_palette( palette_t * self ) {
-  free(palette_colors(self));
-  free(self);
 }
 
 ///////////
@@ -98,7 +93,7 @@ void free_palette( palette_t * self ) {
 
 // sets the palette colors to another array of colors
 // (copies)
-void palette_set( palette_t * self, color_t * cs ) {
+void palette_set_colors( palette_t * self, color_t * cs ) {
   loop(i,0,palette_max_colors()) {
     palette_colors(self)[i] = cs[i];
   }
@@ -114,4 +109,9 @@ void palette_set_color( palette_t * self, int n, color_t c ) {
   if (inrange(n,0,palette_max_colors())) {
     palette_colors(self)[n] = c;
   }
+}
+
+color_t palette_get_color( palette_t * self, int n ) {
+  n = wrap(n,0,palette_max_colors());
+  return palette_colors(self)[n];
 }

@@ -29,6 +29,8 @@ colormap_t * colormap( int x, int y ) {
   return r;
 }
 
+
+
 colormap_t * colormap_from_image( image_t * u ) {
   colormap_t * r = colormap( point_x(image_size(u)), point_y(image_size(u)) );
 
@@ -47,10 +49,11 @@ colormap_t * colormap_from_image( image_t * u ) {
       cr = rounded(cr,85)/85;
       cg = rounded(cg,85)/85;
       cb = rounded(cb,85)/85;
-      ca = rounded(ca,85)/85;
+      ca = (ca >= 128);
+
       aa = (j*sx) + i;
-      if (ca<3) {
-        colormap_data(r)[aa] = color__trans();
+      if (ca==0) {
+        colormap_data(r)[aa] = color_trans();
       }
       else {
         colormap_data(r)[aa] = color( cr, cg, cb );
@@ -73,8 +76,18 @@ void free_colormap( colormap_t * self ) {
 ///////////////
 
 void colormap_plot( colormap_t * self, int x, int y, color_t c ) {
+  int uu = 0;
   if (inrect(x,y,0,0,colormap_width(self),colormap_height(self))) {
-    colormap_data(self)[y*point_x(colormap_size(self)) + x] = c;
+    uu = y*point_x(colormap_size(self)) + x;
+    colormap_data(self)[uu] = color_set(colormap_data(self)[uu],c);
+  }
+}
+
+void colormap_plot_replace( colormap_t * self, int x, int y, color_t c ) {
+  int uu = 0;
+  if (inrect(x,y,0,0,colormap_width(self),colormap_height(self))) {
+    uu = y*point_x(colormap_size(self)) + x;
+    colormap_data(self)[uu] = c;
   }
 }
 
@@ -120,7 +133,7 @@ void colormap_plot_avg( colormap_t * self, int x, int y, color_t c ) {
 
 // fill the colormap with a color index. You may specify -1
 // to make it transparent
-void colormap_fill( colormap_t * self, color_t c ) {
+void colormap_clear( colormap_t * self, color_t c ) {
   loop(i,0,point_x(colormap_size(self))*point_y(colormap_size(self))) {
     colormap_data(self)[i] = c;
   }
@@ -130,5 +143,5 @@ color_t colormap_get_pixel( colormap_t * self, int x, int y ) {
   if (inrect(x,y,0,0,self->size->x,self->size->y)) {
     return colormap_data(self)[y*point_x(colormap_size(self)) + x];
   }
-  return color__trans();
+  return color_trans();
 }

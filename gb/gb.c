@@ -30,11 +30,11 @@
 #include "modules/image.c"              // uses SDL2_image
 #include "modules/palette.c"            // storage of a list of 6-bit colors.
 #include "modules/colormap.c"           // a 2d array of colors
-#include "modules/mouse.c"              // mouse interface
 #include "modules/sound.c"              // sound interface
 #include "modules/font.c"               // bitmap fonts which utilize image colormaps
 #include "modules/board.c"              // drawing durfaces
 #include "modules/visual.c"             // window and renderer interface
+#include "modules/mouse.c"              // mouse interface
 #include "modules/assets.c"             // asset container object (sound/image/font)
 #include "modules/audio.c"              // audio mixer
 #include "modules/graph.c"              // drawing interface
@@ -110,7 +110,7 @@ void gb_init() {
   gb_visual()      = visual();
   gb_timing()      = timing();
   gb_assets()      = assets();
-  gb_mouse()       = mouse(null());
+  gb_mouse()       = mouse(gb_visual(), null());
   gb_audio()       = audio();
   gb_graph()       = graph(gb_visual());
   gb_controller()  = controller();
