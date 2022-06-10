@@ -35,7 +35,8 @@ byte_t _graph_transvals[] = {
 #define graph_area()         graph_width()*graph_height()
 #define graph_depth_cls_d()  1000000
 
-#define graph_max_layers()   10
+#define graph_max_layers()         10
+#define graph_max_frame_dots() 100000
 
 //////////
 // type //
@@ -45,8 +46,10 @@ type() {
 
   // the reference to the visual + renderer
   visual_t      * visual;
-  SDL_Renderer  * renderer;
   
+  // the number of dots which were processed in the frame.
+  uint_t        frame_dots;
+
   // the draw color
   color_t       color;
   // the cls color
@@ -105,6 +108,8 @@ type() {
 #define graph_flip_x(self)          (self->flip_x)
 #define graph_flip_y(self)          (self->flip_y)
 
+#define graph_frame_dots(self)      (self->frame_dots)
+
 #define graph_color(self)           (self->color)
 #define graph_color_cls(self)       (self->color_cls)
 
@@ -147,7 +152,6 @@ graph_t * graph( visual_t * v ) {
   graph_t * r = alloc(graph_t);
   
   graph_visual(r)        = v;
-  graph_renderer(r)      = visual_renderer(v);
 
   graph_flip_x(r)        = false();
   graph_flip_y(r)        = false();
@@ -325,85 +329,106 @@ int graph_get_pixel_depth( graph_t * self, int x, int y ) {
 // since there's no alpha in GB's 64 color palette, dithering
 // is applied instead.
 void graph_draw_dot( graph_t * self, int x, int y ) {
-  if (inrect(x,y,graph_clip_x(self),graph_clip_y(self),graph_clip_w(self),graph_clip_h(self))) {
+  if (graph_frame_dots(self) < graph_max_frame_dots()) {
+    if (inrect(x,y,graph_clip_x(self),graph_clip_y(self),graph_clip_w(self),graph_clip_h(self))) {
+      graph_frame_dots(self) += 1;
 
-    int gm = graph_mode(self);
+      int gm = graph_mode(self);
 
-    if (gm==graph_mode_normal()) {
-      if (graph_get_pixel_stencil(self,x,y)==false()) {
-        if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
-          colormap_plot( graph_data(self), x, y, graph_color(self) );
-          if (graph_depth_enabled(self)==true()) {
-            graph_plot_depth(self,x,y,graph_depth(self));
+      if (gm==graph_mode_normal()) {
+        colormap_plot( graph_data(self), x, y, graph_color(self) );
+        /*
+        if (graph_get_pixel_stencil(self,x,y)==false()) {
+          if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
+            colormap_plot( graph_data(self), x, y, graph_color(self) );
+            if (graph_depth_enabled(self)==true()) {
+              graph_plot_depth(self,x,y,graph_depth(self));
+            }
           }
         }
+        */
       }
-    }
-    else if (gm==graph_mode_replace()) {
-      colormap_plot_replace( graph_data(self), x, y, graph_color(self) );
-    }
-    else if (gm==graph_mode_add()) {
-      if (graph_get_pixel_stencil(self,x,y)==false()) {
-        if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
-          colormap_plot_add( graph_data(self), x, y, graph_color(self) );
-          if (graph_depth_enabled(self)==true()) {
-            graph_plot_depth(self,x,y,graph_depth(self));
+      else if (gm==graph_mode_replace()) {
+        colormap_plot_replace( graph_data(self), x, y, graph_color(self) );
+      }
+      else if (gm==graph_mode_add()) {
+        colormap_plot_add( graph_data(self), x, y, graph_color(self) );
+        /*
+        if (graph_get_pixel_stencil(self,x,y)==false()) {
+          if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
+            colormap_plot_add( graph_data(self), x, y, graph_color(self) );
+            if (graph_depth_enabled(self)==true()) {
+              graph_plot_depth(self,x,y,graph_depth(self));
+            }
           }
         }
+        */
       }
-    }
-    else if (gm==graph_mode_sub()) {
-      if (graph_get_pixel_stencil(self,x,y)==false()) {
-        if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
-          colormap_plot_sub( graph_data(self), x, y, graph_color(self) );
-          if (graph_depth_enabled(self)==true()) {
-            graph_plot_depth(self,x,y,graph_depth(self));
+      else if (gm==graph_mode_sub()) {
+        colormap_plot_sub( graph_data(self), x, y, graph_color(self) );
+        /*
+        if (graph_get_pixel_stencil(self,x,y)==false()) {
+          if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
+            colormap_plot_sub( graph_data(self), x, y, graph_color(self) );
+            if (graph_depth_enabled(self)==true()) {
+              graph_plot_depth(self,x,y,graph_depth(self));
+            }
           }
         }
+        */
       }
-    }
-    else if (gm==graph_mode_high()) {
-      if (graph_get_pixel_stencil(self,x,y)==false()) {
-        if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
-          colormap_plot_high( graph_data(self), x, y, graph_color(self) );
-          if (graph_depth_enabled(self)==true()) {
-            graph_plot_depth(self,x,y,graph_depth(self));
+      else if (gm==graph_mode_high()) {
+        colormap_plot_high( graph_data(self), x, y, graph_color(self) );
+        /*
+        if (graph_get_pixel_stencil(self,x,y)==false()) {
+          if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
+            colormap_plot_high( graph_data(self), x, y, graph_color(self) );
+            if (graph_depth_enabled(self)==true()) {
+              graph_plot_depth(self,x,y,graph_depth(self));
+            }
           }
         }
+        */
       }
-    }
-    else if (gm==graph_mode_low()) {
-      if (graph_get_pixel_stencil(self,x,y)==false()) {
-        if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
-          colormap_plot_low( graph_data(self), x, y, graph_color(self) );
-          if (graph_depth_enabled(self)==true()) {
-            graph_plot_depth(self,x,y,graph_depth(self));
+      else if (gm==graph_mode_low()) {
+        colormap_plot_low( graph_data(self), x, y, graph_color(self) );
+        /*
+        if (graph_get_pixel_stencil(self,x,y)==false()) {
+          if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
+            colormap_plot_low( graph_data(self), x, y, graph_color(self) );
+            if (graph_depth_enabled(self)==true()) {
+              graph_plot_depth(self,x,y,graph_depth(self));
+            }
           }
         }
+        */
       }
-    }
-    else if (gm==graph_mode_avg()) {
-      if (graph_get_pixel_stencil(self,x,y)==false()) {
-        if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
-          colormap_plot_avg( graph_data(self), x, y, graph_color(self) );
-          if (graph_depth_enabled(self)==true()) {
-            graph_plot_depth(self,x,y,graph_depth(self));
+      else if (gm==graph_mode_avg()) {
+        colormap_plot_avg( graph_data(self), x, y, graph_color(self) );
+        /*
+        if (graph_get_pixel_stencil(self,x,y)==false()) {
+          if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
+            colormap_plot_avg( graph_data(self), x, y, graph_color(self) );
+            if (graph_depth_enabled(self)==true()) {
+              graph_plot_depth(self,x,y,graph_depth(self));
+            }
           }
         }
+        */
       }
-    }
 
-    else if (gm==graph_mode_depth()) {
-      if (graph_depth(self) < graph_get_pixel_depth(self,x,y)) {
-        graph_plot_depth(self,x,y,graph_depth(self));
+      else if (gm==graph_mode_depth()) {
+        if (graph_depth(self) < graph_get_pixel_depth(self,x,y)) {
+          graph_plot_depth(self,x,y,graph_depth(self));
+        }
+      }
+
+      else if (gm==graph_mode_stencil()) {
+        graph_plot_stencil(self,x,y,graph_stencil(self));
       }
     }
-
-    else if (gm==graph_mode_stencil()) {
-      graph_plot_stencil(self,x,y,graph_stencil(self));
-    }
-  }
   //SDL_RenderDrawPoint(graph_renderer(self), x, y);
+  }
 }
 
 
@@ -702,6 +727,7 @@ void graph_draw_layer( graph_t * self, int d ) {
 }
 
 void graph_draw_mouse( graph_t * self, mouse_t * m ) {
+  /*
   if (mouse_visible(m)==true()) {
     graph_set_layer(self,-1);
     graph_set_mode(self,graph_mode_replace());
@@ -712,6 +738,7 @@ void graph_draw_mouse( graph_t * self, mouse_t * m ) {
     graph_draw_layer(self,-1);
     graph_reset_layer(self);
   }
+  */
 }
 
 ////////////
@@ -719,13 +746,35 @@ void graph_draw_mouse( graph_t * self, mouse_t * m ) {
 ////////////
 
 void graph_present( graph_t * self ) {
-  color_t c;
-  graph_set_layer(self,0);
-  loop(i,0,graph_width()) {
-    loop(j,0,graph_height()) {
-      c = colormap_get_pixel(graph_data(self),i,j);
-      SDL_SetRenderDrawColor(graph_renderer(self),color_r(c)*85, color_g(c)*85, color_b(c)*85, 255);
-      SDL_RenderDrawPoint(graph_renderer(self),i,j);
+  // pixel format = ABGR8888
+  visual_t  * vv  = graph_visual(self);
+  board_t   * bb  = visual_screen(vv);
+  
+  board_lock( bb );
+  int         bp  = board_rawpitch(bb);
+  Uint32    * px  = board_rawdata(bb);
+
+  colormap_t * cm = graph_data(self);
+
+  int xx  = 0;
+  int yy  = 0;
+  int ci  = 0;
+  color_t cc;
+
+  // who uses do/while loops, right?
+  // while     = check first, do after
+  // do-while  = do first, check after
+  do {
+    //log("%d %d",xx,yy);
+    cc = colormap_data(cm)[ci];
+    px[ci] = abgr(255,color_b(cc)*85,color_g(cc)*85,color_r(cc)*85);
+    ci++;
+    xx += 1;
+    if (xx==400) {
+      xx  = 0;
+      yy += 1;
     }
-  }
+  } while (xx<400 && yy<240);
+  board_unlock( bb );
+  graph_frame_dots(self) = 0;
 }

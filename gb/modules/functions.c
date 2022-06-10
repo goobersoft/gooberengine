@@ -5,15 +5,10 @@
 
 char _bits[36];
 char * bits(uint_t n) {
-  int uu = 0;
   loop(i,0,32) {
-    uu = 31-i;
-    _bits[uu] = '0';
-    if (((n>>uu)&1)==1) {
-      _bits[uu] = '1';
-    }
+    _bits[31-i] = (n&1) ? '1' : '0';
+    n = n>>1;
   }
-  return _bits;
 }
 
 void swap(int * a, int * b) {
@@ -82,6 +77,10 @@ int find( int * a, int l, int c, int v ) {
   return undefined();
 }
 
+
+Uint32 abgr( byte_t a, byte_t b, byte_t g, byte_t r ) {
+  return (((Uint32)a)<<24) | (((Uint32)b)<<16) | (((Uint32)g)<<8) | ((Uint32)r);
+}
 
 
 char * sdl_pixelformat_str( uint_t f ) {
@@ -198,87 +197,6 @@ fixed_t rounded( fixed_t a, int d ) {
 // arrays //
 ////////////
 
-// notes:
-//  maybe allow the first index to hold the size of the array
-//  and make gb64 1-based? Just something to think about.
-
-// returns an integer array of length n
-// fills the array with default value v
-int * array( int n, int v ) {
-  int * r = allocv(int,n);
-  for (int i = 0; i < n; i++) {
-    r[i] = v;
-  }
-  return r;
-}
-
-// only the pointer to a is needed here.
-void free_array( int * a ) {
-  free(a);
-}
-
-// this function will check to see if the array at index n
-// is 0. If it is, it turns it to 1 and returns true().
-// returns false otherwise.
-int array_lock(int * a, int n) {
-  if (a[n] == false()) {
-    a[n] = true();
-    return true();
-  }
-  return false();
-}
-
-// similar to the locking function, this function will
-// check to see if array at index n is 1. Sets to 0 if true().
-// returns true() on success, false otherwise.
-int array_unlock( int * a, int n ) {
-  if (a[n] == true()) {
-    a[n] = false();
-    return true();
-  }
-  return false();
-}
-
-
-// returns a 2D array (array of arrays)
-int ** array2d(int x, int y, int v) {
-  int ** r = malloc(sizeof(int*)*x);
-  for (int i = 0; i < x; i++) {
-    r[i] = array(y,v);
-  }
-  return r;
-}
-
-// you need to provide the X dimension for
-// the function to know how many inner arrays
-// to free.
-void free_array2d( int ** a, int x ) {
-  for (int i = 0; i < x; i++) {
-    free( a[i] );
-  }
-  free(a);
-}
-
-// returns a 3D array (array of array of arrays)
-int *** array3d( int x, int y, int z, int v ) {
-  int *** r = malloc(sizeof(int**)*x);
-  for (int i = 0; i < x; i++) {
-    r[i] = array2d(y,z,v);
-  }
-  return r;
-}
-
-// you need to provide both the X and Y sizes
-// so that the function knows how many inner arrays
-// need to be freed.
-void free_array3d( int *** a, int x, int y ) {
-  for (int i = 0; i < x; i++) {
-    free_array2d(a[i], y);
-  }
-  free(a);
-}
-
-
 ///////////////////
 // locker object //
 ///////////////////
@@ -304,6 +222,6 @@ locker_t * locker( int l ) {
   locker_t * r = alloc(locker_t);
   locker_counter(r) = 0;
   locker_length(r)  = l;
-  locker_active(r)  = array(l,false());
+  locker_active(r)  = allocv(bool_t,l);
   return r;
 }

@@ -1,37 +1,42 @@
 
+#define board_width()   400
+#define board_height()  240
+
 typedef struct {
 
-  local    point_t      * size;
+  external SDL_Renderer * renderer;
   local    SDL_Texture  * texture;
-  external SDL_Renderer * source;
+  local    SDL_Texture  * rawtexture;
+  local    bool_t         locked;
+  local    Uint32       * rawdata;
+  local    int            rawpitch;
 
 } board_t;
 
 #define board_size(self)       (self->size)
-#define board_source(self)     (self->texture)
-#define board_texture(self)    board_source(self)
-#define board_renderer(self)   (self->source)
+#define board_renderer(self)   (self->renderer)
+#define board_texture(self)    (self->texture)
+#define board_locked(self)     (self->locked)
+#define board_rawdata(self)    (self->rawdata)
+#define board_rawpitch(self)   (self->rawpitch)
 
 /////////
 // new //
 /////////
 
-board_t * board(int x, int y, SDL_Renderer * r) {
-  x = low(x,10);
-  y = low(y,10);
+board_t * board( SDL_Renderer * r ) {
   board_t * b   = alloc(board_t);
-  b->size       = point(x,y);
-  b->texture    = SDL_CreateTexture(r, SDL_PIXELFORMAT_ARGB8888,
-    SDL_TEXTUREACCESS_TARGET, x, y);
-  b->source     = r;
-  return b;
-}
 
-// the dunder will help differentiate it from functions.
-// this is supposed to mean a new board with "full" resolution.
-// (400x240)
-board_t * board__full( SDL_Renderer * r ) {
-  return board(400,240,r);
+  board_renderer(b)  = r;
+  board_texture(b)   = SDL_CreateTexture( r,
+    SDL_PIXELFORMAT_ABGR8888,
+    SDL_TEXTUREACCESS_STREAMING,
+    board_width(), board_height()
+  );
+  
+  board_rawdata(b)   = allocv(Uint32*,board_width()*board_height());
+  board_locked(b)    = false();
+  return b;
 }
 
 /////////
@@ -39,8 +44,7 @@ board_t * board__full( SDL_Renderer * r ) {
 /////////
 
 void free_board( board_t * self ) {
-  SDL_DestroyTexture(board_source(self));
-  free_point(board_size(self));
+  SDL_DestroyTexture(board_texture(self));
   free(self);
 }
 
@@ -48,3 +52,22 @@ void free_board( board_t * self ) {
 // functions //
 ///////////////
 
+bool_t board_lock( board_t * self ) {
+  if (board_locked(self) == false()) {
+    SDL_LockTexture(board_texture(self), null(), (void**)ref(board_rawdata(self)), ref(board_rawpitch(self)));
+    board_locked(self) = true();
+    return true();
+  }
+  return false();
+}
+
+bool_t board_unlock( board_t * self ) {
+  if (board_locked(self) == true()) {
+    SDL_UnlockTexture(board_texture(self));
+    board_locked(self)   = false();
+    board_rawdata(self)  = null();
+    board_rawpitch(self) = 0;
+    return true();
+  }
+  return false();
+}
