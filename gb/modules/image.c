@@ -12,6 +12,8 @@ type() {
   char         * path;
   color_t      * data;
 
+  visual_t     * visual;
+
 } image_t;
 
 #define image_renderer(self) (self->renderer)
@@ -22,6 +24,7 @@ type() {
 #define image_width(self)    point_x(image_size(self))
 #define image_height(self)   point_y(image_size(self))
 #define image_data(self)     (self->data)
+#define image_visual(self)   (self->visual)
 
 /////////
 // new //
@@ -29,7 +32,7 @@ type() {
 
 // width and height must be included.
 // SDL for this machine is using SDL_PIXELFORMAT_ABGR8888
-image_t * image( char * f, SDL_Renderer * rr ) {
+image_t * image( char * f, visual_t * v ) {
   
   // if no dimensions are given, the default pixel screen size
   // is used instead. This is the typical size for a tilesheet.
@@ -44,9 +47,9 @@ image_t * image( char * f, SDL_Renderer * rr ) {
     // An image must have a relationship to the renderer to be able
     // to create a texture. Images should be created AFTER the
     // visual module, as the visual module includes a renderer.
-    image_renderer(r) = rr;
+    image_visual(r)   = v;
     image_surface(r)  = s;
-    image_texture(r)  = SDL_CreateTextureFromSurface(rr,s);
+    image_texture(r)  = SDL_CreateTextureFromSurface(visual_renderer(v),s);
     image_width(r)    = s->w;
     image_height(r)   = s->h;
     image_path(r)     = f;

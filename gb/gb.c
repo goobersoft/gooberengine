@@ -27,13 +27,15 @@
 #include "modules/stack.c"              // LIFO-style stack object
 #include "modules/number.c"             // integer number with min and max bounds
 #include "modules/color.c"              // 6-bit color with transparency bit
+#include "modules/board.c"              // drawing durfaces
+#include "modules/visual.c"             // window and renderer interface
 #include "modules/image.c"              // uses SDL2_image
 #include "modules/palette.c"            // storage of a list of 6-bit colors.
 #include "modules/colormap.c"           // a 2d array of colors
 #include "modules/sound.c"              // sound interface
 #include "modules/font.c"               // bitmap fonts which utilize image colormaps
-#include "modules/board.c"              // drawing durfaces
-#include "modules/visual.c"             // window and renderer interface
+
+
 #include "modules/mouse.c"              // mouse interface
 #include "modules/assets.c"             // asset container object (sound/image/font)
 #include "modules/audio.c"              // audio mixer
@@ -109,7 +111,7 @@ void gb_init() {
   gb_paused()      = false();
   gb_visual()      = visual();
   gb_timing()      = timing();
-  gb_assets()      = assets();
+  gb_assets()      = assets(gb_visual());
   gb_mouse()       = mouse(gb_visual(), null());
   gb_audio()       = audio();
   gb_graph()       = graph(gb_visual());
@@ -125,7 +127,33 @@ void gb_init() {
 
 void gb_load() {
   // load the default assets
-  assets_load(gb_assets(),gb_visual());
+  // load images
+  assets_t * a = gb_assets();
+  visual_t * v = gb_visual();
+
+  assets_set_image(a,0,image("gb/media/images/gb-0.png",v));
+  assets_set_image(a,1,image("gb/media/images/gb-1.png",v));
+  assets_set_image(a,2,image("gb/media/images/editor-bg.png",v));
+  assets_set_image(a,3,image("gb/media/images/test.png",v));
+
+  // load colormaps from images
+  assets_set_colormap(a,0,colormap_from_image(assets_get_image(a,0)));
+  assets_set_colormap(a,1,colormap_from_image(assets_get_image(a,1)));
+  assets_set_colormap(a,2,colormap_from_image(assets_get_image(a,2)));
+  assets_set_colormap(a,3,colormap_from_image(assets_get_image(a,3)));
+
+  // load sounds
+  assets_set_sound(a,0,sound("gb/media/sounds/jake-1.ogg"));
+  assets_set_sound(a,1,sound("gb/media/sounds/jake-2.ogg"));
+  assets_set_sound(a,2,sound("gb/media/sounds/jake-3.ogg"));
+  assets_set_sound(a,3,sound("gb/media/sounds/jake-4.ogg"));
+
+  // load font 1
+  font_t * f = font( assets_get_image(a,0) );
+  font_set_pos         ( f, 0, 100  );
+  font_set_tile_size   ( f, 5, 10   );
+  font_set_tiles_size  ( f, 10, 10  );
+  assets_set_font      ( a, 0, f );
 
   // set the mouse's icon
   mouse_colormap(gb_mouse())      = assets_get_colormap(gb_assets(),0);

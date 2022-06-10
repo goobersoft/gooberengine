@@ -12,6 +12,7 @@ void debug_init() {
 }
 
 void debug_load() {
+  assets_load_image( gb_assets(), 4, "ma/media/images/ma-0.png" );
 }
 
 void debug_update() {

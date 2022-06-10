@@ -22,6 +22,8 @@ type() {
   // array of fonts
   font_t  ** fonts;
 
+  visual_t * visual;
+
 } assets_t;
 
 #define assets_num_images(self)    (self->num_images)
@@ -32,12 +34,13 @@ type() {
 #define assets_colormaps(self)     (self->colormaps)
 #define assets_sounds(self)        (self->sounds)
 #define assets_fonts(self)         (self->fonts)
+#define assets_visual(self)        (self->visual)
 
 /////////
 // new //
 /////////
 
-assets_t * assets() {
+assets_t * assets( visual_t * v ) {
   assets_t * r            = alloc(assets_t);
   assets_num_images(r)    = assets_num_images_d();
   assets_num_colormaps(r) = assets_num_colormaps_d();
@@ -47,6 +50,7 @@ assets_t * assets() {
   assets_colormaps(r)     = allocv(colormap_t*, assets_num_colormaps_d());
   assets_sounds(r)        = allocv(sound_t*,    assets_num_sounds_d());
   assets_fonts(r)         = allocv(font_t*,     assets_num_fonts_d());
+  assets_visual(r)        = v;
   return r;
 }
 
@@ -78,6 +82,13 @@ bool_t assets_set_image( assets_t * self, int n, image_t * a ) {
     return true();
   }
   log("image id %d could not be set." nl(), n);
+  return false();
+}
+
+bool_t assets_load_image( assets_t * self, int n, char * t ) {
+  if (assets_visual(self)!=null()) {
+    return assets_set_image( self, n, image(t,assets_visual(self)) );
+  }
   return false();
 }
 
@@ -141,30 +152,3 @@ font_t * assets_get_font( assets_t * self, int n ) {
 ////////////
 // events //
 ////////////
-
-void assets_load( assets_t * self, visual_t * v ) {
-  // load images
-  assets_set_image(self,0,image("gb/media/images/gb-0.png",visual_renderer(v)));
-  assets_set_image(self,1,image("gb/media/images/gb-1.png",visual_renderer(v)));
-  assets_set_image(self,2,image("gb/media/images/editor-bg.png",visual_renderer(v)));
-  assets_set_image(self,3,image("gb/media/images/test.png",visual_renderer(v)));
-
-  // load colormaps from images
-  assets_set_colormap(self,0,colormap_from_image(assets_get_image(self,0)));
-  assets_set_colormap(self,1,colormap_from_image(assets_get_image(self,1)));
-  assets_set_colormap(self,2,colormap_from_image(assets_get_image(self,2)));
-  assets_set_colormap(self,3,colormap_from_image(assets_get_image(self,3)));
-
-  // load sounds
-  assets_set_sound(self,0,sound("gb/media/sounds/jake-1.ogg"));
-  assets_set_sound(self,1,sound("gb/media/sounds/jake-2.ogg"));
-  assets_set_sound(self,2,sound("gb/media/sounds/jake-3.ogg"));
-  assets_set_sound(self,3,sound("gb/media/sounds/jake-4.ogg"));
-
-  // load font 1
-  font_t * f = font( assets_get_image(self,0) );
-  font_set_pos         ( f, 0, 100  );
-  font_set_tile_size   ( f, 5, 10   );
-  font_set_tiles_size  ( f, 10, 10  );
-  assets_set_font      ( self, 0, f );
-}

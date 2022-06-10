@@ -13,6 +13,9 @@ void mac_init() {
 void mac_load() {
 }
 
+void mac_start() {
+}
+
 void mac_update() {
 }
 
