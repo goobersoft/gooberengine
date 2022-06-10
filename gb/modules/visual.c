@@ -42,8 +42,8 @@ visual_t * visual() {
     visual_window_width_d(),visual_window_height_d(),0);
 
   visual_renderer(r) = SDL_CreateRenderer(visual_window(r),-1,
-    SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
-    //SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_TARGETTEXTURE);
+    //SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+    SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_TARGETTEXTURE);
 
   visual_screen(r) = board(visual_renderer(r));
 

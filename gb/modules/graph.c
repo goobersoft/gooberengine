@@ -333,107 +333,40 @@ void graph_draw_dot( graph_t * self, int x, int y ) {
     if (inrect(x,y,graph_clip_x(self),graph_clip_y(self),graph_clip_w(self),graph_clip_h(self))) {
       graph_frame_dots(self) += 1;
 
-      int gm = graph_mode(self);
-
-      if (gm==graph_mode_normal()) {
-        colormap_plot( graph_data(self), x, y, graph_color(self) );
-        /*
-        if (graph_get_pixel_stencil(self,x,y)==false()) {
-          if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
-            colormap_plot( graph_data(self), x, y, graph_color(self) );
-            if (graph_depth_enabled(self)==true()) {
-              graph_plot_depth(self,x,y,graph_depth(self));
-            }
+      switch( graph_mode(self) ) {
+        case graph_mode_normal():;
+          colormap_plot( graph_data(self), x, y, graph_color(self) );
+          break;
+        case graph_mode_replace():;
+          colormap_plot_replace( graph_data(self), x, y, graph_color(self) );
+          break;
+        case graph_mode_add():;
+          colormap_plot_add( graph_data(self), x, y, graph_color(self) );
+          break;
+        case graph_mode_sub():;
+          colormap_plot_sub( graph_data(self), x, y, graph_color(self) );
+          break;
+        case graph_mode_high():;
+          colormap_plot_high( graph_data(self), x, y, graph_color(self) );
+          break;
+        case graph_mode_low():;
+          colormap_plot_low( graph_data(self), x, y, graph_color(self) );
+          break;
+        case graph_mode_avg():;
+          colormap_plot_avg( graph_data(self), x, y, graph_color(self) );
+          break;
+        case graph_mode_depth():;
+          if (graph_depth(self) < graph_get_pixel_depth(self,x,y)) {
+            graph_plot_depth(self,x,y,graph_depth(self));
           }
-        }
-        */
-      }
-      else if (gm==graph_mode_replace()) {
-        colormap_plot_replace( graph_data(self), x, y, graph_color(self) );
-      }
-      else if (gm==graph_mode_add()) {
-        colormap_plot_add( graph_data(self), x, y, graph_color(self) );
-        /*
-        if (graph_get_pixel_stencil(self,x,y)==false()) {
-          if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
-            colormap_plot_add( graph_data(self), x, y, graph_color(self) );
-            if (graph_depth_enabled(self)==true()) {
-              graph_plot_depth(self,x,y,graph_depth(self));
-            }
-          }
-        }
-        */
-      }
-      else if (gm==graph_mode_sub()) {
-        colormap_plot_sub( graph_data(self), x, y, graph_color(self) );
-        /*
-        if (graph_get_pixel_stencil(self,x,y)==false()) {
-          if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
-            colormap_plot_sub( graph_data(self), x, y, graph_color(self) );
-            if (graph_depth_enabled(self)==true()) {
-              graph_plot_depth(self,x,y,graph_depth(self));
-            }
-          }
-        }
-        */
-      }
-      else if (gm==graph_mode_high()) {
-        colormap_plot_high( graph_data(self), x, y, graph_color(self) );
-        /*
-        if (graph_get_pixel_stencil(self,x,y)==false()) {
-          if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
-            colormap_plot_high( graph_data(self), x, y, graph_color(self) );
-            if (graph_depth_enabled(self)==true()) {
-              graph_plot_depth(self,x,y,graph_depth(self));
-            }
-          }
-        }
-        */
-      }
-      else if (gm==graph_mode_low()) {
-        colormap_plot_low( graph_data(self), x, y, graph_color(self) );
-        /*
-        if (graph_get_pixel_stencil(self,x,y)==false()) {
-          if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
-            colormap_plot_low( graph_data(self), x, y, graph_color(self) );
-            if (graph_depth_enabled(self)==true()) {
-              graph_plot_depth(self,x,y,graph_depth(self));
-            }
-          }
-        }
-        */
-      }
-      else if (gm==graph_mode_avg()) {
-        colormap_plot_avg( graph_data(self), x, y, graph_color(self) );
-        /*
-        if (graph_get_pixel_stencil(self,x,y)==false()) {
-          if (graph_depth(self) <= graph_get_pixel_depth(self,x,y)) {
-            colormap_plot_avg( graph_data(self), x, y, graph_color(self) );
-            if (graph_depth_enabled(self)==true()) {
-              graph_plot_depth(self,x,y,graph_depth(self));
-            }
-          }
-        }
-        */
-      }
-
-      else if (gm==graph_mode_depth()) {
-        if (graph_depth(self) < graph_get_pixel_depth(self,x,y)) {
-          graph_plot_depth(self,x,y,graph_depth(self));
-        }
-      }
-
-      else if (gm==graph_mode_stencil()) {
-        graph_plot_stencil(self,x,y,graph_stencil(self));
+          break;
+        case graph_mode_stencil():;
+          graph_plot_stencil(self,x,y,graph_stencil(self));
+          break;
       }
     }
-  //SDL_RenderDrawPoint(graph_renderer(self), x, y);
   }
 }
-
-
-
-
 
 void graph_draw_dot_c( graph_t * self, int x, int y, color_t c ) {
   if (color_a(c)==1) {
@@ -446,14 +379,12 @@ void graph_draw_hl( graph_t * self, int x, int y, int w ) {
   loop(i,0,w) {
     graph_draw_dot(self,x+i,y);
   }
-  //SDL_RenderDrawLine(graph_renderer(self), x, y, x+w, y);
 }
 
 void graph_draw_vl( graph_t * self, int x, int y, int h ) {
   loop(j,0,h) {
     graph_draw_dot(self,x,y+j);
   }
-  //SDL_RenderDrawLine(graph_renderer(self), x, y, x, y+h);
 }
 
 
@@ -463,8 +394,6 @@ void graph_draw_rect( graph_t * self, int x, int y, int w, int h ) {
       graph_draw_dot(self,x+i,y+j);
     }
   }
-  //graph_set_dst_rect(self,x,y,w,h);
-  //SDL_RenderFillRect(graph_renderer(self),graph_rect_dst(self));
 }
 
 void graph_draw_rect_line( graph_t * self, int x, int y, int w, int h ) {
@@ -475,9 +404,6 @@ void graph_draw_rect_line( graph_t * self, int x, int y, int w, int h ) {
       }
     }
   }
-  
-  //graph_set_dst_rect(self,x,y,w,h);
-  //SDL_RenderDrawRect(graph_renderer(self),graph_rect_dst(self));
 }
 
 
@@ -547,7 +473,7 @@ void graph_draw_circle_spray( graph_t * self, int x, int y, int r, int p ) {
     loop(i,-r,r) {
       loop(j,-r,r) {
         if (sqroot(sqr(i)+sqr(j)) < r) {
-          if prob(p) graph_draw_dot(self, x+i, y+j);
+          if (prob(p)) graph_draw_dot(self, x+i, y+j);
         }
       }
     }
@@ -677,6 +603,18 @@ void graph_draw_colormap( graph_t * self, int x, int y, colormap_t * c ) {
   }
 }
 
+void graph_draw_colormap_spray( graph_t * self, int x, int y, colormap_t * c, int p ) {
+  int sx = graph_flip_x(self)==true() ? c->size->x-1 : 0;
+  int sy = graph_flip_y(self)==true() ? c->size->y-1 : 0;
+  int dx = graph_flip_x(self)==true() ? -1 : 1;
+  int dy = graph_flip_y(self)==true() ? -1 : 1;
+  loop(i,0,c->size->x) {
+    loop(j,0,c->size->y) {
+      if (prob(p)) graph_draw_dot_c(self,sx+(i*dx),sy+(j*dy),colormap_get_pixel(c,i,j));
+    }
+  }
+}
+
 void graph_draw_colormap_sub( graph_t * self, int dx, int dy, colormap_t * c, int sx, int sy, int sw, int sh ) {
   int ssx = graph_flip_x(self)==true() ? sw-1 : 0;
   int ssy = graph_flip_y(self)==true() ? sh-1 : 0;
@@ -689,7 +627,23 @@ void graph_draw_colormap_sub( graph_t * self, int dx, int dy, colormap_t * c, in
   }
 }
 
-void graph_draw_colormap_sub_ex( graph_t * self, int dx, int dy, int dw, int dh, colormap_t * c, int sx, int sy, int sw, int sh ) {
+void graph_draw_colormap_sub_spray( graph_t * self, int dx, int dy, colormap_t * c, int sx, int sy, int sw, int sh, int p ) {
+  int ssx = graph_flip_x(self)==true() ? sw-1 : 0;
+  int ssy = graph_flip_y(self)==true() ? sh-1 : 0;
+  int ddx = graph_flip_x(self)==true() ? -1 : 1;
+  int ddy = graph_flip_y(self)==true() ? -1 : 1;
+  loop(i,0,sw) {
+    loop(j,0,sh) {
+      if (prob(p)) graph_draw_dot_c( self, ssx + dx + (i*ddx), ssy + dy + (j*ddy), colormap_get_pixel(c,sx+i,sy+j) );
+    }
+  }
+}
+
+void graph_draw_colormap_sub_ex( 
+  graph_t * self, 
+  int dx, int dy, int dw, int dh, 
+  colormap_t * c, int sx, int sy, int sw, int sh ) 
+{
   int sssx = graph_flip_x(self)==true() ? sw-1 : 0;
   int sssy = graph_flip_y(self)==true() ? sh-1 : 0;
   int dddx = graph_flip_x(self)==true() ? -1 : 1;
@@ -705,13 +659,35 @@ void graph_draw_colormap_sub_ex( graph_t * self, int dx, int dy, int dw, int dh,
   }
 }
 
+void graph_draw_colormap_sub_ex_spray( 
+  graph_t * self, 
+  int dx, int dy, int dw, int dh, 
+  colormap_t * c, int sx, int sy, int sw, int sh, 
+  int p )
+{
+  int sssx = graph_flip_x(self)==true() ? sw-1 : 0;
+  int sssy = graph_flip_y(self)==true() ? sh-1 : 0;
+  int dddx = graph_flip_x(self)==true() ? -1 : 1;
+  int dddy = graph_flip_y(self)==true() ? -1 : 1;
+  int ddx;
+  int ddy;
+  loop(i,0,dw) {
+    loop(j,0,dh) {
+      ddx = i*sw/dw;
+      ddy = j*sw/dh; 
+      if (prob(p)) graph_draw_dot_c( self, sssx + dx + (i*dddx), sssy + dy + (j*dddy), colormap_get_pixel(c,sx+ddx,sy+ddy) );
+    }
+  }
+}
+
 // points 1, 2, 3, 4 are the points of a quad in clockwise motion.
 // you may move the points in any order you like to get rotation,
 // flipping, scaling, etc.
-void graph_draw_colormap_sub_quad( graph_t * self,
+void graph_draw_colormap_sub_quad(
+  graph_t * self,
   int dx1, int dy1, int dx2, int dy2, int dx3, int dy3, int dx4, int dy4,
-  colormap_t * c, int sx, int sy, int sw, int sh) {
-
+  colormap_t * c, int sx, int sy, int sw, int sh )
+{
 
 }
 
@@ -724,6 +700,11 @@ void graph_draw_layer( graph_t * self, int d ) {
     graph_draw_colormap( self, 0, 0, graph_layers(self)[d] );
     graph_set_layer(self,u);
   }
+}
+
+// this does not allow movement of the layer when drawing.
+// draw the dots in their prospective location before drawing the layer.
+void graph_draw_layer_sub( graph_t * self, int d, int sx, int sy, int sw, int sh ) {
 }
 
 void graph_draw_mouse( graph_t * self, mouse_t * m ) {
@@ -751,7 +732,6 @@ void graph_present( graph_t * self ) {
   board_t   * bb  = visual_screen(vv);
   
   board_lock( bb );
-  int         bp  = board_rawpitch(bb);
   Uint32    * px  = board_rawdata(bb);
 
   colormap_t * cm = graph_data(self);
@@ -767,14 +747,14 @@ void graph_present( graph_t * self ) {
   do {
     //log("%d %d",xx,yy);
     cc = colormap_data(cm)[ci];
-    px[ci] = abgr(255,color_b(cc)*85,color_g(cc)*85,color_r(cc)*85);
-    ci++;
-    xx += 1;
+    px[ci++] = abgr(255,color_b(cc)*85,color_g(cc)*85,color_r(cc)*85);
+    //ci++;
+    xx++;
     if (xx==400) {
-      xx  = 0;
+      xx = 0;
       yy += 1;
     }
-  } while (xx<400 && yy<240);
+  } while (ci<96000);
   board_unlock( bb );
   graph_frame_dots(self) = 0;
 }

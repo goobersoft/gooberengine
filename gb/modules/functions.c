@@ -137,7 +137,7 @@ char * sdl_pixelformat_str( uint_t f ) {
 
 #define rnd(a,b)     (a+(rand()%(b-a)))
 #define chance(x,y)  (rnd(0,y)<x)
-#define prob(x)      chance(x,100)
+#define prob(x)      chance(x,1000)
 #define sqr(a)       ((a)*(a))
 #define bool(x)      (x&1)
 
@@ -145,7 +145,7 @@ char * sdl_pixelformat_str( uint_t f ) {
   sqroot(sqr(x2-x1)+sqr(y2-y1))
 
 
-fixed_t ceiled( fixed_t a, int d ) {
+int ceiled( int a, int d ) {
   int u = abs(a)%d;
   if (u>0) {
     if (a < 0) {
@@ -158,7 +158,7 @@ fixed_t ceiled( fixed_t a, int d ) {
   return a;
 }
 
-fixed_t floored( fixed_t a, int d ) {
+int floored( int a, int d ) {
   int u = abs(a)%d;
   if (u>0) {
     if (a < 0) {
@@ -171,7 +171,7 @@ fixed_t floored( fixed_t a, int d ) {
   return a;
 }
 
-fixed_t rounded( fixed_t a, int d ) {
+int rounded( int a, int d ) {
   if ((abs(a)%d) >= d/2) {
     return ceiled(a,d);
   }
@@ -179,6 +179,12 @@ fixed_t rounded( fixed_t a, int d ) {
     return floored(a,d);
   }
 }
+
+int evenize( int a ) {
+  return (a&1)?a+1:a;
+}
+
+
 
 ////////////////
 // collisions //

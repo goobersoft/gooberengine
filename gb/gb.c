@@ -170,7 +170,7 @@ void gb_update() {
   // timing //
   ////////////
 
-  timing_update(gb_timing());
+  timing_update_pre(gb_timing());
 
   ////////////////
   // sdl events //
@@ -191,11 +191,20 @@ void gb_update() {
   mouse_update      (gb_mouse());
   controller_update (gb_controller());
   
+  debug_update_pre();
+
+  /////////////////
+  // timing post //
+  /////////////////
+
+  timing_update_post(gb_timing());
+
   ///////////
   // debug //
   ///////////
 
-  debug_update();
+  debug_update_post();
+  
 }
 
 void gb_draw() {
