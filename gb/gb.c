@@ -135,12 +135,14 @@ void gb_load() {
   assets_set_image(a,1,image("gb/media/images/gb-1.png",v));
   assets_set_image(a,2,image("gb/media/images/editor-bg.png",v));
   assets_set_image(a,3,image("gb/media/images/test.png",v));
+  assets_set_image(a,4,image("gb/media/images/gb-color-test.png",v));
 
   // load colormaps from images
   assets_set_colormap(a,0,colormap_from_image(assets_get_image(a,0)));
   assets_set_colormap(a,1,colormap_from_image(assets_get_image(a,1)));
   assets_set_colormap(a,2,colormap_from_image(assets_get_image(a,2)));
   assets_set_colormap(a,3,colormap_from_image(assets_get_image(a,3)));
+  assets_set_colormap(a,4,colormap_from_image(assets_get_image(a,4)));
 
   // load sounds
   assets_set_sound(a,0,sound("gb/media/sounds/jake-1.ogg"));
@@ -219,7 +221,7 @@ void gb_draw() {
   debug_draw_post();
   // present the screen
   graph_present(gb_graph());
-  visual_draw(gb_visual());
+  visual_draw_post(gb_visual());
 }
 
 void gb_quit() {

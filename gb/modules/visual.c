@@ -64,6 +64,29 @@ void free_visual(visual_t * v) {
   free(v);
 }
 
+///////////////
+// functions //
+///////////////
+
+void visual_draw_scanlines( visual_t * self ) {
+  SDL_Rect rr;
+  
+  SDL_SetRenderDrawBlendMode  ( visual_renderer(self), SDL_BLENDMODE_BLEND );
+  for (int i = 2; i < point_y(visual_window_size(self)); i+=3) {
+    rr.x = 0;
+    rr.y = i;
+    rr.w = 1200;
+    rr.h = 1;
+    SDL_SetRenderDrawColor      ( visual_renderer(self), 0, 0, 0, 96 );
+    SDL_RenderFillRect( visual_renderer(self), ref(rr) );
+    /*
+    rr.y = i-2;
+    SDL_SetRenderDrawColor      ( visual_renderer(self), 0, 0, 0, 48 );
+    SDL_RenderFillRect( visual_renderer(self), ref(rr) );
+    */
+  }
+}
+
 ////////////
 // events //
 ////////////
@@ -77,7 +100,9 @@ void visual_draw_pre( visual_t * self ) {
   
 }
 
-void visual_draw( visual_t * self ) {
+
+void visual_draw_post( visual_t * self ) {
   SDL_RenderCopy       ( visual_renderer(self), board_texture(visual_screen(self)), NULL, NULL);
+  visual_draw_scanlines(self);
   SDL_RenderPresent    ( visual_renderer(self) );
 }
