@@ -2,7 +2,7 @@
 type() {
 
   // reference image
-  image_t * image;
+  colormap_t * colormap;
 
   // position on image
   uint_t x;
@@ -16,7 +16,7 @@ type() {
 
 } font_t;
 
-#define font_image(self)       (self->image)
+#define font_colormap(self)    (self->colormap)
 #define font_x(self)           (self->x)
 #define font_y(self)           (self->y)
 #define font_tiles_x(self)     (self->tiles_x)
@@ -28,9 +28,9 @@ type() {
 // new //
 /////////
 
-font_t * font( image_t * u ) {
+font_t * font( colormap_t * u ) {
   font_t * r = alloc(font_t);
-  font_image(r)       = u;
+  font_colormap(r)    = u;
   font_x(r)           = 0;
   font_y(r)           = 0;
   font_tiles_x(r)     = 0;
@@ -47,8 +47,8 @@ font_t * font( image_t * u ) {
 // funcs //
 ///////////
 
-void font_set_image( font_t * self, image_t * im ) {
-  font_image(self) = im;
+void font_set_colormap( font_t * self, colormap_t * c ) {
+  font_colormap(self) = c;
 }
 
 void font_set_pos( font_t * self, int x, int y ) {

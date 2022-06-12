@@ -48,6 +48,9 @@
 #include "modules/controller.c"         // gamepads
 #include "modules/network.c"            // networking (TCP/UDP)
 
+// load the toys submodule
+#include "modules/toys/jake.c"
+
 
 /////////////
 // gb type //
@@ -151,11 +154,29 @@ void gb_load() {
   assets_set_sound(a,3,sound("gb/media/sounds/jake-4.ogg"));
 
   // load font 1
-  font_t * f = font( assets_get_image(a,0) );
+  font_t * f;
+
+  f = font( assets_get_colormap(a,0) );
   font_set_pos         ( f, 0, 100  );
   font_set_tile_size   ( f, 5, 10   );
   font_set_tiles_size  ( f, 10, 10  );
   assets_set_font      ( a, 0, f );
+
+  graph_set_font( gb_graph(), f );
+  
+  f = font( assets_get_colormap(a,0) );
+  font_set_pos         ( f, 0, 0   );
+  font_set_tile_size   ( f, 10, 10 );
+  font_set_tiles_size  ( f, 10, 10 );
+  assets_set_font      ( a, 1, f );
+
+  
+
+  
+
+  
+
+  
 
   // set the mouse's icon
   mouse_colormap(gb_mouse())      = assets_get_colormap(gb_assets(),0);

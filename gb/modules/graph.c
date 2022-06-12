@@ -24,11 +24,14 @@ byte_t _graph_transvals[] = {
 #define graph_mode_replace()  1
 #define graph_mode_add()      2
 #define graph_mode_sub()      3
-#define graph_mode_high()     4
-#define graph_mode_low()      5
-#define graph_mode_avg()      6
-#define graph_mode_depth()    7
-#define graph_mode_stencil()  8
+#define graph_mode_rsub()     4
+#define graph_mode_high()     5
+#define graph_mode_rhigh()    6
+#define graph_mode_low()      7
+#define graph_mode_rlow()     8
+#define graph_mode_avg()      9
+#define graph_mode_depth()    10
+#define graph_mode_stencil()  11
 
 #define graph_width()        400
 #define graph_height()       240
@@ -280,6 +283,10 @@ void graph_reset_layer( graph_t * self ) {
   graph_set_layer(self,0);
 }
 
+void graph_set_font( graph_t * self, font_t * f ) {
+  graph_font(self) = f;
+}
+
 ///////////////////////
 // drawing functions //
 ///////////////////////
@@ -514,24 +521,6 @@ void graph_draw_line( graph_t * self, int x1, int y1, int x2, int y2 ) {
   }
 }
 
-/*
-void graph_draw_image( graph_t * self, image_t * u, int x, int y ) {
-  graph_set_src_rect(self, 0, 0, image_width(u), image_height(u));
-  graph_set_dst_rect(self, x, y, image_width(u), image_height(u));
-  SDL_RenderCopy( graph_renderer(self), image_texture(u), graph_rect_src(self), graph_rect_dst(self) );
-}
-
-void graph_draw_image_sub( graph_t * self, image_t * u, int dx, int dy, int sx, int sy, int sw, int sh ) {
-  graph_set_src_rect(self, sx, sy, sw, sh);
-  graph_set_dst_rect(self, dx, dy, sw, sh);
-  SDL_RenderCopy( graph_renderer(self), image_texture(u), graph_rect_src(self), graph_rect_dst(self) );
-}
-*/
-
-void graph_draw_text( graph_t * self, int x, int y, char * t ) {
-  
-}
-
 void graph_draw_rect_dither_even( graph_t * self, int x, int y, int w, int h) {
   loop(j,0,h) {
     loop(i,0,w) {
@@ -691,6 +680,37 @@ void graph_draw_colormap_sub_quad(
 
 }
 
+void graph_draw_text( graph_t * self, int x, int y, char * t ) {
+  if (graph_font(self)) {
+    font_t * f = graph_font(self);
+    int xx = font_tile_width(graph_font(self));
+    int yy = font_tile_height(graph_font(self));
+    int px = font_x(graph_font(self));
+    int py = font_y(graph_font(self));
+    int sx;
+    int sy;
+    loop(i,0,strlen(t)) {
+      font_get_pos_at(f, t[i], ref(sx), ref(sy));
+      graph_draw_colormap_sub( self, x + (i*xx), y, font_colormap(f), sx, sy, xx, yy );
+    }
+  }
+}
+
+void graph_draw_text_spray( graph_t * self, int x, int y, char * t, int p ) {
+    if (graph_font(self)) {
+    font_t * f = graph_font(self);
+    int xx = font_tile_width(graph_font(self));
+    int yy = font_tile_height(graph_font(self));
+    int px = font_x(graph_font(self));
+    int py = font_y(graph_font(self));
+    int sx;
+    int sy;
+    loop(i,0,strlen(t)) {
+      font_get_pos_at(f, t[i], ref(sx), ref(sy));
+      graph_draw_colormap_sub_spray( self, x + (i*xx), y, font_colormap(f), sx, sy, xx, yy, p );
+    }
+  }
+}
 
 void graph_draw_layer( graph_t * self, int d ) {
   d = wrap(d,0,graph_max_layers());
