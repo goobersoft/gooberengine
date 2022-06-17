@@ -1,4 +1,8 @@
 
+#define gb_version_major() 0
+#define gb_version_minor() 1
+#define gb_version_patch() 0
+
 //  submodules stack
 //  ----------------
 //  instead of using header files, GB64 uses a source stack.
@@ -48,6 +52,9 @@
 #include "modules/controller.c"         // gamepads
 #include "modules/network.c"            // networking (TCP/UDP)
 
+
+#include "modules/cartridge.c"
+
 // load the toys submodule
 #include "modules/toys/jake.c"
 
@@ -67,6 +74,8 @@ typedef struct {
   mouse_t      * mouse;
   audio_t      * audio;
   controller_t * controller;
+
+  cartridge_t  * cartridge;
   
 } gb_t;
 
@@ -92,6 +101,7 @@ gb_t * gb;
 #define gb_mouse()      (gb->mouse)
 #define gb_audio()      (gb->audio)
 #define gb_controller() (gb->controller)
+#define gb_cartridge()  (gb->cartridge)
 
 //////////////////////////
 // special debug module //
@@ -100,12 +110,14 @@ gb_t * gb;
 // this will help with debugging immensely.
 
 #include "modules/debug.c"
+#include "modules/statpanel.c"
 
 ////////////
 // events //
 ////////////
 
-void gb_init() {
+void gb_init( cartridge_t * c ) {
+  log("gooberengine - version %d.%d.%d",gb_version_major(),gb_version_minor(),gb_version_patch());
 
   // the master object does not have an allocation function.
   // instead it is done here in init()
@@ -119,6 +131,12 @@ void gb_init() {
   gb_audio()       = audio();
   gb_graph()       = graph(gb_visual());
   gb_controller()  = controller();
+
+  // if the cart has been successfully loaded, call the init function.
+  gb_cartridge() = c;
+  if (gb_cartridge()) {
+    cartridge_fn_init(gb_cartridge())();
+  }
 
   ///////////////
   // debugging //
@@ -170,21 +188,23 @@ void gb_load() {
   font_set_tiles_size  ( f, 10, 10 );
   assets_set_font      ( a, 1, f );
 
-  
-
-  
-
-  
-
-  
-
   // set the mouse's icon
   mouse_colormap(gb_mouse())      = assets_get_colormap(gb_assets(),0);
   mouse_set_colormap_rect         (gb_mouse(),40,200,10,10);
   mouse_set_visible               (gb_mouse(),false());
 
+  if (gb_cartridge()) {
+    cartridge_fn_load(gb_cartridge())();
+  }
+
   // debug
   debug_load();
+}
+
+void gb_start() {
+  if (gb_cartridge()) {
+    cartridge_fn_start(gb_cartridge())();
+  }
 }
 
 void gb_update() {
@@ -214,6 +234,10 @@ void gb_update() {
   mouse_update      (gb_mouse());
   controller_update (gb_controller());
   
+  if (gb_cartridge()) {
+    cartridge_fn_update(gb_cartridge())();
+  }
+
   debug_update_pre();
 
   /////////////////
@@ -236,6 +260,11 @@ void gb_draw() {
   visual_draw_pre(gb_visual());  
   // background drawing for debug
   debug_draw_pre();
+
+  if (gb_cartridge()) {
+    cartridge_fn_draw(gb_cartridge())();
+  }
+
   // all of the module drawing goes in here
   graph_draw_mouse( gb_graph(), gb_mouse() );
   // do some debug drawing at the end of everything else
@@ -247,7 +276,12 @@ void gb_draw() {
 
 void gb_quit() {
 
+
   debug_quit();
+
+  if (gb_cartridge()) {
+    cartridge_fn_quit(gb_cartridge())();
+  }
 
   free_visual(gb_visual());
   free_timing(gb_timing());

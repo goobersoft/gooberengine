@@ -3,6 +3,10 @@
 // generic //
 /////////////
 
+// empty function
+void emp() {
+}
+
 char _bits[36];
 char * bits(uint_t n) {
   loop(i,0,32) {
@@ -198,6 +202,13 @@ int evenize( int a ) {
 
 #define incube(x1,y1,z1,x2,y2,z2,w2,h2,d2) \
   (inrange(x1,x2,x2+w2)&&inrange(y1,y2,y2+h2)&&inrange(z1,z2,z2+d2))
+
+#define rectinrect(x1,y1,w1,h1,x2,y2,w2,h2) \
+  (inrect(x1,y1,x2,y2,w2,h2)&&inrect(x1+w1-1,y1,x2,y2,w2,h2)&& \
+   inrect(x1,y1+h1-1,x2,y2,w2,h2)&&inrect(x1+w1-1,y1+h1-1,x2,y2,w2,h2))
+
+#define rectinrect2(x1,y1,w1,h1,x2,y2,w2,h2) \
+  (rectinrect(x1,y1,w1,h1,x2,y2,w2,h2)&&rectinrect(x2,y2,w2,h2,x1,y1,w1,h1))
 
 ////////////
 // arrays //

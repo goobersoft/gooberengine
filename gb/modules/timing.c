@@ -1,4 +1,6 @@
 
+#define timing_desired_fps() 60
+
 ////////////
 // struct //
 ////////////
