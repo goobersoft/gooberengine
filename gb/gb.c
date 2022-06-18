@@ -38,12 +38,9 @@
 #include "modules/colormap.c"           // a 2d array of colors
 #include "modules/sound.c"              // sound interface
 #include "modules/font.c"               // bitmap fonts which utilize image colormaps
-
-
 #include "modules/mouse.c"              // mouse interface
 #include "modules/assets.c"             // asset container object (sound/image/font)
 #include "modules/audio.c"              // audio mixer
-#include "modules/graph.c"              // drawing interface
 #include "modules/alarm.c"              // timers
 #include "modules/timing.c"             // fps/timing interface
 #include "modules/gbs.c"                // GooberScript
@@ -51,9 +48,9 @@
 #include "modules/scene.c"              // scene base object
 #include "modules/controller.c"         // gamepads
 #include "modules/network.c"            // networking (TCP/UDP)
-
-
 #include "modules/cartridge.c"
+#include "modules/statpanel.c"
+#include "modules/graph.c"              // drawing interface
 
 // load the toys submodule
 #include "modules/toys/jake.c"
@@ -110,14 +107,14 @@ gb_t * gb;
 // this will help with debugging immensely.
 
 #include "modules/debug.c"
-#include "modules/statpanel.c"
+
 
 ////////////
 // events //
 ////////////
 
 void gb_init( cartridge_t * c ) {
-  log("gooberengine - version %d.%d.%d",gb_version_major(),gb_version_minor(),gb_version_patch());
+  log("gooberengine - VER: %d.%d.%d",gb_version_major(),gb_version_minor(),gb_version_patch());
 
   // the master object does not have an allocation function.
   // instead it is done here in init()

@@ -742,6 +742,12 @@ void graph_draw_mouse( graph_t * self, mouse_t * m ) {
   */
 }
 
+void graph_draw_statpanel( graph_t * self, statpanel_t * s ) {
+
+  
+
+}
+
 ////////////
 // events //
 ////////////

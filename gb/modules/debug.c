@@ -21,6 +21,7 @@ void debug_load() {
 }
 
 void debug_update_pre() {
+  jake_update(debug_jake);
 }
 
 void debug_update_post() {
@@ -60,6 +61,10 @@ void debug_draw_post() {
 
     graph_draw_hl( gb_graph(), _star_x[i]/1000, _star_y[i], _star_s[i]/1000 );
   }
+
+  graph_draw_jake( gb_graph(), debug_jake );
+
+  graph_draw_text( gb_graph(), 100, 100, "stars");
 }
 
 void debug_quit() {
