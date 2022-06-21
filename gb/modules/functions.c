@@ -15,6 +15,10 @@ char * bits(uint_t n) {
   }
 }
 
+
+
+
+
 void swap(int * a, int * b) {
   a[0] ^= b[0];
   b[0] ^= a[0];
@@ -66,6 +70,39 @@ int frac(int a, int b, int p) {
   r = r / p;
   return (int)r;
 }
+
+
+int power( int a, int b ) {
+  b = low(b,0);
+  if (b == 0) return 1;
+  b -= 1;
+  int r = a;
+  while(b>0) {
+    r *= a;
+    b -= 1;
+  }
+  return r;
+}
+
+int digits( int n ) {
+  n     = abs(n);
+  if (n<10) return 1;
+  int u = 1;
+  while ( n >= power(10,u) ) {
+    u += 1;
+  }
+  return u;
+}
+
+
+/*
+char _str[20];
+char * str( int n ) {
+  int c = n;
+  int q = (n<0);
+
+}
+*/
 
 // a: array to search
 // l: length of array

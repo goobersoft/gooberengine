@@ -8,27 +8,35 @@
 
 type() {
 
-  bool_t  visible;
-  bool_t  pos;
-  char    text[statpanel_max_text()];
+  bool_t     visible;
+  bool_t     pos;
+  string_t * text;
+
+  int value_timing_fps;
+  int value_mouse_x;
+  int value_mouse_y;
+  int value_graph_dots;
 
 } statpanel_t;
 
-#define statpanel_visible(self) (self->visible)
-#define statpanel_pos(self)     (self->pos)
-#define statpanel_text(self,a)  (self->text[a])
+#define statpanel_visible(self)           (self->visible)
+#define statpanel_pos(self)               (self->pos)
+#define statpanel_text(self)              (self->text)
+#define statpanel_value_timing_fps(self)  (self->value_timing_fps)
+#define statpanel_value_mouse_x(self)     (self->value_mouse_x)
+#define statpanel_value_mouse_y(self)     (self->value_mouse_y)
+#define statpanel_value_graph_dots(self)  (self->value_graph_dots)
+
 
 /////////
 // new //
 /////////
 
 statpanel_t * statpanel() {
-  statpanel_t * self        = alloc(statpanel_t);
-  statpanel_visible(self)   = true();
-  statpanel_pos(self)       = statpanel_pos_bottom();
-  loop(i,0,statpanel_max_text()) {
-    statpanel_text(self,i) = '\0';
-  }
+  statpanel_t * self                = alloc(statpanel_t);
+  statpanel_visible(self)           = true();
+  statpanel_pos(self)               = statpanel_pos_bottom();
+  statpanel_text(self)              = string__length(100);
   return self;
 }
 
@@ -37,5 +45,4 @@ statpanel_t * statpanel() {
 ////////////
 
 void statpanel_update( statpanel_t * self ) {
-
 }

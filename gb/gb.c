@@ -1,7 +1,5 @@
 
-#define gb_version_major() 0
-#define gb_version_minor() 1
-#define gb_version_patch() 0
+#define gb_version()        "0.1.1"
 
 //  submodules stack
 //  ----------------
@@ -71,6 +69,7 @@ typedef struct {
   mouse_t      * mouse;
   audio_t      * audio;
   controller_t * controller;
+  statpanel_t  * statpanel;
 
   cartridge_t  * cartridge;
   
@@ -99,6 +98,7 @@ gb_t * gb;
 #define gb_audio()      (gb->audio)
 #define gb_controller() (gb->controller)
 #define gb_cartridge()  (gb->cartridge)
+#define gb_statpanel()  (gb->statpanel)
 
 //////////////////////////
 // special debug module //
@@ -114,7 +114,7 @@ gb_t * gb;
 ////////////
 
 void gb_init( cartridge_t * c ) {
-  log("gooberengine - VER: %d.%d.%d",gb_version_major(),gb_version_minor(),gb_version_patch());
+  log("gooberengine - VER: %s",gb_version());
 
   // the master object does not have an allocation function.
   // instead it is done here in init()
@@ -128,6 +128,10 @@ void gb_init( cartridge_t * c ) {
   gb_audio()       = audio();
   gb_graph()       = graph(gb_visual());
   gb_controller()  = controller();
+
+  gb_statpanel()   = statpanel();
+  //statpanel_set_timing_ref( gb_statpanel(), gb_timing() );
+  //statpanel_set_graph_ref( gb_statpanel(), gb_graph() );
 
   // if the cart has been successfully loaded, call the init function.
   gb_cartridge() = c;
@@ -230,6 +234,7 @@ void gb_update() {
 
   mouse_update      (gb_mouse());
   controller_update (gb_controller());
+  statpanel_update  (gb_statpanel());
   
   if (gb_cartridge()) {
     cartridge_fn_update(gb_cartridge())();
@@ -262,6 +267,7 @@ void gb_draw() {
     cartridge_fn_draw(gb_cartridge())();
   }
 
+  graph_draw_statpanel( gb_graph(), gb_statpanel() );
   // all of the module drawing goes in here
   graph_draw_mouse( gb_graph(), gb_mouse() );
   // do some debug drawing at the end of everything else

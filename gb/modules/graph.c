@@ -743,9 +743,13 @@ void graph_draw_mouse( graph_t * self, mouse_t * m ) {
 }
 
 void graph_draw_statpanel( graph_t * self, statpanel_t * s ) {
-
-  
-
+  if (statpanel_visible(s)) {
+    int u = 230*statpanel_pos(s);
+    graph_set_color( self, color(0,0,0) );
+    graph_draw_rect( self, 0, u, 400, 10 );
+    graph_set_color( self, color(3,3,3) );
+    graph_draw_text( self, 0, u, string_data(statpanel_text(s)) );
+  }
 }
 
 ////////////

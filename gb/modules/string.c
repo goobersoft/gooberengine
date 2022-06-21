@@ -67,3 +67,12 @@ void string_set( string_t * self, char * c ) {
   char * r     = allocv(char,l);
   strncpy      (r,c,l);
 }
+
+void string_copy( string_t * self, int n, char * c ) {
+  int l = strlen(c);
+  loop(i,0,l) {
+    if (inrange(i+n,0,string_length(self))) {
+      string_data(self)[i+n] = c[i];
+    }
+  }
+}
