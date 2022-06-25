@@ -28,6 +28,10 @@ void debug_update_post() {
 }
 
 void debug_draw_pre() {
+  
+}
+
+void debug_draw_post() {
   static int _init = 0;
   static int _star_x[100];
   static int _star_y[100];
@@ -59,11 +63,8 @@ void debug_draw_pre() {
   }
 
   graph_draw_jake( gb_graph(), debug_jake );
+
   graph_draw_text( gb_graph(), 100, 100, "stars");
-}
-
-void debug_draw_post() {
-
 }
 
 void debug_quit() {
