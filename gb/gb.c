@@ -1,7 +1,7 @@
 
 #define gb_version_major() 0
 #define gb_version_minor() 1
-#define gb_version_patch() 0
+#define gb_version_patch() 1
 
 //  submodules stack
 //  ----------------

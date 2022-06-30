@@ -28,12 +28,16 @@ type() {
 // new //
 /////////
 
+void actor_init( actor_t * self ) {
+  point_set( actor_pos(self), 0, 0 );
+  point_set( actor_size(self), 10, 10 );
+  actor_dir(self)   = 0;
+  actor_solid(self) = false();
+}
+
 actor_t * actor() {
   actor_t * r = alloc(actor_t);
-  point_set( actor_pos(r), 0, 0 );
-  point_set( actor_size(r), 10, 10 );
-  actor_dir(r)   = 0;
-  actor_solid(r) = false();
+  actor_init(r);
   return r;
 }
 
