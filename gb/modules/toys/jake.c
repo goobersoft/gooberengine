@@ -7,14 +7,14 @@
 
 type() {
 
-  point_t      pos;
+  point_t    * pos;
   int          delay;
   int          anim_index;
   colormap_t * colormap;
 
 } jake_t;
 
-#define jake_pos(self)        (ref(self->pos))
+#define jake_pos(self)        (self->pos)
 #define jake_delay(self)      (self->delay)
 #define jake_anim_index(self) (self->anim_index)
 #define jake_colormap(self)   (self->colormap)
@@ -23,12 +23,17 @@ type() {
 // new //
 /////////
 
+void jake_init( jake_t * self, colormap_t * c ) {
+  jake_pos(self)        = point(400,rnd(0,220));
+  jake_delay(self)      = jake_delay_max();
+  jake_anim_index(self) = 0;
+  jake_colormap(self)   = c;
+}
+
 jake_t * jake( colormap_t * c ) {
   jake_t * r = alloc(jake_t);
-  point_set(jake_pos(r),400,rnd(0,220));
-  jake_delay(r)      = jake_delay_max();
-  jake_anim_index(r) = 0;
-  jake_colormap(r)   = c;
+  jake_init( r, c );
+  return r;
 }
 
 ////////////

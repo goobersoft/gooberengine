@@ -25,11 +25,15 @@ type() {
 // new //
 /////////
 
+void audio_init( audio_t * self ) {
+  audio_num_channels(self)      = 8;
+  Mix_AllocateChannels(8);
+  audio_channel_state(self)     = allocv(int,8);
+}
+
 audio_t * audio() {
   audio_t * r                = alloc(audio_t);
-  audio_num_channels(r)      = 8;
-  Mix_AllocateChannels(8);
-  audio_channel_state(r)     = allocv(int,8);
+  audio_init(r);
   return r;
 }
 

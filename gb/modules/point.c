@@ -17,9 +17,9 @@ typedef struct {
 // new //
 /////////
 
-void point_init(point_t * p, int x, int y) {
-  point_x(p) = x;
-  point_y(p) = y;
+void point_init( point_t * self, int x, int y ) {
+  point_x(self) = x;
+  point_y(self) = y;
 }
 
 point_t * point(int x, int y) {
@@ -27,14 +27,6 @@ point_t * point(int x, int y) {
   point_init(r,x,y);
   return r;
 }
-
-
-
-//////////
-// free //
-//////////
-
-#define free_point(self) free(self)
 
 ///////////
 // funcs //

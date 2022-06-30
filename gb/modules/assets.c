@@ -40,17 +40,21 @@ type() {
 // new //
 /////////
 
+void assets_init( assets_t * self, visual_t * v ) {
+  assets_num_images(self)    = assets_num_images_d();
+  assets_num_colormaps(self) = assets_num_colormaps_d();
+  assets_num_sounds(self)    = assets_num_sounds_d();
+  assets_num_fonts(self)     = assets_num_fonts_d();
+  assets_images(self)        = allocv(image_t*,    assets_num_images_d());
+  assets_colormaps(self)     = allocv(colormap_t*, assets_num_colormaps_d());
+  assets_sounds(self)        = allocv(sound_t*,    assets_num_sounds_d());
+  assets_fonts(self)         = allocv(font_t*,     assets_num_fonts_d());
+  assets_visual(self)        = v;
+}
+
 assets_t * assets( visual_t * v ) {
   assets_t * r            = alloc(assets_t);
-  assets_num_images(r)    = assets_num_images_d();
-  assets_num_colormaps(r) = assets_num_colormaps_d();
-  assets_num_sounds(r)    = assets_num_sounds_d();
-  assets_num_fonts(r)     = assets_num_fonts_d();
-  assets_images(r)        = allocv(image_t*,    assets_num_images_d());
-  assets_colormaps(r)     = allocv(colormap_t*, assets_num_colormaps_d());
-  assets_sounds(r)        = allocv(sound_t*,    assets_num_sounds_d());
-  assets_fonts(r)         = allocv(font_t*,     assets_num_fonts_d());
-  assets_visual(r)        = v;
+  assets_init(r,v);
   return r;
 }
 

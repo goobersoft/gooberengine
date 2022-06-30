@@ -4,7 +4,7 @@
 // types //
 ///////////
 
-// it's just an int!!
+// it's just one byte!!
 type() {
   byte_t r:2;
   byte_t g:2;
@@ -12,10 +12,15 @@ type() {
   byte_t a:1;
 } color_t;
 
-#define color_r(c)      c.r
-#define color_g(c)      c.g
-#define color_b(c)      c.b
-#define color_a(c)      c.a
+#define color_r(c)      c->r
+#define color_g(c)      c->g
+#define color_b(c)      c->b
+#define color_a(c)      c->a
+
+#define get_color_r(c)  c.r
+#define get_color_g(c)  c.g
+#define get_color_b(c)  c.b
+#define get_color_a(c)  c.a
 
 ////////////
 // Colors //
@@ -24,18 +29,33 @@ type() {
 // RR GG BB <-- each color channel is two bits.
 // transparent color is treated as -1
 
-color_t color(byte_t r, byte_t g, byte_t b) {  
-  color_t rr;
-  rr.r = r&3;
-  rr.g = g&3;
-  rr.b = b&3;
-  rr.a = true();
+void color_init( color_t * self, byte_t r, byte_t g, byte_t b, byte_t a ) {
+  color_r(self) = r&3;
+  color_g(self) = g&3;
+  color_b(self) = b&3;
+  color_a(self) = a&1;
+}
+
+color_t * color(byte_t r, byte_t g, byte_t b) {  
+  color_t  * rr = alloc(color_t);
+  color_init( rr, r, g, b, 1 );
   return rr;
 }
 
-#define color_random()  color(rnd(0,4),rnd(0,4),rnd(0,4))
+// copy, not alloc.
+color_t make_color( byte_t rr, byte_t gg, byte_t bb ) {
+  color_t r;
+  r.r = rr;
+  r.g = gg;
+  r.b = bb;
+  r.a = 1;
+  return r;
+}
 
-color_t color__rgba(byte_t r, byte_t g, byte_t b, byte_t a) {
+#define make_color_random() \
+  make_color(rnd(0,4),rnd(0,4),rnd(0,4))
+
+color_t make_color_rgba(byte_t r, byte_t g, byte_t b, byte_t a) {
   color_t rr;
   rr.r = r&3;
   rr.g = g&3;
@@ -44,15 +64,11 @@ color_t color__rgba(byte_t r, byte_t g, byte_t b, byte_t a) {
   return rr;
 }
 
-fnptr( 
-  color_rgba, color__rgba,
-  color_t, (byte_t,byte_t,byte_t,byte_t)
-);
+#define make_color_trans() \
+  make_color_rgba(0,0,0,0)
 
-#define color_trans()   color__rgba(0,0,0,0)
-
-color_t color__index( int id ) {
-  if (id == 64) return color_trans();
+color_t make_color_index( int id ) {
+  if (id == 64) return make_color_trans();
   color_t rr;
   if (id >= 0) {
     rr.r = id & 3;
@@ -63,59 +79,63 @@ color_t color__index( int id ) {
   return rr;
 }
 
-fnptr(
-  color_index, color__index,
-  color_t, (int)
-);
+///////////
+// funcs //
+///////////
 
-int color_eq(color_t a, color_t b) {
+int color_eq( color_t * a, color_t * b ) {
+  return (color_r(a)==color_r(b)) && (color_g(a)==color_g(b)) && (color_b(a)==color_b(b));
+}
+
+int check_color_eq(color_t a, color_t b) {
   return (a.r==b.r) && (a.g==b.g) && (a.b==b.b);
 }
 
-color_t color_set( color_t c1, color_t c2 ) {
-  if (c1.a||c2.a) {
-    return color(c2.r, c2.g, c2.b);
-  }
-  return color_trans();
+//////////////////
+// global funcs //
+//////////////////
+
+color_t make_color_set( color_t c1, color_t c2 ) {
+  if (c1.a||c2.a) return make_color(c2.r, c2.g, c2.b);
+  return          make_color_trans();
 }
 
-color_t color_add( color_t c1, color_t c2 ) {
-  
-  return color(
-    high(color_r(c1) + color_r(c2),3),
-    high(color_g(c1) + color_g(c2),3),
-    high(color_b(c1) + color_b(c2),3)
+color_t make_color_add( color_t c1, color_t c2 ) {
+  return make_color(
+    high(get_color_r(c1) + get_color_r(c2),3),
+    high(get_color_g(c1) + get_color_g(c2),3),
+    high(get_color_b(c1) + get_color_b(c2),3)
   );
 }
 
-color_t color_sub( color_t c1, color_t c2 ) {
-  return color(
-    low(color_r(c1) - color_r(c2),0),
-    low(color_g(c1) - color_g(c2),0),
-    low(color_b(c1) - color_b(c2),0)
+color_t make_color_sub( color_t c1, color_t c2 ) {
+  return make_color(
+    low(get_color_r(c1) - get_color_r(c2),0),
+    low(get_color_g(c1) - get_color_g(c2),0),
+    low(get_color_b(c1) - get_color_b(c2),0)
   );
 }
 
-color_t color_high( color_t c1, color_t c2 ) {
-  return color(
-    high(color_r(c1),color_r(c2)),
-    high(color_g(c1),color_g(c2)),
-    high(color_b(c1),color_b(c2))
+color_t make_color_high( color_t c1, color_t c2 ) {
+  return make_color(
+    high(get_color_r(c1),get_color_r(c2)),
+    high(get_color_g(c1),get_color_g(c2)),
+    high(get_color_b(c1),get_color_b(c2))
   );
 }
 
-color_t color_low( color_t c1, color_t c2 ) {
-  return color(
-    low(color_r(c1),color_r(c2)),
-    low(color_g(c1),color_g(c2)),
-    low(color_b(c1),color_b(c2))
+color_t make_color_low( color_t c1, color_t c2 ) {
+  return make_color(
+    low(get_color_r(c1),get_color_r(c2)),
+    low(get_color_g(c1),get_color_g(c2)),
+    low(get_color_b(c1),get_color_b(c2))
   );
 }
 
-color_t color_avg( color_t c1, color_t c2 ) {
-  return color(
-    evenize(color_r(c1)+color_r(c2))/2,
-    evenize(color_g(c1)+color_g(c2))/2,
-    evenize(color_b(c1)+color_b(c2))/2
+color_t make_color_avg( color_t c1, color_t c2 ) {
+  return make_color(
+    evenize(get_color_r(c1)+get_color_r(c2))/2,
+    evenize(get_color_g(c1)+get_color_g(c2))/2,
+    evenize(get_color_b(c1)+get_color_b(c2))/2
   );
 }

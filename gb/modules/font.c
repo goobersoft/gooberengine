@@ -28,15 +28,19 @@ type() {
 // new //
 /////////
 
+void font_init( font_t * self, colormap_t * u ) {
+  font_colormap(self)    = u;
+  font_x(self)           = 0;
+  font_y(self)           = 0;
+  font_tiles_x(self)     = 0;
+  font_tiles_y(self)     = 0;
+  font_tile_width(self)  = 0;
+  font_tile_height(self) = 0;
+}
+
 font_t * font( colormap_t * u ) {
   font_t * r = alloc(font_t);
-  font_colormap(r)    = u;
-  font_x(r)           = 0;
-  font_y(r)           = 0;
-  font_tiles_x(r)     = 0;
-  font_tiles_y(r)     = 0;
-  font_tile_width(r)  = 0;
-  font_tile_height(r) = 0;
+  font_init(r,u);
   return r;
 }
 

@@ -23,12 +23,16 @@ type() {
 // new //
 /////////
 
+void alarm_init( alarm_t * self, ulong_t n ) {
+  alarm_length(self)      = n;
+  alarm_time_start(self)  = SDL_GetTicks();
+  alarm_time_end(self)    = alarm_time_start(self) + alarm_length(self);
+  alarm_ringing(self)     = false();
+}
+
 alarm_t * alarm( ulong_t n ) {
   alarm_t * r = alloc(alarm_t);
-  alarm_length(r)      = n;
-  alarm_time_start(r)  = SDL_GetTicks();
-  alarm_time_end(r)    = alarm_time_start(r) + alarm_length(r);
-  alarm_ringing(r)     = false();
+  alarm_init(r,n);
   return r;
 }
 

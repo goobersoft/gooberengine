@@ -24,9 +24,9 @@
 #include "modules/functions_sine.c"     // sine and cosine function
 #include "modules/functions_sqroot.c"   // sqroot function
 //#include "modules/rng.c"                // implementation of mersenne twister in 
-#include "modules/tag.c"                // descriptive tag
 #include "modules/list.c"               // linked list data type
-#include "modules/string.c"             // helper function for immutable strings
+#include "modules/string.c"             // 
+#include "modules/tag.c"                // descriptive tag
 #include "modules/point.c"              // 2d integer point
 #include "modules/stack.c"              // LIFO-style stack object
 #include "modules/number.c"             // integer number with min and max bounds
@@ -280,7 +280,4 @@ void gb_quit() {
     cartridge_fn_quit(gb_cartridge())();
   }
 
-  free_visual(gb_visual());
-  free_timing(gb_timing());
-  free(gb);
 }

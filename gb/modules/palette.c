@@ -28,7 +28,7 @@ palette_t * palette() {
   int cg = 0;
   int cb = 0;
   loop(i,0,palette_max_colors()) {
-    palette_colors(r)[i] = color(cr,cg,cb);
+    palette_colors(r)[i] = make_color(cr,cg,cb);
     cr += 1;
     if (cr==4) {
       cr = 0;
@@ -39,7 +39,7 @@ palette_t * palette() {
       cb += 1;
     }
   }
-  palette_colors(r)[palette_index_trans()] = color_trans();
+  palette_colors(r)[palette_index_trans()] = make_color_trans();
   return r;
 }
 
@@ -48,9 +48,9 @@ palette_t * palette__grayscale() {
   int cg = 0;
   loop(i,0,palette_max_colors()) {
     cg = i%4;
-    palette_colors(r)[i] = color(cg,cg,cg);
+    palette_colors(r)[i] = make_color(cg,cg,cg);
   }
-  palette_colors(r)[palette_index_trans()] = color_trans();
+  palette_colors(r)[palette_index_trans()] = make_color_trans();
   return r;
 }
 
@@ -60,10 +60,10 @@ palette_t * palette__gameboy() {
 
   // first call, needs initializing
   if (not _init) {
-    _cl[0] = color__index(4);
-    _cl[1] = color__index(9);
-    _cl[2] = color__index(14);
-    _cl[3] = color__index(47);
+    _cl[0] = make_color_index(4);
+    _cl[1] = make_color_index(9);
+    _cl[2] = make_color_index(14);
+    _cl[3] = make_color_index(47);
     _init  = true();
   }
 
@@ -74,16 +74,16 @@ palette_t * palette__gameboy() {
     cg = _cl[i%4];
     palette_colors(r)[i] = cg;
   }
-  palette_colors(r)[palette_index_trans()] = color_trans();
+  palette_colors(r)[palette_index_trans()] = make_color_trans();
   return r;
 }
 
 palette_t * palette__random() {
   palette_t * r = alloc(palette_t);
   loop(i,0,palette_max_colors()) {
-    palette_colors(r)[i] = color_random();
+    palette_colors(r)[i] = make_color_random();
   }
-  palette_colors(r)[palette_index_trans()] = color_trans();
+  palette_colors(r)[palette_index_trans()] = make_color_trans();
   return r;
 }
 

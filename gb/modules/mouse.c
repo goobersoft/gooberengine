@@ -56,30 +56,28 @@ type() {
 // new //
 /////////
 
-mouse_t * mouse( visual_t * v, colormap_t * c ) {
-  mouse_t * r = alloc(mouse_t);
-  mouse_visible(r) = true();
-  point_set(mouse_pos(r), 0,0);
-  point_set(mouse_pos_old(r), 0,0);
-  point_set(mouse_pos_diff(r), 0,0);
+void mouse_init( mouse_t * self, visual_t * v, colormap_t * c ) {
+  mouse_visible(self) = true();
+  point_set(mouse_pos(self), 0,0);
+  point_set(mouse_pos_old(self), 0,0);
+  point_set(mouse_pos_diff(self), 0,0);
   
-  mouse_visual(r) = v;
+  mouse_visual(self) = v;
   
-  mouse_colormap(r) = c;
-  point_set(mouse_colormap_pos(r),  0,0);
-  point_set(mouse_colormap_size(r), 10,10);
+  mouse_colormap(self) = c;
+  point_set(mouse_colormap_pos(self),  0,0);
+  point_set(mouse_colormap_size(self), 10,10);
 
   loop(i,0,mouse_max_buttons()) {
-    mouse_buttons(r)[i] = mouse_button_released();
+    mouse_buttons(self)[i] = mouse_button_released();
   }
-  return r;
 }
 
-/////////
-// del //
-/////////
-
-#define free_mouse(m) free(m)
+mouse_t * mouse( visual_t * v, colormap_t * c ) {
+  mouse_t * r = alloc(mouse_t);
+  mouse_init( r, v, c );
+  return r;
+}
 
 ///////////////
 // functions //

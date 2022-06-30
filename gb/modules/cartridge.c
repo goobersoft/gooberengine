@@ -25,17 +25,20 @@ type() {
 // new //
 /////////
 
+void cartridge_init( cartridge_t * self ) {
+  strcpy( cartridge_name(self), "Untitled" );
+
+  cartridge_fn_init(self)   = emp;
+  cartridge_fn_load(self)   = emp;
+  cartridge_fn_start(self)  = emp;
+  cartridge_fn_update(self) = emp;
+  cartridge_fn_draw(self)   = emp;
+  cartridge_fn_quit(self)   = emp;
+}
+
 cartridge_t * cartridge() {
   cartridge_t * r = alloc(cartridge_t);
-
-  strcpy( cartridge_name(r), "Untitled" );
-
-  cartridge_fn_init(r)   = emp;
-  cartridge_fn_load(r)   = emp;
-  cartridge_fn_start(r)  = emp;
-  cartridge_fn_update(r) = emp;
-  cartridge_fn_draw(r)   = emp;
-  cartridge_fn_quit(r)   = emp;
+  cartridge_init(r);
   return r;
 }
 

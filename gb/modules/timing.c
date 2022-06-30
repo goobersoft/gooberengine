@@ -31,20 +31,17 @@ typedef struct {
 // new //
 /////////
 
-timing_t * timing() {
-  timing_t * r = alloc(timing_t);
-  timing_curr(r) = 0;
-  timing_old(r)  = 0;
-  timing_diff(r) = 0;
-  return r;
+void timing_init( timing_t * self ) {
+  timing_curr(self) = 0;
+  timing_old(self)  = 0;
+  timing_diff(self) = 0;
 }
 
-/////////
-// del //
-/////////
-
-// no pointers inside of timing
-#define free_timing(self) free(self)
+timing_t * timing() {
+  timing_t * r = alloc(timing_t);
+  timing_init(r);
+  return r;
+}
 
 ///////////
 // funcs //

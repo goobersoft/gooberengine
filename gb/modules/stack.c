@@ -80,10 +80,14 @@ type() {
 // new //
 /////////
 
+void stack_init( stack_t * self ) {
+  stack_count(self)  = 0;
+  stack_first(self)  = null();
+}
+
 stack_t * stack() {
   stack_t * r     = alloc(stack_t);
-  stack_count(r)  = 0;
-  stack_first(r)  = null();
+  stack_init(r);
   return r;
 }
 

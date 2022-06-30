@@ -30,11 +30,15 @@ type() {
 // new //
 /////////
 
+void controller_init( controller_t * self ) {
+  loop(i,0,controller_max_buttons()) {
+    controller_buttons(self)[i] = controller_button_released();
+  }
+}
+
 controller_t * controller() {
   controller_t * r = alloc(controller_t);
-  loop(i,0,controller_max_buttons()) {
-    controller_buttons(r)[i] = controller_button_released();
-  }
+  controller_init(r);
   return r;
 }
 

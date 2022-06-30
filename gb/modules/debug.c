@@ -47,11 +47,11 @@ void debug_draw_post() {
   }
 
   graph_set_mode        ( gb_graph(), graph_mode_sub() );
-  graph_set_color       ( gb_graph(), color(1,1,1) );
+  graph_set_color       ( gb_graph(), make_color(1,1,1) );
   graph_draw_rect_spray ( gb_graph(), 0, 0, 400, 240, 200 );
 
   graph_set_mode        ( gb_graph(), graph_mode_normal() );
-  graph_set_color       ( gb_graph(), color(0,2,3) );
+  graph_set_color       ( gb_graph(), make_color(0,2,3) );
   loop(i,0,100) {
     _star_x[i] -= _star_s[i];
     if (_star_x[i] < 0) {

@@ -30,10 +30,10 @@ SDL_Rect _sprite_ready_rect_dst( int x, int y, int w, int h ) {
 type() {
 
   // position relative to screen / render target
-  point_t       pos;
+  point_t     * pos;
 
   // offset to account for in terms of image
-  point_t       handle;
+  point_t     * handle;
   
   // flags to indicate if the image should be flipped.
   byte_t        flip_x;
@@ -50,8 +50,8 @@ type() {
 
 } sprite_t;
 
-#define sprite_pos(self)    (&self->pos)
-#define sprite_handle(self) (&self->handle)
+#define sprite_pos(self)    (self->pos)
+#define sprite_handle(self) (self->handle)
 #define sprite_flip_x(self) (self->flip_x)
 #define sprite_flip_y(self) (self->flip_y)
 #define sprite_source(self) (self->source)
@@ -64,17 +64,21 @@ type() {
 // new //
 /////////
 
+void sprite_init( sprite_t * self, SDL_Texture * t ) {
+  sprite_pos(self)    = point(0,0);
+  sprite_handle(self) = point(0,0);
+  sprite_flip_x(self) = false();
+  sprite_flip_y(self) = false();
+  sprite_source(self) = t;
+  sprite_src_x(self)  = 0;
+  sprite_src_y(self)  = 0;
+  sprite_src_w(self)  = 0;
+  sprite_src_h(self)  = 0;
+}
+
 sprite_t * sprite( SDL_Texture * t ) {
   sprite_t * r     = alloc(sprite_t);
-  point_init       (sprite_pos(r),0,0);
-  point_init       (sprite_handle(r),0,0);
-  sprite_flip_x(r) = false();
-  sprite_flip_y(r) = false();
-  sprite_source(r) = t;
-  sprite_src_x(r)  = 0;
-  sprite_src_y(r)  = 0;
-  sprite_src_w(r)  = 0;
-  sprite_src_h(r)  = 0;
+  sprite_init(r,t);
   return r;
 }
 

@@ -66,8 +66,13 @@ type() {
 // new //
 /////////
 
+void gbs_init( gbs_t * self ) {
+
+}
+
 gbs_t * gbs() {
   gbs_t * r = alloc(gbs_t);
+  gbs_init(r);
   return r;
 }
 

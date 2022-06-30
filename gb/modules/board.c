@@ -24,18 +24,20 @@ typedef struct {
 // new //
 /////////
 
-board_t * board( SDL_Renderer * r ) {
-  board_t * b   = alloc(board_t);
-
-  board_renderer(b)  = r;
-  board_texture(b)   = SDL_CreateTexture( r,
+void board_init( board_t * self, SDL_Renderer * r ) {
+  board_renderer(self)  = r;
+  board_texture(self)   = SDL_CreateTexture( r,
     SDL_PIXELFORMAT_ABGR8888,
     SDL_TEXTUREACCESS_STREAMING,
     board_width(), board_height()
   );
-  
-  board_rawdata(b)   = allocv(Uint32*,board_width()*board_height());
-  board_locked(b)    = false();
+  board_rawdata(self)   = allocv(Uint32*,board_width()*board_height());
+  board_locked(self)    = false();
+}
+
+board_t * board( SDL_Renderer * r ) {
+  board_t * b   = alloc(board_t);
+  board_init( b, r );
   return b;
 }
 

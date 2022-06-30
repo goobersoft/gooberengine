@@ -30,6 +30,10 @@ type() {
 // new //
 /////////
 
+void image_init( image_t * self, char * f, visual_t * v ) {
+
+}
+
 // width and height must be included.
 // SDL for this machine is using SDL_PIXELFORMAT_ABGR8888
 image_t * image( char * f, visual_t * v ) {
@@ -40,6 +44,9 @@ image_t * image( char * f, visual_t * v ) {
   // if (h==0) h = 240;
 
   image_t * r       = alloc(image_t);
+
+  //image_init(r,f,v);
+
   // use surface as temporary pixel data storage
   SDL_Surface * s   = IMG_Load(f);
   // init the object only if the file has loaded.

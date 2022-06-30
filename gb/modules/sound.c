@@ -11,6 +11,10 @@ type() {
 // new //
 /////////
 
+void sound_init( sound_t * self, char * f ) {
+  
+}
+
 sound_t * sound( char * f ) {
   sound_t * r = alloc(sound_t);
   sound_source(r) = Mix_LoadWAV( f );
@@ -18,7 +22,10 @@ sound_t * sound( char * f ) {
     log("sound '%s' loaded successfully.",f);
     return r;
   }
-  return null();
+  else {
+    free(r);
+    return null();
+  }
 }
 
 ////////////

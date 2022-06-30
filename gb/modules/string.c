@@ -1,5 +1,4 @@
 
-
 type() {
 
   int    length;
@@ -14,56 +13,45 @@ type() {
 // new //
 /////////
 
-string_t * string(char * c) {
+void string_init( string_t * self, int l ) {
+  string_length(self) = l;
+  string_data(self)   = allocv(char,string_length(self)+1);
+  loop(i,0,string_length(self)) {
+    string_data(self)[i] = ' ';
+  }
+  string_data(self)[string_length(self)] = '\0';
+}
+
+string_t * string( int l ) {
   string_t * r     = alloc(string_t);
-  string_length(r) = strlen(c);
-  string_data(r)   = allocv(char,string_length(r)+1);
-  
-  loop(i,0,string_length(r)) {
-    string_data(r)[i] = c[i];
-  }
-
+  string_init(r,l);
   return r;
-}
-
-string_t * string__length( int n ) {
-  string_t * r = alloc(string_t);
-  string_length(r) = n;
-  string_data(r)   = allocv(char,n);
-  
-  loop(i,0,n) {
-    string_data(r)[i] = 0;
-  }
-
-  return r;
-}
-
-
-string_t * string__concat( string_t * s1, string_t * s2 ) {
-  string_t * r = string__length( string_length(s1) + string_length(s2) + 1);
-  
-  copy(string_data(s1),string_data(s2),i,0,string_length(s1));
-  copy(string_data(s1),string_data(s2),i,string_length(s1),string_length(s1)+string_length(s2));
-
-  return r;
-}
-
-//////////
-// free //
-//////////
-
-void free_string( string_t * self ) {
-  free(string_data(self));
-  free(self);
 }
 
 ///////////
 // funcs //
 ///////////
 
-void string_set( string_t * self, char * c ) {
-  free(string_data(self));
-  size_t l     = strlen(c)+1;
-  char * r     = allocv(char,l);
-  strncpy      (r,c,l);
+void string_clear( string_t * self ) {
+  loop(i,0,string_length(self)) {
+    string_data(self)[i] = ' ';
+  }
+}
+
+void string_copy_at( string_t * self, int n, char * c ) {
+  if (c) {
+    int l = strlen(c);
+    loop(i,0,l) {
+      if (inrange(n+i,0,string_length(self))) {
+        string_data(self)[n+i] = c[i];
+      }
+      else {
+        break;
+      }
+    }
+  }
+}
+
+void string_copy( string_t * self, char * c ) {
+  string_copy_at(self,0,c);
 }
