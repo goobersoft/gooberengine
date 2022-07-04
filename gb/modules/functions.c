@@ -1,4 +1,6 @@
 
+
+
 /////////////
 // generic //
 /////////////
@@ -210,35 +212,3 @@ int evenize( int a ) {
 #define rectinrect2(x1,y1,w1,h1,x2,y2,w2,h2) \
   (rectinrect(x1,y1,w1,h1,x2,y2,w2,h2)&&rectinrect(x2,y2,w2,h2,x1,y1,w1,h1))
 
-////////////
-// arrays //
-////////////
-
-///////////////////
-// locker object //
-///////////////////
-// this is supposed to manage array systems with locking array indices
-
-typedef struct {
-
-  // the counter for the array to start looking from
-  int    counter;
-  // the size of the array it is managing
-  int    length;
-  // an array of active flags for locking resources
-  int  * active;
-
-} locker_t;
-
-#define locker_counter(self) (self->counter)
-#define locker_length(self)  (self->length)
-#define locker_active(self)  (self->active)
-
-
-locker_t * locker( int l ) {
-  locker_t * r = alloc(locker_t);
-  locker_counter(r) = 0;
-  locker_length(r)  = l;
-  locker_active(r)  = allocv(bool_t,l);
-  return r;
-}

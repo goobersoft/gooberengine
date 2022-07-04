@@ -23,6 +23,7 @@
 #include "modules/functions.c"          // core functions
 #include "modules/functions_sine.c"     // sine and cosine function
 #include "modules/functions_sqroot.c"   // sqroot function
+#include "modules/locker.c"
 //#include "modules/rng.c"                // implementation of mersenne twister in 
 #include "modules/list.c"               // linked list data type
 #include "modules/string.c"             // 
@@ -202,6 +203,7 @@ void gb_start() {
   if (gb_cartridge()) {
     cartridge_fn_start(gb_cartridge())();
   }
+  debug_start();
 }
 
 void gb_update() {
