@@ -37,7 +37,8 @@ byte_t _graph_transvals[] = {
 #define graph_width()        400
 #define graph_height()       240
 #define graph_area()         graph_width()*graph_height()
-#define graph_depth_cls_d()  1000000
+#define graph_max_depth()    1000000
+#define graph_min_depth()   -1000000
 
 #define graph_max_layers()         10
 #define graph_max_frame_dots() 100000
@@ -64,15 +65,10 @@ type() {
   // current depth
   int           depth;
   // depth enable flag
-  bool_t        depth_write;
+  bool_t        depth_enabled;
   // depth clear
   int           depth_cls;
-  // current stencil
-  bool_t        stencil;
-  // 
-  bool_t        stencil_write;
-  // stencil cls
-  bool_t        stencil_cls;
+
   // the drawing mode
   int           mode;
 
@@ -94,7 +90,7 @@ type() {
   // depth data
   int         * data_depth;
   // stencil data
-  bool_t      * data_stencil;
+  //bool_t      * data_stencil;
   // current layer
   int           layer;
   // extra colormaps
@@ -119,11 +115,7 @@ type() {
 
 #define graph_depth(self)           (self->depth)
 #define graph_depth_cls(self)       (self->depth_cls)
-#define graph_depth_write(self)     (self->depth_write)
-
-#define graph_stencil(self)         (self->stencil)
-#define graph_stencil_cls(self)     (self->stencil_cls)
-#define graph_stencil_write(self)   (self->stencil_write)
+#define graph_depth_enabled(self)   (self->depth_enabled)
 
 #define graph_clip_pos(self)        (&self->clip_pos)
 #define graph_clip_size(self)       (&self->clip_size)  
@@ -142,7 +134,6 @@ type() {
 
 #define graph_data(self)            (self->data)
 #define graph_data_depth(self)      (self->data_depth)
-#define graph_data_stencil(self)    (self->data_stencil)
 
 #define graph_layer(self)           (self->layer)
 #define graph_layers(self)          (self->layers)
@@ -160,11 +151,9 @@ void graph_init( graph_t * self, visual_t * v ) {
   graph_color(self)           = make_color(3,3,3);
   graph_color_cls(self)       = make_color(0,0,0);
   graph_depth(self)           = 0;
-  graph_depth_write(self)     = false();
-  graph_depth_cls(self)       = graph_depth_cls_d();
-  graph_stencil(self)         = true();
-  graph_stencil_cls(self)     = false();
-  graph_stencil_write(self)   = false();
+  graph_depth_cls(self)       = graph_max_depth();
+  graph_depth_enabled(self)   = false();
+
   graph_mode(self)            = graph_mode_normal();
 
   graph_palette(self)         = palette();
@@ -181,10 +170,10 @@ void graph_init( graph_t * self, visual_t * v ) {
   // set the graph data to layer 0.
   graph_data(self) = graph_layers(self)[0];
   //graph_data(r)         = colormap( graph_width(), graph_height() );
-  graph_data_stencil(self) = allocv( bool_t, graph_area() );
-  graph_data_depth(self)   = allocv( int,    graph_area() );
+  //graph_data_stencil(self) = allocv( bool_t, graph_area() );
+  graph_data_depth(self)   = allocv( int, graph_area() );
   loop(i,0,graph_area()) {
-    graph_data_depth(self)[i] = graph_depth_cls_d();
+    graph_data_depth(self)[i] = graph_max_depth();
   }
 }
 
@@ -222,24 +211,12 @@ void graph_set_depth( graph_t * self, int d ) {
   graph_depth(self) = d;
 }
 
-void graph_enable_depth_write( graph_t * self, bool_t d ) {
-  graph_depth_write(self) = bool(d);
+void graph_enable_depth( graph_t * self, bool_t d ) {
+  graph_depth_enabled(self) = bool(d);
 }
 
 void graph_set_cls_depth( graph_t * self, int d ) {
   graph_depth_cls(self) = d;
-}
-
-void graph_set_stencil( graph_t * self, bool_t s ) {
-  graph_stencil(self) = bool(s);
-}
-
-void graph_enable_stencil_write( graph_t * self, bool_t s ) {
-  graph_stencil_write(self) = bool(s);
-}
-
-void graph_set_cls_stencil( graph_t * self, bool_t s ) {
-  graph_stencil_cls(self) = bool(s);
 }
 
 void graph_set_mode( graph_t * self, int m ) {
@@ -287,27 +264,19 @@ void graph_set_font( graph_t * self, font_t * f ) {
 // drawing functions //
 ///////////////////////
 
-void graph_cls_ext( graph_t * self, bool_t cc, bool_t cd, bool_t cs ) {
-  if (cc) {
-    colormap_clear(graph_data(self),graph_color_cls(self));
-  }
-  if (cd) {
-    loop(i,0,graph_area()) { 
-      graph_data_depth(self)[i] = graph_depth_cls(self);
-    }
-  }
-  if (cs) {
-    loop(i,0,graph_area()) { 
-      graph_data_stencil(self)[i] = graph_stencil_cls(self);
-    }
+void graph_cls_color( graph_t * self ) {
+  colormap_clear(graph_data(self),graph_color_cls(self));
+}
+
+void graph_cls_depth( graph_t * self ) {
+  loop(i,0,graph_area()) { 
+    graph_data_depth(self)[i] = graph_depth_cls(self);
   }
 }
 
 void graph_cls( graph_t * self ) {
-  int cd = graph_depth_write(self);
-  int cs = graph_stencil_write(self);
-  // will clear the stencil and depth buffers if their writing flag is on.
-  graph_cls_ext( self, true(), cd, cs );
+  graph_cls_color(self);
+  graph_cls_depth(self);
 }
 
 color_t graph_get_pixel( graph_t * self, int x, int y ) {
@@ -317,19 +286,6 @@ color_t graph_get_pixel( graph_t * self, int x, int y ) {
 void graph_plot_depth( graph_t * self, int x, int y, int d ) {
   if (inrect(x,y,0,0,graph_width(),graph_height())) {
     graph_data_depth(self)[y*graph_width()+x] = d;
-  }
-}
-
-void graph_plot_stencil( graph_t * self, int x, int y, bool_t s ) { 
-  if (inrect(x,y,0,0,graph_width(),graph_height())) {
-    graph_data_stencil(self)[y*graph_width()+x] = bool(s);
-  }
-}
-
-// true if opaque (cannot draw), false if transparent (can draw)
-bool_t graph_get_pixel_stencil( graph_t * self, int x, int y ) {
-  if (inrect(x,y,0,0,graph_width(),graph_height())) {
-    return graph_data_stencil(self)[(graph_width()*y)+x];
   }
 }
 
@@ -344,60 +300,41 @@ int graph_get_pixel_depth( graph_t * self, int x, int y ) {
 // is applied instead.
 void graph_draw_dot( graph_t * self, int x, int y ) {
 
+
   if (graph_frame_dots(self) < graph_max_frame_dots()) {
     if (inrect(x,y,graph_clip_x(self),graph_clip_y(self),graph_clip_w(self),graph_clip_h(self))) {
-      graph_frame_dots(self) += 1;
-
-      switch( graph_mode(self) ) {
-        case graph_mode_normal():;
-          colormap_plot( graph_data(self), x, y, graph_color(self) );
-          if (graph_depth_write(self))   graph_plot_depth   (self, x, y, graph_depth(self));
-          if (graph_stencil_write(self)) graph_plot_stencil (self, x, y, graph_stencil(self));
-          break;
-        case graph_mode_replace():;
-          colormap_plot_replace( graph_data(self), x, y, graph_color(self) );
-          if (graph_depth_write(self))   graph_plot_depth   (self, x, y, graph_depth(self));
-          if (graph_stencil_write(self)) graph_plot_stencil (self, x, y, graph_stencil(self));
-          break;
-        case graph_mode_add():;
-          colormap_plot_add( graph_data(self), x, y, graph_color(self) );
-          if (graph_depth_write(self))   graph_plot_depth   (self, x, y, graph_depth(self));
-          if (graph_stencil_write(self)) graph_plot_stencil (self, x, y, graph_stencil(self));
-          break;
-        case graph_mode_sub():;
-          colormap_plot_sub( graph_data(self), x, y, graph_color(self) );
-          if (graph_depth_write(self))   graph_plot_depth   (self, x, y, graph_depth(self));
-          if (graph_stencil_write(self)) graph_plot_stencil (self, x, y, graph_stencil(self));
-          break;
-        case graph_mode_high():;
-          colormap_plot_high( graph_data(self), x, y, graph_color(self) );
-          if (graph_depth_write(self))   graph_plot_depth   (self, x, y, graph_depth(self));
-          if (graph_stencil_write(self)) graph_plot_stencil (self, x, y, graph_stencil(self));
-          break;
-        case graph_mode_low():;
-          colormap_plot_low( graph_data(self), x, y, graph_color(self) );
-          if (graph_depth_write(self))   graph_plot_depth   (self, x, y, graph_depth(self));
-          if (graph_stencil_write(self)) graph_plot_stencil (self, x, y, graph_stencil(self));
-          break;
-        case graph_mode_avg():;
-          colormap_plot_avg( graph_data(self), x, y, graph_color(self) );
-          if (graph_depth_write(self))   graph_plot_depth   (self, x, y, graph_depth(self));
-          if (graph_stencil_write(self)) graph_plot_stencil (self, x, y, graph_stencil(self));
-          break;
-        // write only color, without depth or stencil (even if they are enabled)
-        case graph_mode_color():;
-          colormap_plot( graph_data(self), x, y, graph_color(self) );
-          break;
-        // write only depth
-        case graph_mode_depth():;
-          if (graph_depth(self) < graph_get_pixel_depth(self,x,y)) {
-            graph_plot_depth(self,x,y,graph_depth(self));
+      if (graph_mode(self) == graph_mode_depth()) {
+        graph_plot_depth(self,x,y,graph_depth(self));
+      }
+      else {
+        bool_t fb = true();
+        if (graph_depth_enabled(self)) {
+          fb = fb && (graph_depth(self) <= graph_get_pixel_depth(self,x,y));
+          if (fb == true()) graph_plot_depth(self,x,y,graph_depth(self));
+        }
+        if (fb == true()) {
+          if (graph_mode(self) == graph_mode_normal()) {
+            colormap_plot( graph_data(self), x, y, graph_color(self) );
           }
-          break;
-        // write only stencil
-        case graph_mode_stencil():;
-          graph_plot_stencil(self,x,y,graph_stencil(self));
-          break;
+          else if (graph_mode(self) == graph_mode_replace()) {
+            colormap_plot_replace( graph_data(self), x, y, graph_color(self) );
+          }
+          else if (graph_mode(self) == graph_mode_add()) {
+            colormap_plot_add( graph_data(self), x, y, graph_color(self) );
+          }
+          else if (graph_mode(self) == graph_mode_sub()) {
+            colormap_plot_sub( graph_data(self), x, y, graph_color(self) );
+          }
+          else if (graph_mode(self) == graph_mode_high()) {
+            colormap_plot_high( graph_data(self), x, y, graph_color(self) );
+          }
+          else if (graph_mode(self) == graph_mode_low()) {
+            colormap_plot_low( graph_data(self), x, y, graph_color(self) );
+          }
+          else if (graph_mode(self) == graph_mode_avg()) {
+            colormap_plot_avg( graph_data(self), x, y, graph_color(self) );
+          }
+        }
       }
     }
   }
