@@ -55,3 +55,9 @@ void string_copy_at( string_t * self, int n, char * c ) {
 void string_copy( string_t * self, char * c ) {
   string_copy_at(self,0,c);
 }
+
+void string_end( string_t * self, int n ) {
+  if ( inrange(n,0,string_length(self)) ) {
+    string_data(self)[n] = '\0';
+  }
+}

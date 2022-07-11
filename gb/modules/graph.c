@@ -43,6 +43,8 @@ byte_t _graph_transvals[] = {
 #define graph_max_layers()         10
 #define graph_max_frame_dots() 100000
 
+#define graph_max_intensity()    1000
+
 //////////
 // type //
 //////////
@@ -68,6 +70,8 @@ type() {
   bool_t        depth_enabled;
   // depth clear
   int           depth_cls;
+  // spray intensity [0-1000]
+  int           intensity;
 
   // the drawing mode
   int           mode;
@@ -89,8 +93,6 @@ type() {
   colormap_t  * data;
   // depth data
   int         * data_depth;
-  // stencil data
-  //bool_t      * data_stencil;
   // current layer
   int           layer;
   // extra colormaps
@@ -116,6 +118,8 @@ type() {
 #define graph_depth(self)           (self->depth)
 #define graph_depth_cls(self)       (self->depth_cls)
 #define graph_depth_enabled(self)   (self->depth_enabled)
+
+#define graph_intensity(self)       (self->intensity)
 
 #define graph_clip_pos(self)        (&self->clip_pos)
 #define graph_clip_size(self)       (&self->clip_size)  
@@ -154,13 +158,15 @@ void graph_init( graph_t * self, visual_t * v ) {
   graph_depth_cls(self)       = graph_max_depth();
   graph_depth_enabled(self)   = false();
 
+  graph_intensity(self)       = graph_max_intensity();
+
   graph_mode(self)            = graph_mode_normal();
 
   graph_palette(self)         = palette();
   graph_palette_default(self) = graph_palette(self);
 
   point_set( graph_clip_pos(self),0,0 );
-  point_set( graph_clip_size(self),400,240 ); 
+  point_set( graph_clip_size(self),400,240 );
 
   graph_layer(self)  = 0;
   graph_layers(self) = allocv(colormap_t*,graph_max_layers());
@@ -260,6 +266,10 @@ void graph_set_font( graph_t * self, font_t * f ) {
   graph_font(self) = f;
 }
 
+void graph_set_intensity( graph_t * self, int n ) {
+  graph_intensity(self) = clamp(n,0,graph_max_intensity());
+}
+
 ///////////////////////
 // drawing functions //
 ///////////////////////
@@ -300,13 +310,13 @@ int graph_get_pixel_depth( graph_t * self, int x, int y ) {
 // is applied instead.
 void graph_draw_dot( graph_t * self, int x, int y ) {
 
-
   if (graph_frame_dots(self) < graph_max_frame_dots()) {
     if (inrect(x,y,graph_clip_x(self),graph_clip_y(self),graph_clip_w(self),graph_clip_h(self))) {
+      // depth mode is not affected by spray intensity
       if (graph_mode(self) == graph_mode_depth()) {
         graph_plot_depth(self,x,y,graph_depth(self));
       }
-      else {
+      else if (prob(graph_intensity(self))) {
         bool_t fb = true();
         if (graph_depth_enabled(self)) {
           fb = fb && (graph_depth(self) <= graph_get_pixel_depth(self,x,y));
@@ -435,34 +445,6 @@ void graph_draw_circle_dots( graph_t * self, int x, int y, int r, int ct, int rt
   }
 }
 
-void graph_draw_circle_spray( graph_t * self, int x, int y, int r, int p ) {
-  if (r<=0) return;
-  // just draw a dot if the r is 1
-  if (r == 1) {
-    graph_draw_dot( self, x, y );
-  }
-  // otherwise...
-  else {
-    loop(i,-r,r) {
-      loop(j,-r,r) {
-        if (sqroot(sqr(i)+sqr(j)) < r) {
-          if (prob(p)) graph_draw_dot(self, x+i, y+j);
-        }
-      }
-    }
-  }
-}
-
-void graph_draw_rect_spray( graph_t * self, int x, int y, int w, int h, int p ) {
-  loop(i,0,w) {
-    loop(j,0,h) {
-      if (prob(p)) {
-        graph_draw_dot( self, x+i, y+j );
-      }
-    }
-  }
-}
-
 void graph_draw_replace( graph_t * self, int x, int y, int w, int h, color_t rs, color_t rd ) {
   loop(i,0,w) {
     loop(j,0,h) {
@@ -558,18 +540,6 @@ void graph_draw_colormap( graph_t * self, int x, int y, colormap_t * c ) {
   }
 }
 
-void graph_draw_colormap_spray( graph_t * self, int x, int y, colormap_t * c, int p ) {
-  int sx = graph_flip_x(self)==true() ? c->size->x-1 : 0;
-  int sy = graph_flip_y(self)==true() ? c->size->y-1 : 0;
-  int dx = graph_flip_x(self)==true() ? -1 : 1;
-  int dy = graph_flip_y(self)==true() ? -1 : 1;
-  loop(i,0,c->size->x) {
-    loop(j,0,c->size->y) {
-      if (prob(p)) graph_draw_dot_c(self,sx+(i*dx),sy+(j*dy),colormap_get_pixel(c,i,j));
-    }
-  }
-}
-
 void graph_draw_colormap_sub( graph_t * self, int dx, int dy, colormap_t * c, int sx, int sy, int sw, int sh ) {
   int ssx = graph_flip_x(self)==true() ? sw-1 : 0;
   int ssy = graph_flip_y(self)==true() ? sh-1 : 0;
@@ -578,18 +548,6 @@ void graph_draw_colormap_sub( graph_t * self, int dx, int dy, colormap_t * c, in
   loop(i,0,sw) {
     loop(j,0,sh) {
       graph_draw_dot_c( self, ssx + dx + (i*ddx), ssy + dy + (j*ddy), colormap_get_pixel(c,sx+i,sy+j) );
-    }
-  }
-}
-
-void graph_draw_colormap_sub_spray( graph_t * self, int dx, int dy, colormap_t * c, int sx, int sy, int sw, int sh, int p ) {
-  int ssx = graph_flip_x(self)==true() ? sw-1 : 0;
-  int ssy = graph_flip_y(self)==true() ? sh-1 : 0;
-  int ddx = graph_flip_x(self)==true() ? -1 : 1;
-  int ddy = graph_flip_y(self)==true() ? -1 : 1;
-  loop(i,0,sw) {
-    loop(j,0,sh) {
-      if (prob(p)) graph_draw_dot_c( self, ssx + dx + (i*ddx), ssy + dy + (j*ddy), colormap_get_pixel(c,sx+i,sy+j) );
     }
   }
 }
@@ -608,29 +566,8 @@ void graph_draw_colormap_sub_ex(
   loop(i,0,dw) {
     loop(j,0,dh) {
       ddx = i*sw/dw;
-      ddy = j*sw/dh; 
+      ddy = j*sh/dh; 
       graph_draw_dot_c( self, sssx + dx + (i*dddx), sssy + dy + (j*dddy), colormap_get_pixel(c,sx+ddx,sy+ddy) );
-    }
-  }
-}
-
-void graph_draw_colormap_sub_ex_spray( 
-  graph_t * self, 
-  int dx, int dy, int dw, int dh, 
-  colormap_t * c, int sx, int sy, int sw, int sh, 
-  int p )
-{
-  int sssx = graph_flip_x(self)==true() ? sw-1 : 0;
-  int sssy = graph_flip_y(self)==true() ? sh-1 : 0;
-  int dddx = graph_flip_x(self)==true() ? -1 : 1;
-  int dddy = graph_flip_y(self)==true() ? -1 : 1;
-  int ddx;
-  int ddy;
-  loop(i,0,dw) {
-    loop(j,0,dh) {
-      ddx = i*sw/dw;
-      ddy = j*sw/dh; 
-      if (prob(p)) graph_draw_dot_c( self, sssx + dx + (i*dddx), sssy + dy + (j*dddy), colormap_get_pixel(c,sx+ddx,sy+ddy) );
     }
   }
 }
@@ -658,22 +595,6 @@ void graph_draw_text( graph_t * self, int x, int y, char * t ) {
     loop(i,0,strlen(t)) {
       font_get_pos_at(f, t[i], ref(sx), ref(sy));
       graph_draw_colormap_sub( self, x + (i*xx), y, font_colormap(f), sx, sy, xx, yy );
-    }
-  }
-}
-
-void graph_draw_text_spray( graph_t * self, int x, int y, char * t, int p ) {
-    if (graph_font(self)) {
-    font_t * f = graph_font(self);
-    int xx = font_tile_width(graph_font(self));
-    int yy = font_tile_height(graph_font(self));
-    int px = font_x(graph_font(self));
-    int py = font_y(graph_font(self));
-    int sx;
-    int sy;
-    loop(i,0,strlen(t)) {
-      font_get_pos_at(f, t[i], ref(sx), ref(sy));
-      graph_draw_colormap_sub_spray( self, x + (i*xx), y, font_colormap(f), sx, sy, xx, yy, p );
     }
   }
 }

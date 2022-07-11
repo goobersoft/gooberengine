@@ -46,9 +46,6 @@
 // converts a float to a fixed point integer.
 #define ftoi(f) ((int)f*1000)
 
-#define xstr(x) str(x)
-#define str(x)  #x
-
 // typedefs
 typedef size_t         index_t;
 typedef unsigned char  bool_t;

@@ -9,6 +9,65 @@
 void emp() {
 }
 
+int sign( int n ) {
+  // if n is 0
+  if (n == 0) return 0;
+  // if n > 0
+  if (n > 0) return 1;
+  // if n < 0
+  return -1;
+}
+
+int digits( int n ) {
+  if (n == 0) return 1;
+  int d = 0;
+  // while n is not 0
+  while (n != 0) {
+    // number of digits inc 1
+    d += 1;
+    // divide n by 10
+    n /= 10;
+  }
+  // return number of digits
+  return d;
+}
+
+
+char _str[20];
+char * str( int n ) {
+  // init (runs only once)
+  static bool_t init = 0;
+  if (init == 0) {
+    loop(i,0,20) {
+      _str[i] = '\0';
+    }
+    init = 1;
+  } 
+  // get the number of digits
+  int d = digits(n);
+  // determine if the number is negative
+  int s = sign(n);
+  // if the number is negative, the first
+  // cell in the string array is a hyphen
+  if (s == -1) {
+    // add 1 to d to accomodate for hyphen
+    d += 1;
+    // set index 0 to '-'
+    _str[0] = '-';
+  }
+  // get absolute number of n
+  // otherwise modulo won't work right
+  n = abs(n);
+  // begin looping from [0 to d-1]
+  loop(i,0,d) {
+    _str[d-i-1] = '0' + (n % 10);
+    n /= 10;
+  }
+  //_str[d] = '\0';
+  return _str;
+}
+
+
 char _bits[36];
 char * bits(uint_t n) {
   loop(i,0,32) {
@@ -143,7 +202,7 @@ char * sdl_pixelformat_str( uint_t f ) {
 
 #define rnd(a,b)     (a+(rand()%(b-a)))
 #define chance(x,y)  (rnd(0,y)<x)
-#define prob(x)      chance(x,1000)
+#define prob(x)      (x==1000)?(1):(chance(x,1000))
 #define sqr(a)       ((a)*(a))
 #define bool(x)      (x&1)
 
