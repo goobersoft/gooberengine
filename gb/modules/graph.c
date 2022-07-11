@@ -158,7 +158,7 @@ void graph_init( graph_t * self, visual_t * v ) {
   graph_depth_cls(self)       = graph_max_depth();
   graph_depth_enabled(self)   = false();
 
-  graph_intensity(self)       = graph_max_intensity();
+  graph_intensity(self)       = graph_max_intensity()/10;
 
   graph_mode(self)            = graph_mode_normal();
 
@@ -314,34 +314,45 @@ void graph_draw_dot( graph_t * self, int x, int y ) {
     if (inrect(x,y,graph_clip_x(self),graph_clip_y(self),graph_clip_w(self),graph_clip_h(self))) {
       // depth mode is not affected by spray intensity
       if (graph_mode(self) == graph_mode_depth()) {
+        graph_frame_dots(self) += 1;
         graph_plot_depth(self,x,y,graph_depth(self));
       }
       else if (prob(graph_intensity(self))) {
         bool_t fb = true();
         if (graph_depth_enabled(self)) {
           fb = fb && (graph_depth(self) <= graph_get_pixel_depth(self,x,y));
-          if (fb == true()) graph_plot_depth(self,x,y,graph_depth(self));
+          if (fb == true()) {
+            graph_frame_dots(self) += 1;
+            graph_plot_depth(self,x,y,graph_depth(self));
+          }
         }
         if (fb == true()) {
           if (graph_mode(self) == graph_mode_normal()) {
+            graph_frame_dots(self) += 1;
             colormap_plot( graph_data(self), x, y, graph_color(self) );
           }
           else if (graph_mode(self) == graph_mode_replace()) {
+            graph_frame_dots(self) += 1;
             colormap_plot_replace( graph_data(self), x, y, graph_color(self) );
           }
           else if (graph_mode(self) == graph_mode_add()) {
+            graph_frame_dots(self) += 1;
             colormap_plot_add( graph_data(self), x, y, graph_color(self) );
           }
           else if (graph_mode(self) == graph_mode_sub()) {
+            graph_frame_dots(self) += 1;
             colormap_plot_sub( graph_data(self), x, y, graph_color(self) );
           }
           else if (graph_mode(self) == graph_mode_high()) {
+            graph_frame_dots(self) += 1;
             colormap_plot_high( graph_data(self), x, y, graph_color(self) );
           }
           else if (graph_mode(self) == graph_mode_low()) {
+            graph_frame_dots(self) += 1;
             colormap_plot_low( graph_data(self), x, y, graph_color(self) );
           }
           else if (graph_mode(self) == graph_mode_avg()) {
+            graph_frame_dots(self) += 1;
             colormap_plot_avg( graph_data(self), x, y, graph_color(self) );
           }
         }
@@ -615,24 +626,12 @@ void graph_draw_layer_sub( graph_t * self, int d, int sx, int sy, int sw, int sh
 }
 
 void graph_draw_mouse( graph_t * self, mouse_t * m ) {
-  /*
   if (mouse_visible(m)==true()) {
-    graph_set_layer(self,-1);
-    graph_set_mode(self,graph_mode_replace());
-    graph_set_flip(self,false(),false());
-    graph_set_color(self,color_trans());
-    graph_draw_rect_spray(self,0,0,400,240,10);
+    int u = graph_intensity(self);
+    graph_set_intensity(self,1000);
     graph_draw_colormap_sub( self, mouse_x(m)/3, mouse_y(m)/3, mouse_colormap(m), 40, 200, 10, 10 );
-    graph_draw_layer(self,-1);
-    graph_reset_layer(self);
+    graph_set_intensity(self,u);
   }
-  */
-}
-
-void graph_draw_statpanel( graph_t * self, statpanel_t * s ) {
-
-  
-
 }
 
 ////////////

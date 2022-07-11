@@ -52,8 +52,16 @@ void string_copy_at( string_t * self, int n, char * c ) {
   }
 }
 
+void string_copy_number_at( string_t * self, int n, int m ) {
+  string_copy_at(self,n,str(m));
+}
+
 void string_copy( string_t * self, char * c ) {
   string_copy_at(self,0,c);
+}
+
+void string_copy_number( string_t * self, int m ) {
+  string_copy_number_at(self,0,m);
 }
 
 void string_end( string_t * self, int n ) {

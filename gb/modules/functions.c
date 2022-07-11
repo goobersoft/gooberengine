@@ -63,7 +63,7 @@ char * str( int n ) {
     _str[d-i-1] = '0' + (n % 10);
     n /= 10;
   }
-  //_str[d] = '\0';
+  _str[d] = '\0';
   return _str;
 }
 

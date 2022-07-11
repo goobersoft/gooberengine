@@ -1,7 +1,7 @@
 
 #define gb_version_major() 0
 #define gb_version_minor() 1
-#define gb_version_patch() 3
+#define gb_version_patch() 4
 
 //  submodules stack
 //  ----------------
@@ -29,6 +29,7 @@
 #include "modules/string.c"             // 
 #include "modules/tag.c"                // descriptive tag
 #include "modules/point.c"              // 2d integer point
+#include "modules/collide.c"
 #include "modules/stack.c"              // LIFO-style stack object
 #include "modules/number.c"             // integer number with min and max bounds
 #include "modules/color.c"              // 6-bit color with transparency bit
@@ -50,7 +51,7 @@
 #include "modules/controller.c"         // gamepads
 #include "modules/network.c"            // networking (TCP/UDP)
 #include "modules/cartridge.c"
-#include "modules/statpanel.c"
+
 #include "modules/graph.c"              // drawing interface
 
 // load the toys submodule
@@ -107,7 +108,9 @@ gb_t * gb;
 // the debug module has visibility of the gb globals
 // this will help with debugging immensely.
 
+#include "modules/debugpanel.c"
 #include "modules/debug.c"
+
 
 
 ////////////
@@ -189,7 +192,7 @@ void gb_load() {
   // set the mouse's icon
   mouse_colormap(gb_mouse())      = assets_get_colormap(gb_assets(),0);
   mouse_set_colormap_rect         (gb_mouse(),40,200,10,10);
-  mouse_set_visible               (gb_mouse(),false());
+  mouse_set_visible               (gb_mouse(),true());
 
   if (gb_cartridge()) {
     cartridge_fn_load(gb_cartridge())();

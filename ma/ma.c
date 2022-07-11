@@ -4,7 +4,6 @@
 // includes //
 //////////////
 
-#include "modules/collide.c"
 #include "modules/statuseffect.c"
 #include "modules/actor.c"
 
