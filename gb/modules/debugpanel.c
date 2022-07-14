@@ -12,6 +12,8 @@ type() {
   bool_t     pos;
   string_t * string;
 
+
+
 } debugpanel_t;
 
 #define debugpanel_visible(self)   (self->visible)
@@ -37,7 +39,12 @@ debugpanel_t * debugpanel() {
 
 void debugpanel_draw( debugpanel_t * self ) {
 
-  //string_clear(debugpanel_string(self));
+  //////////////
+  // updating //
+  //////////////
+
+  string_clear(debugpanel_string(self));
+  
   loop(i,0,controller_max_buttons()) {
     string_copy_number_at(debugpanel_string(self),i,controller_buttons(gb_controller())[i]);
   }
@@ -52,6 +59,19 @@ void debugpanel_draw( debugpanel_t * self ) {
 
   string_copy_number_at(debugpanel_string(self),25,u1);
   string_copy_at(debugpanel_string(self),25+uu,"\%");
+
+  int u2 = 0;
+  u2 = string_copy_number_at(debugpanel_string(self),
+    30,point_x(mouse_pos(gb_mouse()))/visual_window_scale(gb_visual()));
+  u2 = string_copy_at(debugpanel_string(self),u2,",");
+  u2 = string_copy_number_at(debugpanel_string(self),
+    u2,point_y(mouse_pos(gb_mouse()))/visual_window_scale(gb_visual()));
+
+
+
+  /////////////
+  // drawing //
+  /////////////
 
   int u = graph_intensity(gb_graph());
   graph_set_intensity(gb_graph(),1000);

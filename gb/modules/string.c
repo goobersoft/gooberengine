@@ -38,7 +38,7 @@ void string_clear( string_t * self ) {
   }
 }
 
-void string_copy_at( string_t * self, int n, char * c ) {
+int string_copy_at( string_t * self, int n, char * c ) {
   if (c) {
     int l = strlen(c);
     loop(i,0,l) {
@@ -46,26 +46,30 @@ void string_copy_at( string_t * self, int n, char * c ) {
         string_data(self)[n+i] = c[i];
       }
       else {
-        break;
+        return string_length(self);
       }
     }
+    return n+l;
   }
+  return 0;
 }
 
-void string_copy_number_at( string_t * self, int n, int m ) {
+int string_copy_number_at( string_t * self, int n, int m ) {
   string_copy_at(self,n,str(m));
 }
 
-void string_copy( string_t * self, char * c ) {
+int string_copy( string_t * self, char * c ) {
   string_copy_at(self,0,c);
 }
 
-void string_copy_number( string_t * self, int m ) {
+int string_copy_number( string_t * self, int m ) {
   string_copy_number_at(self,0,m);
 }
 
-void string_end( string_t * self, int n ) {
+int string_end( string_t * self, int n ) {
   if ( inrange(n,0,string_length(self)) ) {
     string_data(self)[n] = '\0';
+    return n+1;
   }
+  return 0;
 }

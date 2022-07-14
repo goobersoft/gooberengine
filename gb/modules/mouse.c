@@ -12,6 +12,8 @@
 #define mouse_button_back()     4
 #define mouse_button_forward()  5
 
+#define mouse_click_time_max()  30 // frames
+
 //////////
 // type //
 //////////
@@ -24,6 +26,9 @@ type() {
   point_t pos;
   point_t pos_old;
   point_t pos_diff;
+
+  point_t click_pos;
+  int     click_time;
 
   // mouse icon
   colormap_t * colormap;
@@ -42,6 +47,10 @@ type() {
 #define mouse_pos(self)           (&self->pos)
 #define mouse_pos_old(self)       (&self->pos_old)
 #define mouse_pos_diff(self)      (&self->pos_diff)
+
+#define mouse_click_pos(self)     (&self->click_pos)
+#define mouse_click_time(self)    (self->click_time)
+
 #define mouse_colormap(self)      (self->colormap)
 #define mouse_colormap_pos(self)  (&self->colormap_pos)
 #define mouse_colormap_size(self) (&self->colormap_size)
@@ -58,10 +67,14 @@ type() {
 
 void mouse_init( mouse_t * self, visual_t * v, colormap_t * c ) {
   mouse_visible(self) = true();
+
   point_set(mouse_pos(self), 0,0);
   point_set(mouse_pos_old(self), 0,0);
   point_set(mouse_pos_diff(self), 0,0);
   
+  point_set(mouse_click_pos(self), 0,0);
+  mouse_click_time(self) = mouse_click_time_max();
+
   mouse_visual(self) = v;
   
   mouse_colormap(self) = c;
@@ -102,6 +115,11 @@ void mouse_set_colormap_rect( mouse_t * self, int x, int y, int w, int h ) {
   point_set(mouse_colormap_size(self),w,h);
 }
 
+void mouse_click( mouse_t * self, int x, int y, int b ) {
+  point_set(mouse_click_pos(self), x, y);
+  mouse_click_time(self) = 0;
+}
+
 
 ////////////
 // events //
@@ -115,6 +133,7 @@ void mouse_update( mouse_t * self ) {
     if ((btn & (1<<i)) != 0) {
       if (mouse_buttons(self)[i] == mouse_button_released()) {
         mouse_buttons(self)[i] = mouse_button_pressed();
+        mouse_click(self,xx,yy,i);
       }
       else if (mouse_buttons(self)[i] == mouse_button_pressed()) {
         mouse_buttons(self)[i] = mouse_button_held();
@@ -122,6 +141,7 @@ void mouse_update( mouse_t * self ) {
     }
     else {
       mouse_buttons(self)[i] = mouse_button_released();
+      //mouse_release(self,i);
     }
     
   }
@@ -141,4 +161,6 @@ void mouse_update( mouse_t * self ) {
     point_x(mouse_pos(self)) - point_x(mouse_pos_old(self)),
     point_y(mouse_pos(self)) - point_y(mouse_pos_old(self))
   );
+
+  mouse_click_time(self) = high(mouse_click_time(self)+2,mouse_click_time_max());
 }

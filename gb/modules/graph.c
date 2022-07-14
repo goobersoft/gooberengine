@@ -629,7 +629,15 @@ void graph_draw_mouse( graph_t * self, mouse_t * m ) {
   if (mouse_visible(m)==true()) {
     int u = graph_intensity(self);
     graph_set_intensity(self,1000);
-    graph_draw_colormap_sub( self, mouse_x(m)/3, mouse_y(m)/3, mouse_colormap(m), 40, 200, 10, 10 );
+
+    graph_draw_colormap_sub( self, 
+      (point_x(mouse_click_pos(m))/visual_window_scale(graph_visual(self)))-5, 
+      (point_y(mouse_click_pos(m))/visual_window_scale(graph_visual(self)))-5, 
+      mouse_colormap(m), 50 + (10*(mouse_click_time(m)/7)), 200, 10, 10 ); 
+
+    graph_draw_colormap_sub( self, mouse_x(m)/visual_window_scale(graph_visual(self)), 
+      mouse_y(m)/visual_window_scale(graph_visual(self)), mouse_colormap(m), 40, 200, 10, 10 );
+    
     graph_set_intensity(self,u);
   }
 }

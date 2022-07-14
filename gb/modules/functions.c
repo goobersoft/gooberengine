@@ -59,11 +59,15 @@ char * str( int n ) {
   // otherwise modulo won't work right
   n = abs(n);
   // begin looping from [0 to d-1]
-  loop(i,0,d) {
-    _str[d-i-1] = '0' + (n % 10);
-    n /= 10;
-  }
+
   _str[d] = '\0';
+
+  do {
+    d-=1;
+    _str[d] = '0' + (n % 10);
+    n /= 10;
+  } while(n>0);
+  
   return _str;
 }
 

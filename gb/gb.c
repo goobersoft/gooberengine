@@ -1,7 +1,7 @@
 
 #define gb_version_major() 0
 #define gb_version_minor() 1
-#define gb_version_patch() 4
+#define gb_version_patch() 5
 
 //  submodules stack
 //  ----------------
@@ -228,7 +228,13 @@ void gb_update() {
       gb_running() = false();
     }
   }
-  
+
+  const Uint8 * b = SDL_GetKeyboardState( null() );
+  if (b[SDL_SCANCODE_ESCAPE]) {
+    log("quit.");
+    exit(0);
+  }
+
   /////////////
   // modules //
   /////////////
