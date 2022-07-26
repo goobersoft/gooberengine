@@ -50,7 +50,7 @@ void alarm_update( alarm_t * self ) {
 }
 
 bool_t alarm_is_ringing( alarm_t * self ) {
-  return (alarm_ringing(self) == true());
+  return alarm_ringing(self);
 }
 
 void alarm_reset( alarm_t * self ) {

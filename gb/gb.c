@@ -1,7 +1,7 @@
 
 #define gb_version_major() 0
 #define gb_version_minor() 1
-#define gb_version_patch() 5
+#define gb_version_patch() 6
 
 //  submodules stack
 //  ----------------
@@ -47,6 +47,7 @@
 #include "modules/timing.c"             // fps/timing interface
 #include "modules/gbs.c"                // GooberScript
 #include "modules/sprite.c"             // instanced object with a reference to a colormap
+#include "modules/tilemap.c"            // instanceable grids of variable colormap sections
 #include "modules/scene.c"              // scene base object
 #include "modules/controller.c"         // gamepads
 #include "modules/network.c"            // networking (TCP/UDP)

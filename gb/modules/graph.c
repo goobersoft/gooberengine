@@ -36,10 +36,12 @@ byte_t _graph_transvals[] = {
 
 #define graph_width()        400
 #define graph_height()       240
-#define graph_area()         graph_width()*graph_height()
+#define graph_area()         (graph_width()*graph_height())
 #define graph_max_depth()    1000000
 #define graph_min_depth()   -1000000
 
+#define graph_layer_base()          0
+#define graph_layer_top()           9
 #define graph_max_layers()         10
 #define graph_max_frame_dots() 100000
 
@@ -612,11 +614,36 @@ void graph_draw_text( graph_t * self, int x, int y, char * t ) {
 
 void graph_draw_layer( graph_t * self, int d ) {
   d = wrap(d,0,graph_max_layers());
+  // will only operate if the current layer is higher than 0
   if (d!=0) {
+    // get current layer
     int u = graph_layer(self);
+    // set current layer to base (0)
     graph_set_layer(self,0);
+    // draw the layer info
     graph_draw_colormap( self, 0, 0, graph_layers(self)[d] );
+    // set back to current layer
     graph_set_layer(self,u);
+  }
+}
+
+void graph_merge_layer( graph_t * self, int l2 ) {
+  l2 = wrap(l2,0,graph_max_layers());
+  // only works if the layer being merged is > 0
+  if (l2 != 0) {
+    // automatically set the layer to 0 when merging.
+    graph_set_layer(self,0);
+    // get the colormap of the layer we want
+    colormap_t * col = graph_layers(self)[l2];
+    // transient color variable
+    color_t      c;
+    // loop [0-96000)
+    loop(i,0,graph_area()) {
+      // set c to the data of the colormap of [l2]
+      c = colormap_data(col)[i];
+      // if a is not 0 (i.e. opaque) set the buffer to the new color.
+      if (c.a == 1) colormap_data(graph_data(self))[i] = c;
+    }
   }
 }
 
@@ -640,6 +667,27 @@ void graph_draw_mouse( graph_t * self, mouse_t * m ) {
     
     graph_set_intensity(self,u);
   }
+}
+
+void graph_draw_tilemap( graph_t * self, int x, int y, tilemap_t * t ) {
+  point_t pt;
+  loop(i,0,point_x(tilemap_size(t))) {
+    loop(j,0,point_y(tilemap_size(t))) {
+      tilemap_get_tile(t,i,j,ref(pt));
+      graph_draw_colormap_sub( self, 
+        x + (point_x(tilemap_tile_size(t))*i),
+        y + (point_y(tilemap_tile_size(t))*j),
+        tilemap_colormap(t), 
+        point_x(tilemap_offset(t)) + (pt.x*point_x(tilemap_tile_size(t))), 
+        point_y(tilemap_offset(t)) + (pt.y*point_y(tilemap_tile_size(t))),
+        point_x(tilemap_tile_size(t)),
+        point_y(tilemap_tile_size(t)));
+    }
+  }
+}
+
+void graph_draw_tilemap_sub( graph_t * self, int x, int y, int w, int h, tilemap_t * t ) {
+
 }
 
 ////////////
@@ -674,7 +722,7 @@ void graph_present( graph_t * self ) {
       xx = 0;
       yy += 1;
     }
-  } while (ci<96000);
+  } while (ci<graph_area());
   board_unlock( bb );
   graph_frame_dots(self) = 0;
 }

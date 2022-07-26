@@ -1,4 +1,5 @@
 
+
 #define audio_channel_stopped() 0
 #define audio_channel_playing() 1
 
@@ -11,14 +12,24 @@
 #define audio_channel_aux()   6 // auxillary / menu
 #define audio_channel_music() 7 // background music
 
+#define audio_playback_freq() 44100
+#define audio_num_channels()  10
+#define audio_buffer_size()   4096
+
 type() {
 
-  int num_channels;
-  int * channel_state;
+  // the samples which will be played back in the audio engine.
+  int *  data;
+  // each channel has its own audio data to be mixed.
+  int ** channel_data;
+  // the state of each channel
+  int *  channel_state;
+
 
 } audio_t;
 
-#define audio_num_channels(self)   (self->num_channels)
+#define audio_data(self)           (self->data)
+#define audio_channel_data(self)   (self->channel_data)
 #define audio_channel_state(self)  (self->channel_state)
 
 /////////
@@ -26,13 +37,17 @@ type() {
 /////////
 
 void audio_init( audio_t * self ) {
-  audio_num_channels(self)      = 8;
-  Mix_AllocateChannels(8);
-  audio_channel_state(self)     = allocv(int,8);
+  audio_data(self)              = allocv(int,audio_buffer_size());
+  audio_channel_data(self)      = allocv(int*,audio_num_channels());
+  loop(i,0,audio_num_channels()) {
+    audio_channel_data(self)[i] = allocv(int,audio_buffer_size());
+  }
+  audio_channel_state(self)     = allocv(int,audio_num_channels());
+  Mix_AllocateChannels(audio_num_channels());
 }
 
 audio_t * audio() {
-  audio_t * r                = alloc(audio_t);
+  audio_t * r = alloc(audio_t);
   audio_init(r);
   return r;
 }
@@ -41,27 +56,29 @@ audio_t * audio() {
 // funcs //
 ///////////
 
+/*
 void audio_set_channels( audio_t * self, int n ) {
   audio_num_channels(self) = n;
   Mix_AllocateChannels(n);
   free( audio_channel_state(self) );
   audio_channel_state(self) = allocv(int,n);
 }
+*/
 
 void audio_play( audio_t * self, sound_t * s, int c ) {
-  c = wrap(c,0,audio_num_channels(self));
+  c = wrap(c,0,audio_num_channels());
   Mix_PlayChannel( c, sound_source(s), 0 );
   audio_channel_state(self)[c] = audio_channel_playing();
 }
 
 void audio_play_looped( audio_t * self, sound_t * s, int c ) {
-  c = wrap(c,0,audio_num_channels(self));
+  c = wrap(c,0,audio_num_channels());
   Mix_PlayChannel( c, sound_source(s), -1 );
   audio_channel_state(self)[c] = audio_channel_playing();
 }
 
 void audio_stop( audio_t * self, int c ) {
-  c = wrap(c,0,audio_num_channels(self));
+  c = wrap(c,0,audio_num_channels());
   Mix_HaltChannel( c );
   audio_channel_state(self)[c] = audio_channel_stopped();
 }
@@ -71,7 +88,7 @@ void audio_stop( audio_t * self, int c ) {
 ////////////
 
 void audio_update( audio_t * self ) {
-  loop(i,0,audio_num_channels(self)) {
+  loop(i,0,audio_num_channels()) {
     if (Mix_Playing(i)==true()) {
       audio_channel_state(self)[i] = audio_channel_playing();
     }

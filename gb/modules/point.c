@@ -32,6 +32,11 @@ point_t * point(int x, int y) {
 // funcs //
 ///////////
 
+void point_copy(point_t * self, point_t * other) {
+  point_x(self) = point_x(other);
+  point_y(self) = point_y(other);
+}
+
 void point_set(point_t * self, int x, int y) {
   point_x(self) = x;
   point_y(self) = y;
