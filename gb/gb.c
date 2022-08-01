@@ -1,7 +1,7 @@
 
 #define gb_version_major() 0
 #define gb_version_minor() 1
-#define gb_version_patch() 6
+#define gb_version_patch() 7
 
 //  submodules stack
 //  ----------------
@@ -23,14 +23,17 @@
 #include "modules/functions.c"          // core functions
 #include "modules/functions_sine.c"     // sine and cosine function
 #include "modules/functions_sqroot.c"   // sqroot function
-#include "modules/locker.c"
-//#include "modules/rng.c"                // implementation of mersenne twister in 
-#include "modules/list.c"               // linked list data type
-#include "modules/string.c"             // 
 #include "modules/tag.c"                // descriptive tag
+#include "modules/locker.c"
+//#include "modules/rng.c"              // implementation of mersenne twister in 
+#include "modules/list.c"               // linked list data type
+#include "modules/pile.c"               // LIFO-style stack object
+#include "modules/queue.c"              // uses list for FIFO-style
+#include "modules/string.c"             // fixed-length character arrays
+#include "modules/tree.c"               // dictionary-styled data structure
 #include "modules/point.c"              // 2d integer point
-#include "modules/collide.c"
-#include "modules/stack.c"              // LIFO-style stack object
+#include "modules/collide.c"            // AABB collisions
+
 #include "modules/number.c"             // integer number with min and max bounds
 #include "modules/color.c"              // 6-bit color with transparency bit
 #include "modules/board.c"              // drawing durfaces
@@ -51,6 +54,7 @@
 #include "modules/scene.c"              // scene base object
 #include "modules/controller.c"         // gamepads
 #include "modules/network.c"            // networking (TCP/UDP)
+#include "modules/gbml.c"               // markup
 #include "modules/cartridge.c"
 
 #include "modules/graph.c"              // drawing interface

@@ -32,6 +32,10 @@ string_t * string( int l ) {
 // funcs //
 ///////////
 
+bool_t string_equals( string_t * self, char * st ) {
+  return streq(string_data(self),st);
+}
+
 void string_clear( string_t * self ) {
   loop(i,0,string_length(self)) {
     string_data(self)[i] = ' ';
@@ -72,4 +76,14 @@ int string_end( string_t * self, int n ) {
     return n+1;
   }
   return 0;
+}
+
+/////////////
+// alt new //
+/////////////
+
+string_t * string_from( char * a ) {
+  string_t * r = string(strlen(a));
+  string_copy_at(r,0,a);
+  return r;
 }

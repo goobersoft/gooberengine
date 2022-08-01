@@ -12,8 +12,6 @@
 #include </usr/include/SDL2/SDL_mixer.h>
 #include </usr/include/SDL2/SDL_image.h>
 #include </usr/include/SDL2/SDL_net.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
 
 ///////////////////////////////////////
 // include the GB master module      //

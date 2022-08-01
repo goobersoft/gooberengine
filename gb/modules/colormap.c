@@ -25,6 +25,9 @@ void colormap_init( colormap_t * self, int x, int y ) {
   colormap_size(self) = point(x,y);
   colormap_data(self) = allocv(color_t,x*y);
   colormap_area(self) = x*y;
+  loop(i,0,colormap_area(self)) {
+    colormap_data(self)[i] = make_color(0,0,0);
+  }
 }
 
 colormap_t * colormap( int x, int y ) {
@@ -81,8 +84,10 @@ void free_colormap( colormap_t * self ) {
 
 void colormap_plot( colormap_t * self, int x, int y, color_t c ) {
   if (inrect(x,y,0,0,colormap_width(self),colormap_height(self))) {
-    int uu = y*point_x(colormap_size(self)) + x;
-    colormap_data(self)[uu] = make_color_set(colormap_data(self)[uu],c);
+    if (c.a) {
+      int uu = y*point_x(colormap_size(self)) + x;
+      colormap_data(self)[uu] = c;//make_color_set(colormap_data(self)[uu],c);
+    }
   }
 }
 

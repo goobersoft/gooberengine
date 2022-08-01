@@ -6,10 +6,11 @@
 
 // it's just one byte!!
 type() {
-  byte_t r:2;
-  byte_t g:2;
-  byte_t b:2;
-  byte_t a:1;
+  byte_t r:2; // red component   [0-3]
+  byte_t g:2; // green component [0-3]
+  byte_t b:2; // blue component  [0-3]
+  byte_t a:1; // alpha flag      [0-1]
+  byte_t i:1; // intensity flag  [0-1]
 } color_t;
 
 #define color_r(c)      c->r
@@ -95,10 +96,12 @@ int check_color_eq(color_t a, color_t b) {
 // global funcs //
 //////////////////
 
+/*
 color_t make_color_set( color_t c1, color_t c2 ) {
-  if (c1.a||c2.a) return make_color(c2.r, c2.g, c2.b);
+  if (c2.a)     return make_color(c2.r, c2.g, c2.b);
   return          make_color_trans();
 }
+*/
 
 color_t make_color_add( color_t c1, color_t c2 ) {
   return make_color(
@@ -138,4 +141,12 @@ color_t make_color_avg( color_t c1, color_t c2 ) {
     evenize(get_color_g(c1)+get_color_g(c2))/2,
     evenize(get_color_b(c1)+get_color_b(c2))/2
   );
+}
+
+void color_to_string( color_t c, string_t * s ) {
+  int u = 0;
+  u = string_copy_number_at(s,u,c.r);
+  u = string_copy_number_at(s,u,c.g);
+  u = string_copy_number_at(s,u,c.b);
+  u = string_copy_number_at(s,u,c.a);
 }

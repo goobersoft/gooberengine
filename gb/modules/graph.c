@@ -207,6 +207,7 @@ void graph_set_flip( graph_t * self, bool_t x, bool_t y ) {
   graph_flip_y(self) = y;
 }
 
+
 void graph_set_color( graph_t * self, color_t c ) {
   graph_color(self) = palette_colors(graph_palette(self))[_graph_calc_palette_index(c)];
 }
@@ -365,10 +366,8 @@ void graph_draw_dot( graph_t * self, int x, int y ) {
 
 
 void graph_draw_dot_c( graph_t * self, int x, int y, color_t c ) {
-  if (get_color_a(c)==1) {
-    graph_set_color(self,c);
-    graph_draw_dot(self,x,y);
-  }
+  graph_set_color(self,c);
+  graph_draw_dot(self,x,y);
 }
 
 void graph_draw_hl( graph_t * self, int x, int y, int w ) {

@@ -4,27 +4,30 @@
 
 type() {
 
-  string_t *  id;
-  int         nice;
+  // a string literal which represents the class of the object
+  // containing this tag
+  const char * class;
+  // a string literal which uniquely identifies the object
+  // containing this tag
+  const char * id;
 
 } tag_t;
 
-#define tag_id(self)    (self->id)
-#define tag_nice(self)  (self->nice)
+#define tag_class(self)     (self->class)
+#define tag_id(self)        (self->id)
 
 /////////
 // new //
 /////////
 
-void tag_init( tag_t * self, char * id, int n ) {
-  tag_nice(self)  = n;
-  tag_id(self)    = string(tag_max_id_length());
-  string_copy(tag_id(self),id);
+void tag_init( tag_t * self, char * cs, char * id ) {
+  tag_class(self) = cs;
+  tag_id(self)    = id;
 }
 
-tag_t * tag( char * id, int n ) {
+tag_t * tag( char * cs, char * id ) {
   tag_t * r = alloc(tag_t);
-  tag_init(r,id,n);
+  tag_init(r,cs,id);
   return r;
 }
 
@@ -32,10 +35,10 @@ tag_t * tag( char * id, int n ) {
 // functions //
 ///////////////
 
-void tag_set_id( tag_t * self, char * id ) {
-  string_copy(tag_id(self),id);
+void tag_set_class( tag_t * self, char * cs ) {
+  tag_class(self) = cs;
 }
 
-void tag_set_nice( tag_t * self, int n ) {
-  tag_nice(self) = n;
+void tag_set_id( tag_t * self, char * id ) {
+  tag_id(self) = id;
 }

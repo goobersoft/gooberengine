@@ -1,8 +1,5 @@
 
 
-// keywords (which are only for syntactic saugar)
-#define local     /* local */
-#define external  /* external */
 
 #define and  &&
 #define AND  &
@@ -92,7 +89,6 @@ typedef unsigned long  ulong_t;
 #define val0(x,n)       x[n]
 
 #define loop(i,a,b)     for(int i=a;i<b;i++)
-
 
 #define type()            typedef struct
 #define union()           typedef union

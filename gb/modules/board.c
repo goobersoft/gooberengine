@@ -4,12 +4,12 @@
 
 typedef struct {
 
-  external SDL_Renderer * renderer;
-  local    SDL_Texture  * texture;
-  local    SDL_Texture  * rawtexture;
-  local    bool_t         locked;
-  local    Uint32       * rawdata;
-  local    int            rawpitch;
+  SDL_Renderer * renderer;
+  SDL_Texture  * texture;
+  SDL_Texture  * rawtexture;
+  bool_t         locked;
+  Uint32       * rawdata;
+  int            rawpitch;
 
 } board_t;
 

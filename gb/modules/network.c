@@ -3,4 +3,8 @@ type() {
 
   
 
-} network_c;
+} network_t;
+
+/////////
+// new //
+/////////

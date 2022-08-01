@@ -64,80 +64,107 @@ void free_list(list_t * self) {
 // funcs //
 ///////////
 
-void list_add_first( list_t * self, void * d ) {
+// internal functions for adding and removing listnodes
+
+void _list_add_first( list_t * self, listnode_t * l ) {
   if (list_count(self)==0) {
-    listnode_t * a    = listnode(d);
-    list_first(self)  = a;
-    list_last(self)   = a;
+    list_first(self)  = l;
+    list_last(self)   = l;
     list_count(self)  = 1;
   }
   else {
-    listnode_t * a    = listnode(d);
     listnode_t * b    = list_first(self);
-    listnode_prev(b)  = a;
-    listnode_next(a)  = b;
-    list_first(self)  = a;
+    listnode_prev(b)  = l;
+    listnode_next(l)  = b;
+    list_first(self)  = l;
     list_count(self)  += 1;
   }
 }
 
-void list_add_last( list_t * self, void * d ) {
+void _list_add_last( list_t * self, listnode_t * l ) {
   if (list_count(self)==0) {
-    listnode_t * a    = listnode(d);
-    list_first(self)  = a;
-    list_last(self)   = a;
+    list_first(self)  = l;
+    list_last(self)   = l;
     list_count(self)  = 1;
   }
   else {
-    listnode_t * a     = listnode(d);
     listnode_t * b     = list_last(self);
-    listnode_next(b)   = a;
-    listnode_prev(a)   = b;
-    list_last(self)    = a;
+    listnode_next(b)   = l;
+    listnode_prev(l)   = b;
+    list_last(self)    = l;
     list_count(self)  += 1;
   }
 }
 
-void * list_remove_first( list_t * self ) {
+listnode_t * _list_remove_first( list_t * self ) {
   if (list_count(self)==1) {
     listnode_t * a  = list_first(self);
-    void * d        = listnode_data(a);
-    free_listnode(a);
     list_count(self) = 0;
-    return d;
+    return a;
   }
   else if (list_count(self) > 1) {
     listnode_t * a                  = list_first(self);
-    void * d                        = listnode_data(a);
     list_first(self)                = listnode_next(a);
     listnode_prev(list_first(self)) = null();
-    free_listnode(a);
     list_count(self) -= 1;
+    return a;
+  }
+  return null();
+}
+
+listnode_t * _list_remove_last( list_t * self ) {
+  if (list_count(self)==1) {
+    listnode_t * a  = list_first(self);
+    list_count(self) = 0;
+    return a;
+  }
+  else if (list_count(self) > 1) {
+    listnode_t * a                  = list_last(self);
+    list_last(self)                 = listnode_prev(a);
+    listnode_next(list_last(self))  = null();
+    list_count(self) -= 1;
+    return a;
+  }
+  return null();
+}
+
+// public functions
+
+void list_add_first( list_t * self, void * d ) {
+  _list_add_first(self,listnode(d));
+}
+
+void list_add_last( list_t * self, void * d ) {
+  _list_add_last(self,listnode(d));
+}
+
+void * list_remove_first( list_t * self ) {
+  listnode_t * l = _list_remove_first(self);
+  if (l) {
+    void * d = listnode_data(l);
+    free_listnode(l);
     return d;
   }
   return null();
 }
 
 void * list_remove_last( list_t * self ) {
-  if (list_count(self)==1) {
-    listnode_t * a  = list_first(self);
-    void * d        = listnode_data(a);
-    free_listnode(a);
-    list_count(self) = 0;
-    return d;
-  }
-  else if (list_count(self) > 1) {
-    listnode_t * a                  = list_last(self);
-    void * d                        = listnode_data(a);
-    list_last(self)                 = listnode_prev(a);
-    listnode_next(list_last(self))  = null();
-    free_listnode(a);
-    list_count(self) -= 1;
+  listnode_t * l = _list_remove_last(self);
+  if (l) {
+    void * d = listnode_data(l);
+    free_listnode(l);
     return d;
   }
   return null();
 }
 
+void * list_get_first( list_t * self ) {
+  return listnode_data(list_first(self));
+}
+
+void * list_get_last( list_t * self ) {
+  return listnode_data(list_first(self));
+}
 
 /////////////
 // foreach //
@@ -161,9 +188,12 @@ listnode_t * _foreach_listnode;
 void       * _foreach_data;
 
 void * _foreach_set_listnode( list_t * d ) {
- _foreach_listnode  = list_first(d);
- _foreach_data      = listnode_data(_foreach_listnode);
- return _foreach_data;
+  if (list_count(d)>0) {
+  _foreach_listnode  = list_first(d);
+  _foreach_data      = listnode_data(_foreach_listnode);
+  return _foreach_data;
+  }
+  return null();
 }
 
 void * _foreach_iterate() {
@@ -175,4 +205,30 @@ void * _foreach_iterate() {
   return null();
 }
 
-#define foreach(self,dt) void*dt=_foreach_set_listnode(self);for(;_foreach_listnode!=null();dt=_foreach_iterate())
+#define foreach(self,dt) for(void*dt=_foreach_set_listnode(self);_foreach_listnode!=null();dt=_foreach_iterate())
+
+/////////////////
+// other funcs //
+/////////////////
+
+bool_t list_contains( list_t * self, void * dt ) {
+  foreach(self,dl) {
+    if (dl == dt) {
+      return true();
+    }
+  }
+  false();
+}
+
+
+// rotating a list allows you to check the contents of the list at either
+// the head or the tail.
+void list_rotate_next(list_t * self) {
+  listnode_t * t1 = _list_remove_first(self);
+  _list_add_last(self,t1);
+}
+
+void list_rotate_prev(list_t * self) {
+  listnode_t * t1 = _list_remove_last(self);
+  _list_add_first(self,t1);
+}
