@@ -83,12 +83,12 @@ typedef unsigned long  ulong_t;
 
 #define log             SDL_Log
 #define ref(x)          (&x)
-#define ptr(x)          void*x
-#define ptrarr(x)       x**
-#define val(x)          *x
-#define val0(x,n)       x[n]
+#define ptr(x)          (x*)
+#define aptr(x)         (x**)
+#define val(x)          (*x)
+#define valn(x,n)       x[n]
 
-#define loop(i,a,b)     for(int i=a;i<b;i++)
+#define loop(i,a,b)       for(int i=a;i<b;i++)
 
 #define type()            typedef struct
 #define union()           typedef union
@@ -102,6 +102,7 @@ typedef unsigned long  ulong_t;
 
 #define pi()              3141
 
+/*
 #define _1111       f
 #define _1110       e
 #define _1101       d
@@ -119,13 +120,13 @@ typedef unsigned long  ulong_t;
 #define _0001       1
 #define _0000       0
 #define bin(u)      0x##u
+*/
 
+#define tile8(x)         (8*x)
+#define tile10(x)        (10*x)
 
-#define tile8(x)    (8*x)
-#define tile10(x)   (10*x)
-
-#define millisecond(x)  (1000*x)
-#define microsecond(x)  (1000000*x)
+#define milliseconds(x)  (1000*x)
+#define microseconds(x)  (1000000*x)
 
 //  function pointers
 //    f1: function 1 identifier
@@ -134,7 +135,7 @@ typedef unsigned long  ulong_t;
 //    ag: arglist (char,int), etc
 #define fnptr(f1,f2,rt,ag) rt(*f1)ag=f2
 
-#define copy(a,b,i,ps,pf)       \
+#define copy(a,b,ps,pf)         \
   for (int i=0;i<pf-ps;i++) {   \
     a[ps+i]=b[i];               \
   }

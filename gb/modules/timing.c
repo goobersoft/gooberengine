@@ -75,8 +75,8 @@ void timing_update_post(timing_t * self) {
 
   // fps
   timing_fps_ticks(self) += 1;
-  if (timing_fps_time(self) > microsecond(1)) {
-    timing_fps_time(self) -= microsecond(1);
+  if (timing_fps_time(self) > microseconds(1)) {
+    timing_fps_time(self) -= microseconds(1);
     timing_fps(self) = timing_fps_ticks(self);
     timing_fps_ticks(self) = 0;
   }

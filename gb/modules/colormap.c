@@ -86,7 +86,7 @@ void colormap_plot( colormap_t * self, int x, int y, color_t c ) {
   if (inrect(x,y,0,0,colormap_width(self),colormap_height(self))) {
     if (c.a) {
       int uu = y*point_x(colormap_size(self)) + x;
-      colormap_data(self)[uu] = c;//make_color_set(colormap_data(self)[uu],c);
+      colormap_data(self)[uu] = c;
     }
   }
 }

@@ -33,10 +33,12 @@
 #include "modules/tree.c"               // dictionary-styled data structure
 #include "modules/point.c"              // 2d integer point
 #include "modules/collide.c"            // AABB collisions
-
 #include "modules/number.c"             // integer number with min and max bounds
 #include "modules/color.c"              // 6-bit color with transparency bit
 #include "modules/board.c"              // drawing durfaces
+
+#include "modules/input.c"              // user input
+
 #include "modules/visual.c"             // window and renderer interface
 #include "modules/image.c"              // uses SDL2_image
 #include "modules/palette.c"            // storage of a list of 6-bit colors.
@@ -235,6 +237,12 @@ void gb_update() {
   }
 
   const Uint8 * b = SDL_GetKeyboardState( null() );
+  
+  if (b[SDL_SCANCODE_P]) {
+    gb_paused() = ! gb_paused();
+  }
+  
+  
   if (b[SDL_SCANCODE_ESCAPE]) {
     log("quit.");
     exit(0);
@@ -247,8 +255,12 @@ void gb_update() {
   mouse_update      (gb_mouse());
   controller_update (gb_controller());
   
-  if (gb_cartridge()) {
-    cartridge_fn_update(gb_cartridge())();
+  if (gb_paused()==false()) {
+
+    if (gb_cartridge()) {
+      cartridge_fn_update(gb_cartridge())();
+    }
+
   }
 
   debug_update_pre();

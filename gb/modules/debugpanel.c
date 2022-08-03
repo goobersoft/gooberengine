@@ -66,6 +66,9 @@ void debugpanel_draw( debugpanel_t * self ) {
   u2 = string_copy_at(debugpanel_string(self),u2,",");
   u2 = string_copy_number_at(debugpanel_string(self),
     u2,point_y(mouse_pos(gb_mouse()))/visual_window_scale(gb_visual()));
+  
+  string_copy_at(debugpanel_string(self),50,"P:");
+  string_copy_number_at(debugpanel_string(self),52,gb_paused());
 
 
 
