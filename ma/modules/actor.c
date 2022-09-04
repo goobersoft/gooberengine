@@ -1,38 +1,30 @@
 
 type() {
 
-  // pos in 1/1000ths of a pixel
-  point_t  pos;
-  // size in pixels
-  point_t  size;
+
+  entity_t * entity;
 
   // the direction, if applicable
   // different contexts may utilize this in diff ways.
   // (i.e. left=1, right=2, or an angle 0-999)
   int dir;
 
-  // a boolean indicating if it is a solid actor
-  // (a nonsolid actor passes through other actors)
-  // (a solid actor will collide with other solids
-  // as well as solid actors)
-  bool_t solid;
-
 } actor_t;
 
-#define actor_pos(self)   (&self->pos)
-#define actor_size(self)  (&self->size)
-#define actor_dir(self)   (self->dir)
-#define actor_solid(self) (self->solid)
+#define actor_entity(self) (self->entity)
+#define actor_pos(self)    (self->entity->pos)
+#define actor_size(self)   (self->entity->size)
+#define actor_solid(self)  (self->entity->solid)
+#define actor_dir(self)    (self->dir)
+
 
 /////////
 // new //
 /////////
 
 void actor_init( actor_t * self ) {
-  point_set( actor_pos(self), 0, 0 );
-  point_set( actor_size(self), 10, 10 );
-  actor_dir(self)   = 0;
-  actor_solid(self) = false();
+  actor_entity(self)  = entity(0,0,10,10);
+  actor_dir(self)     = 0;
 }
 
 actor_t * actor() {
@@ -45,6 +37,7 @@ actor_t * actor() {
 // funcs //
 ///////////
 
+/*
 void actor_set_pos( actor_t * self, int x, int y ) {
   point_set( actor_pos(self), x, y );
 }
@@ -70,3 +63,4 @@ bool_t actor_collide_actor( actor_t * self, actor_t * other ) {
     self->pos.x, self->pos.y, self->size.x, self->size.y,
     other->pos.x, other->pos.y, other->size.x, other->size.y );
 }
+*/

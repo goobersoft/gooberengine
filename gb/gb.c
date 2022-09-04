@@ -32,7 +32,7 @@
 #include "modules/string.c"             // fixed-length character arrays
 #include "modules/tree.c"               // dictionary-styled data structure
 #include "modules/point.c"              // 2d integer point
-#include "modules/collide.c"            // AABB collisions
+#include "modules/entity.c"             // AABB collisions
 #include "modules/number.c"             // integer number with min and max bounds
 #include "modules/color.c"              // 6-bit color with transparency bit
 #include "modules/board.c"              // drawing durfaces
@@ -124,7 +124,7 @@ gb_t * gb;
 // events //
 ////////////
 
-void gb_init( cartridge_t * c ) {
+void gb_init() {
   log("gooberengine - VER: %d.%d.%d",gb_version_major(),gb_version_minor(),gb_version_patch());
 
   // the master object does not have an allocation function.
@@ -139,12 +139,6 @@ void gb_init( cartridge_t * c ) {
   gb_audio()       = audio();
   gb_graph()       = graph(gb_visual());
   gb_controller()  = controller();
-
-  // if the cart has been successfully loaded, call the init function.
-  gb_cartridge() = c;
-  if (gb_cartridge()) {
-    cartridge_fn_init(gb_cartridge())();
-  }
 
   ///////////////
   // debugging //
@@ -201,18 +195,11 @@ void gb_load() {
   mouse_set_colormap_rect         (gb_mouse(),40,200,10,10);
   mouse_set_visible               (gb_mouse(),true());
 
-  if (gb_cartridge()) {
-    cartridge_fn_load(gb_cartridge())();
-  }
-
   // debug
   debug_load();
 }
 
 void gb_start() {
-  if (gb_cartridge()) {
-    cartridge_fn_start(gb_cartridge())();
-  }
   debug_start();
 }
 
@@ -254,14 +241,6 @@ void gb_update() {
 
   mouse_update      (gb_mouse());
   controller_update (gb_controller());
-  
-  if (gb_paused()==false()) {
-
-    if (gb_cartridge()) {
-      cartridge_fn_update(gb_cartridge())();
-    }
-
-  }
 
   debug_update_pre();
 
@@ -286,10 +265,6 @@ void gb_draw() {
   // background drawing for debug
   debug_draw_pre();
 
-  if (gb_cartridge()) {
-    cartridge_fn_draw(gb_cartridge())();
-  }
-
   // all of the module drawing goes in here
   graph_draw_mouse( gb_graph(), gb_mouse() );
   // do some debug drawing at the end of everything else
@@ -301,11 +276,6 @@ void gb_draw() {
 
 void gb_quit() {
 
-
   debug_quit();
-
-  if (gb_cartridge()) {
-    cartridge_fn_quit(gb_cartridge())();
-  }
 
 }

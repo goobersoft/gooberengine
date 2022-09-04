@@ -19,31 +19,7 @@
 ///////////////////////////////////////
 
 #include "gb/gb.c"
-
-///////////////////////////////////////
-// choose which game to compile with //
-///////////////////////////////////////
-
-#define cart_none()      0
-#define cart_ma()        1
-#define cart_mac()       2
-
-#define cart_current()   cart_ma()
-
-#if cart_current()!=0
-  #define cart_inserted()  1
-#else
-  #define cart_inserted()  0
-#endif
-
-
-#if cart_current()==cart_mac()
-  #include "mac/mac.c"
-#endif
-
-#if cart_current()==cart_ma()
-  #include "ma/ma.c"
-#endif
+#include "ma/ma.c"
 
 ////////////
 // events //
@@ -61,34 +37,33 @@ void init() {
   // open the audio device.
   Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 1, 4096 );
 
-
-  cartridge_t * cartridge;
-
-  if (cart_inserted()) {
-    cartridge = load_cartridge();
-  }
-
-  gb_init(cartridge);
+  gb_init();
+  ma_init();
 }
 
 void load() {
   gb_load();
+  ma_load();
 }
 
 void start() {
   gb_start();
+  ma_start();
 }
 
 void update() {
   gb_update();
-  gb_draw();
+  ma_update();
 }
 
 void draw() {
+  gb_draw();
+  ma_draw();
 }
 
 void quit() {
   gb_quit();
+  ma_quit();
   SDL_Quit();
 }
 
