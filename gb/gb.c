@@ -19,17 +19,19 @@
 /////////////
 
 #include "modules/globals.c"            // includes many macro definitions
-#include "modules/types.c"              // complex numerical types
 #include "modules/functions.c"          // core functions
 #include "modules/functions_sine.c"     // sine and cosine function
 #include "modules/functions_sqroot.c"   // sqroot function
+#include "modules/types.c"              // complex numerical types
 #include "modules/tag.c"                // descriptive tag
 #include "modules/locker.c"
 //#include "modules/rng.c"              // implementation of mersenne twister in 
+#include "modules/string.c"             // fixed-length character arrays
 #include "modules/list.c"               // linked list data type
+#include "modules/dict.c"               // dictionary
 #include "modules/pile.c"               // LIFO-style stack object
 #include "modules/queue.c"              // uses list for FIFO-style
-#include "modules/string.c"             // fixed-length character arrays
+
 #include "modules/tree.c"               // dictionary-styled data structure
 #include "modules/point.c"              // 2d integer point
 #include "modules/entity.c"             // AABB collisions
@@ -57,7 +59,6 @@
 #include "modules/controller.c"         // gamepads
 #include "modules/network.c"            // networking (TCP/UDP)
 #include "modules/gbml.c"               // markup
-#include "modules/cartridge.c"
 
 #include "modules/graph.c"              // drawing interface
 
@@ -80,8 +81,6 @@ typedef struct {
   mouse_t      * mouse;
   audio_t      * audio;
   controller_t * controller;
-
-  cartridge_t  * cartridge;
   
 } gb_t;
 
@@ -244,18 +243,16 @@ void gb_update() {
 
   debug_update_pre();
 
-  /////////////////
-  // timing post //
-  /////////////////
-
-  timing_update_post(gb_timing());
-
   ///////////
   // debug //
   ///////////
 
   debug_update_post();
-  
+
+}
+
+void gb_update_post() {
+
 }
 
 void gb_draw() {
@@ -272,6 +269,8 @@ void gb_draw() {
   // present the screen
   graph_present(gb_graph());
   visual_draw_post(gb_visual());
+
+  timing_update_post(gb_timing());
 }
 
 void gb_quit() {

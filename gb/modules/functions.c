@@ -269,9 +269,9 @@ int evenize( int a ) {
   (inrange(x1,x2,x2+w2)&&inrange(y1,y2,y2+h2)&&inrange(z1,z2,z2+d2))
 
 #define rectinrect(x1,y1,w1,h1,x2,y2,w2,h2) \
-  (inrect(x1,y1,x2,y2,w2,h2)&&inrect(x1+w1-1,y1,x2,y2,w2,h2)&& \
-   inrect(x1,y1+h1-1,x2,y2,w2,h2)&&inrect(x1+w1-1,y1+h1-1,x2,y2,w2,h2))
+  (inrect(x1,y1,x2,y2,w2,h2)||inrect(x1+w1-1,y1,x2,y2,w2,h2)|| \
+   inrect(x1,y1+h1-1,x2,y2,w2,h2)||inrect(x1+w1-1,y1+h1-1,x2,y2,w2,h2))
 
 #define rectinrect2(x1,y1,w1,h1,x2,y2,w2,h2) \
-  (rectinrect(x1,y1,w1,h1,x2,y2,w2,h2)&&rectinrect(x2,y2,w2,h2,x1,y1,w1,h1))
+  (rectinrect(x1,y1,w1,h1,x2,y2,w2,h2)||rectinrect(x2,y2,w2,h2,x1,y1,w1,h1))
 

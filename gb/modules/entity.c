@@ -24,10 +24,10 @@ type() {
 // new //
 /////////
 
-entity_t * entity( int x, int y, int w, int h ) {
+entity_t * entity() {
   entity_t * r = alloc(entity_t);
-  point_set       (entity_pos(r),x,y);
-  point_set       (entity_size(r),w,h);
+  point_set       (entity_pos(r),0,0);
+  point_set       (entity_size(r),10,10);
   entity_solid(r) = true();
   return r;
 }
@@ -48,9 +48,37 @@ void entity_set_solid( entity_t * self, bool_t b ) {
   entity_solid(self) = bool(b);
 }
 
-bool_t entity_check( entity_t * c1, entity_t * c2 ) {
-  return rectinrect2(
-    entity_pos_x(c1), entity_pos_y(c1), entity_size_x(c1), entity_size_y(c1),
-    entity_pos_x(c2), entity_pos_y(c2), entity_size_x(c2), entity_size_y(c2)
-  );
+bool_t entity_check_collide( entity_t * c1, entity_t * c2 ) {
+  if (entity_solid(c1) and entity_solid(c2)) {
+    return rectinrect2(
+      entity_pos_x(c1), entity_pos_y(c1), entity_size_x(c1), entity_size_y(c1),
+      entity_pos_x(c2), entity_pos_y(c2), entity_size_x(c2), entity_size_y(c2)
+    );
+  }
+}
+
+// attempts to glide horizontally while checking against another entity.
+int entity_glide_h( entity_t * self, int n, entity_t * other ) {
+}
+
+// attempts to glide vertically while checking against another entity.
+int entity_glide_v( entity_t * self, int n, entity_t * other ) {
+}
+
+int entity_glide_h_list( entity_t * self, int n, list_t * l ) {
+}
+
+int entity_glide_v_hist( entity_t * self, int n, list_t * l ) {
+}
+
+int entity_glide_hv( entity_t * self, int dx, int dy, entity_t * other ) {
+}
+
+int entity_glide_vh( entity_t * self, int dx, int dy, entity_t * other ) {
+}
+
+int entity_glide_hv_list( entity_t * self, int dx, int dy, list_t * l ) {
+}
+
+int entity_glide_vh_list( entity_t * self, int dx, int dy, list_t * l ) {
 }

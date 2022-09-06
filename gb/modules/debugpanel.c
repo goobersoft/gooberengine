@@ -73,6 +73,9 @@ void debugpanel_draw( debugpanel_t * self ) {
     u2 = string_copy_number_at(debugpanel_string(self),
       u2,point_y(mouse_pos(gb_mouse()))/visual_window_scale(gb_visual()));
     
+    string_copy_at(debugpanel_string(self),40,"CPU:");
+    // will draw a bar instead of text
+
     string_copy_at(debugpanel_string(self),50,"P:");
     string_copy_number_at(debugpanel_string(self),52,gb_paused());
 
@@ -80,13 +83,22 @@ void debugpanel_draw( debugpanel_t * self ) {
     // drawing //
     /////////////
 
+    graph_set_mode( gb_graph(), graph_mode_normal() );
+
     int u = graph_intensity(gb_graph());
     graph_set_intensity(gb_graph(),1000);
 
     graph_set_color(gb_graph(),make_color(0,0,0));
     graph_draw_rect(gb_graph(),0,0,400,10);
+
+    graph_set_color(gb_graph(),make_color(3,0,0));
+    graph_draw_rect(gb_graph(),220,2,timing_cpu_usage(gb_timing())/2,6);
+
     graph_set_color(gb_graph(),make_color(3,3,3));
     graph_draw_text(gb_graph(),0,0,string_data(debugpanel_string(self)));
+
+
+    
 
     graph_set_intensity(gb_graph(),u);
   }

@@ -98,14 +98,20 @@ void _list_add_last( list_t * self, listnode_t * l ) {
 
 listnode_t * _list_remove_first( list_t * self ) {
   if (list_count(self)==1) {
-    listnode_t * a  = list_first(self);
-    list_count(self) = 0;
+    listnode_t * a    = list_first(self);
+    list_first(self)  = null();
+    list_last(self)   = null();
+    listnode_next(a)  = null();
+    listnode_prev(a)  = null();
+    list_count(self)  = 0;
     return a;
   }
   else if (list_count(self) > 1) {
     listnode_t * a                  = list_first(self);
     list_first(self)                = listnode_next(a);
     listnode_prev(list_first(self)) = null();
+    listnode_next(a) = null();
+    listnode_prev(a) = null();
     list_count(self) -= 1;
     return a;
   }
@@ -114,14 +120,20 @@ listnode_t * _list_remove_first( list_t * self ) {
 
 listnode_t * _list_remove_last( list_t * self ) {
   if (list_count(self)==1) {
-    listnode_t * a  = list_first(self);
-    list_count(self) = 0;
+    listnode_t * a  = list_last(self);
+    list_first(self)  = null();
+    list_last(self)   = null();
+    listnode_next(a)  = null();
+    listnode_prev(a)  = null();
+    list_count(self)  = 0;
     return a;
   }
   else if (list_count(self) > 1) {
     listnode_t * a                  = list_last(self);
     list_last(self)                 = listnode_prev(a);
     listnode_next(list_last(self))  = null();
+    listnode_next(a) = null();
+    listnode_prev(a) = null();
     list_count(self) -= 1;
     return a;
   }
@@ -163,7 +175,7 @@ void * list_get_first( list_t * self ) {
 }
 
 void * list_get_last( list_t * self ) {
-  return listnode_data(list_first(self));
+  return listnode_data(list_last(self));
 }
 
 /////////////
@@ -224,11 +236,15 @@ bool_t list_contains( list_t * self, void * dt ) {
 // rotating a list allows you to check the contents of the list at either
 // the head or the tail.
 void list_rotate_next(list_t * self) {
-  listnode_t * t1 = _list_remove_first(self);
-  _list_add_last(self,t1);
+  if (list_count(self) > 1) {
+    listnode_t * t1 = _list_remove_first(self);
+    _list_add_last(self,t1);
+  }
 }
 
 void list_rotate_prev(list_t * self) {
-  listnode_t * t1 = _list_remove_last(self);
-  _list_add_first(self,t1);
+  if (list_count(self) > 1) {
+    listnode_t * t1 = _list_remove_last(self);
+    _list_add_first(self,t1);
+  }
 }

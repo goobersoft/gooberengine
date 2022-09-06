@@ -15,10 +15,12 @@ type() {
 
 void string_init( string_t * self, int l ) {
   string_length(self) = l;
+  // use one extra byte for null terminator
   string_data(self)   = allocv(char,string_length(self)+1);
   loop(i,0,string_length(self)) {
     string_data(self)[i] = ' ';
   }
+  // make sure that the string has a null terminator at the end.
   string_data(self)[string_length(self)] = '\0';
 }
 
@@ -26,6 +28,11 @@ string_t * string( int l ) {
   string_t * r     = alloc(string_t);
   string_init(r,l);
   return r;
+}
+
+void free_string( string_t * self ) {
+  free(string_data(self));
+  free(self);
 }
 
 ///////////
