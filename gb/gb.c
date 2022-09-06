@@ -29,10 +29,7 @@
 #include "modules/string.c"             // fixed-length character arrays
 #include "modules/list.c"               // linked list data type
 #include "modules/dict.c"               // dictionary
-#include "modules/pile.c"               // LIFO-style stack object
-#include "modules/queue.c"              // uses list for FIFO-style
-
-#include "modules/tree.c"               // dictionary-styled data structure
+#include "modules/pstack.c"             // LIFO-style priority stack object
 #include "modules/point.c"              // 2d integer point
 #include "modules/entity.c"             // AABB collisions
 #include "modules/number.c"             // integer number with min and max bounds
@@ -153,6 +150,29 @@ void gb_load() {
   assets_t * a = gb_assets();
   visual_t * v = gb_visual();
 
+  // using a dictionary internally for assets instead of arrays
+  // this will make it easier not to accidentally step over the same indices
+  // when creating games for gb
+  assets_set_image(a,"gb-0",          image("gb/media/images/gb-0.png",v));
+  assets_set_image(a,"gb-1",          image("gb/media/images/gb-1.png",v));
+  assets_set_image(a,"editor-bg",     image("gb/media/images/editor-bg.png",v));
+  assets_set_image(a,"test",          image("gb/media/images/test.png",v));
+  assets_set_image(a,"gb-color-test", image("gb/media/images/gb-color-test.png",v));
+
+  // the assets object understands that we're looking for image_t* pointers.
+  // internally the pointer is automatically cast in the dictionary from void* to image_t*
+  assets_set_colormap(a,"gb-0",           colormap_from_image(assets_get_image(a,"gb-0")));
+  assets_set_colormap(a,"gb-1",           colormap_from_image(assets_get_image(a,"gb-1")));
+  assets_set_colormap(a,"editor-bg",      colormap_from_image(assets_get_image(a,"editor-bg")));
+  assets_set_colormap(a,"test",           colormap_from_image(assets_get_image(a,"test")));
+  assets_set_colormap(a,"gb-color-test",  colormap_from_image(assets_get_image(a,"gb-color-test")));
+
+  assets_set_sound(a,"jake-1",sound("gb/media/sounds/jake-1.ogg"));
+  assets_set_sound(a,"jake-2",sound("gb/media/sounds/jake-2.ogg"));
+  assets_set_sound(a,"jake-3",sound("gb/media/sounds/jake-3.ogg"));
+  assets_set_sound(a,"jake-4",sound("gb/media/sounds/jake-4.ogg"));
+
+  /*
   assets_set_image(a,0,image("gb/media/images/gb-0.png",v));
   assets_set_image(a,1,image("gb/media/images/gb-1.png",v));
   assets_set_image(a,2,image("gb/media/images/editor-bg.png",v));
@@ -171,26 +191,26 @@ void gb_load() {
   assets_set_sound(a,1,sound("gb/media/sounds/jake-2.ogg"));
   assets_set_sound(a,2,sound("gb/media/sounds/jake-3.ogg"));
   assets_set_sound(a,3,sound("gb/media/sounds/jake-4.ogg"));
-
+  */
   // load font 1
   font_t * f;
 
-  f = font( assets_get_colormap(a,0) );
+  f = font( assets_get_colormap(a,"gb-0") );
   font_set_pos         ( f, 0, 100  );
   font_set_tile_size   ( f, 5, 10   );
   font_set_tiles_size  ( f, 10, 10  );
-  assets_set_font      ( a, 0, f );
+  assets_set_font      ( a, "thin", f );
 
   graph_set_font( gb_graph(), f );
   
-  f = font( assets_get_colormap(a,0) );
+  f = font( assets_get_colormap(a,"gb-0") );
   font_set_pos         ( f, 0, 0   );
   font_set_tile_size   ( f, 10, 10 );
   font_set_tiles_size  ( f, 10, 10 );
-  assets_set_font      ( a, 1, f );
+  assets_set_font      ( a, "original", f );
 
   // set the mouse's icon
-  mouse_colormap(gb_mouse())      = assets_get_colormap(gb_assets(),0);
+  mouse_colormap(gb_mouse())      = assets_get_colormap(gb_assets(),"gb-0");
   mouse_set_colormap_rect         (gb_mouse(),40,200,10,10);
   mouse_set_visible               (gb_mouse(),true());
 

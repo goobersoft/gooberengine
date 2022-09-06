@@ -269,8 +269,14 @@ void graph_set_font( graph_t * self, font_t * f ) {
   graph_font(self) = f;
 }
 
-void graph_set_intensity( graph_t * self, int n ) {
+int graph_set_intensity( graph_t * self, int n ) {
+  int u = graph_intensity(self);
   graph_intensity(self) = clamp(n,0,graph_max_intensity());
+  return u;
+}
+
+int graph_set_intensity_max( graph_t * self ) {
+  return graph_set_intensity( self, graph_max_intensity() );
 }
 
 ///////////////////////

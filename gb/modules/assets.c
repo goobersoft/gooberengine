@@ -1,18 +1,21 @@
 
 
 // default maximum values
+/*
 #define assets_num_images_d()     1000
 #define assets_num_colormaps_d()  1000
 #define assets_num_sounds_d()     1000
 #define assets_num_fonts_d()      100
+*/
 
 type() {
 
+  /*
   int num_sounds;
   int num_images;
   int num_colormaps;
   int num_fonts;
-
+  
   // array of images
   image_t ** images;
   // array of colormaps
@@ -21,15 +24,26 @@ type() {
   sound_t ** sounds;
   // array of fonts
   font_t  ** fonts;
+  */
 
+  // moving to dictionaries so that sounds/images/fonts
+  // can be recalled with keys, not indices.
+  dict_t * images;
+  dict_t * colormaps;
+  dict_t * sounds;
+  dict_t * fonts;
+
+  // reference to visual object
   visual_t * visual;
 
 } assets_t;
 
+/*
 #define assets_num_images(self)    (self->num_images)
 #define assets_num_colormaps(self) (self->num_colormaps)
 #define assets_num_sounds(self)    (self->num_sounds)
 #define assets_num_fonts(self)     (self->num_fonts)
+*/
 #define assets_images(self)        (self->images)
 #define assets_colormaps(self)     (self->colormaps)
 #define assets_sounds(self)        (self->sounds)
@@ -41,6 +55,7 @@ type() {
 /////////
 
 void assets_init( assets_t * self, visual_t * v ) {
+  /*
   assets_num_images(self)    = assets_num_images_d();
   assets_num_colormaps(self) = assets_num_colormaps_d();
   assets_num_sounds(self)    = assets_num_sounds_d();
@@ -49,6 +64,11 @@ void assets_init( assets_t * self, visual_t * v ) {
   assets_colormaps(self)     = allocv(colormap_t*, assets_num_colormaps_d());
   assets_sounds(self)        = allocv(sound_t*,    assets_num_sounds_d());
   assets_fonts(self)         = allocv(font_t*,     assets_num_fonts_d());
+  */
+  assets_images(self)        = dict();
+  assets_colormaps(self)     = dict();
+  assets_sounds(self)        = dict();
+  assets_fonts(self)         = dict();
   assets_visual(self)        = v;
 }
 
@@ -58,6 +78,7 @@ assets_t * assets( visual_t * v ) {
   return r;
 }
 
+/*
 assets_t * assets__custom_sizes( size_t i, size_t c, size_t s, size_t f ) {
   i = clamp(i,0,100000);
   s = clamp(s,0,100000);
@@ -73,11 +94,57 @@ assets_t * assets__custom_sizes( size_t i, size_t c, size_t s, size_t f ) {
   assets_fonts(r)         = allocv(font_t*,     f);
   return r;
 }
+*/
 
 ///////////
 // funcs //
 ///////////
 
+// -- setters -- //
+
+bool_t assets_set_image( assets_t * self, char * k, image_t * a ) {
+  return dset(assets_images(self),k,a);
+  //return dict_set( assets_images(self), k, a );
+}
+
+bool_t assets_set_colormap( assets_t * self, char * k, colormap_t * c ) {
+  return dset(assets_colormaps(self),k,c);
+  //return dict_set( assets_colormaps(self), k, c);
+}
+
+bool_t assets_set_sound( assets_t * self, char * k, sound_t * s ) {
+  return dset(assets_sounds(self),k,s);
+  //return dict_set( assets_sounds(self), k, s);
+}
+
+bool_t assets_set_font( assets_t * self, char * k, font_t * f ) {
+  return dset(assets_fonts(self),k,f);
+  //return dict_set( assets_fonts(self), k, f);
+}
+
+// -- getters -- //
+
+image_t * assets_get_image( assets_t * self, char * k ) {
+  return dget(assets_images(self),k,image_t*);
+  //return dict_get( assets_images(self), k );
+}
+
+colormap_t * assets_get_colormap( assets_t * self, char * k ) {
+  return dget(assets_colormaps(self),k,colormap_t*);
+  //return dict_get( assets_colormaps(self), k );
+}
+
+sound_t * assets_get_sound( assets_t * self, char * k ) {
+  return dget(assets_sounds(self),k,sound_t*);
+  //return dict_get( assets_sounds(self), k );
+}
+
+font_t * assets_get_font( assets_t * self, char * k ) {
+  return dget(assets_fonts(self),k,font_t*);
+  //return dict_get( assets_fonts(self), k );
+}
+
+/*
 // this does both images and colormaps as well
 bool_t assets_set_image( assets_t * self, int n, image_t * a ) {
   if (inrange(n,0,assets_num_images(self))) {
@@ -152,6 +219,7 @@ font_t * assets_get_font( assets_t * self, int n ) {
   }
   return null();
 }
+*/
 
 ////////////
 // events //

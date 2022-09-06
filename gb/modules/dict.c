@@ -140,3 +140,10 @@ void _dict_print( dict_t * self ) {
     log("%s",string_data(dictentry_key(u)));
   }
 }
+
+///////////////////
+// helper macros //
+///////////////////
+
+#define dset(d,k,v)   dict_set(d,k,cast(v,void*))
+#define dget(d,k,c)   cast(dict_get(d,k),c)

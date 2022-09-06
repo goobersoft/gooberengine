@@ -35,7 +35,7 @@ type() {
 
 type() {
 
-  tree_t * data;
+  dict_t * data;
 
 } gbml_t;
 
