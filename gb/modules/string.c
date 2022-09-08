@@ -49,6 +49,10 @@ void string_clear( string_t * self ) {
   }
 }
 
+void string_put( string_t * self, int n, char c ) {
+  string_data(self)[n] = c;
+}
+
 int string_copy_at( string_t * self, int n, char * c ) {
   if (c) {
     int l = strlen(c);

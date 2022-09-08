@@ -72,6 +72,17 @@ colormap_t * colormap_from_image( image_t * u ) {
   return r;
 }
 
+colormap_t * colormap_from_base64( int w, int h, char * s ) {
+  colormap_t * r   = alloc(colormap_t);
+  colormap_size(r) = point(w,h);
+  colormap_area(r) = w * h;
+  colormap_data(r) = allocv(color_t,w*h);
+  loop(i,0,colormap_area(r)) {
+    colormap_data(r)[i] = make_color_index(int_from_base64(s,i));
+  }
+  return r;
+}
+
 void free_colormap( colormap_t * self ) {
   free( colormap_data(self) );
   free( colormap_size(self) );
@@ -146,4 +157,18 @@ color_t colormap_get_pixel( colormap_t * self, int x, int y ) {
     return colormap_data(self)[y*point_x(colormap_size(self)) + x];
   }
   return make_color_trans();
+}
+
+
+string_t * colormap_to_base64( colormap_t * self ) {
+  string_t * r = string( colormap_area(self) );
+
+
+  loop(i,0,colormap_area(self)) {
+    string_put(r,i,
+      _base64str[ wrap( color_to_index( colormap_data(self)[i] ),0,65)]
+    );
+  }
+
+  return r;
 }

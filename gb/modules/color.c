@@ -55,9 +55,9 @@ color_t * color_from( color_t c ) {
 // copy, not alloc.
 color_t make_color( byte_t rr, byte_t gg, byte_t bb ) {
   color_t r;
-  r.r = rr;
-  r.g = gg;
-  r.b = bb;
+  r.r = rr&3;
+  r.g = gg&3;
+  r.b = bb&3;
   r.a = 1;
   return r;
 }
@@ -81,9 +81,9 @@ color_t make_color_index( int id ) {
   if (id == 64) return make_color_trans();
   color_t rr;
   if (id >= 0) {
-    rr.r = id & 3;
-    rr.g = id / 4;
-    rr.b = id / 16;
+    rr.r = (id >> 4) & 3;
+    rr.g = (id >> 2) & 3;
+    rr.b = id & 3;
     rr.a = true();
   }
   return rr;
@@ -99,6 +99,11 @@ int color_eq( color_t * a, color_t * b ) {
 
 int check_color_eq(color_t a, color_t b) {
   return (a.r==b.r) && (a.g==b.g) && (a.b==b.b);
+}
+
+int color_to_index( color_t c ) {
+  if (c.a==0) return -1;
+  return (c.r<<4) | (c.g<<2) | (c.b);
 }
 
 //////////////////

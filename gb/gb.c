@@ -22,6 +22,7 @@
 #include "modules/functions.c"          // core functions
 #include "modules/functions_sine.c"     // sine and cosine function
 #include "modules/functions_sqroot.c"   // sqroot function
+#include "modules/functions_base64.c"   // sqroot function
 #include "modules/types.c"              // complex numerical types
 #include "modules/tag.c"                // descriptive tag
 #include "modules/locker.c"
