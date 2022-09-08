@@ -65,11 +65,11 @@ int controller_is_button_pressed( controller_t * self, int n ) {
 }
 
 int controller_is_button_held( controller_t * self, int n ) {
-  return controller_get_button(self,n) == controller_button_held();
+  return controller_get_button(self,n) > 0;
 }
 
 int controller_is_button_released( controller_t * self, int n ) {
-  return controller_get_button(self,n) == controller_button_released();
+  return controller_get_button(self,n) == 0;
 }
 
 ////////////

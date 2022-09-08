@@ -208,28 +208,40 @@ void graph_set_flip( graph_t * self, bool_t x, bool_t y ) {
 }
 
 
-void graph_set_color( graph_t * self, color_t c ) {
+color_t graph_set_color( graph_t * self, color_t c ) {
+  color_t r = graph_color(self);
   graph_color(self) = palette_colors(graph_palette(self))[_graph_calc_palette_index(c)];
+  return r;
 }
 
-void graph_set_cls_color( graph_t * self, color_t c ) {
+color_t graph_set_cls_color( graph_t * self, color_t c ) {
+  color_t r = graph_color_cls(self);
   graph_color_cls(self) = palette_colors(graph_palette(self))[_graph_calc_palette_index(c)];
+  return r;
 }
 
-void graph_set_depth( graph_t * self, int d ) {
+int graph_set_depth( graph_t * self, int d ) {
+  int r = graph_depth(self);
   graph_depth(self) = d;
+  return r;
 }
 
-void graph_enable_depth( graph_t * self, bool_t d ) {
+bool_t graph_enable_depth( graph_t * self, bool_t d ) {
+  bool_t r = graph_depth_enabled(self);
   graph_depth_enabled(self) = bool(d);
+  return r;
 }
 
-void graph_set_cls_depth( graph_t * self, int d ) {
+int graph_set_cls_depth( graph_t * self, int d ) {
+  int r = graph_depth_cls(self);
   graph_depth_cls(self) = d;
+  return r;
 }
 
-void graph_set_mode( graph_t * self, int m ) {
+int graph_set_mode( graph_t * self, int m ) {
+  int r = graph_mode(self);
   graph_mode(self) = m;
+  return r;
 }
 
 void graph_set_clip( graph_t * self, int x, int y, int w, int h ) {

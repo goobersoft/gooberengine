@@ -43,6 +43,15 @@ color_t * color(byte_t r, byte_t g, byte_t b) {
   return rr;
 }
 
+color_t * color_from( color_t c ) {
+  color_t  * rr = alloc(color_t);
+  color_r(rr) = c.r;
+  color_g(rr) = c.g;
+  color_b(rr) = c.b;
+  color_a(rr) = c.a;
+  return rr;
+}
+
 // copy, not alloc.
 color_t make_color( byte_t rr, byte_t gg, byte_t bb ) {
   color_t r;

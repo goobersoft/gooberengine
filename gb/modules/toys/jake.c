@@ -11,6 +11,7 @@ type() {
   int          delay;
   int          anim_index;
   colormap_t * colormap;
+  graph_t    * graph;
 
 } jake_t;
 
@@ -18,21 +19,23 @@ type() {
 #define jake_delay(self)      (self->delay)
 #define jake_anim_index(self) (self->anim_index)
 #define jake_colormap(self)   (self->colormap)
+#define jake_graph(self)      (self->graph)
 
 /////////
 // new //
 /////////
 
-void jake_init( jake_t * self, colormap_t * c ) {
+void jake_init( jake_t * self, colormap_t * c, graph_t * g ) {
   jake_pos(self)        = point(400,rnd(0,220));
   jake_delay(self)      = jake_delay_max();
   jake_anim_index(self) = 0;
   jake_colormap(self)   = c;
+  jake_graph(self)      = g;
 }
 
-jake_t * jake( colormap_t * c ) {
+jake_t * jake( colormap_t * c, graph_t * g ) {
   jake_t * r = alloc(jake_t);
-  jake_init( r, c );
+  jake_init( r, c, g );
   return r;
 }
 
@@ -57,11 +60,11 @@ void jake_update( jake_t * self ) {
 
 
 
-void graph_draw_jake( graph_t * self, jake_t * j ) {
-  if (jake_colormap(j)) {
+void jake_draw( jake_t * self ) {
+  if (jake_colormap(self)) {
     graph_draw_colormap_sub( 
-      self, point_x(jake_pos(j)), point_y(jake_pos(j)), 
-      jake_colormap(j), jake_cmap_x()+(jake_cmap_size()*jake_anim_index(j)), jake_cmap_y(), 
+      jake_graph(self), point_x(jake_pos(self)), point_y(jake_pos(self)), 
+      jake_colormap(self), jake_cmap_x()+(jake_cmap_size()*jake_anim_index(self)), jake_cmap_y(), 
       jake_cmap_size(), jake_cmap_size()
     );
   }

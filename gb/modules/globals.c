@@ -59,6 +59,8 @@ typedef unsigned long  ulong_t;
 #define alloc(x)     calloc(sizeof(x),1)
 #define allocv(x,n)  calloc(sizeof(x),n)
 
+#define clone(r,o)   (r[0]=o[0])
+
 // generic getters / setters / basic arithematic
 #define get(a,b)     (a->b)
 #define set(a,b,c)   ((a->b)=c)

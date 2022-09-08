@@ -1,7 +1,7 @@
 
 #define gb_version_major() 0
 #define gb_version_minor() 1
-#define gb_version_patch() 7
+#define gb_version_patch() 8
 
 //  submodules stack
 //  ----------------
@@ -59,8 +59,18 @@
 
 #include "modules/graph.c"              // drawing interface
 
-// load the toys submodule
+///////////////
+// graphical //
+///////////////
+
+#include "modules/graphical/sprayer.c"
+
+//////////
+// toys //
+//////////
+
 #include "modules/toys/jake.c"
+#include "modules/toys/ball.c"
 
 
 /////////////
@@ -103,7 +113,6 @@ gb_t * gb;
 #define gb_mouse()      (gb->mouse)
 #define gb_audio()      (gb->audio)
 #define gb_controller() (gb->controller)
-#define gb_cartridge()  (gb->cartridge)
 
 //////////////////////////
 // special debug module //
@@ -113,8 +122,6 @@ gb_t * gb;
 
 #include "modules/debugpanel.c"
 #include "modules/debug.c"
-
-
 
 ////////////
 // events //
