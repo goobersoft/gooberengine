@@ -1,102 +1,68 @@
 
-/////////
-// pre //
-/////////
-
-// this is used for drawing operations.
-SDL_Rect  _sprite_rect_src;
-SDL_Rect  _sprite_rect_dst;
-
-SDL_Rect _sprite_ready_rect_src( int x, int y, int w, int h ) {
-  _sprite_rect_src.x = x;
-  _sprite_rect_src.y = y;
-  _sprite_rect_src.w = w;
-  _sprite_rect_src.h = h;
-  return _sprite_rect_src;
-}
-
-SDL_Rect _sprite_ready_rect_dst( int x, int y, int w, int h ) {
-  _sprite_rect_dst.x = x;
-  _sprite_rect_dst.y = y;
-  _sprite_rect_dst.w = w;
-  _sprite_rect_dst.h = h;
-  return _sprite_rect_dst;
-}
-
-//////////
-// type //
-//////////
-
 type() {
 
-  // position relative to screen / render target
-  point_t     * pos;
-
-  // offset to account for in terms of image
-  point_t     * handle;
-  
-  // flags to indicate if the image should be flipped.
-  byte_t        flip_x;
-  byte_t        flip_y;
-
-  // pointer to the source texture (tileset)
-  SDL_Texture * source;
-
-  // parameters for when copying from the source image
-  int           src_x;
-  int           src_y;
-  int           src_w;
-  int           src_h;
+  // reference to colormap
+  colormap_t  * colormap;
+  // texture rect
+  rect_t      * rect;
+  // offset from topleft
+  point_t     * origin;
 
 } sprite_t;
 
-#define sprite_pos(self)    (self->pos)
-#define sprite_handle(self) (self->handle)
-#define sprite_flip_x(self) (self->flip_x)
-#define sprite_flip_y(self) (self->flip_y)
-#define sprite_source(self) (self->source)
-#define sprite_src_x(self)  (self->src_x)
-#define sprite_src_y(self)  (self->src_y)
-#define sprite_src_w(self)  (self->src_w)
-#define sprite_src_h(self)  (self->src_h)
+#define sprite_colormap(self) (self->colormap)
+#define sprite_rect(self)     (self->rect)
+#define sprite_origin(self)   (self->origin)
 
 /////////
 // new //
 /////////
 
-void sprite_init( sprite_t * self, SDL_Texture * t ) {
-  sprite_pos(self)    = point(0,0);
-  sprite_handle(self) = point(0,0);
-  sprite_flip_x(self) = false();
-  sprite_flip_y(self) = false();
-  sprite_source(self) = t;
-  sprite_src_x(self)  = 0;
-  sprite_src_y(self)  = 0;
-  sprite_src_w(self)  = 0;
-  sprite_src_h(self)  = 0;
+sprite_t * sprite( colormap_t * c, int cx, int cy, int cw, int ch ) {
+  sprite_t * r        = alloc(sprite_t);
+  sprite_colormap(r)  = c;
+  sprite_rect(r)      = rect(cx,cy,cw,ch);
+  sprite_origin(r)    = point(0,0);
 }
 
-sprite_t * sprite( SDL_Texture * t ) {
-  sprite_t * r     = alloc(sprite_t);
-  sprite_init(r,t);
+sprite_t * clone_sprite( sprite_t * o ) {
+  sprite_t * r       = alloc(sprite_t);
+  sprite_colormap(r) = sprite_colormap(o);
+  sprite_rect(r)     = clone_rect(sprite_rect(o));
+  sprite_origin(r)   = clone_point(sprite_origin(o));
   return r;
+}
+
+void free_sprite( sprite_t * self ) {
+  // does not free colormap - this is an external pointer
+  free(sprite_rect(self));
+  free(sprite_origin(self));
+  free(self);
 }
 
 ///////////
 // funcs //
 ///////////
 
-SDL_Rect sprite_get_rect(sprite_t * s) {
-  return _sprite_ready_rect_src(sprite_src_x(s), sprite_src_y(s), sprite_src_w(s), sprite_src_h(s));
+// because sprite is defined BEFORE graph, the graph module will
+// have functions for drawing the sprite.
+
+void sprite_set_colormap( sprite_t * self, colormap_t * c ) {
+  sprite_colormap(self) = c;
 }
 
-void sprite_set_rect( sprite_t * s, int x, int y, int w, int h ) {
-  sprite_src_x(s) = x;
-  sprite_src_y(s) = y;
-  sprite_src_w(s) = w;
-  sprite_src_h(s) = h;
+void sprite_set_rect( sprite_t * self, int x, int y, int w, int h ) {
+  rect_set(sprite_rect(self),x,y,w,h);
 }
 
-void sprite_set_source( sprite_t * s, SDL_Texture * t ) {
-  sprite_source(s) = t;
+void sprite_set_rect_pos( sprite_t * self, int x, int y ) {
+  rect_set_pos(sprite_rect(self), x, y);
+}
+
+void sprite_set_rect_size( sprite_t * self, int w, int h ) {
+  rect_set_size(sprite_rect(self), w, h);
+}
+
+void sprite_set_origin( sprite_t * self, int x, int y ) {
+  point_set( sprite_origin(self), x, y );
 }

@@ -28,6 +28,16 @@ point_t * point(int x, int y) {
   return r;
 }
 
+point_t * clone_point( point_t * o ) {
+  point_t * r = alloc(point_t);
+  clone(r,o);
+  return r;
+}
+
+void free_point( point_t * self ) {
+  free(self);
+}
+
 ///////////
 // funcs //
 ///////////

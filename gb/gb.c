@@ -32,6 +32,7 @@
 #include "modules/dict.c"               // dictionary
 #include "modules/pstack.c"             // LIFO-style priority stack object
 #include "modules/point.c"              // 2d integer point
+#include "modules/rect.c"
 #include "modules/entity.c"             // AABB collisions
 #include "modules/number.c"             // integer number with min and max bounds
 #include "modules/color.c"              // 6-bit color with transparency bit
@@ -72,6 +73,7 @@
 
 #include "modules/toys/jake.c"
 #include "modules/toys/ball.c"
+#include "modules/toys/fountain.c"
 
 
 /////////////
@@ -121,8 +123,8 @@ gb_t * gb;
 // the debug module has visibility of the gb globals
 // this will help with debugging immensely.
 
-#include "modules/debugpanel.c"
-#include "modules/debug.c"
+#include "modules/debug/debugpanel.c"
+#include "modules/debug/debug.c"
 
 ////////////
 // events //
