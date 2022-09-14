@@ -84,7 +84,7 @@ fountain_t * fountain( int x, int y, graph_t * g, colormap_t * c ) {
   fountain_t * r          = alloc(fountain_t);
   fountain_pos(r)         = point(x,y);
   fountain_angle(r)       = 0;
-  fountain_angle_width(r) = 250;
+  fountain_angle_width(r) = 120;
 
   fountain_graph(r)       = g;
   fountain_colormap(r)    = c;
@@ -108,8 +108,8 @@ void fountain_update( fountain_t * self ) {
 
   int an = rnd(0,fountain_angle_width(self)*2);
   int vx, vy;
-  vx = frac(sine( an-fountain_angle_width(self) ),9,2);
-  vy = frac(cosine( an-fountain_angle_width(self) ),9,2);
+  vx = frac(sine( an-fountain_angle_width(self) ),   6,1);
+  vy = frac(cosine( an-fountain_angle_width(self) ), 6,1);
 
   fountpart_t * p = fountpart( point_x(fountain_pos(self))*1000, point_y(fountain_pos(self))*1000,
     fountain_sprite(self), vx, vy);
@@ -143,8 +143,9 @@ void fountain_draw( fountain_t * self ) {
   foreach( fountain_particles(self), dt ) {
     u = cast(dt,fountpart_t*);
 
-    graph_draw_sprite( fountain_graph(self), fountpart_sprite(u), 
-      point_x(fountpart_pos(u))/1000, point_y(fountpart_pos(u))/1000);
+    graph_draw_sprite( fountain_graph(self), 
+      point_x(fountpart_pos(u))/1000, point_y(fountpart_pos(u))/1000,
+      fountpart_sprite(u));
 
   }
 

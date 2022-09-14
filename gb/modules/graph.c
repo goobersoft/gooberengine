@@ -711,7 +711,7 @@ void graph_draw_tilemap_sub( graph_t * self, int x, int y, int w, int h, tilemap
 // functions for drawing modules // 
 ///////////////////////////////////
 
-void graph_draw_sprite( graph_t * self, sprite_t * s, int x, int y ) {
+void graph_draw_sprite( graph_t * self, int x, int y, sprite_t * s ) {
   graph_draw_colormap_sub( self, x-point_x(sprite_origin(s)), y-point_y(sprite_origin(s)), sprite_colormap(s), 
     rect_x(sprite_rect(s)), rect_y(sprite_rect(s)), rect_w(sprite_rect(s)), rect_h(sprite_rect(s)));
 }

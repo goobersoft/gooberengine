@@ -1013,6 +1013,12 @@ int sqroot_t() {
   return _sqroot_t;
 }
 
+// sqroot only works up to an input of 1,000,000
+// keep this in mind when checking distances.
+// it is more efficient to do a coarse measurement
+// of distance (like 1/10 or 1/100 of X/Y) and then
+// perform more refined calculations when two entities
+// are closer together.
 int sqroot( int n ) {
   if (n<=0)       return  0;
   if (n>1000000)  return -1;

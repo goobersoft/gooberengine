@@ -8,23 +8,26 @@ typedef struct {
   point_t    *  size;
   color_t    *  data;
   int           area;
+  point_t    *  draw_offset;
 
 } colormap_t;
 
-#define colormap_size(self)   (self->size)
-#define colormap_width(self)  (self->size->x)
-#define colormap_height(self) (self->size->y)
-#define colormap_data(self)   (self->data)
-#define colormap_area(self)   (self->area)
+#define colormap_size(self)        (self->size)
+#define colormap_width(self)       (self->size->x)
+#define colormap_height(self)      (self->size->y)
+#define colormap_data(self)        (self->data)
+#define colormap_area(self)        (self->area)
+#define colormap_draw_offset(self) (self->draw_offset)
 
 /////////
 // new //
 /////////
 
 void colormap_init( colormap_t * self, int x, int y ) {
-  colormap_size(self) = point(x,y);
-  colormap_data(self) = allocv(color_t,x*y);
-  colormap_area(self) = x*y;
+  colormap_size(self)          = point(x,y);
+  colormap_draw_offset(self)   = point(0,0);
+  colormap_data(self)          = allocv(color_t,x*y);
+  colormap_area(self)          = x*y;
   loop(i,0,colormap_area(self)) {
     colormap_data(self)[i] = make_color(0,0,0);
   }
@@ -92,6 +95,12 @@ void free_colormap( colormap_t * self ) {
 ///////////////
 // functions //
 ///////////////
+
+void colormap_set_draw_offset( colormap_t * self, int x, int y ) {
+  point_set( colormap_draw_offset(self),
+    wrap(x,0,colormap_width(self)),
+    wrap(y,0,colormap_height(self)) );
+}
 
 void colormap_plot( colormap_t * self, int x, int y, color_t c ) {
   if (inrect(x,y,0,0,colormap_width(self),colormap_height(self))) {
