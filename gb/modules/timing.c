@@ -18,6 +18,11 @@ typedef struct {
   ulong_t       fps_time;
   int           fps_ticks;
 
+  int           clock_hours;
+  int           clock_minutes;
+  int           clock_seconds;
+  int           clock_nano;
+
   int           cpu_usage;
 
 } timing_t;
@@ -31,6 +36,11 @@ typedef struct {
 #define timing_fps_ticks(self) (self->fps_ticks)
 #define timing_cpu_usage(self) (self->cpu_usage)
 
+#define timing_clock_hours(self)   (self->clock_hours)
+#define timing_clock_minutes(self) (self->clock_minutes)
+#define timing_clock_seconds(self) (self->clock_seconds)
+#define timing_clock_nano(self)    (self->clock_nano)
+
 /////////
 // new //
 /////////
@@ -43,6 +53,11 @@ void timing_init( timing_t * self ) {
   timing_fps_time(self)  = 0;
   timing_fps_ticks(self) = 0;
   timing_cpu_usage(self) = 0;
+
+  timing_clock_hours(self)    = 0;
+  timing_clock_minutes(self)  = 0;
+  timing_clock_seconds(self)  = 0;
+  timing_clock_nano(self)     = 0;
 }
 
 timing_t * timing() {
@@ -70,20 +85,34 @@ void timing_record( timing_t * self ) {
   timing_fps_time(self) += timing_diff(self);
 }
 
+void timing_update_clock( timing_t * self ) {
+  timing_clock_nano(self) += timing_diff(self);
+  if (timing_clock_nano(self) >= 1000000) {
+    timing_clock_nano(self) -= 1000000;
+    timing_clock_seconds(self) += 1;
+  }
+  if (timing_clock_seconds(self) >= 60) {
+    timing_clock_seconds(self) -= 60;
+    timing_clock_minutes(self) += 1;
+  }
+  if (timing_clock_minutes(self) >= 60) {
+    timing_clock_minutes(self) -= 60;
+    timing_clock_hours(self) += 1;
+  }
+}
+
 ////////////
 // events //
 ////////////
 
 void timing_update_pre( timing_t * self ) {
   timing_record(self);
-
-  // cpu
-  //timing_cpu_usage(self) = timing_diff(self);
-  
+  timing_update_clock(self);
 }
 
 void timing_update_post(timing_t * self) {
   timing_record(self);
+  timing_update_clock(self);
 
   // fps
   timing_fps_ticks(self) += 1;

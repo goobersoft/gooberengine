@@ -51,7 +51,7 @@ void debugpanel_draw( debugpanel_t * self ) {
 
     string_clear(debugpanel_string(self));
     
-    loop(i,0,controller_max_buttons()) {
+    loop(i,controller_max_buttons()) {
       string_copy_number_at(debugpanel_string(self),i,controller_buttons(gb_controller())[i]);
     }
 
@@ -73,11 +73,14 @@ void debugpanel_draw( debugpanel_t * self ) {
     u2 = string_copy_number_at(debugpanel_string(self),
       u2,point_y(mouse_pos(gb_mouse()))/visual_window_scale(gb_visual()));
     
-    string_copy_at(debugpanel_string(self),40,"CPU:");
+    u2 = string_copy_at(debugpanel_string(self),40,"CPU:");
     // will draw a bar instead of text
 
-    string_copy_at(debugpanel_string(self),50,"P:");
-    string_copy_number_at(debugpanel_string(self),52,gb_paused());
+    u2 = string_copy_at ( debugpanel_string(self), 70, rstr(timing_clock_hours(gb_timing()),2) );
+    u2 = string_copy_at ( debugpanel_string(self), 72, ":" );
+    u2 = string_copy_at ( debugpanel_string(self), 73, rstr(timing_clock_minutes(gb_timing()),2) );
+    u2 = string_copy_at ( debugpanel_string(self), 75, ":" );
+    u2 = string_copy_at ( debugpanel_string(self), 76, rstr(timing_clock_seconds(gb_timing()),2) );
 
     /////////////
     // drawing //

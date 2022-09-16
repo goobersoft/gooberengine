@@ -8,6 +8,7 @@
 
 type() {
 
+  // component holding the bounding box
   entity_t * entity;
   int        dir;
   point_t  * velo;

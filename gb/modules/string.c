@@ -17,7 +17,7 @@ void string_init( string_t * self, int l ) {
   string_length(self) = l;
   // use one extra byte for null terminator
   string_data(self)   = allocv(char,string_length(self)+1);
-  loop(i,0,string_length(self)) {
+  loop(i,string_length(self)) {
     string_data(self)[i] = ' ';
   }
   // make sure that the string has a null terminator at the end.
@@ -44,7 +44,7 @@ bool_t string_equals( string_t * self, char * st ) {
 }
 
 void string_clear( string_t * self ) {
-  loop(i,0,string_length(self)) {
+  loop(i,string_length(self)) {
     string_data(self)[i] = ' ';
   }
 }
@@ -56,7 +56,7 @@ void string_put( string_t * self, int n, char c ) {
 int string_copy_at( string_t * self, int n, char * c ) {
   if (c) {
     int l = strlen(c);
-    loop(i,0,l) {
+    loop(i,l) {
       if (inrange(n+i,0,string_length(self))) {
         string_data(self)[n+i] = c[i];
       }

@@ -64,10 +64,10 @@ void makeii_update( makeii_t * self ) {
   }
 
   if (controller_is_button_held( gb_controller(), controller_button_left() )) {
-    makeii_pos_x(self) -= 2000;
+    makeii_pos_x(self) -= 2500;
   }
   else if (controller_is_button_held( gb_controller(), controller_button_right() )) {
-    makeii_pos_x(self) += 2000;
+    makeii_pos_x(self) += 2500;
   }
 
   point_clamp(makeii_pos(self), 0, 0, 400000-30000, 240000-30000);

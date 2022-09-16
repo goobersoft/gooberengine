@@ -31,7 +31,7 @@ type() {
 /////////
 
 void controller_init( controller_t * self ) {
-  loop(i,0,controller_max_buttons()) {
+  loop(i,controller_max_buttons()) {
     controller_buttons(self)[i] = controller_button_released();
   }
 }
@@ -78,7 +78,7 @@ int controller_is_button_released( controller_t * self, int n ) {
 
 
 void controller_update( controller_t * self ) {
-  loop(i,0,controller_max_buttons()) {
+  loop(i,controller_max_buttons()) {
     if (controller_buttons(self)[i] == controller_button_pressed()) {
       controller_buttons(self)[i] = controller_button_held();
     }

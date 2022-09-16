@@ -27,7 +27,7 @@ palette_t * palette() {
   int cr = 0;
   int cg = 0;
   int cb = 0;
-  loop(i,0,palette_max_colors()) {
+  loop(i,palette_max_colors()) {
     palette_colors(r)[i] = make_color(cr,cg,cb);
     cr += 1;
     if (cr==4) {
@@ -46,7 +46,7 @@ palette_t * palette() {
 palette_t * palette__grayscale() {
   palette_t * r = alloc(palette_t);
   int cg = 0;
-  loop(i,0,palette_max_colors()) {
+  loop(i,palette_max_colors()) {
     cg = i%4;
     palette_colors(r)[i] = make_color(cg,cg,cg);
   }
@@ -70,7 +70,7 @@ palette_t * palette__gameboy() {
   palette_t * r = alloc(palette_t);
 
   color_t cg;
-  loop(i,0,palette_max_colors()) {
+  loop(i,palette_max_colors()) {
     cg = _cl[i%4];
     palette_colors(r)[i] = cg;
   }
@@ -80,7 +80,7 @@ palette_t * palette__gameboy() {
 
 palette_t * palette__random() {
   palette_t * r = alloc(palette_t);
-  loop(i,0,palette_max_colors()) {
+  loop(i,palette_max_colors()) {
     palette_colors(r)[i] = make_color_random();
   }
   palette_colors(r)[palette_index_trans()] = make_color_trans();
@@ -94,13 +94,13 @@ palette_t * palette__random() {
 // sets the palette colors to another array of colors
 // (copies)
 void palette_set_colors( palette_t * self, color_t * cs ) {
-  loop(i,0,palette_max_colors()) {
+  loop(i,palette_max_colors()) {
     palette_colors(self)[i] = cs[i];
   }
 }
 
 void palette_copy( palette_t * self, palette_t * ot ) {
-  loop(i,0,palette_max_colors()) {
+  loop(i,palette_max_colors()) {
     palette_colors(self)[i] = palette_colors(ot)[i];
   }
 }

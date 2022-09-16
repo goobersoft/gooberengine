@@ -26,7 +26,7 @@ void ma_debug_start() {
   debug_ball    = ball( gb_graph(), gb_controller() );
   debug_fountain = fountain( 200, 120, gb_graph(), assets_get_colormap( gb_assets(), "gb-0" ));
 
-  debug_sprayer = sprayer( gb_graph(), 0, 0, 400, 240, make_color(3,2,1) );
+  debug_sprayer = sprayer( gb_graph(), 0, 0, 400, 240, make_color(1,1,1) );
   sprayer_mode(debug_sprayer) = graph_mode_sub();
   
 

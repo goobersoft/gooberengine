@@ -62,11 +62,11 @@ image_t * image( char * f, visual_t * v ) {
     image_path(r)     = f;
 
     //log("%s\n" , sdl_pixelformat_str(s->format->format));
-    log("image '%s' loaded successfully." nl(),image_path(r));
+    //log("image '%s' loaded successfully." nl(),image_path(r));
     return r;
   }
   // no need to free the SDL_Surface if it failed - it is null.
-  log("image '%s' failed." nl(),f);
+  //log("image '%s' failed." nl(),f);
   return null();
 }
 

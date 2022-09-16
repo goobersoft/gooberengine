@@ -90,7 +90,8 @@ typedef unsigned long  ulong_t;
 #define val(x)          (*x)
 #define valn(x,n)       x[n]
 
-#define loop(i,a,b)       for(int i=a;i<b;i++)
+#define loop(i,b)         for(int i=0;i<b;i++)
+#define loop2(i,a,b)      for(int i=a;i<b;i++)
 
 #define type()            typedef struct
 #define union()           typedef union

@@ -172,7 +172,7 @@ void graph_init( graph_t * self, visual_t * v ) {
 
   graph_layer(self)  = 0;
   graph_layers(self) = allocv(colormap_t*,graph_max_layers());
-  loop(i,0,graph_max_layers()) {
+  loop(i,graph_max_layers()) {
     graph_layers(self)[i] = colormap(graph_width(),graph_height());
   }
   // set the graph data to layer 0.
@@ -180,7 +180,7 @@ void graph_init( graph_t * self, visual_t * v ) {
   //graph_data(r)         = colormap( graph_width(), graph_height() );
   //graph_data_stencil(self) = allocv( bool_t, graph_area() );
   graph_data_depth(self)   = allocv( int, graph_area() );
-  loop(i,0,graph_area()) {
+  loop(i,graph_area()) {
     graph_data_depth(self)[i] = graph_max_depth();
   }
 }
@@ -300,7 +300,7 @@ void graph_cls_color( graph_t * self ) {
 }
 
 void graph_cls_depth( graph_t * self ) {
-  loop(i,0,graph_area()) { 
+  loop(i,graph_area()) { 
     graph_data_depth(self)[i] = graph_depth_cls(self);
   }
 }
@@ -389,29 +389,29 @@ void graph_draw_dot_c( graph_t * self, int x, int y, color_t c ) {
 }
 
 void graph_draw_hl( graph_t * self, int x, int y, int w ) {
-  loop(i,0,w) {
+  loop(i,w) {
     graph_draw_dot(self,x+i,y);
   }
 }
 
 void graph_draw_vl( graph_t * self, int x, int y, int h ) {
-  loop(j,0,h) {
+  loop(j,h) {
     graph_draw_dot(self,x,y+j);
   }
 }
 
 
 void graph_draw_rect( graph_t * self, int x, int y, int w, int h ) {
-  loop(i,0,w) {
-    loop(j,0,h) {
+  loop(i,w) {
+    loop(j,h) {
       graph_draw_dot(self,x+i,y+j);
     }
   }
 }
 
 void graph_draw_rect_line( graph_t * self, int x, int y, int w, int h ) {
-  loop(i,0,w) {
-    loop(j,0,h) {
+  loop(i,w) {
+    loop(j,h) {
       if ((i==0) or (j==0) or (i==w-1) or (j==h-1)) {
         graph_draw_dot(self,x+i,y+j);
       }
@@ -429,8 +429,8 @@ void graph_draw_circle( graph_t * self, int x, int y, int r ) {
   }
   // otherwise...
   else {
-    loop(i,-r,r) {
-      loop(j,-r,r) {
+    loop2(i,-r,r) {
+      loop2(j,-r,r) {
         if (sqroot(sqr(i)+sqr(j)) < r) {
           graph_draw_dot(self, x+i, y+j);
         }
@@ -448,8 +448,8 @@ void graph_draw_circle_line( graph_t * self, int x, int y, int r ) {
   // otherwise...
   else {
     int uu = 0;
-    loop(i,-r,r) {
-      loop(j,-r,r) {
+    loop2(i,-r,r) {
+      loop2(j,-r,r) {
         uu = sqroot(sqr(i)+sqr(j)); 
         if ((uu < r) and (uu >= r-1)) {
           graph_draw_dot(self, x+i, y+j);
@@ -467,7 +467,7 @@ void graph_draw_circle_dots( graph_t * self, int x, int y, int r, int ct, int rt
   else {
     int rx = 0;
     int ry = 0;
-    loop(i,0,ct) {
+    loop(i,ct) {
       rx = x + frac(r,rounded(sine(rt + frac(i,1000,ct)),10),1000);
       ry = y + frac(r,rounded(cosine(rt + frac(i,1000,ct)),10),1000);
       graph_draw_dot(self,rx,ry);
@@ -476,8 +476,8 @@ void graph_draw_circle_dots( graph_t * self, int x, int y, int r, int ct, int rt
 }
 
 void graph_draw_replace( graph_t * self, int x, int y, int w, int h, color_t rs, color_t rd ) {
-  loop(i,0,w) {
-    loop(j,0,h) {
+  loop(i,w) {
+    loop(j,h) {
       color_t u = graph_get_pixel( self, x+i, y+j );
       if (check_color_eq(u,rs)) {
         graph_draw_dot_c(self,x+i,y+j,rd);
@@ -492,7 +492,7 @@ void graph_draw_line( graph_t * self, int x1, int y1, int x2, int y2 ) {
   int uu = sqroot( sqr(dx) + sqr(dy) );
   int rx = 0;
   int ry = 0;
-  loop(i,0,uu) {
+  loop(i,uu) {
     rx = x1 + (dx*i/uu);
     ry = y1 + (dy*i/uu);
     graph_draw_dot( self, rx, ry );
@@ -500,8 +500,8 @@ void graph_draw_line( graph_t * self, int x1, int y1, int x2, int y2 ) {
 }
 
 void graph_draw_rect_dither_even( graph_t * self, int x, int y, int w, int h) {
-  loop(j,0,h) {
-    loop(i,0,w) {
+  loop(j,h) {
+    loop(i,w) {
       if (((i+j)&1)==0) {
         graph_draw_dot(self,x+i,y+j);
       }
@@ -510,8 +510,8 @@ void graph_draw_rect_dither_even( graph_t * self, int x, int y, int w, int h) {
 }
 
 void graph_draw_rect_dither_odd( graph_t * self, int x, int y, int w, int h ) {
-  loop(j,0,h) {
-    loop(i,0,w) {
+  loop(j,h) {
+    loop(i,w) {
       if (((i+j)&1)==1) {
         graph_draw_dot(self,x+i,y+j);
       }
@@ -537,7 +537,7 @@ void graph_draw_triangle( graph_t * self, int x1, int y1, int x2, int y2, int x3
   //log("%d",ds);
   int ddx;
   int ddy;
-  loop(i,0,ds) {
+  loop(i,ds) {
     ddx = x1 + (dx*i/ds);
     ddy = y1 + (dy*i/ds);
     graph_draw_line( self, ddx, ddy, x3, y3 );
@@ -563,8 +563,8 @@ void graph_draw_colormap( graph_t * self, int x, int y, colormap_t * c ) {
   int sy = graph_flip_y(self)==true() ? c->size->y-1 : 0;
   int dx = graph_flip_x(self)==true() ? -1 : 1;
   int dy = graph_flip_y(self)==true() ? -1 : 1;
-  loop(i,0,c->size->x) {
-    loop(j,0,c->size->y) {
+  loop(i,c->size->x) {
+    loop(j,c->size->y) {
       graph_draw_dot_c(self,sx+(i*dx),sy+(j*dy),colormap_get_pixel(c,i,j));
     }
   }
@@ -575,8 +575,8 @@ void graph_draw_colormap_sub( graph_t * self, int dx, int dy, colormap_t * c, in
   int ssy = graph_flip_y(self)==true() ? sh-1 : 0;
   int ddx = graph_flip_x(self)==true() ? -1 : 1;
   int ddy = graph_flip_y(self)==true() ? -1 : 1;
-  loop(i,0,sw) {
-    loop(j,0,sh) {
+  loop(i,sw) {
+    loop(j,sh) {
       graph_draw_dot_c( self, ssx + dx + (i*ddx), ssy + dy + (j*ddy), colormap_get_pixel(c,sx+i,sy+j) );
     }
   }
@@ -593,8 +593,8 @@ void graph_draw_colormap_sub_ex(
   int dddy = graph_flip_y(self)==true() ? -1 : 1;
   int ddx;
   int ddy;
-  loop(i,0,dw) {
-    loop(j,0,dh) {
+  loop(i,dw) {
+    loop(j,dh) {
       ddx = i*sw/dw;
       ddy = j*sh/dh; 
       graph_draw_dot_c( self, sssx + dx + (i*dddx), sssy + dy + (j*dddy), colormap_get_pixel(c,sx+ddx,sy+ddy) );
@@ -622,7 +622,7 @@ void graph_draw_text( graph_t * self, int x, int y, char * t ) {
     int py = font_y(graph_font(self));
     int sx;
     int sy;
-    loop(i,0,strlen(t)) {
+    loop(i,strlen(t)) {
       font_get_pos_at(f, t[i], ref(sx), ref(sy));
       graph_draw_colormap_sub( self, x + (i*xx), y, font_colormap(f), sx, sy, xx, yy );
     }
@@ -655,7 +655,7 @@ void graph_merge_layer( graph_t * self, int l2 ) {
     // transient color variable
     color_t      c;
     // loop [0-96000)
-    loop(i,0,graph_area()) {
+    loop(i,graph_area()) {
       // set c to the data of the colormap of [l2]
       c = colormap_data(col)[i];
       // if a is not 0 (i.e. opaque) set the buffer to the new color.
@@ -688,8 +688,8 @@ void graph_draw_mouse( graph_t * self, mouse_t * m ) {
 
 void graph_draw_tilemap( graph_t * self, int x, int y, tilemap_t * t ) {
   point_t pt;
-  loop(i,0,point_x(tilemap_size(t))) {
-    loop(j,0,point_y(tilemap_size(t))) {
+  loop(i,point_x(tilemap_size(t))) {
+    loop(j,point_y(tilemap_size(t))) {
       tilemap_get_tile(t,i,j,ref(pt));
       graph_draw_colormap_sub( self, 
         x + (point_x(tilemap_tile_size(t))*i),

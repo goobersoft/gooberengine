@@ -39,8 +39,16 @@ type() {
 
 type () {
 
-  input_keyboard_t keyboard;
-  input_joypad_t   joypad;
-  input_mouse_t    mouse;
+  input_keyboard_t * keyboard;
+  input_joypad_t   * joypad;
+  input_mouse_t    * mouse;
 
 } input_t;
+
+/////////
+// new //
+/////////
+
+input_t * input() {
+  input_t * r = alloc(input_t);
+}

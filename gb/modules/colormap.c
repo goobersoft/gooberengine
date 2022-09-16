@@ -28,7 +28,7 @@ void colormap_init( colormap_t * self, int x, int y ) {
   colormap_draw_offset(self)   = point(0,0);
   colormap_data(self)          = allocv(color_t,x*y);
   colormap_area(self)          = x*y;
-  loop(i,0,colormap_area(self)) {
+  loop(i,colormap_area(self)) {
     colormap_data(self)[i] = make_color(0,0,0);
   }
 }
@@ -53,8 +53,8 @@ colormap_t * colormap_from_image( image_t * u ) {
   byte_t  cb;
   byte_t  ca;
   int     aa;
-  loop(i,0,sx) {
-    loop(j,0,sy) {
+  loop(i,sx) {
+    loop(j,sy) {
       image_get_pixel( u, i, j, ref(cr), ref(cg), ref(cb), ref(ca) );
       cr = rounded(cr,85)/85;
       cg = rounded(cg,85)/85;
@@ -80,7 +80,7 @@ colormap_t * colormap_from_base64( int w, int h, char * s ) {
   colormap_size(r) = point(w,h);
   colormap_area(r) = w * h;
   colormap_data(r) = allocv(color_t,w*h);
-  loop(i,0,colormap_area(r)) {
+  loop(i,colormap_area(r)) {
     colormap_data(r)[i] = make_color_index(int_from_base64(s,i));
   }
   return r;
@@ -156,7 +156,7 @@ void colormap_plot_avg( colormap_t * self, int x, int y, color_t c ) {
 // fill the colormap with a color index. You may specify -1
 // to make it transparent
 void colormap_clear( colormap_t * self, color_t c ) {
-  loop(i,0,colormap_area(self)) {
+  loop(i,colormap_area(self)) {
     colormap_data(self)[i] = c;
   }
 }
@@ -173,7 +173,7 @@ string_t * colormap_to_base64( colormap_t * self ) {
   string_t * r = string( colormap_area(self) );
 
 
-  loop(i,0,colormap_area(self)) {
+  loop(i,colormap_area(self)) {
     string_put(r,i,
       _base64str[ wrap( color_to_index( colormap_data(self)[i] ),0,65)]
     );

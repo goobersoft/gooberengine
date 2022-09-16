@@ -20,15 +20,21 @@ type() {
 #define entity_size_x(self)  point_x(entity_size(self))
 #define entity_size_y(self)  point_y(entity_size(self))
 
+#define entity_make_rect(self) make_rect(entity_pos(self).x,entity_pos(self).y,entity_size(self).x,entity_size(self).y)
+
 /////////
 // new //
 /////////
 
+void entity_init( entity_t * self ) {
+  point_set          (entity_pos(self),0,0);
+  point_set          (entity_size(self),10,10);
+  entity_solid(self) = true();
+}
+
 entity_t * entity() {
   entity_t * r = alloc(entity_t);
-  point_set       (entity_pos(r),0,0);
-  point_set       (entity_size(r),10,10);
-  entity_solid(r) = true();
+  entity_init(r);
   return r;
 }
 

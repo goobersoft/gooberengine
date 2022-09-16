@@ -81,7 +81,7 @@ void mouse_init( mouse_t * self, visual_t * v, colormap_t * c ) {
   point_set(mouse_colormap_pos(self),  0,0);
   point_set(mouse_colormap_size(self), 10,10);
 
-  loop(i,0,mouse_max_buttons()) {
+  loop(i,mouse_max_buttons()) {
     mouse_buttons(self)[i] = mouse_button_released();
   }
 }
@@ -129,7 +129,7 @@ void mouse_update( mouse_t * self ) {
   int btn, xx, yy;
   btn = SDL_GetMouseState(ref(xx),ref(yy));
 
-  loop(i,0,mouse_max_buttons()) {
+  loop(i,mouse_max_buttons()) {
     if ((btn & (1<<i)) != 0) {
       if (mouse_buttons(self)[i] == mouse_button_released()) {
         mouse_buttons(self)[i] = mouse_button_pressed();

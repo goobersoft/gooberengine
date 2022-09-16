@@ -22,6 +22,7 @@ typedef struct {
   board_t       * screen;       // the main screen texture
   point_t         window_size;
   int             window_scale;
+  bool_t          fullscreen;
 
 } visual_t;
 
@@ -30,6 +31,7 @@ typedef struct {
 #define visual_screen(self)          (self->screen)
 #define visual_window_size(self)     (&self->window_size)
 #define visual_window_scale(self)    (self->window_scale)
+#define visual_fullscreen(self)      (self->fullscreen)
 
 /////////
 // new //
@@ -45,6 +47,7 @@ void visual_init( visual_t * self ) {
   visual_screen(self) = board(visual_renderer(self));
   point_set( visual_window_size(self), visual_window_width_d(), visual_window_height_d() );
   visual_window_scale(self) = visual_window_scale_d();
+  visual_fullscreen(self) = false();
 }
 
 visual_t * visual() {
@@ -79,6 +82,14 @@ void visual_draw_scanlines( visual_t * self ) {
 ////////////
 // events //
 ////////////
+
+void visual_update( visual_t * self ) {
+  // pushing F4 will switch between fullscreen and windowed mode
+
+  
+
+  // pushing F2 and F3 will change the window scale multiplier
+}
 
 void visual_draw_pre( visual_t * self ) {
   // clear the backbuffer for the renderer

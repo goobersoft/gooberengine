@@ -86,8 +86,8 @@ void tilemap_plot_data( tilemap_t * self, int tx, int ty, int nx, int ny ) {
 }
 
 void tilemap_rect_data( tilemap_t * self, int tx, int ty, int tw, int th, int nx, int ny ) {
-  loop(i,0,tw) {
-    loop(j,0,th) {
+  loop(i,tw) {
+    loop(j,th) {
       tilemap_plot_data(self, tx+i, ty+j, nx, ny);
     }
   }

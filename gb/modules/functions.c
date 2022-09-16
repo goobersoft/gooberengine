@@ -38,7 +38,7 @@ char * str( int n ) {
   // init (runs only once)
   static bool_t init = 0;
   if (init == 0) {
-    loop(i,0,20) {
+    loop(i,20) {
       _str[i] = '\0';
     }
     init = 1;
@@ -72,9 +72,64 @@ char * str( int n ) {
 }
 
 
+char _right[100];
+// s: input string
+// l: length needed
+// p: padding char
+char * right( char * s, int l, char p ) {
+  // create temporary char pointer to _right[] array
+  char * r = _right;
+  // set the default padding char to ' ' if it is not provided.
+  if (p == 0) p = ' ';
+  // get the current length of s
+  int ll = strlen(s);
+  // get the amount of padding we need
+  int q = l - ll;
+  // is q 0?
+  if (q == 0) {
+    // copy the string
+    loop(i,l) {
+      r[i] = s[i];
+    }
+    // terminate string and return
+    r[l] = '\0';
+    return r;
+  }
+  // is q positive?
+  else if (q >= 0) {
+    // pad the left side with p
+    loop(i,q) {
+      r[i] = p;
+    }
+    // now copy the string
+    loop(i,ll) {
+      r[ll+i] = s[i];
+    }
+    // terminate string and return
+    r[l] = '\0';
+    return r;
+  }
+  // otherwise is q negative?
+  else if (q < 0) {
+    q=abs(q);
+    // copy only a portion of the string
+    loop(i,l) {
+      r[i] = s[q+i];
+    }
+    // terminate string and return
+    r[l] = '\0';
+    return r;
+  }
+}
+
+char * rstr( int n, int l ) {
+  return right(str(n),l,'0');
+}
+
+
 char _bits[36];
 char * bits(uint_t n) {
-  loop(i,0,32) {
+  loop(i,32) {
     _bits[31-i] = (n&1) ? '1' : '0';
     n = n>>1;
   }

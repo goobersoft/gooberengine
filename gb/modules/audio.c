@@ -39,7 +39,7 @@ type() {
 void audio_init( audio_t * self ) {
   audio_data(self)              = allocv(int,audio_buffer_size());
   audio_channel_data(self)      = allocv(int*,audio_num_channels());
-  loop(i,0,audio_num_channels()) {
+  loop(i,audio_num_channels()) {
     audio_channel_data(self)[i] = allocv(int,audio_buffer_size());
   }
   audio_channel_state(self)     = allocv(int,audio_num_channels());
@@ -88,7 +88,7 @@ void audio_stop( audio_t * self, int c ) {
 ////////////
 
 void audio_update( audio_t * self ) {
-  loop(i,0,audio_num_channels()) {
+  loop(i,audio_num_channels()) {
     if (Mix_Playing(i)==true()) {
       audio_channel_state(self)[i] = audio_channel_playing();
     }

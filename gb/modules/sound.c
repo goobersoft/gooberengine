@@ -19,7 +19,7 @@ sound_t * sound( char * f ) {
   sound_t * r = alloc(sound_t);
   sound_source(r) = Mix_LoadWAV( f );
   if (sound_source(r) != null()) {
-    log("sound '%s' loaded successfully.",f);
+    //log("sound '%s' loaded successfully.",f);
     return r;
   }
   else {
