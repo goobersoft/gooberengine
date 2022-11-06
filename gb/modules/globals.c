@@ -95,6 +95,10 @@ typedef unsigned long  ulong_t;
 
 #define type()            typedef struct
 #define union()           typedef union
+
+#define field(x,t,b)      t x:b
+
+
 #define null()            NULL
 
 #define layer_top(x)      (1000+x)

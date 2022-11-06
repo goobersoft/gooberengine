@@ -8,21 +8,33 @@ type() {
   // offset from topleft
   point_t     * origin;
 
+  field(flip_x,bool_t,1);
+  field(flip_y,bool_t,1);
+
 } sprite_t;
 
 #define sprite_colormap(self) (self->colormap)
 #define sprite_rect(self)     (self->rect)
 #define sprite_origin(self)   (self->origin)
+#define sprite_flip_x(self)   (self->flip_x)
+#define sprite_flip_y(self)   (self->flip_y)
 
 /////////
 // new //
 /////////
 
+void sprite_init( sprite_t * self, colormap_t * c, int cx, int cy, int cw, int ch ) {
+  sprite_colormap(self)  = c;
+  sprite_rect(self)      = rect(cx,cy,cw,ch);
+  sprite_origin(self)    = point(0,0);
+  sprite_flip_x(self)    = false();
+  sprite_flip_y(self)    = false();
+}
+
 sprite_t * sprite( colormap_t * c, int cx, int cy, int cw, int ch ) {
   sprite_t * r        = alloc(sprite_t);
-  sprite_colormap(r)  = c;
-  sprite_rect(r)      = rect(cx,cy,cw,ch);
-  sprite_origin(r)    = point(0,0);
+  sprite_init(r,c,cx,cy,cw,ch);
+  return r;
 }
 
 sprite_t * clone_sprite( sprite_t * o ) {
@@ -30,6 +42,8 @@ sprite_t * clone_sprite( sprite_t * o ) {
   sprite_colormap(r) = sprite_colormap(o);
   sprite_rect(r)     = clone_rect(sprite_rect(o));
   sprite_origin(r)   = clone_point(sprite_origin(o));
+  sprite_flip_x(r)   = sprite_flip_x(o);
+  sprite_flip_y(r)   = sprite_flip_y(o);
   return r;
 }
 

@@ -33,9 +33,9 @@ makeii_t * makeii() {
   makeii_active(r)  = true();
   // define the actor stuff
 
-  makeii_actor(r)   = actor( assets_get_colormap( gb_assets(), "ma-0" ) );
-  actor_set_dir( makeii_actor(r), actor_dir_east() );
-  actor_set_sprite_rect(makeii_actor(r), 70, 210, 30, 30 );
+  makeii_actor(r)       = actor( assets_get_colormap( gb_assets(), "ma-0" ) );
+  actor_set_dir         ( makeii_actor(r), actor_dir_east() );
+  actor_set_sprite_rect ( makeii_actor(r), 70, 210, 30, 30 );
 
   makeii_lp(r)      = number(8,0,8);
   makeii_ap(r)      = number(8,0,8);
@@ -65,9 +65,11 @@ void makeii_update( makeii_t * self ) {
 
   if (controller_is_button_held( gb_controller(), controller_button_left() )) {
     makeii_pos_x(self) -= 2500;
+    sprite_flip_x(actor_sprite(makeii_actor(self))) = true();
   }
   else if (controller_is_button_held( gb_controller(), controller_button_right() )) {
     makeii_pos_x(self) += 2500;
+    sprite_flip_x(actor_sprite(makeii_actor(self))) = false();
   }
 
   point_clamp(makeii_pos(self), 0, 0, 400000-30000, 240000-30000);
