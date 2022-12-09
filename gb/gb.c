@@ -178,7 +178,7 @@ void gb_init() {
   gb_scene()       = scene(gb());
   scene_set_id(gb_scene(),"none");\
 
-  //test
+  //test2
 
   ///////////////
   // debugging //
