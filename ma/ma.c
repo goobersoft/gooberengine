@@ -5,8 +5,9 @@
 //////////////
 
 // modules
-#include "modules/statuseffect.c"
 #include "modules/actor.c"
+#include "modules/statuseffect.c"
+
 
 // actors
 #include "modules/actors/makeii.c"

@@ -10,7 +10,7 @@ type() {
   bool_t solid;
 
   // a pointer to the parent object
-  remote( void * parent );
+  foreign( void * parent );
 
 } entity_t;
 

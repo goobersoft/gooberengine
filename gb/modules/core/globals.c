@@ -106,12 +106,12 @@ typedef unsigned long  ulong_t;
 //    field( f_visible, bool_t, 1 );
 #define field(x,t,b)      t x:b
 
-// local / remote are just syntactic sugar.
+// local / foreign are just syntactic sugar.
 // the purpose of these are to indicate when the object is freed:
 //    LOCAL fields are freed with the object
-//    REMOTE fields do not get freed with the object
+//    FOREIGN fields do not get freed with the object
 #define local(x)          x
-#define remote(x)         x
+#define foreign(x)        x
 
 #define null()            NULL
 
@@ -121,27 +121,7 @@ typedef unsigned long  ulong_t;
 #define layer_bg(x)       (200+x)
 #define layer_bottom(x)   (x)
 
-#define pi()              3141
-
-/*
-#define _1111       f
-#define _1110       e
-#define _1101       d
-#define _1100       c
-#define _1011       b
-#define _1010       a
-#define _1001       9
-#define _1000       8
-#define _0111       7
-#define _0110       6
-#define _0101       5
-#define _0100       4
-#define _0011       3
-#define _0010       2
-#define _0001       1
-#define _0000       0
-#define bin(u)      0x##u
-*/
+#define pi()              3141592
 
 #define tile8(x)         (8*x)
 #define tile10(x)        (10*x)

@@ -11,15 +11,12 @@ type() {
   point_t * size;
   // entity of camera used for scenes
   entity_t * entity;
-  // the scene
-  scene_t * scene;
 
 } camera_t;
 
 #define camera_pos(self)    (self->pos)
 #define camera_size(self)   (self->size)
 #define camera_entity(self) (self->entity)
-#define camera_scene(self)  (self->scene)
 
 /////////
 // new //
@@ -40,7 +37,3 @@ camera_t * camera() {
 ///////////////
 // functions //
 ///////////////
-
-void camera_set_scene( camera_t * self, scene_t * s ) {
-  camera_scene(self) = s;
-}

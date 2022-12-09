@@ -54,7 +54,7 @@ byte_t _graph_transvals[] = {
 type() {
 
   // the reference to the visual + renderer
-  remote( visual_t * visual );
+  foreign( visual_t * visual );
   
   // the number of dots which were processed in the frame.
   uint_t        frame_dots;
@@ -85,17 +85,17 @@ type() {
   point_t       clip_size;
 
   // A link to the font in Assets
-  remote( font_t * font );
+  foreign( font_t * font );
   // palette for rendering (color IDs)
   // this is a pointer to the default palette on init
-  remote( palette_t * palette );
+  foreign( palette_t * palette );
   // default palette
-  remote( palette_t * palette_default );
+  foreign( palette_t * palette_default );
   // transparency level
   byte_t        trans;
 
   // color data (colormap)
-  remote( colormap_t * data );
+  foreign( colormap_t * data );
   // depth data
   local( int * data_depth );
   // current layer

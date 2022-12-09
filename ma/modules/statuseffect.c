@@ -16,11 +16,11 @@
 
 type() {
 
-  int  level;
-  int  time;
+  tag_t *   tag;
+  int       level;
+  int       time;
 
-  // ref to the actor holding the SE.
-  void * actor;
+  ma_actor_t * actor;
 
 } ma_statuseffect_t;
 

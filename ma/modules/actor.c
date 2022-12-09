@@ -24,7 +24,7 @@ type() {
   // parent actor type
   // since we do not know what the parent's type is,
   // we leave this up to the parent to free itself.
-  remote( void * parent );
+  foreign( void * parent );
 
 } ma_actor_t;
 

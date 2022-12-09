@@ -41,7 +41,7 @@ void point3_set(point3_t * self, int x, int y, int z) {
   point3_z(self) = z;
 }
 
-void point3_add(point3_t * self, int x, int y) {
+void point3_add(point3_t * self, int x, int y, int z) {
   point3_x(self) = point3_x(self) + x;
   point3_y(self) = point3_y(self) + y;
   point3_z(self) = point3_z(self) + z;
