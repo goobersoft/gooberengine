@@ -1,6 +1,6 @@
 
-#define statuseffect_max_level() 20
-#define statuseffect_max_time()  999999
+#define ma_statuseffect_max_level() 20
+#define ma_statuseffect_max_time()  999999
 
 ///////////
 // notes //
@@ -22,25 +22,25 @@ type() {
   // ref to the actor holding the SE.
   void * actor;
 
-} statuseffect_t;
+} ma_statuseffect_t;
 
-#define statuseffect_level(self) (self->level)
-#define statuseffect_time(self)  (self->time)
-#define statuseffect_actor(self) (self->actor)
+#define ma_statuseffect_level(self) (self->level)
+#define ma_statuseffect_time(self)  (self->time)
+#define ma_statuseffect_actor(self) (self->actor)
 
 /////////
 // new //
 /////////
 
-void statuseffect_init( statuseffect_t * self ) {
-  statuseffect_level(self)  = 0;
-  statuseffect_time(self)   = 0;
-  statuseffect_actor(self)  = null();
+void ma_statuseffect_init( ma_statuseffect_t * self ) {
+  ma_statuseffect_level(self)  = 0;
+  ma_statuseffect_time(self)   = 0;
+  ma_statuseffect_actor(self)  = null();
 }
 
-statuseffect_t * statuseffect( ) {
-  statuseffect_t * r = alloc(statuseffect_t);
-  statuseffect_init(r);
+ma_statuseffect_t * ma_statuseffect( ) {
+  ma_statuseffect_t * r = alloc(ma_statuseffect_t);
+  ma_statuseffect_init(r);
   return r;
 }
 
@@ -48,10 +48,10 @@ statuseffect_t * statuseffect( ) {
 // funcs //
 ///////////
 
-void statuseffect_set_time( statuseffect_t * self, int t ) {
-  statuseffect_time(self) = clamp(t,0,statuseffect_max_time());
+void ma_statuseffect_set_time( ma_statuseffect_t * self, int t ) {
+  ma_statuseffect_time(self) = clamp(t,0,ma_statuseffect_max_time());
 }
 
-void statuseffect_set_level( statuseffect_t * self, int l ) {
-  statuseffect_level(self) = clamp(l,0,statuseffect_max_level());
+void ma_statuseffect_set_level( ma_statuseffect_t * self, int l ) {
+  ma_statuseffect_level(self) = clamp(l,0,ma_statuseffect_max_level());
 }

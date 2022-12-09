@@ -76,20 +76,28 @@ void debugpanel_draw( debugpanel_t * self ) {
     u2 = string_copy_at(debugpanel_string(self),40,"CPU:");
     // will draw a bar instead of text
 
-    u2 = string_copy_at ( debugpanel_string(self), 70, rstr(timing_clock_hours(gb_timing()),2) );
-    u2 = string_copy_at ( debugpanel_string(self), 72, ":" );
-    u2 = string_copy_at ( debugpanel_string(self), 73, rstr(timing_clock_minutes(gb_timing()),2) );
-    u2 = string_copy_at ( debugpanel_string(self), 75, ":" );
-    u2 = string_copy_at ( debugpanel_string(self), 76, rstr(timing_clock_seconds(gb_timing()),2) );
+    u2 = string_copy_at ( debugpanel_string(self), 60, rstr(timing_clock_hours(gb_timing()),2) );
+    u2 = string_copy_at ( debugpanel_string(self), 62, ":" );
+    u2 = string_copy_at ( debugpanel_string(self), 63, rstr(timing_clock_minutes(gb_timing()),2) );
+    u2 = string_copy_at ( debugpanel_string(self), 65, ":" );
+    u2 = string_copy_at ( debugpanel_string(self), 66, rstr(timing_clock_seconds(gb_timing()),2) );
+
+    u2 = string_copy_at ( debugpanel_string(self), 70, "S:");
+    u2 = string_copy_at ( debugpanel_string(self), 72, scene_id(gb_scene()));
 
     /////////////
     // drawing //
     /////////////
 
+    // set to layer 9 (or top layer)
+    graph_set_layer(gb_graph(),-1);
+    // clear layer
+    graph_cls(gb_graph());
+    // set graph mode to normal
     graph_set_mode( gb_graph(), graph_mode_normal() );
 
-    int u = graph_intensity(gb_graph());
-    graph_set_intensity(gb_graph(),1000);
+    // record prev intensity, and set the intensity to max
+    int u = graph_set_intensity_max(gb_graph());
 
     graph_set_color(gb_graph(),make_color(0,0,0));
     graph_draw_rect(gb_graph(),0,0,400,10);
@@ -100,9 +108,8 @@ void debugpanel_draw( debugpanel_t * self ) {
     graph_set_color(gb_graph(),make_color(3,3,3));
     graph_draw_text(gb_graph(),0,0,string_data(debugpanel_string(self)));
 
-
-    
-
     graph_set_intensity(gb_graph(),u);
+    graph_set_layer(gb_graph(),0);
+    graph_merge_layer(gb_graph(),-1);
   }
 }

@@ -57,8 +57,9 @@ void update() {
 }
 
 void draw() {
-  gb_draw();
+  gb_draw_pre();
   ma_draw();
+  gb_draw_post();
 }
 
 void quit() {

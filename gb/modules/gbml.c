@@ -1,257 +1,253 @@
 
-/*
-var/const
-	ZMLNODE_LIST = 1
-	ZMLNODE_SCOPE = 2
-	ZMLNODE_S = 3
-
-proc/ZMLNode(list/L, S=0)
-//	set waitfor = 0
-	var/z = new/list(3)
-	z[ZMLNODE_SCOPE] = S
-	z[ZMLNODE_LIST] = L
-	z[ZMLNODE_S] = ""
-	return z
-*/
-
-//////////////
-// gbmlnode //
-//////////////
-
-#define gbmlnode_type_tree()   1
-#define gbmlnode_type_int()    2
-#define gbmlnode_type_string() 3
-
-type() {
-
-  // this indicates the current scope, 0 being top.
-  string_t * key;
-  int        scope;
-  bool_t     data_type;
-  void *     data;
-
-} gbmlnode_t;
 
 
-type() {
-
-  dict_t * data;
-
-} gbml_t;
-
-
-/*
-
-#define zml_tab() "  "
-
-proc/zml_load(f)
-	var/d = file2text(f+".zml")
-	if(d != null)
-		return zml_text_parse(d)
-	else
-		return new/list()
-
-proc/zml_save(z,t)
-	if(z == null) return
-
-	if(fexists("[t]-TEMP.zml"))
-		fdel("[t]-TEMP.zml")
-
-	var/tm = file("[t]-TEMP.zml")
-	try
-		tm << zml_to_string(Z)
-
-//		Temp = players/conta/admin/admin(1)-TEMP.zml
-//		T = players/conta/admin/admin(1)
-//		T-TEMP = players/conta/admin/admin(1)-TEMP
-//		T-TEMP+.zml = players/conta/admin/admin(1)-TEMP.zml
-//		T+zml = players/conta/admin/admin(1).zml
-
-		if(length(Temp))
-			fdel(T+".zml")
-			fcopy(Temp,T+".zml")
-			fdel(Temp)
-
-	catch(var/exception/e)
-		world.log << "[e] on [e.file]:[e.line]"
-		fdel(Temp)
-
-
-	fdel(T+".zml")
-	var/f = file(T+".zml")
-	f << ZML_ToString(Z)
-
-
-proc/ZML_Text_Parse(T)
-//	set waitfor = 0
-	var/list/l = Tokenize(T, list("{","}","=",";","#"),list())
-	var/list/r = list(".."=null)
-	var/list/rc = r
-	var/vn  = null
-	var/vv = null
-	var/s = 0
-	var/cm = 0
-
-	for (var/d in l)
-		if(d == "{")
-			if(!cm)
-				if(vn != null)
-					var/u = new/list()
-					u[".."] = rc
-
-					rc[vn] = u
-					rc = rc[vn]
-
-					vn = null
-					vv = null
-
-					s++
-				else
-					var/list/u = new
-					u[".."] = rc
-					rc["_"] = u
-					rc = rc["_"]
-
-					vn = null
-					vv = null
-
-					s++
-			vn = null;
-			vv = null;
-
-		else if(d == "}")
-			if(!cm)
-				if(s > 0)
-					var/uu = rc
-					rc = rc[".."]
-					uu -= ".."
-
-					vn = null
-					vv = null
-					s--
-				else
-					CRASH("Scope drops below 0!")
-
-		else if(d == "=")
-			if(!cm)
-				if(vn != null)
-					rc[vn] = "0"
-				else
-					rc["_"] = "0"
-
-		else if(d == ";")
-			if(!cm)
-				if( (vn != null) && (vv != null) )
-					rc[vn] = vv
-					vn = null
-					vv = null
-				else if(vn != null)
-					rc += vn
-					vn = null
-
-		else if(d == "#")
-			cm = !cm
-
-		else
-			if(!cm)
-				if(vn == null)
-					vn = d
-				else if(vv == null)
-					vv = d
-	rc -= ".."
-	return r
-
-proc/ZML_ToString(Z)
-//	set waitfor = 0
-	return ZMLNode_ToString(ZMLNode(Z,0))
-
-var/const
-	ZMLNODE_LIST = 1
-	ZMLNODE_SCOPE = 2
-	ZMLNODE_S = 3
-
-proc/ZMLNode(list/L, S=0)
-//	set waitfor = 0
-	var/z = new/list(3)
-	z[ZMLNODE_SCOPE] = S
-	z[ZMLNODE_LIST] = L
-	z[ZMLNODE_S] = ""
-	return z
-
-proc/ZMLNode_ToString(Z)
-//	set waitfor = 0
-	if(Z[ZMLNODE_LIST])
-		for (var/d in Z[ZMLNODE_LIST])
-			d = string(d)
-			if(islist(Z[ZMLNODE_LIST][d]))
-				var/z = ZMLNode(Z[ZMLNODE_LIST][d], Z[ZMLNODE_SCOPE]+1)
-				Z[ZMLNODE_S] += "[RepString(ZML_TAB,Z[ZMLNODE_SCOPE])][d] {\n" + ZMLNode_ToString(z)
-				Z[ZMLNODE_S] += "[RepString(ZML_TAB,Z[ZMLNODE_SCOPE])]}\n"
-			else
-				if(Z[ZMLNODE_LIST][d] != null)
-					Z[ZMLNODE_S] += "[RepString(ZML_TAB,Z[ZMLNODE_SCOPE])][d] = [Z[ZMLNODE_LIST][d]];\n"
-				else
-					Z[ZMLNODE_S] += "[RepString(ZML_TAB,Z[ZMLNODE_SCOPE])][d];\n"
-
-	return Z[ZMLNODE_S]
 
 ///////////////////////
-// GENERAL FUNCTIONS //
+// gbml parse object //
 ///////////////////////
 
-#define gb_clamp(n,l,h) max(min(n,h),l)
+#define gbmlparser_max_word_size() 64
+#define gbmlparser_state_key()      0
+#define gbmlparser_state_value()    1
 
-proc/string(S)
-	if      (isnum(S))   return num2text(S,100)
-	else if (istext(S))  return S
-	else                 return "[S]"
+type() {
+	// input string
+	string_t * input;
+	// current scope level
+	int        scope;
+	// contains the dictionaries
+	list_t   * stack;
+	// current dictionary
+	dict_t   * curr;
+	// current char
+	char       curr_char;
+	// current word
+	string_t * curr_word;
+	// current word cursor
+	int        curr_word_c;
+	// boolean quote mode
+	bool_t     quote_mode;
+	// state
+	int        state;
+	// key and value
+	string_t * curr_key;
+	string_t * curr_value;
 
-proc/RepString(T=" ", N=1)
-	var/t = ""
-	for (var/i = 1 to N)
-		t += T
-	return t
 
-proc/Char(T,N)
-	return ascii2text( text2ascii(T,N) )
+} gbmlparser_t;
 
-proc/TrimString(T)
-	var/p1 = 0
-	var/p2 = 0
-	var/list/l = list(" ","\t","\n")
-	var/c  = ""
-	for (var/i = 1 to length(T))
-		c = Char(T,i)
-		if( !(c in l))
-			if(!p1)
-				p1 = i
-				p2 = i
-			else
-				p2 = i
-	return copytext(T,p1,p2+1)
+#define gbmlparser_input(self) 				(self->input)
+#define gbmlparser_scope(self) 				(self->scope)
+#define gbmlparser_stack(self) 				(self->stack)
+#define gbmlparser_curr(self)					(self->curr)
+#define gbmlparser_curr_char(self)  	(self->curr_char)
+#define gbmlparser_curr_word(self)  	(self->curr_word)
+#define gbmlparser_curr_word_c(self) 	(self->curr_word_c)
+#define gbmlparser_quote_mode(self) 	(self->quote_mode)
+#define gbmlparser_state(self)      	(self->state)
+#define gbmlparser_curr_key(self)   	(self->curr_key)
+#define gbmlparser_curr_value(self) 	(self->curr_value)
 
-proc/Tokenize(T, list/L=list(","), list/M=list(";"))
-	var/c = ""
-	var/w = ""
-	var/list/l = new
-	for (var/i = 1 to length(T))
-		c = Char(T,i)
-		if (c in L)
-			w = TrimString(w)
-			if(w)
-				l += w
-			l += c
-			w = ""
-			c = ""
-		else if (c in M)
-			w = TrimString(w)
-			if(w)
-				l += w
-			w = ""
-			c = ""
-		else
-			w += c
-	if(w)
-		l += TrimString(w)
-	return l
-*/
+void gbmlparser_init( gbmlparser_t * self, string_t * s ) {
+	gbmlparser_input(self)   		  = s;
+	gbmlparser_scope(self) 			  = 0;
+	gbmlparser_stack(self) 			  = list();
+	gbmlparser_curr(self)    		  = dict();
+	gbmlparser_curr_char(self) 	  = ' ';
+	gbmlparser_curr_word(self)    = string(gbmlparser_max_word_size());
+	gbmlparser_curr_word_c(self)  = 0;
+	gbmlparser_quote_mode(self)   = false();
+	gbmlparser_state(self)        = 0;
+	gbmlparser_curr_key(self)     = string(gbmlparser_max_word_size());
+	gbmlparser_curr_value(self)   = string(gbmlparser_max_word_size());
+}
+
+gbmlparser_t * gbmlparser( string_t * s ) {
+	gbmlparser_t * r = alloc(gbmlparser_t);
+	gbmlparser_init(r,s);
+	return r;
+}
+
+void free_gbmlparser( gbmlparser_t * self ) {
+	free_string(gbmlparser_input(self));
+	free_string(gbmlparser_curr_word(self));
+	free_string(gbmlparser_curr_key(self));
+	free_string(gbmlparser_curr_value(self));
+	free(self);
+}
+
+//////////////////////
+// parser functions //
+//////////////////////
+
+void gbmlparser_scope_in( gbmlparser_t * self ) {
+}
+
+void gbmlparser_scope_out( gbmlparser_t * self ) {
+}
+
+void gbmlparser_set_curr_key( gbmlparser_t * self ) {
+}
+
+void gbmlparser_set_curr_value( gbmlparser_t * self ) {
+}
+
+void gbmlparser_change_state( gbmlparser_t * self ) {
+}
+
+void gbmlparser_toggle_quote_mode( gbmlparser_t * self ) {
+}
+
+void gbmlparser_add_to_curr_word( gbmlparser_t * self ) {
+}
+
+void gbmlparser_clear_curr_word( gbmlparser_t * self ) {
+}
+
+dict_t * gbmlparser_parse( gbmlparser_t * self ) {
+
+	if (!gbmlparser_input(self)) {
+		return dict();
+	}
+	else {
+		// make a brand new dict
+		gbmlparser_curr(self) = dict();
+		// add this dictionary to the stack
+		list_add_last( gbmlparser_stack(self), gbmlparser_curr(self) );
+
+		// loop through the entire string of input
+		loop(i,string_length(gbmlparser_input(self))) {
+			// get the current string
+			gbmlparser_curr_char(self) = string_get(gbmlparser_input(self),i);
+			// quotation character enables/disables quote mode.
+			if (gbmlparser_curr_char(self) == '"') {
+				// toggle quote mode
+				gbmlparser_quote_mode(self) = !gbmlparser_quote_mode(self);
+			}
+			// scope in
+			else if (gbmlparser_curr_char(self) == '{') {
+				// check for quote mode
+				if (gbmlparser_quote_mode(self)) {
+					// add char to word if so.
+					gbmlparser_curr_word_c(self) = string_put(gbmlparser_input(self),gbmlparser_curr_word_c(self),
+						gbmlparser_curr_char(self));
+				}
+				// determine how to scope in based on the state
+				else {
+					// do we have data in our current word?
+					if (string_virtual_length(gbmlparser_curr_word(self)) > 0) {
+						// set the key first
+						string_copy(gbmlparser_curr_key(self),string_data(gbmlparser_curr_word(self)));
+						// erase the current word
+						string_clear(gbmlparser_curr_word(self));
+					}
+					// only write if the key does not exist.
+					// keep in mind that it will take an empty string as a key as well.
+					if (!dict_contains( gbmlparser_curr(self), string_data(gbmlparser_curr_key(self)) )) {
+						// add a new dictionary with the current key
+						dict_t * u = dict();
+						dict_set( gbmlparser_curr(self), string_data(gbmlparser_curr_key(self)), u );
+						// set the current dict to the new one
+						gbmlparser_curr(self) = u;
+						// add the dict to the stack
+						list_add_last( gbmlparser_stack(self), u );
+					}
+					// if the key DOES exist, simply scope into the dict.
+					// use the internal dictentry we found earlier.
+					else {
+						gbmlparser_curr(self) = dictentry_data(_dict_contains_dictentry);
+						list_add_last( gbmlparser_stack(self), gbmlparser_curr(self) );
+					}
+				}
+			}
+			else if (gbmlparser_curr_char(self) == '}') {
+				if (gbmlparser_quote_mode(self)) {
+					gbmlparser_curr_word_c(self) = string_put(gbmlparser_input(self),gbmlparser_curr_word_c(self),
+						gbmlparser_curr_char(self));
+				}
+				// scope out
+				else {
+					if (list_count(gbmlparser_stack(self)) > 1) {
+
+					}
+				}
+			}
+			else if (gbmlparser_curr_char(self) == '"') {
+				if (gbmlparser_quote_mode(self)) {
+					gbmlparser_curr_word_c(self) = string_put(gbmlparser_input(self),gbmlparser_curr_word_c(self),
+						gbmlparser_curr_char(self));
+				}
+				else {
+				}
+			}
+			else if (gbmlparser_curr_char(self) == '=') {
+				if (gbmlparser_quote_mode(self)) {
+					gbmlparser_curr_word_c(self) = string_put(gbmlparser_input(self),gbmlparser_curr_word_c(self),
+						gbmlparser_curr_char(self));
+				}
+				else {
+				}
+			}
+			else if (gbmlparser_curr_char(self) == ';') {
+				if (gbmlparser_quote_mode(self)) {
+					gbmlparser_curr_word_c(self) = string_put(gbmlparser_input(self),gbmlparser_curr_word_c(self),
+						gbmlparser_curr_char(self));
+				}
+				else {
+				}
+			}
+			else if (gbmlparser_curr_char(self) == '#') {
+				if (gbmlparser_quote_mode(self)) {
+					gbmlparser_curr_word_c(self) = string_put(gbmlparser_input(self),gbmlparser_curr_word_c(self),
+						gbmlparser_curr_char(self));
+				}
+				else {
+				}
+			}
+			// whitespace?
+			else if ( (gbmlparser_curr_char(self) == ' ') or (gbmlparser_curr_char(self) == '\t') or (gbmlparser_curr_char(self) == '\n') ) {
+				if (gbmlparser_quote_mode(self)) {
+					gbmlparser_curr_word_c(self) = string_put(gbmlparser_input(self),gbmlparser_curr_word_c(self),
+						gbmlparser_curr_char(self));
+				}
+				// do nothing otherwise.
+				else {
+					// do nothing.
+					emp();
+				}
+			}
+			else {
+				gbmlparser_curr_word_c(self) = string_put(gbmlparser_input(self),gbmlparser_curr_word_c(self),
+					gbmlparser_curr_char(self));
+			}
+		}
+	}
+}
+
+
+
+///////////////
+// functions //
+///////////////
+
+// load a GBML object from a file.
+dict_t * gbml_load( char * t ) {
+	// open file for reading
+	var(f) = SDL_RWFromFile(t,"r");
+	// read this file only if it is not null.
+	if (f != null()) {
+		// create a new string with the size of the file
+		// (string API will make one extra char for null terminator)
+		string_t * s = string(SDL_RWsize(f));
+		// fill string data with file.
+		SDL_RWread(f,string_data(s),1,SDL_RWsize(f));
+		// parse the data with the string as input
+
+		gbmlparser_t * ps = gbmlparser(s);
+		dict_t * r = gbmlparser_parse(ps);
+		return r;
+	}
+	else {
+		return dict();
+	}
+}

@@ -6,8 +6,17 @@ type() {
 
 } string_t;
 
+// the real length of the string, which does not account
+// for null terminators. The actual size of the char array is
+// length+1.
 #define string_length(self) (self->length)
+// macro to get the inner character data from the string.
 #define string_data(self)   (self->data)
+// macro to determine what C would see in terms of a string length
+// using strlen(). Note that this will check for a null terminator.
+// if the first character is a null terminator, then the virtual
+// length of the string if 0.
+#define string_virtual_length(self) strlen(string_data(self))
 
 /////////
 // new //
@@ -39,18 +48,42 @@ void free_string( string_t * self ) {
 // funcs //
 ///////////
 
+// this will return 0 if it is out of range.
+// it will otherwise pluck a character from the array.
+char string_get( string_t * self, int p ) {
+  if (inrange(p,0,string_length(self))) {
+    return string_data(self)[p];
+  }
+  return 0;
+}
+
+
 bool_t string_equals( string_t * self, char * st ) {
   return streq(string_data(self),st);
 }
 
-void string_clear( string_t * self ) {
+int string_clear( string_t * self ) {
   loop(i,string_length(self)) {
-    string_data(self)[i] = ' ';
+    string_data(self)[i] = '\0';
   }
+  return 0;
 }
 
-void string_put( string_t * self, int n, char c ) {
-  string_data(self)[n] = c;
+int string_clear_with( string_t * self, char c ) {
+  loop(i,string_length(self)) {
+    string_data(self)[i] = c;
+  }
+  return 0;
+}
+
+int string_put( string_t * self, int n, char c ) {
+  if (inrange(n,0,string_length(self))) {
+    string_data(self)[n] = c;
+    return n + 1;
+  }
+  else {
+    return n;
+  }
 }
 
 int string_copy_at( string_t * self, int n, char * c ) {

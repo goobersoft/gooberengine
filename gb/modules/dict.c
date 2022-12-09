@@ -8,16 +8,22 @@ type() {
 
   string_t  * key;
   void      * data;
+  tag_t     * tag;
 
 } dictentry_t;
 
 #define dictentry_key(self)   (self->key)
 #define dictentry_data(self)  (self->data)
+#define dictentry_tag(self)   (self->tag)
+#define dictentry_id(self)    tag_id(dictentry_tag(self))
 
 dictentry_t * dictentry( char * s, void * d ) {
   dictentry_t * r      = alloc(dictentry_t);
   dictentry_key(r)     = string_from(s);
   dictentry_data(r)    = d;
+  // using a tag can help us identify what type of data the dictentry
+  // is holding in other modules.
+  dictentry_tag(r)     = tag("dictentry","");
   return r;
 }
 
@@ -25,6 +31,7 @@ dictentry_t * dictentry( char * s, void * d ) {
 // does not destroy data, be careful!
 void free_dictentry( dictentry_t * self ) {
   free_string(dictentry_key(self));
+  free_tag(dictentry_tag(self));
   free(self);
 }
 
@@ -72,26 +79,43 @@ dict_t * dict() {
 // functions //
 ///////////////
 
-// this will return true if a dictionary entry was
-// over-written. false otherwise.
-bool_t dict_set( dict_t * self, char * s, void * d ) {
-
+dictentry_t * _dict_contains_dictentry;
+bool_t dict_contains( dict_t * self, char * k ) {
   // check if the key already exists.
   if (list_count(dict_entries(self)) > 0) {
     dictentry_t * u;
     foreach(dict_entries(self),dt) {
       u = cast(dt,dictentry_t*);
-      if (dictentry_compare_key(u,s)) {
-        dictentry_set_data(u,d);
+      if (dictentry_compare_key(u,k)) {
+        _dict_contains_dictentry = u;
         return true();
       }
     }
   }
-
-  // make a new key
-  dictentry_t * de = dictentry(s,d);
-  list_add_last(dict_entries(self),de);
   return false();
+}
+
+// this will return the old data if the data was overwritten.
+// will return null otherwise.
+void * dict_set( dict_t * self, char * s, void * d ) {
+
+  // check first if the dictionary already has an entry
+  if (dict_contains(self,s)) {
+    // set the data. WARNING -- UNSAFE!
+    // keep the old data internally in a pointer to free later.
+    void * r = dictentry_data(_dict_contains_dictentry);
+    // set the new data.
+    dictentry_set_data(_dict_contains_dictentry,d);
+    // return old data
+    return r;
+  }
+  else {
+    // make a new key
+    dictentry_t * de = dictentry(s,d);
+    list_add_last(dict_entries(self),de);
+    // no old data for key
+    return null();
+  }
 }
 
 void * dict_get( dict_t * self, char * s ) {
@@ -107,7 +131,9 @@ void * dict_get( dict_t * self, char * s ) {
   return null();
 }
 
-bool_t dict_remove( dict_t * self, char * s ) {
+// will return the retaining data for the key given
+// if it exists. null otherwise.
+void * dict_remove( dict_t * self, char * s ) {
 
   if (list_count(dict_entries(self)) > 0) {
     int l = list_count(dict_entries(self));
@@ -118,8 +144,9 @@ bool_t dict_remove( dict_t * self, char * s ) {
 
       if ( dictentry_compare_key(u,s) ) {
         list_remove_first(dict_entries(self));
+        void * r = dictentry_data(u);
         free_dictentry(u);
-        return true();
+        return r;
       }
 
       // rotate the entries so that the next node is at the head.
@@ -128,7 +155,7 @@ bool_t dict_remove( dict_t * self, char * s ) {
       l--;
     }
   }
-  return false();
+  return null();
 }
 
 void _dict_print( dict_t * self ) {

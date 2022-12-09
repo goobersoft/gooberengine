@@ -19,6 +19,9 @@ type() {
 #define sprite_flip_x(self)   (self->flip_x)
 #define sprite_flip_y(self)   (self->flip_y)
 
+#define sprite_width(self)    rect_w(sprite_rect(self)) 
+#define sprite_height(self)   rect_h(sprite_rect(self))
+
 /////////
 // new //
 /////////

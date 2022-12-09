@@ -49,6 +49,10 @@ rect_t * clone_rect( rect_t * o ) {
   return r;
 }
 
+void free_rect( rect_t * self ) {
+  free(self);
+}
+
 ///////////
 // funcs //
 ///////////

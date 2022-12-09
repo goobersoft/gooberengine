@@ -29,15 +29,11 @@ void integer_set( integer_t * self, int n ) {
 }
 
 void integer_add( integer_t * self, int n ) {
-  integer_value(self) += n;
+  integer_value(self) = clamp(integer_value(self)+n,integer_min_value(),integer_max_value());
 }
 
 void integer_mul( integer_t * self, int n ) {
-  integer_value(self) *= n;
-}
-
-void integer_sub( integer_t * self, int n ) {
-  integer_value(self) -= n;
+  integer_value(self) = clamp(integer_value(self)*n,integer_min_value(),integer_max_value());
 }
 
 void integer_div( integer_t * self, int n ) {

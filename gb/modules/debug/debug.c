@@ -1,17 +1,27 @@
 
 
+//////////
+// type //
+//////////
+
+type() {
+
+  debugpanel_t * panel;
+
+} debug_t;
+
 /////////////
 // globals //
 /////////////
 
-debugpanel_t  * debug_panel;
+debug_t         debug;
 
 ////////////
 // events //
 ////////////
 
 void debug_init() {
-  debug_panel   = debugpanel();
+  debug.panel   = debugpanel();
 }
 
 void debug_load() {
@@ -34,7 +44,7 @@ void debug_draw_pre() {
 }
 
 void debug_draw_post() {
-  debugpanel_draw(debug_panel);
+  debugpanel_draw(debug.panel);
 }
 
 void debug_quit() {

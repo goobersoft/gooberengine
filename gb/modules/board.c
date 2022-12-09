@@ -24,6 +24,7 @@ typedef struct {
 // new //
 /////////
 
+
 void board_init( board_t * self, SDL_Renderer * r ) {
   board_renderer(self)  = r;
   board_texture(self)   = SDL_CreateTexture( r,

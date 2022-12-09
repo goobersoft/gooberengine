@@ -29,7 +29,7 @@ void colormap_init( colormap_t * self, int x, int y ) {
   colormap_data(self)          = allocv(color_t,x*y);
   colormap_area(self)          = x*y;
   loop(i,colormap_area(self)) {
-    colormap_data(self)[i] = make_color(0,0,0);
+    colormap_data(self)[i] = make_color_rgba(0,0,0,0);
   }
 }
 

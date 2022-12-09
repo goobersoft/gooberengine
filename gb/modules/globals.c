@@ -90,14 +90,28 @@ typedef unsigned long  ulong_t;
 #define val(x)          (*x)
 #define valn(x,n)       x[n]
 
+#define var(x)          void*x
+
 #define loop(i,b)         for(int i=0;i<b;i++)
 #define loop2(i,a,b)      for(int i=a;i<b;i++)
 
 #define type()            typedef struct
 #define union()           typedef union
 
+// this is used inside of a type() block.
+// x: the name of the field
+// t: the data type
+// b: the amount of bits to use for the data type
+// example:
+//    field( f_visible, bool_t, 1 );
 #define field(x,t,b)      t x:b
 
+// local / remote are just syntactic sugar.
+// the purpose of these are to indicate when the object is freed:
+//    LOCAL fields are freed with the object
+//    REMOTE fields do not get freed with the object
+#define local(x)          x
+#define remote(x)         x
 
 #define null()            NULL
 

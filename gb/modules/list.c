@@ -248,3 +248,18 @@ void list_rotate_prev(list_t * self) {
     _list_add_first(self,t1);
   }
 }
+
+// returns true and places the item in the front of the list if it
+// is inside of the list. Returns false otherwise.
+bool_t list_find(list_t * self, void * v) {
+  // check to see if the item exists in the list.
+  // if it does, continue to rotate the list until it is the first
+  // item in the list.
+  if (list_contains(self,v)) {
+    while(list_get_first(self) != v) {
+      list_rotate_next(self);
+    }
+    return true();
+  }
+  return false();
+}

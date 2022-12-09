@@ -5,15 +5,19 @@
 
 type() {
 
-  point_t   pos;
-  point_t   size;
-  bool_t    solid;
+  local( point_t * pos );
+  local( point_t * size );
+  bool_t solid;
+
+  // a pointer to the parent object
+  remote( void * parent );
 
 } entity_t;
 
-#define entity_pos(self)     ref(self->pos)
-#define entity_size(self)    ref(self->size)
+#define entity_pos(self)     (self->pos)
+#define entity_size(self)    (self->size)
 #define entity_solid(self)   (self->solid)
+#define entity_parent(self)  (self->parent)
 
 #define entity_pos_x(self)   point_x(entity_pos(self))
 #define entity_pos_y(self)   point_y(entity_pos(self))
@@ -22,36 +26,44 @@ type() {
 
 #define entity_make_rect(self) make_rect(entity_pos(self).x,entity_pos(self).y,entity_size(self).x,entity_size(self).y)
 
+//#define entity_set_parent(self,p)  set(self,parent,p)
+#define entity_set_pos(self,x,y)   point_set(entity_pos(self),x,y)
+#define entity_set_size(self,w,h)  point_set(entity_size(self),w,h)
+#define entity_set_solid(self,b)   set(self,solid,bool(b))
+
 /////////
 // new //
 /////////
 
-void entity_init( entity_t * self ) {
-  point_set          (entity_pos(self),0,0);
-  point_set          (entity_size(self),10,10);
-  entity_solid(self) = true();
+void entity_init( entity_t * self, void * p ) {
+  entity_pos(self)         = point(0,0);
+  entity_size(self)        = point(10,10);
+  entity_solid(self)       = true();
+  entity_parent(self)      = p;
 }
 
-entity_t * entity() {
+entity_t * entity( void * p ) {
   entity_t * r = alloc(entity_t);
-  entity_init(r);
+  entity_init(r,p);
   return r;
+}
+
+void free_entity( entity_t * self ) {
+  free_point(entity_pos(self));
+  free_point(entity_size(self));
+  free(self);
 }
 
 ///////////
 // funcs //
 ///////////
 
-void entity_set_pos( entity_t * self, int x, int y ) {
-  point_set(entity_pos(self),x,y);
-}
-
-void entity_set_size( entity_t * self, int w, int h ) {
-  point_set(entity_size(self),w,h);
-}
-
-void entity_set_solid( entity_t * self, bool_t b ) {
-  entity_solid(self) = bool(b);
+// setting a parent for this entity object would be useful for
+// knowing the owner actor of this entity. The reason why the
+// pointer is void is because different types may use the
+// entity type for collisions.
+void entity_set_parent( entity_t * self, void * p ) {
+  entity_parent(self) = p;
 }
 
 bool_t entity_check_collide( entity_t * c1, entity_t * c2 ) {

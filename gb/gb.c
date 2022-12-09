@@ -55,6 +55,7 @@
 #include "modules/sprite.c"             // instanced object with a reference to a colormap
 #include "modules/tilemap.c"            // instanceable grids of variable colormap sections
 #include "modules/scene.c"              // scene base object
+#include "modules/camera.c"             // determines how a scene should render
 #include "modules/controller.c"         // gamepads
 #include "modules/network.c"            // networking (TCP/UDP)
 #include "modules/gbml.c"               // markup
@@ -84,6 +85,8 @@ typedef struct {
 
   int            running;
   int            paused;
+  bool_t         flag_cls;
+  bool_t         flag_debug;
   visual_t     * visual;
   timing_t     * timing;
   graph_t      * graph;
@@ -91,6 +94,8 @@ typedef struct {
   mouse_t      * mouse;
   audio_t      * audio;
   controller_t * controller;
+
+  scene_t      * scene;
   
 } gb_t;
 
@@ -109,6 +114,8 @@ gb_t * gb;
 #define gb()            (gb)
 #define gb_assets()     (gb->assets)
 #define gb_running()    (gb->running)
+#define gb_flag_cls()   (gb->flag_cls)
+#define gb_flag_debug() (gb->flag_debug)
 #define gb_paused()     (gb->paused)
 #define gb_visual()     (gb->visual)
 #define gb_timing()     (gb->timing)
@@ -116,6 +123,15 @@ gb_t * gb;
 #define gb_mouse()      (gb->mouse)
 #define gb_audio()      (gb->audio)
 #define gb_controller() (gb->controller)
+#define gb_scene()      (gb->scene)
+
+//////////////////////
+// helper functions //
+//////////////////////
+
+#define gb_get_colormap(c)   assets_get_colormap(gb_assets(),c)
+#define gb_get_sound(s)      assets_get_sound(gb_assets(),s)
+#define gb_get_font(f)       assets_get_font(gb_assets(),f)
 
 //////////////////////////
 // special debug module //
@@ -138,6 +154,8 @@ void gb_init() {
   gb()             = alloc(gb_t);
   gb_running()     = true();
   gb_paused()      = false();
+  gb_flag_cls()    = false();
+  gb_flag_debug()  = true();//false();
   gb_visual()      = visual();
   gb_timing()      = timing();
   gb_assets()      = assets(gb_visual());
@@ -145,6 +163,9 @@ void gb_init() {
   gb_audio()       = audio();
   gb_graph()       = graph(gb_visual());
   gb_controller()  = controller();
+
+  gb_scene()       = scene(gb());
+  scene_set_id(gb_scene(),"none");
 
   ///////////////
   // debugging //
@@ -285,17 +306,24 @@ void gb_update_post() {
 
 }
 
-void gb_draw() {
+void gb_draw_pre() {
   
+  // clear the graph colormap if the cls flag is enabled.
+  if (gb_flag_cls()) {
+    graph_cls(gb_graph());
+  }
+
   // clear screen to black and set draw color back to white.
   visual_draw_pre(gb_visual());  
   // background drawing for debug
-  debug_draw_pre();
+  if (gb_flag_debug()) debug_draw_pre();
+}
 
+void gb_draw_post() {
   // all of the module drawing goes in here
   graph_draw_mouse( gb_graph(), gb_mouse() );
   // do some debug drawing at the end of everything else
-  debug_draw_post();
+  if (gb_flag_debug()) debug_draw_post();
   // present the screen
   graph_present(gb_graph());
   visual_draw_post(gb_visual());

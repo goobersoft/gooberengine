@@ -9,23 +9,6 @@
 */
 
 type() {
-
-  /*
-  int num_sounds;
-  int num_images;
-  int num_colormaps;
-  int num_fonts;
-  
-  // array of images
-  image_t ** images;
-  // array of colormaps
-  colormap_t ** colormaps;
-  // array of sounds
-  sound_t ** sounds;
-  // array of fonts
-  font_t  ** fonts;
-  */
-
   // moving to dictionaries so that sounds/images/fonts
   // can be recalled with keys, not indices.
   dict_t * images;
@@ -55,16 +38,6 @@ type() {
 /////////
 
 void assets_init( assets_t * self, visual_t * v ) {
-  /*
-  assets_num_images(self)    = assets_num_images_d();
-  assets_num_colormaps(self) = assets_num_colormaps_d();
-  assets_num_sounds(self)    = assets_num_sounds_d();
-  assets_num_fonts(self)     = assets_num_fonts_d();
-  assets_images(self)        = allocv(image_t*,    assets_num_images_d());
-  assets_colormaps(self)     = allocv(colormap_t*, assets_num_colormaps_d());
-  assets_sounds(self)        = allocv(sound_t*,    assets_num_sounds_d());
-  assets_fonts(self)         = allocv(font_t*,     assets_num_fonts_d());
-  */
   assets_images(self)        = dict();
   assets_colormaps(self)     = dict();
   assets_sounds(self)        = dict();
@@ -78,23 +51,6 @@ assets_t * assets( visual_t * v ) {
   return r;
 }
 
-/*
-assets_t * assets__custom_sizes( size_t i, size_t c, size_t s, size_t f ) {
-  i = clamp(i,0,100000);
-  s = clamp(s,0,100000);
-  f = clamp(f,0,100000);
-  assets_t * r         = alloc(assets_t);
-  assets_num_images(r)    = i;
-  assets_num_colormaps(r) = c;
-  assets_num_sounds(r)    = s;
-  assets_num_fonts(r)     = f;
-  assets_images(r)        = allocv(image_t*,    i);
-  assets_colormaps(r)     = allocv(colormap_t*, c);
-  assets_sounds(r)        = allocv(sound_t*,    s);
-  assets_fonts(r)         = allocv(font_t*,     f);
-  return r;
-}
-*/
 
 ///////////
 // funcs //
@@ -102,22 +58,22 @@ assets_t * assets__custom_sizes( size_t i, size_t c, size_t s, size_t f ) {
 
 // -- setters -- //
 
-bool_t assets_set_image( assets_t * self, char * k, image_t * a ) {
+void * assets_set_image( assets_t * self, char * k, image_t * a ) {
   return dset(assets_images(self),k,a);
   //return dict_set( assets_images(self), k, a );
 }
 
-bool_t assets_set_colormap( assets_t * self, char * k, colormap_t * c ) {
+void * assets_set_colormap( assets_t * self, char * k, colormap_t * c ) {
   return dset(assets_colormaps(self),k,c);
   //return dict_set( assets_colormaps(self), k, c);
 }
 
-bool_t assets_set_sound( assets_t * self, char * k, sound_t * s ) {
+void * assets_set_sound( assets_t * self, char * k, sound_t * s ) {
   return dset(assets_sounds(self),k,s);
   //return dict_set( assets_sounds(self), k, s);
 }
 
-bool_t assets_set_font( assets_t * self, char * k, font_t * f ) {
+void * assets_set_font( assets_t * self, char * k, font_t * f ) {
   return dset(assets_fonts(self),k,f);
   //return dict_set( assets_fonts(self), k, f);
 }

@@ -54,7 +54,7 @@ byte_t _graph_transvals[] = {
 type() {
 
   // the reference to the visual + renderer
-  visual_t      * visual;
+  remote( visual_t * visual );
   
   // the number of dots which were processed in the frame.
   uint_t        frame_dots;
@@ -78,27 +78,30 @@ type() {
   // the drawing mode
   int           mode;
 
+  //local( rect_t * clip );
+
+  // TODO: change these into a rect object
   point_t       clip_pos;
   point_t       clip_size;
 
   // A link to the font in Assets
-  font_t      * font;
+  remote( font_t * font );
   // palette for rendering (color IDs)
   // this is a pointer to the default palette on init
-  palette_t   * palette;
+  remote( palette_t * palette );
   // default palette
-  palette_t   * palette_default;
+  remote( palette_t * palette_default );
   // transparency level
   byte_t        trans;
 
   // color data (colormap)
-  colormap_t  * data;
+  remote( colormap_t * data );
   // depth data
-  int         * data_depth;
+  local( int * data_depth );
   // current layer
   int           layer;
   // extra colormaps
-  colormap_t ** layers;
+  local( colormap_t ** layers );
 
   // internal rectangles used for drawing
   SDL_Rect  rect_src;
@@ -123,6 +126,7 @@ type() {
 
 #define graph_intensity(self)       (self->intensity)
 
+//#define graph_clip(self)            (self->graph_clip)
 #define graph_clip_pos(self)        (&self->clip_pos)
 #define graph_clip_size(self)       (&self->clip_size)  
 #define graph_clip_x(self)          (self->clip_pos.x)
@@ -155,12 +159,12 @@ void graph_init( graph_t * self, visual_t * v ) {
   graph_flip_x(self)          = false();
   graph_flip_y(self)          = false();
   graph_color(self)           = make_color(3,3,3);
-  graph_color_cls(self)       = make_color(0,0,0);
+  graph_color_cls(self)       = make_color_rgba(0,0,0,0);
   graph_depth(self)           = 0;
   graph_depth_cls(self)       = graph_max_depth();
   graph_depth_enabled(self)   = false();
 
-  graph_intensity(self)       = graph_max_intensity()/10;
+  graph_intensity(self)       = 150;
 
   graph_mode(self)            = graph_mode_normal();
 
@@ -189,6 +193,21 @@ graph_t * graph( visual_t * v ) {
   graph_t * r = alloc(graph_t);
   graph_init(r,v);
   return r;
+}
+
+void free_graph( graph_t * self ) {
+  // free the clipping rect
+  //free_rect( graph_clip(self) );
+  // free the depth buffer
+  free( graph_data_depth(self) );
+  // free all of the colormaps contained in the layers
+  loop(i,graph_max_layers()) {
+    free_colormap(graph_layers(self)[i]);
+  }
+  // clear the array that held the layers
+  free(graph_layers(self));
+  // finally, free self
+  free(self);
 }
 
 ///////////////
@@ -266,14 +285,15 @@ void graph_set_palette( graph_t * self, palette_t * p ) {
   }
 }
 
-// setting n to -1 will be the base colormap
-// setting 0 to 9 will be the extra colormaps
+// setting n to 0 is the base layer.
+// 1-9 are extra layers.
 void graph_set_layer( graph_t * self, int n ) {
   n = wrap(n,0,graph_max_layers());
   graph_data(self) = graph_layers(self)[n];
 }
 
-void graph_reset_layer( graph_t * self ) {
+// sets the layer to the bottommost (0)
+void graph_set_layer_base( graph_t * self ) {
   graph_set_layer(self,0);
 }
 
@@ -308,6 +328,15 @@ void graph_cls_depth( graph_t * self ) {
 void graph_cls( graph_t * self ) {
   graph_cls_color(self);
   graph_cls_depth(self);
+}
+
+void graph_cls_all( graph_t * self ) {
+  loop(i,graph_max_layers()) {
+    graph_set_layer(self,i);
+    graph_cls_color(self);
+  }
+  // set back to layer 0 when finished.
+  graph_set_layer(self,0);
 }
 
 color_t graph_get_pixel( graph_t * self, int x, int y ) {
@@ -610,7 +639,7 @@ void graph_draw_colormap_sub_quad(
   int dx1, int dy1, int dx2, int dy2, int dx3, int dy3, int dx4, int dy4,
   colormap_t * c, int sx, int sy, int sw, int sh )
 {
-
+  // TODO
 }
 
 void graph_draw_text( graph_t * self, int x, int y, char * t ) {
@@ -667,6 +696,7 @@ void graph_merge_layer( graph_t * self, int l2 ) {
 // this does not allow movement of the layer when drawing.
 // draw the dots in their prospective location before drawing the layer.
 void graph_draw_layer_sub( graph_t * self, int d, int sx, int sy, int sw, int sh ) {
+  // TODO
 }
 
 void graph_draw_mouse( graph_t * self, mouse_t * m ) {
@@ -704,7 +734,18 @@ void graph_draw_tilemap( graph_t * self, int x, int y, tilemap_t * t ) {
 }
 
 void graph_draw_tilemap_sub( graph_t * self, int x, int y, int w, int h, tilemap_t * t ) {
+  // TODO
+}
 
+// draws the whole screen with the cls color
+// useful if you want to use the spray functionality to clear the screen instead of
+// simply wiping it (but this method is slower).
+void graph_draw_cls( graph_t * self ) {
+  color_t u  = graph_set_color( self, graph_color_cls(self) );
+  int v      = graph_set_mode( self, graph_mode_replace() );
+  graph_draw_rect( self, 0, 0, 400, 240 );
+  graph_set_color( self, u );
+  graph_set_mode( self, v);
 }
 
 ///////////////////////////////////
@@ -717,6 +758,20 @@ void graph_draw_sprite( graph_t * self, int x, int y, sprite_t * s ) {
     rect_x(sprite_rect(s)), rect_y(sprite_rect(s)), rect_w(sprite_rect(s)), rect_h(sprite_rect(s)));
   graph_set_flip( self, false(), false() );
 }
+
+void graph_draw_sprite_tiled( graph_t * self, int x, int y, sprite_t * s, int w, int h ) {
+  for (int i = 0; i < w; i++) {
+    for (int j = 0; j < h; j++) {
+      graph_draw_sprite(self,x + (sprite_width(s)*i),y + (sprite_height(s)*j),s);
+    }
+  }
+}
+
+void graph_draw_camera( graph_t * self, int x, int y, camera_t * c ) {
+  // TODO
+}
+
+
 
 ////////////
 // events //
