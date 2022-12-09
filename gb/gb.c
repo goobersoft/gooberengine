@@ -176,7 +176,9 @@ void gb_init() {
   gb_controller()  = controller();
 
   gb_scene()       = scene(gb());
-  scene_set_id(gb_scene(),"none");
+  scene_set_id(gb_scene(),"none");\
+
+  //test
 
   ///////////////
   // debugging //
