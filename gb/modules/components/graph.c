@@ -767,9 +767,6 @@ void graph_draw_sprite_tiled( graph_t * self, int x, int y, sprite_t * s, int w,
   }
 }
 
-void graph_draw_camera( graph_t * self, int x, int y, camera_t * c ) {
-  // TODO
-}
 
 
 

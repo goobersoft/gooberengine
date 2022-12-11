@@ -15,6 +15,8 @@ type() {
   // a gravity constant
   int        gravity;
 
+  // local tag info
+  local( tag_t * tag );
   // component holding the bounding box
   local( entity_t * entity );
   // a velocity vector
@@ -28,6 +30,8 @@ type() {
 
 } ma_actor_t;
 
+#define ma_actor_tag(self)     (self->tag)
+#define ma_actor_id(self)      tag_id(ma_actor_tag(self))
 #define ma_actor_entity(self)  (self->entity)
 #define ma_actor_pos(self)     entity_pos(ma_actor_entity(self))
 #define ma_actor_size(self)    entity_size(ma_actor_entity(self))
@@ -44,6 +48,7 @@ type() {
 
 void ma_actor_init( ma_actor_t * self, colormap_t * c, void * p ) {
   
+  ma_actor_tag(self)     = tag(self,"actor");
   ma_actor_entity(self)  = entity(self);
   ma_actor_dir(self)     = ma_actor_dir_south();
   ma_actor_gravity(self) = ma_actor_gravity_d();
@@ -83,6 +88,7 @@ void ma_actor_set_gravity( ma_actor_t * self, int g ) {
 // macros //
 ////////////
 
+#define ma_actor_set_id(a,id)                 tag_set_id(ma_actor_tag(self),id)
 #define ma_actor_set_pos(a,x,y)               entity_set_pos(ma_actor_entity(a),x,y)
 #define ma_actor_set_size(a,w,h)              entity_set_size(ma_actor_entity(a),w,h)
 #define ma_actor_set_solid(a,b)               entity_set_solid(ma_actor_entity(a),b)

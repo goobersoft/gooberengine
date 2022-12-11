@@ -12,7 +12,7 @@ type() {
   // ability points
   local( number_t * ap );
 
-  bool_t       flag_ducking;
+  bool_t       f_ducking;
 
 } ma_makeii_t;
 
@@ -24,7 +24,7 @@ type() {
 
 #define ma_makeii_flag_active(self)   tag_flag_active(ma_makeii_tag(self))
 #define ma_makeii_flag_visible(self)  tag_flag_visible(ma_makeii_tag(self))
-#define ma_makeii_flag_ducking(self)  (self->flag_ducking)
+#define ma_makeii_f_ducking(self)  (self->f_ducking)
 #define ma_makeii_pos(self)           entity_pos(ma_actor_entity(ma_makeii_actor(self)))
 #define ma_makeii_pos_x(self)         point_x(entity_pos(ma_actor_entity(ma_makeii_actor(self))))
 #define ma_makeii_pos_y(self)         point_y(entity_pos(ma_actor_entity(ma_makeii_actor(self))))
@@ -47,7 +47,7 @@ type() {
 
 void ma_makeii_init( ma_makeii_t * self ) {
   // make a new tag with class "ma_makeii" and no ID
-  ma_makeii_tag(self)          = tag("ma_makeii",null(),self);
+  ma_makeii_tag(self)          = tag(self,"makeii");
   // create the ma_actor
   ma_makeii_actor(self)        = ma_actor( assets_get_colormap( gb_assets(), "ma-0" ), self );
   // set the ma_actor dir
@@ -100,10 +100,10 @@ void ma_makeii_update( ma_makeii_t * self ) {
 
   // control the ducking behavior of ma_makeii
   if (controller_is_button_held( gb_controller(), controller_button_down())) {
-    ma_makeii_flag_ducking(self) = true();
+    ma_makeii_f_ducking(self) = true();
   }
   else {
-    ma_makeii_flag_ducking(self) = false();
+    ma_makeii_f_ducking(self) = false();
   }
 
   // clamp the position of ma_makeii inside of the screen

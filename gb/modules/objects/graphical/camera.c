@@ -37,3 +37,6 @@ camera_t * camera() {
 ///////////////
 // functions //
 ///////////////
+
+void camera_draw() {
+}

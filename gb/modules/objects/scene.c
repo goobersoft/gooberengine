@@ -43,7 +43,7 @@ type() {
 
 scene_t * scene(void * p) {
   scene_t * r             = alloc(scene_t);
-  scene_tag(r)            = tag("scene","",p);
+  scene_tag(r)            = tag(r,"scene");
   scene_name(r)           = string(scene_name_size());
   scene_size(r)           = point(400,240);
   scene_pos(r)            = point(0,0);

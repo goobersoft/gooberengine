@@ -26,7 +26,7 @@
 #include "modules/core/types.c"              // complex numerical types
 #include "modules/core/tag.c"                // descriptive tag
 #include "modules/core/locker.c"
-//#include "modules/rng.c"              // implementation of mersenne twister in 
+//#include "modules/rng.c"              // implementation of mersenne twister in c
 #include "modules/core/string.c"             // fixed-length character arrays
 #include "modules/core/list.c"               // linked list data type
 #include "modules/core/dict.c"               // dictionary
@@ -37,8 +37,6 @@
 #include "modules/core/number.c"             // integer number with min and max bounds
 #include "modules/core/alarm.c"              // timers
 
-#include "modules/entity.c"             // AABB collisions
-
 #include "modules/graphical/color.c"              // 6-bit color with transparency bit
 #include "modules/graphical/board.c"              // drawing durfaces
 #include "modules/graphical/visual.c"             // window and renderer interface
@@ -48,7 +46,7 @@
 #include "modules/graphical/font.c"               // bitmap fonts which utilize image colormaps
 #include "modules/graphical/sprite.c"             // instanced object with a reference to a colormap
 #include "modules/graphical/tilemap.c"            // instanceable grids of variable colormap sections
-#include "modules/graphical/camera.c"             // determines how a scene should render
+
 
 #include "modules/input/input.c"              // user input
 #include "modules/input/mouse.c"              // mouse interface
@@ -57,35 +55,28 @@
 #include "modules/audio/sound.c"              // sound interface
 #include "modules/audio/audio.c"              // audio mixer
 
-
+#include "modules/network/network.c"            // networking (TCP/UDP)
 
 #include "modules/components/assets.c"             // asset container object (sound/image/font)
 #include "modules/components/timing.c"             // fps/timing interface
-
-#include "modules/gbs.c"                // GooberScript
-
-
-#include "modules/scene.c"              // scene base object
-
-
-#include "modules/network.c"            // networking (TCP/UDP)
-#include "modules/gbml.c"               // markup
-
 #include "modules/components/graph.c"              // drawing interface
 
-///////////////
-// graphical //
-///////////////
+///////////////////////
+// top layer objects //
+///////////////////////
 
-#include "modules/graphical/sprayer.c"
+#include "modules/objects/gbs.c"                // GooberScript
+#include "modules/objects/gbml.c"               // markup
+#include "modules/objects/entity.c"             // AABB collisions
+#include "modules/objects/scene.c"              // scene base object
 
-//////////
-// toys //
-//////////
+#include "modules/objects/graphical/sprayer.c"
+#include "modules/objects/graphical/camera.c"             // determines how a scene should render
 
-#include "modules/toys/jake.c"
-#include "modules/toys/ball.c"
-#include "modules/toys/fountain.c"
+#include "modules/objects/toys/jake.c"
+#include "modules/objects/toys/ball.c"
+#include "modules/objects/toys/fountain.c"
+
 
 
 /////////////

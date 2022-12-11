@@ -7,6 +7,7 @@
 
 type() {
 
+  tag_t      * tag;
   point_t    * pos;
   int          delay;
   int          anim_index;
@@ -15,6 +16,7 @@ type() {
 
 } jake_t;
 
+#define jake_tag(self)        (self->tag)
 #define jake_pos(self)        (self->pos)
 #define jake_delay(self)      (self->delay)
 #define jake_anim_index(self) (self->anim_index)
@@ -26,6 +28,7 @@ type() {
 /////////
 
 void jake_init( jake_t * self, colormap_t * c, graph_t * g ) {
+  jake_tag(self)        = tag(self,"ma_jake");
   jake_pos(self)        = point(400,rnd(0,220));
   jake_delay(self)      = jake_delay_max();
   jake_anim_index(self) = 0;

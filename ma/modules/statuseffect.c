@@ -44,7 +44,7 @@ type() {
 /////////
 
 void ma_statuseffect_init( ma_statuseffect_t * self ) {
-  ma_statuseffect_tag(self)      = tag("statuseffect",null(),self);
+  ma_statuseffect_tag(self)      = tag(self,"statuseffect");
   ma_statuseffect_level(self)    = 0;
   ma_statuseffect_time(self)     = 0;
   ma_statuseffect_active(self)   = true();

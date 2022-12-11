@@ -23,7 +23,7 @@ dictentry_t * dictentry( char * s, void * d ) {
   dictentry_data(r)    = d;
   // using a tag can help us identify what type of data the dictentry
   // is holding in other modules.
-  dictentry_tag(r)     = tag("dictentry","",null());
+  dictentry_tag(r)     = tag(r,"dictentry");
   return r;
 }
 
