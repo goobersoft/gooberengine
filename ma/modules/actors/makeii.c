@@ -47,7 +47,7 @@ type() {
 
 void ma_makeii_init( ma_makeii_t * self ) {
   // make a new tag with class "ma_makeii" and no ID
-  ma_makeii_tag(self)          = tag("ma_makeii",null());
+  ma_makeii_tag(self)          = tag("ma_makeii",null(),self);
   // create the ma_actor
   ma_makeii_actor(self)        = ma_actor( assets_get_colormap( gb_assets(), "ma-0" ), self );
   // set the ma_actor dir
