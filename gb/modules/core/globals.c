@@ -34,12 +34,6 @@
 // the app runs at 60 FPS - this is the millisecond measurement
 #define tick_delay()   16667
 
-// easter egg: Bob's LoL
-// this is 2^20 (1048576) - 2^15 (32768) 
-// result is (2^15)-(2^5)-1
-// the number looks amusing to me, so maybe I might use it somewhere.
-#define bobslol()     1015808
-
 // converts a float to a fixed point integer.
 #define ftoi(f) ((int)f*1000)
 
@@ -73,15 +67,19 @@ typedef unsigned long  ulong_t;
 
 #define streq(a,b)    (strcmp(a,b)==0)
 
-#define eq(a,b)   a==b
-#define neq(a,b)  a!=b
-#define gt(a,b)   a>b
-#define gte(a,b)  a>=b
-#define lt(a,b)   a<b
-#define lte(a,b)  a<=b
+#define eq(a,b)   (a==b)
+#define neq(a,b)  (a!=b)
+#define gt(a,b)   (a>b)
+#define gte(a,b)  (a>=b)
+#define lt(a,b)   (a<b)
+#define lte(a,b)  (a<=b)
+
+
 
 // newline character
 #define nl()            "\n"
+// null terminator
+#define nt()            '\0'
 
 #define log             SDL_Log
 #define ref(x)          (&x)
@@ -143,4 +141,8 @@ typedef unsigned long  ulong_t;
 
 #define cast(a,b) ((b)a)
 
-
+#define isnull(a)  (a==null())
+#define exists(a)  (a!=null())
+#define iszero(a)  (a==0)
+#define istrue(a)  (a==true())
+#define isfalse(a) (a==false())

@@ -49,15 +49,20 @@ void debugpanel_draw( debugpanel_t * self ) {
     // updating //
     //////////////
 
-    string_clear(debugpanel_string(self));
-    
+    // clear the string for the panel
+    string_clear(debugpanel_string(self),' ');
+
+
+    // button states (0: off, 1: held, 2: pressed)
     loop(i,controller_max_buttons()) {
       string_copy_number_at(debugpanel_string(self),i,controller_buttons(gb_controller())[i]);
     }
 
+    // copy the FPS string
     string_copy_at(debugpanel_string(self),13,"FPS:");
     string_copy_number_at(debugpanel_string(self),17,timing_fps(gb_timing()));
 
+    // copy the dots string
     string_copy_at(debugpanel_string(self),20,"DOTS:");
 
     int u1 = graph_frame_dots(gb_graph())/1000;
@@ -83,7 +88,9 @@ void debugpanel_draw( debugpanel_t * self ) {
     u2 = string_copy_at ( debugpanel_string(self), 66, rstr(timing_clock_seconds(gb_timing()),2) );
 
     u2 = string_copy_at ( debugpanel_string(self), 70, "S:");
-    u2 = string_copy_at ( debugpanel_string(self), 72, scene_id(gb_scene()));
+    if (gb_scene()) {
+      u2 = string_copy_at ( debugpanel_string(self), 72, scene_id(gb_scene()));
+    }
 
     /////////////
     // drawing //
@@ -99,17 +106,26 @@ void debugpanel_draw( debugpanel_t * self ) {
     // record prev intensity, and set the intensity to max
     int u = graph_set_intensity_max(gb_graph());
 
+    // set color to black
     graph_set_color(gb_graph(),make_color(0,0,0));
+    // draw the background strip at the top
     graph_draw_rect(gb_graph(),0,0,400,10);
 
+    // set color to red
     graph_set_color(gb_graph(),make_color(3,0,0));
+    // make the CPU bar
     graph_draw_rect(gb_graph(),220,2,timing_cpu_usage(gb_timing())/2,6);
 
+    // set color to white
     graph_set_color(gb_graph(),make_color(3,3,3));
+    // draw the debugging string
     graph_draw_text(gb_graph(),0,0,string_data(debugpanel_string(self)));
 
+    // reset the intensity
     graph_set_intensity(gb_graph(),u);
+    // set layer to 0
     graph_set_layer(gb_graph(),0);
+    // merge the top layer.
     graph_merge_layer(gb_graph(),-1);
   }
 }

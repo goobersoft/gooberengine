@@ -259,9 +259,9 @@ char * sdl_pixelformat_str( uint_t f ) {
 // rng //
 /////////
 
-#define rnd(a,b)     ((b-a)==0)?(a):(a+(rand()%(b-a)))
+#define rnd(a,b)     (((b-a)==0)?(a):(a+(rand()%(b-a))))
 #define chance(x,y)  (rnd(0,y)<x)
-#define prob(x)      (x==1000)?(1):(chance(x,1000))
+#define prob(x)      ((x==1000)?(1):(chance(x,1000)))
 #define sqr(a)       ((a)*(a))
 #define bool(x)      (x&1)
 

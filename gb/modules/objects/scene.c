@@ -3,21 +3,21 @@
 
 type() {
 
-  tag_t * tag;
+  local( tag_t * tag );
   // the name of the scene
-  string_t * name;
+  local( string_t * name );
   // the dimensions of the scene in pixels
-  point_t * size;
+  local( point_t * size );
   // the position of the scene on the screen
-  point_t * pos;
+  local( point_t * pos );
   // a list of entities contained in the scene
-  list_t * entities;
+  local( list_t * entities );
   // a counter for the scene's lifespan
   uint_t ticks;
   // a flag indicating that the scene is finished playing. 
-  bool_t flag_finished;
+  bool_t f_finished;
   // a pointer to the parent scene
-  void * parent;
+  foreign( void * source );
 
 } scene_t;
 
@@ -27,8 +27,8 @@ type() {
 #define scene_pos(self)           (self->pos)
 #define scene_entities(self)      (self->entities)
 #define scene_ticks(self)         (self->ticks)
-#define scene_flag_finished(self) (self->flag_finished)
-#define scene_parent(self)        (self->parent)
+#define scene_f_finished(self)    (self->f_finished)
+#define scene_source(self)        (self->source)
 
 // helper macros
 #define scene_id(self) tag_id(scene_tag(self))
@@ -41,20 +41,29 @@ type() {
 // new //
 /////////
 
-scene_t * scene(void * p) {
-  scene_t * r             = alloc(scene_t);
-  scene_tag(r)            = tag(r,"scene");
-  scene_name(r)           = string(scene_name_size());
-  scene_size(r)           = point(400,240);
-  scene_pos(r)            = point(0,0);
-  scene_entities(r)       = list();
-  scene_flag_finished(r)  = false();
-  scene_parent(r)         = p;
+void scene_init( scene_t * self, void * p, char * id ) {
+  scene_tag(self)            = tag(self,"scene");
+  scene_id(self)             = id;
+  scene_name(self)           = string(scene_name_size());
+  scene_size(self)           = point(400,240);
+  scene_pos(self)            = point(0,0);
+  scene_entities(self)       = list();
+  scene_f_finished(self)     = false();
+  scene_source(self)         = p;
+}
+
+scene_t * scene(void * p, char * id) {
+  scene_t * r       = alloc(scene_t);
+  scene_init        (r,p,id);
   return r;
 }
 
 void free_scene( scene_t * self ) {
-  free_tag(scene_tag(self));
+  free_tag    (scene_tag(self));
+  free_string (scene_name(self));
+  free_point  (scene_size(self));
+  free_point  (scene_pos(self));
+  free_list   (scene_entities(self));
 }
 
 ///////////////
@@ -80,12 +89,12 @@ void scene_set_name( scene_t * self, char * u ) {
   string_copy(scene_name(self), u);
 }
 
-void scene_set_parent( scene_t * self, void * p ) {
-  scene_parent(self) = p;
+void scene_set_source( scene_t * self, void * src ) {
+  scene_source(self) = src;
 }
 
 void scene_finish( scene_t * self ) {
-  scene_flag_finished(self) = true();
+  scene_f_finished(self) = true();
 }
 
 ////////////
@@ -94,7 +103,7 @@ void scene_finish( scene_t * self ) {
 
 void scene_update( scene_t * self ) {
   // a scene will stop playing if it is flagged as finished.
-  if (scene_flag_finished(self) == false()) {
+  if (scene_f_finished(self) == false()) {
     scene_ticks(self) += 1;
   }
 }

@@ -7,10 +7,10 @@
 
 type() {
 
-  bool_t      alive;
-  sprite_t  * sprite;
-  point_t   * pos;
-  point_t   * velo;
+  bool_t alive;
+  local( sprite_t  * sprite );
+  local( point_t   * pos );
+  local( point_t   * velo );
 
 } fountpart_t;
 
@@ -51,7 +51,7 @@ void fountpart_update( fountpart_t * self ) {
 type() {
 
   // position on screen
-  point_t *  pos;
+  local( point_t * pos );
   // angle to spray particles
   int        angle;
   // angle difference
@@ -113,7 +113,9 @@ void fountain_update( fountain_t * self ) {
 
   fountpart_t * p = fountpart( point_x(fountain_pos(self))*1000, point_y(fountain_pos(self))*1000,
     fountain_sprite(self), vx, vy);
-  if (prob(500)) rect_add_pos( sprite_rect(fountpart_sprite(p)), 0, 10 );
+  if prob(500) {
+    rect_add_pos( sprite_rect(fountpart_sprite(p)), 0, 10 );
+  }
 
   list_add_last( fountain_particles(self), p );
 

@@ -4,13 +4,13 @@
 
 type() {
 
-  point_t * pos;
-  point_t * velo;
-  color_t * color;
+  local( point_t * pos );
+  local( point_t * velo );
+  local( color_t * color );
 
   // reference to graph object
-  graph_t      * graph;
-  controller_t * controller;
+  foreign( graph_t      * graph );
+  foreign( controller_t * controller );
 
 } ball_t;
 
@@ -43,7 +43,7 @@ ball_t * ball( graph_t * g, controller_t * c ) {
 void ball_update( ball_t * self ) {
 
   // controller inquiries
-  if (ball_controller(self)) {
+  if ball_controller(self) {
     if (controller_is_button_held( ball_controller(self), controller_button_left() )) {
       point_add( ball_velo(self), -100, 0 );
     }
@@ -81,11 +81,11 @@ void ball_update( ball_t * self ) {
 }
 
 void ball_draw( ball_t * self) {
-  if (ball_graph(self)) {
+  if ball_graph(self) {
     int ti = graph_set_intensity(ball_graph(self),1000);
     color_t tm = graph_set_color(ball_graph(self),val(ball_color(self)));
-    graph_draw_circle_line(ball_graph(self), point_x(ball_pos(self))/1000, point_y(ball_pos(self))/1000, 10);
-    graph_set_intensity(ball_graph(self),ti);
-    graph_set_color(ball_graph(self),tm);
+    graph_draw_circle_line (ball_graph(self), point_x(ball_pos(self))/1000, point_y(ball_pos(self))/1000, 10);
+    graph_set_intensity    (ball_graph(self),ti);
+    graph_set_color        (ball_graph(self),tm);
   }
 }

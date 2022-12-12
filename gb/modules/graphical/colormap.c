@@ -103,7 +103,7 @@ void colormap_set_draw_offset( colormap_t * self, int x, int y ) {
 }
 
 void colormap_plot( colormap_t * self, int x, int y, color_t c ) {
-  if (inrect(x,y,0,0,colormap_width(self),colormap_height(self))) {
+  if inrect(x,y,0,0,colormap_width(self),colormap_height(self)) {
     if (c.a) {
       int uu = y*point_x(colormap_size(self)) + x;
       colormap_data(self)[uu] = c;
@@ -112,42 +112,42 @@ void colormap_plot( colormap_t * self, int x, int y, color_t c ) {
 }
 
 void colormap_plot_replace( colormap_t * self, int x, int y, color_t c ) {
-  if (inrect(x,y,0,0,colormap_width(self),colormap_height(self))) {
+  if inrect(x,y,0,0,colormap_width(self),colormap_height(self)) {
     int uu = y*point_x(colormap_size(self)) + x;
     colormap_data(self)[uu] = c;
   }
 }
 
 void colormap_plot_add( colormap_t * self, int x, int y, color_t c ) {
-  if (inrect(x,y,0,0,colormap_width(self),colormap_height(self))) {
+  if inrect(x,y,0,0,colormap_width(self),colormap_height(self)) {
     int uu = y*point_x(colormap_size(self)) + x;
     colormap_data(self)[uu] = make_color_add(colormap_data(self)[uu],c);
   }
 }
 
 void colormap_plot_sub( colormap_t * self, int x, int y, color_t c ) {
-  if (inrect(x,y,0,0,colormap_width(self),colormap_height(self))) {
+  if inrect(x,y,0,0,colormap_width(self),colormap_height(self)) {
     int uu = y*point_x(colormap_size(self)) + x;
     colormap_data(self)[uu] = make_color_sub(colormap_data(self)[uu],c);
   }
 }
 
 void colormap_plot_high( colormap_t * self, int x, int y, color_t c ) {
-  if (inrect(x,y,0,0,colormap_width(self),colormap_height(self))) {
+  if inrect(x,y,0,0,colormap_width(self),colormap_height(self)) {
     int uu = y*point_x(colormap_size(self)) + x;
     colormap_data(self)[uu] = make_color_high(colormap_data(self)[uu],c);
   }
 }
 
 void colormap_plot_low( colormap_t * self, int x, int y, color_t c ) {
-  if (inrect(x,y,0,0,colormap_width(self),colormap_height(self))) {
+  if inrect(x,y,0,0,colormap_width(self),colormap_height(self)) {
     int uu = y*point_x(colormap_size(self)) + x;
     colormap_data(self)[uu] = make_color_low(colormap_data(self)[uu],c);
   }
 }
 
 void colormap_plot_avg( colormap_t * self, int x, int y, color_t c ) {
-  if (inrect(x,y,0,0,colormap_width(self),colormap_height(self))) {
+  if inrect(x,y,0,0,colormap_width(self),colormap_height(self)) {
     int uu = y*point_x(colormap_size(self)) + x;
     colormap_data(self)[uu] = make_color_avg(colormap_data(self)[uu],c);
   }
@@ -162,7 +162,7 @@ void colormap_clear( colormap_t * self, color_t c ) {
 }
 
 color_t colormap_get_pixel( colormap_t * self, int x, int y ) {
-  if (inrect(x,y,0,0,self->size->x,self->size->y)) {
+  if inrect(x,y,0,0,self->size->x,self->size->y) {
     return colormap_data(self)[y*point_x(colormap_size(self)) + x];
   }
   return make_color_trans();

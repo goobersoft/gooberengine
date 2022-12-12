@@ -1,7 +1,7 @@
 
-#define gb_version_major() 0
-#define gb_version_minor() 1
-#define gb_version_patch() 8
+#define gb_version_major() 2022
+#define gb_version_minor() 12
+#define gb_version_patch() 11
 
 //  submodules stack
 //  ----------------
@@ -18,34 +18,36 @@
 // modules //
 /////////////
 
-#include "modules/core/globals.c"            // includes many macro definitions
-#include "modules/core/functions.c"          // core functions
-#include "modules/core/functions_sine.c"     // sine and cosine function
-#include "modules/core/functions_sqroot.c"   // sqroot function
-#include "modules/core/functions_base64.c"   // sqroot function
-#include "modules/core/types.c"              // complex numerical types
-#include "modules/core/tag.c"                // descriptive tag
+#include "modules/core/globals.c"             // includes many macro definitions
+#include "modules/core/functions.c"           // core functions
+#include "modules/core/functions_sine.c"      // sine and cosine function
+#include "modules/core/functions_sqroot.c"    // sqroot function
+#include "modules/core/functions_base64.c"    // sqroot function
+#include "modules/core/types.c"               // complex numerical types
+#include "modules/core/tag.c"                 // descriptive tag
 #include "modules/core/locker.c"
-//#include "modules/rng.c"              // implementation of mersenne twister in c
-#include "modules/core/string.c"             // fixed-length character arrays
-#include "modules/core/list.c"               // linked list data type
-#include "modules/core/dict.c"               // dictionary
-#include "modules/core/pstack.c"             // LIFO-style priority stack object
-#include "modules/core/point.c"              // 2d integer point
+/*
+#include "modules/rng.c"                      // implementation of mersenne twister in c
+*/
+#include "modules/core/string.c"              // fixed-length character arrays
+#include "modules/core/list.c"                // linked list data type
+#include "modules/core/dict.c"                // dictionary
+#include "modules/core/pstack.c"              // LIFO-style priority stack object
+#include "modules/core/point.c"               // 2d integer point
 #include "modules/core/point3.c"              // 2d integer point
-#include "modules/core/rect.c"
-#include "modules/core/number.c"             // integer number with min and max bounds
-#include "modules/core/alarm.c"              // timers
+#include "modules/core/rect.c"                // 
+#include "modules/core/number.c"              // integer number with min and max bounds
+#include "modules/core/alarm.c"               // timers
 
-#include "modules/graphical/color.c"              // 6-bit color with transparency bit
-#include "modules/graphical/board.c"              // drawing durfaces
-#include "modules/graphical/visual.c"             // window and renderer interface
-#include "modules/graphical/image.c"              // uses SDL2_image
-#include "modules/graphical/palette.c"            // storage of a list of 6-bit colors.
-#include "modules/graphical/colormap.c"           // a 2d array of colors
-#include "modules/graphical/font.c"               // bitmap fonts which utilize image colormaps
-#include "modules/graphical/sprite.c"             // instanced object with a reference to a colormap
-#include "modules/graphical/tilemap.c"            // instanceable grids of variable colormap sections
+#include "modules/graphical/color.c"          // 6-bit color with transparency bit
+#include "modules/graphical/board.c"          // drawing durfaces
+#include "modules/graphical/visual.c"         // window and renderer interface
+#include "modules/graphical/image.c"          // uses SDL2_image
+#include "modules/graphical/palette.c"        // storage of a list of 6-bit colors.
+#include "modules/graphical/colormap.c"       // a 2d array of colors
+#include "modules/graphical/font.c"           // bitmap fonts which utilize image colormaps
+#include "modules/graphical/sprite.c"         // instanced object with a reference to a colormap
+#include "modules/graphical/tilemap.c"        // instanceable grids of variable colormap sections
 
 
 #include "modules/input/input.c"              // user input
@@ -53,29 +55,31 @@
 #include "modules/input/controller.c"         // gamepads
 
 #include "modules/audio/sound.c"              // sound interface
-#include "modules/audio/audio.c"              // audio mixer
 
-#include "modules/network/network.c"            // networking (TCP/UDP)
-
-#include "modules/components/assets.c"             // asset container object (sound/image/font)
-#include "modules/components/timing.c"             // fps/timing interface
-#include "modules/components/graph.c"              // drawing interface
+#include "modules/components/audio.c"         // audio mixer
+#include "modules/components/network.c"       // networking (TCP/UDP)
+#include "modules/components/assets.c"        // asset container object (sound/image/font)
+#include "modules/components/timing.c"        // fps/timing interface
+#include "modules/components/graph.c"         // drawing interface
 
 ///////////////////////
 // top layer objects //
 ///////////////////////
+// one thing to note is that top layer objects are aware of the graph module.
+// this means that these objects will have their own drawing functions which reference
+// the graph module instead.
 
-#include "modules/objects/gbs.c"                // GooberScript
-#include "modules/objects/gbml.c"               // markup
-#include "modules/objects/entity.c"             // AABB collisions
-#include "modules/objects/scene.c"              // scene base object
+#include "modules/objects/gbs.c"                  // GooberScript
+#include "modules/objects/gbml.c"                 // markup
+#include "modules/objects/entity.c"               // AABB collisions
+#include "modules/objects/scene.c"                // scene base object
 
-#include "modules/objects/graphical/sprayer.c"
-#include "modules/objects/graphical/camera.c"             // determines how a scene should render
+#include "modules/objects/graphical/sprayer.c"    // sprays the screen with colored pixels
+#include "modules/objects/graphical/camera.c"     // determines how a scene should render
 
-#include "modules/objects/toys/jake.c"
-#include "modules/objects/toys/ball.c"
-#include "modules/objects/toys/fountain.c"
+#include "modules/objects/toys/jake.c"            // slithers across the screen slowly
+#include "modules/objects/toys/ball.c"            // bounces based on arrow keys
+#include "modules/objects/toys/fountain.c"        // sprays sprites from a center
 
 
 
@@ -85,10 +89,10 @@
 
 typedef struct {
 
-  int            running;
-  int            paused;
-  bool_t         flag_cls;
-  bool_t         flag_debug;
+  bool_t         f_running;
+  bool_t         f_paused;
+  bool_t         f_cls;
+  bool_t         f_debug;
   visual_t     * visual;
   timing_t     * timing;
   graph_t      * graph;
@@ -115,10 +119,10 @@ gb_t * gb;
 // also I hate using the -> operator.
 #define gb()            (gb)
 #define gb_assets()     (gb->assets)
-#define gb_running()    (gb->running)
-#define gb_flag_cls()   (gb->flag_cls)
-#define gb_flag_debug() (gb->flag_debug)
-#define gb_paused()     (gb->paused)
+#define gb_running()    (gb->f_running)
+#define gb_flag_cls()   (gb->f_cls)
+#define gb_flag_debug() (gb->f_debug)
+#define gb_paused()     (gb->f_paused)
 #define gb_visual()     (gb->visual)
 #define gb_timing()     (gb->timing)
 #define gb_graph()      (gb->graph)
@@ -166,18 +170,16 @@ void gb_init() {
   gb_graph()       = graph(gb_visual());
   gb_controller()  = controller();
 
-  gb_scene()       = scene(gb());
+  gb_scene()       = scene(gb(),"");
   scene_set_id(gb_scene(),"none");
-
-  //test2
-
-  ///////////////
-  // debugging //
-  ///////////////
 
   debug_init();
   
 }
+
+//////////
+// LOAD //
+//////////
 
 void gb_load() {
   // load the default assets
@@ -257,17 +259,17 @@ void gb_start() {
   debug_start();
 }
 
+////////////
+// UPDATE //
+////////////
+
 void gb_update() {
 
-  ////////////
-  // timing //
-  ////////////
+  //-- Timing --//
 
   timing_update_pre(gb_timing());
 
-  ////////////////
-  // sdl events //
-  ////////////////
+  //-- SDL Events --//
 
   SDL_Event e;
   while (SDL_PollEvent(&e)) {
@@ -289,18 +291,14 @@ void gb_update() {
     exit(0);
   }
 
-  /////////////
-  // modules //
-  /////////////
+  //-- Modules --//
 
   mouse_update      (gb_mouse());
   controller_update (gb_controller());
 
-  debug_update_pre();
+  //-- debugging --//
 
-  ///////////
-  // debug //
-  ///////////
+  debug_update_pre();
 
   debug_update_post();
 
@@ -310,6 +308,11 @@ void gb_update_post() {
 
 }
 
+//////////
+// DRAW //
+//////////
+
+// pre-draw event
 void gb_draw_pre() {
   
   // clear the graph colormap if the cls flag is enabled.
@@ -323,6 +326,7 @@ void gb_draw_pre() {
   if (gb_flag_debug()) debug_draw_pre();
 }
 
+// post-draw event
 void gb_draw_post() {
   // all of the module drawing goes in here
   graph_draw_mouse( gb_graph(), gb_mouse() );
@@ -335,8 +339,10 @@ void gb_draw_post() {
   timing_update_post(gb_timing());
 }
 
+//////////
+// QUIT //
+//////////
+
 void gb_quit() {
-
   debug_quit();
-
 }

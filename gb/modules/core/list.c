@@ -34,7 +34,7 @@ type() {
 
   listnode_t * first;
   listnode_t * last;
-  int count;
+  int          count;
 
 } list_t;
 
@@ -52,7 +52,7 @@ list_t * list() {
 
 void free_list(list_t * self) {
   listnode_t * d;
-  while (list_first(self) != null()) {
+  while exists(list_first(self)) {
     d = list_first(self);
     list_first(self) = listnode_next(d);
     free_listnode(d);

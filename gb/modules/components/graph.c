@@ -9,17 +9,6 @@
 // globals //
 /////////////
 
-byte_t _graph_transvals[] = {
-  //bin(_0001)
-  /*
-  bin(_1111_1111_1111_1111),
-  bin(_1110_1011_1110_1011),
-  bin(_1010_0101_1010_0101),
-  bin(_0001_0100_0001_0100),
-  bin(_0000_0000_0000_0000)
-  */
-};
-
 #define graph_mode_normal()   0
 #define graph_mode_replace()  1
 #define graph_mode_add()      2
@@ -126,7 +115,7 @@ type() {
 
 #define graph_intensity(self)       (self->intensity)
 
-//#define graph_clip(self)            (self->graph_clip)
+//#define graph_clip(self)          (self->graph_clip)
 #define graph_clip_pos(self)        (&self->clip_pos)
 #define graph_clip_size(self)       (&self->clip_size)  
 #define graph_clip_x(self)          (self->clip_pos.x)
@@ -277,7 +266,7 @@ void graph_set_trans( graph_t * self, int t ) {
 }
 
 void graph_set_palette( graph_t * self, palette_t * p ) {
-  if (p == null()) {
+  if eq(p,null()) {
     graph_palette(self) = graph_palette_default(self);
   }
   else {
@@ -344,13 +333,13 @@ color_t graph_get_pixel( graph_t * self, int x, int y ) {
 }
 
 void graph_plot_depth( graph_t * self, int x, int y, int d ) {
-  if (inrect(x,y,0,0,graph_width(),graph_height())) {
+  if inrect(x,y,0,0,graph_width(),graph_height()) {
     graph_data_depth(self)[y*graph_width()+x] = d;
   }
 }
 
 int graph_get_pixel_depth( graph_t * self, int x, int y ) {
-  if (inrect(x,y,0,0,graph_width(),graph_height())) {
+  if inrect(x,y,0,0,graph_width(),graph_height()) {
     return graph_data_depth(self)[(graph_width()*y)+x];
   }
 }
@@ -360,16 +349,16 @@ int graph_get_pixel_depth( graph_t * self, int x, int y ) {
 // is applied instead.
 void graph_draw_dot( graph_t * self, int x, int y ) {
 
-  if (graph_frame_dots(self) < graph_max_frame_dots()) {
-    if (inrect(x,y,graph_clip_x(self),graph_clip_y(self),graph_clip_w(self),graph_clip_h(self))) {
+  if ( graph_frame_dots(self) < graph_max_frame_dots() ) {
+    if inrect(x,y,graph_clip_x(self),graph_clip_y(self),graph_clip_w(self),graph_clip_h(self)) {
       // depth mode is not affected by spray intensity
-      if (graph_mode(self) == graph_mode_depth()) {
+      if eq(graph_mode(self), graph_mode_depth()) {
         graph_frame_dots(self) += 1;
         graph_plot_depth(self,x,y,graph_depth(self));
       }
-      else if (prob(graph_intensity(self))) {
+      else if prob(graph_intensity(self)) {
         bool_t fb = true();
-        if (graph_depth_enabled(self)) {
+        if graph_depth_enabled(self) {
           fb = fb && (graph_depth(self) <= graph_get_pixel_depth(self,x,y));
           if (fb == true()) {
             graph_frame_dots(self) += 1;
@@ -377,31 +366,31 @@ void graph_draw_dot( graph_t * self, int x, int y ) {
           }
         }
         if (fb == true()) {
-          if (graph_mode(self) == graph_mode_normal()) {
+          if ( graph_mode(self) == graph_mode_normal() ) {
             graph_frame_dots(self) += 1;
             colormap_plot( graph_data(self), x, y, graph_color(self) );
           }
-          else if (graph_mode(self) == graph_mode_replace()) {
+          else if ( graph_mode(self) == graph_mode_replace() ) {
             graph_frame_dots(self) += 1;
             colormap_plot_replace( graph_data(self), x, y, graph_color(self) );
           }
-          else if (graph_mode(self) == graph_mode_add()) {
+          else if ( graph_mode(self) == graph_mode_add() ) {
             graph_frame_dots(self) += 1;
             colormap_plot_add( graph_data(self), x, y, graph_color(self) );
           }
-          else if (graph_mode(self) == graph_mode_sub()) {
+          else if ( graph_mode(self) == graph_mode_sub() ) {
             graph_frame_dots(self) += 1;
             colormap_plot_sub( graph_data(self), x, y, graph_color(self) );
           }
-          else if (graph_mode(self) == graph_mode_high()) {
+          else if ( graph_mode(self) == graph_mode_high() ) {
             graph_frame_dots(self) += 1;
             colormap_plot_high( graph_data(self), x, y, graph_color(self) );
           }
-          else if (graph_mode(self) == graph_mode_low()) {
+          else if ( graph_mode(self) == graph_mode_low() ) {
             graph_frame_dots(self) += 1;
             colormap_plot_low( graph_data(self), x, y, graph_color(self) );
           }
-          else if (graph_mode(self) == graph_mode_avg()) {
+          else if ( graph_mode(self) == graph_mode_avg() ) {
             graph_frame_dots(self) += 1;
             colormap_plot_avg( graph_data(self), x, y, graph_color(self) );
           }
@@ -453,7 +442,7 @@ void graph_draw_rect_line( graph_t * self, int x, int y, int w, int h ) {
 void graph_draw_circle( graph_t * self, int x, int y, int r ) {
   if (r<=0) return;
   // just draw a dot if the r is 1
-  if (r == 1) {
+  if (r==1) {
     graph_draw_dot( self, x, y );
   }
   // otherwise...
@@ -634,7 +623,7 @@ void graph_draw_colormap_sub_ex(
 // points 1, 2, 3, 4 are the points of a quad in clockwise motion.
 // you may move the points in any order you like to get rotation,
 // flipping, scaling, etc.
-void graph_draw_colormap_sub_quad(
+void graph_draw_colormap_sub_quad (
   graph_t * self,
   int dx1, int dy1, int dx2, int dy2, int dx3, int dy3, int dx4, int dy4,
   colormap_t * c, int sx, int sy, int sw, int sh )
@@ -643,7 +632,7 @@ void graph_draw_colormap_sub_quad(
 }
 
 void graph_draw_text( graph_t * self, int x, int y, char * t ) {
-  if (graph_font(self)) {
+  if graph_font(self) {
     font_t * f = graph_font(self);
     int xx = font_tile_width(graph_font(self));
     int yy = font_tile_height(graph_font(self));
@@ -700,7 +689,7 @@ void graph_draw_layer_sub( graph_t * self, int d, int sx, int sy, int sw, int sh
 }
 
 void graph_draw_mouse( graph_t * self, mouse_t * m ) {
-  if (mouse_visible(m)==true()) {
+  if mouse_visible(m) {
     int u = graph_intensity(self);
     graph_set_intensity(self,1000);
 

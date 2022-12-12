@@ -2,14 +2,14 @@
 type() {
 
   // reference to colormap
-  colormap_t  * colormap;
+  foreign( colormap_t * colormap );
   // texture rect
   rect_t      * rect;
   // offset from topleft
   point_t     * origin;
 
-  field(flip_x,bool_t,1);
-  field(flip_y,bool_t,1);
+  bool_t        flip_x;
+  bool_t        flip_y;
 
 } sprite_t;
 

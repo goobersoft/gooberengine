@@ -78,7 +78,7 @@ void timing_record( timing_t * self ) {
   gettimeofday(timing_timeval(self),NULL);
   timing_old(self)  = timing_curr(self);
   timing_curr(self) = (timing_timeval(self)->tv_sec * 1000000) + (timing_timeval(self)->tv_usec);
-  if (timing_old(self) == 0) timing_old(self) = timing_curr(self);
+  if (timing_old(self)==0) timing_old(self) = timing_curr(self);
   timing_diff(self) = timing_curr(self) - timing_old(self);
 
   // fps

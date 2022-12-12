@@ -62,9 +62,9 @@ bool_t string_equals( string_t * self, char * st ) {
   return streq(string_data(self),st);
 }
 
-int string_clear( string_t * self ) {
+int string_clear( string_t * self, char c ) {
   loop(i,string_length(self)) {
-    string_data(self)[i] = '\0';
+    string_data(self)[i] = c;
   }
   return 0;
 }
@@ -115,7 +115,7 @@ int string_copy_number( string_t * self, int m ) {
 }
 
 int string_end( string_t * self, int n ) {
-  if ( inrange(n,0,string_length(self)) ) {
+  if inrange(n,0,string_length(self)) {
     string_data(self)[n] = '\0';
     return n+1;
   }

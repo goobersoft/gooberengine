@@ -12,7 +12,10 @@ type() {
 /////////
 
 void ma_scene_title_init( ma_scene_title_t * self ) {
-  ma_scene_title_scene(self) = scene(self);
+ 
+  ma_scene_title_scene(self) = gb_scene();//scene(self,"logo");
+  scene_set_id(gb_scene(),"title");
+  scene_set_source(gb_scene(),self);
 }
 
 ma_scene_title_t * ma_scene_title() {

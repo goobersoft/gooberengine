@@ -1,12 +1,6 @@
 
 
-// default maximum values
-/*
-#define assets_num_images_d()     1000
-#define assets_num_colormaps_d()  1000
-#define assets_num_sounds_d()     1000
-#define assets_num_fonts_d()      100
-*/
+
 
 type() {
   // moving to dictionaries so that sounds/images/fonts
@@ -21,12 +15,6 @@ type() {
 
 } assets_t;
 
-/*
-#define assets_num_images(self)    (self->num_images)
-#define assets_num_colormaps(self) (self->num_colormaps)
-#define assets_num_sounds(self)    (self->num_sounds)
-#define assets_num_fonts(self)     (self->num_fonts)
-*/
 #define assets_images(self)        (self->images)
 #define assets_colormaps(self)     (self->colormaps)
 #define assets_sounds(self)        (self->sounds)
@@ -60,22 +48,18 @@ assets_t * assets( visual_t * v ) {
 
 void * assets_set_image( assets_t * self, char * k, image_t * a ) {
   return dset(assets_images(self),k,a);
-  //return dict_set( assets_images(self), k, a );
 }
 
 void * assets_set_colormap( assets_t * self, char * k, colormap_t * c ) {
   return dset(assets_colormaps(self),k,c);
-  //return dict_set( assets_colormaps(self), k, c);
 }
 
 void * assets_set_sound( assets_t * self, char * k, sound_t * s ) {
   return dset(assets_sounds(self),k,s);
-  //return dict_set( assets_sounds(self), k, s);
 }
 
 void * assets_set_font( assets_t * self, char * k, font_t * f ) {
   return dset(assets_fonts(self),k,f);
-  //return dict_set( assets_fonts(self), k, f);
 }
 
 // -- getters -- //
@@ -99,84 +83,3 @@ font_t * assets_get_font( assets_t * self, char * k ) {
   return dget(assets_fonts(self),k,font_t*);
   //return dict_get( assets_fonts(self), k );
 }
-
-/*
-// this does both images and colormaps as well
-bool_t assets_set_image( assets_t * self, int n, image_t * a ) {
-  if (inrange(n,0,assets_num_images(self))) {
-    assets_images(self)[n] = a;
-    log("image id %d set to '%s'" nl(), n, image_path(a));
-    return true();
-  }
-  log("image id %d could not be set." nl(), n);
-  return false();
-}
-
-bool_t assets_load_image( assets_t * self, int n, char * t ) {
-  if (assets_visual(self)!=null()) {
-    return assets_set_image( self, n, image(t,assets_visual(self)) );
-  }
-  return false();
-}
-
-image_t * assets_get_image( assets_t * self, int n ) {
-  if (inrange(n,0,assets_num_images(self))) {
-    return assets_images(self)[n];
-  }
-  return null();
-}
-
-bool_t assets_set_colormap( assets_t * self, int n, colormap_t * c ) {
-  if (inrange(n,0,assets_num_colormaps(self))) {
-    assets_colormaps(self)[n] = c;
-    log("colormap id %d set.",n);
-    return true();
-  }
-  log("colormap id %d could not be set.", n);
-  return false();
-}
-
-colormap_t * assets_get_colormap( assets_t * self, int n ) {
-  if (inrange(n,0,assets_num_colormaps(self))) {
-    return assets_colormaps(self)[n];
-  }
-  return null();
-}
-
-
-bool_t assets_set_sound( assets_t * self, int n, sound_t * a ) {
-  if (inrange(n,0,assets_num_sounds(self))) {
-    assets_sounds(self)[n] = a;
-    //log("sound id %d set to '%s'" nl(), n, sound_path(a));
-    return true();
-  }
-  return false();
-}
-
-sound_t * assets_get_sound( assets_t * self, int n ) {
-  if (inrange(n,0,assets_num_sounds(self))) {
-    return assets_sounds(self)[n];
-  }
-  return null();
-}
-
-
-bool_t assets_set_font( assets_t * self, int n, font_t * a ) {
-  if (inrange(n,0,assets_num_fonts(self))) {
-    assets_fonts(self)[n] = a;
-    return true();
-  }
-  return false();
-}
-
-font_t * assets_get_font( assets_t * self, int n ) {
-  if (inrange(n,0,assets_num_fonts(self))) {
-    return assets_fonts(self)[n];
-  }
-  return null();
-}
-*/
-
-////////////
-// events //
-////////////

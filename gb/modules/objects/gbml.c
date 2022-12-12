@@ -12,17 +12,17 @@
 
 type() {
 	// input string
-	string_t * input;
+	local( string_t * input );
 	// current scope level
 	int        scope;
 	// contains the dictionaries
-	list_t   * stack;
+	local( list_t   * stack );
 	// current dictionary
-	dict_t   * curr;
+	local( dict_t   * curr );
 	// current char
 	char       curr_char;
 	// current word
-	string_t * curr_word;
+	local( string_t * curr_word );
 	// current word cursor
 	int        curr_word_c;
 	// boolean quote mode
@@ -30,8 +30,8 @@ type() {
 	// state
 	int        state;
 	// key and value
-	string_t * curr_key;
-	string_t * curr_value;
+	local( string_t * curr_key );
+	local( string_t * curr_value );
 
 
 } gbmlparser_t;
@@ -106,7 +106,7 @@ void gbmlparser_clear_curr_word( gbmlparser_t * self ) {
 
 dict_t * gbmlparser_parse( gbmlparser_t * self ) {
 
-	if (!gbmlparser_input(self)) {
+	if isnull(gbmlparser_input(self)) {
 		return dict();
 	}
 	else {
@@ -127,7 +127,7 @@ dict_t * gbmlparser_parse( gbmlparser_t * self ) {
 			// scope in
 			else if (gbmlparser_curr_char(self) == '{') {
 				// check for quote mode
-				if (gbmlparser_quote_mode(self)) {
+				if gbmlparser_quote_mode(self) {
 					// add char to word if so.
 					gbmlparser_curr_word_c(self) = string_put(gbmlparser_input(self),gbmlparser_curr_word_c(self),
 						gbmlparser_curr_char(self));
@@ -139,11 +139,12 @@ dict_t * gbmlparser_parse( gbmlparser_t * self ) {
 						// set the key first
 						string_copy(gbmlparser_curr_key(self),string_data(gbmlparser_curr_word(self)));
 						// erase the current word
-						string_clear(gbmlparser_curr_word(self));
+						string_clear(gbmlparser_curr_word(self),nt());
 					}
+
 					// only write if the key does not exist.
 					// keep in mind that it will take an empty string as a key as well.
-					if (!dict_contains( gbmlparser_curr(self), string_data(gbmlparser_curr_key(self)) )) {
+					if isfalse(dict_contains( gbmlparser_curr(self), string_data(gbmlparser_curr_key(self)) )) {
 						// add a new dictionary with the current key
 						dict_t * u = dict();
 						dict_set( gbmlparser_curr(self), string_data(gbmlparser_curr_key(self)), u );
@@ -173,7 +174,7 @@ dict_t * gbmlparser_parse( gbmlparser_t * self ) {
 				}
 			}
 			else if (gbmlparser_curr_char(self) == '"') {
-				if (gbmlparser_quote_mode(self)) {
+				if gbmlparser_quote_mode(self) {
 					gbmlparser_curr_word_c(self) = string_put(gbmlparser_input(self),gbmlparser_curr_word_c(self),
 						gbmlparser_curr_char(self));
 				}
@@ -181,7 +182,7 @@ dict_t * gbmlparser_parse( gbmlparser_t * self ) {
 				}
 			}
 			else if (gbmlparser_curr_char(self) == '=') {
-				if (gbmlparser_quote_mode(self)) {
+				if gbmlparser_quote_mode(self) {
 					gbmlparser_curr_word_c(self) = string_put(gbmlparser_input(self),gbmlparser_curr_word_c(self),
 						gbmlparser_curr_char(self));
 				}
@@ -189,7 +190,7 @@ dict_t * gbmlparser_parse( gbmlparser_t * self ) {
 				}
 			}
 			else if (gbmlparser_curr_char(self) == ';') {
-				if (gbmlparser_quote_mode(self)) {
+				if gbmlparser_quote_mode(self) {
 					gbmlparser_curr_word_c(self) = string_put(gbmlparser_input(self),gbmlparser_curr_word_c(self),
 						gbmlparser_curr_char(self));
 				}
@@ -197,7 +198,7 @@ dict_t * gbmlparser_parse( gbmlparser_t * self ) {
 				}
 			}
 			else if (gbmlparser_curr_char(self) == '#') {
-				if (gbmlparser_quote_mode(self)) {
+				if gbmlparser_quote_mode(self) {
 					gbmlparser_curr_word_c(self) = string_put(gbmlparser_input(self),gbmlparser_curr_word_c(self),
 						gbmlparser_curr_char(self));
 				}
@@ -206,7 +207,7 @@ dict_t * gbmlparser_parse( gbmlparser_t * self ) {
 			}
 			// whitespace?
 			else if ( (gbmlparser_curr_char(self) == ' ') or (gbmlparser_curr_char(self) == '\t') or (gbmlparser_curr_char(self) == '\n') ) {
-				if (gbmlparser_quote_mode(self)) {
+				if gbmlparser_quote_mode(self) {
 					gbmlparser_curr_word_c(self) = string_put(gbmlparser_input(self),gbmlparser_curr_word_c(self),
 						gbmlparser_curr_char(self));
 				}
@@ -235,7 +236,7 @@ dict_t * gbml_load( char * t ) {
 	// open file for reading
 	var(f) = SDL_RWFromFile(t,"r");
 	// read this file only if it is not null.
-	if (f != null()) {
+	if exists(f) {
 		// create a new string with the size of the file
 		// (string API will make one extra char for null terminator)
 		string_t * s = string(SDL_RWsize(f));

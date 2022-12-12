@@ -48,7 +48,7 @@ sprayer_t * sprayer( graph_t * g, int x, int y, int w, int h, color_t c ) {
 ////////////
 
 void sprayer_draw( sprayer_t * self ) {
-  if (sprayer_graph(self)) {
+  if sprayer_graph(self) {
     int ti      = graph_set_intensity(sprayer_graph(self), sprayer_intensity(self));
     int tm      = graph_set_mode(sprayer_graph(self), sprayer_mode(self));
     color_t tc  = graph_set_color(sprayer_graph(self), val(sprayer_color(self)));
@@ -56,8 +56,8 @@ void sprayer_draw( sprayer_t * self ) {
     graph_draw_rect(sprayer_graph(self), point_x(sprayer_pos(self)), point_y(sprayer_pos(self)),
       point_x(sprayer_size(self)), point_y(sprayer_size(self)));
 
-    graph_set_intensity( sprayer_graph(self), ti );
-    graph_set_mode( sprayer_graph(self), tm );
-    graph_set_color( sprayer_graph(self), tc );
+    graph_set_intensity ( sprayer_graph(self), ti );
+    graph_set_mode      ( sprayer_graph(self), tm );
+    graph_set_color     ( sprayer_graph(self), tc );
   }
 }

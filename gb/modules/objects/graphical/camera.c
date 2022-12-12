@@ -6,11 +6,11 @@
 type() {
 
   // position on screen
-  point_t * pos;
+  local( point_t * pos );
   // size of the camera viewport
-  point_t * size;
+  local( point_t * size );
   // entity of camera used for scenes
-  entity_t * entity;
+  local( entity_t * entity );
 
 } camera_t;
 

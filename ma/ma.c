@@ -31,7 +31,8 @@ type() {
 
 } ma_t;
 
-#define ma_scene() (ma->scene)
+#define ma_scene()          (ma->scene)
+#define ma_scene_source()   scene_source(ma_scene())
 
 /////////////
 // globals //
@@ -48,11 +49,11 @@ void ma_clear_scene() {
   if (ma_scene() != null()) {
     char * u  = scene_id(ma_scene());
     // check the tag ID and free appropriately.
-    if (streq(u,"logo")) {
-      free_ma_scene_logo( scene_parent(ma_scene()) );
+    if streq(u,"logo") {
+      free_ma_scene_logo( scene_source(ma_scene()) );
     }
-    else if (streq(u,"title")) {
-      free_ma_scene_title( scene_parent(ma_scene()) );
+    else if streq(u,"title") {
+      free_ma_scene_title( scene_source(ma_scene()) );
     }
   }
 }
@@ -61,31 +62,39 @@ void ma_set_scene( char * id ) {
   // clear the scene if it currently exists.
   ma_clear_scene();
   // check the ID param and make the scene appropriately.
-  if (streq(id,"logo")) {
+  if streq(id,"logo") {
     ma_scene_logo_t * r = ma_scene_logo();
-    ma_scene()          = ma_scene_logo_scene(r);
+    ma_scene()          = gb_scene();//ma_scene_logo_scene(r);
     ma_scene_logo_start(r);
   }
-  else if (streq(id,"title")) {
+  else if streq(id,"title") {
     ma_scene_title_t * r = ma_scene_title();
-    ma_scene()           = ma_scene_title_scene(r);
+    ma_scene()           = gb_scene();//ma_scene_title_scene(r);
     ma_scene_title_start(r);
   }
 }
 
 void ma_update_scene() {
   char * c = scene_id(ma_scene());
-  if (streq(c,"logo")) {
-    ma_scene_logo_update(scene_parent(ma_scene()));
-    if (scene_flag_finished(ma_scene())) ma_set_scene("title");
+  // logo scene
+  if streq(c,"logo") {
+    ma_scene_logo_update(ma_scene_source());
+    if (scene_f_finished(ma_scene())) ma_set_scene("title");
+  }
+  // title scene
+  else if streq(c,"title") {
+    ma_scene_title_update(ma_scene_source());
   }
 }
 
 void ma_draw_scene() {
   char * c = scene_id(ma_scene());
 
-  if (streq(c,"logo")) {
-    ma_scene_logo_draw(scene_parent(ma_scene()));
+  if streq(c,"logo") {
+    ma_scene_logo_draw(scene_source(ma_scene()));
+  }
+  else if streq(c,"title") {
+    ma_scene_title_draw(scene_source(ma_scene()));
   }
 }
 

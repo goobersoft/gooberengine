@@ -7,12 +7,14 @@
 
 type() {
 
-  tag_t      * tag;
-  point_t    * pos;
+  local( tag_t   * tag );
+  local( point_t * pos );
+
   int          delay;
   int          anim_index;
-  colormap_t * colormap;
-  graph_t    * graph;
+  
+  foreign( colormap_t * colormap );
+  foreign( graph_t    * graph );
 
 } jake_t;
 
@@ -64,7 +66,7 @@ void jake_update( jake_t * self ) {
 
 
 void jake_draw( jake_t * self ) {
-  if (jake_colormap(self)) {
+  if jake_colormap(self) {
     graph_draw_colormap_sub( 
       jake_graph(self), point_x(jake_pos(self)), point_y(jake_pos(self)), 
       jake_colormap(self), jake_cmap_x()+(jake_cmap_size()*jake_anim_index(self)), jake_cmap_y(), 

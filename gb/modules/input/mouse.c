@@ -146,15 +146,6 @@ void mouse_update( mouse_t * self ) {
     
   }
 
-  /*
-  log("%d%d%d%d%d",
-    mouse_buttons(self)[0],
-    mouse_buttons(self)[1],
-    mouse_buttons(self)[2],
-    mouse_buttons(self)[3],
-    mouse_buttons(self)[4]);
-  */
-
   point_set( mouse_pos_old(self), point_x(mouse_pos(self)), point_y(mouse_pos(self)) );
   point_set( mouse_pos(self), xx, yy );
   point_set( mouse_pos_diff(self), 

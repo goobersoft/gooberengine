@@ -51,9 +51,9 @@ void pstacknode_compare_with_next( pstacknode_t * self ) {
   if (pstacknode_next(self) != null()) {
     if (pstacknode_nice(self) > pstacknode_nice(pstacknode_next(self))) {
       swap( ref(pstacknode_nice(self)), ref(pstacknode_nice(pstacknode_next(self))) );
-      void * p                             = pstacknode_data(self);
-      pstacknode_data(self)                 = pstacknode_data(pstacknode_next(self));
-      pstacknode_data(pstacknode_next(self)) = p;
+      void * p                                = pstacknode_data(self);
+      pstacknode_data(self)                   = pstacknode_data(pstacknode_next(self));
+      pstacknode_data(pstacknode_next(self))  = p;
     }
     pstacknode_compare_with_next( pstacknode_next(self) );
   }
@@ -62,9 +62,9 @@ void pstacknode_compare_with_next( pstacknode_t * self ) {
 
 // ------------------------------------------- //
 
-///////////
+////////////
 // pstack //
-///////////
+////////////
 
 type() {
 
@@ -96,7 +96,7 @@ pstack_t * pstack() {
 /////////
 
 void free_pstack(pstack_t * self) {
-  if (pstack_first(self) != null()) {
+  if exists( pstack_first(self) ) {
     free_pstacknode( pstack_first(self) );
   }
   free(self);
@@ -139,6 +139,7 @@ void * pstack_pop( pstack_t * self ) {
 
 // add data to the pstack with a 'nice' value
 // lowest nice first, highest nice last
+//          v (not a typo)
 void pstack_ppush( pstack_t * self, void * d, int n ) {
   pstacknode_t * s   = pstacknode();
   pstacknode_data(s) = d;

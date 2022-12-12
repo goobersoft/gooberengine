@@ -25,17 +25,6 @@ type() {
 } gbsnode_type_assign_t;
 
 
-/////////////////////////
-// gbs node type union //
-/////////////////////////
-
-// node type union
-union() {
-
-  gbsnode_type_assign_t assign;
-
-} gbsnode_type_u;
-
 ///////////////////
 // gbs node type //
 ///////////////////
@@ -43,8 +32,8 @@ union() {
 // node type
 type() {
 
-  int             node_type;
-  gbsnode_type_u  node_data;
+  int node_type;
+  local( void * node_data );
 
 } gbsnode_t;
 
@@ -55,10 +44,10 @@ type() {
 
 type() {
 
-  int         count;
-  gbsnode_t * node_first;
-  gbsnode_t * node_curr;
-  list_t    * bookmarks;
+  int count;
+  local( gbsnode_t * node_first );
+  local( gbsnode_t * node_curr );
+  local( list_t    * bookmarks );
 
 } gbs_t;
 

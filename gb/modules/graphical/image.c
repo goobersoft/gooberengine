@@ -50,7 +50,7 @@ image_t * image( char * f, visual_t * v ) {
   // use surface as temporary pixel data storage
   SDL_Surface * s   = IMG_Load(f);
   // init the object only if the file has loaded.
-  if (s != null()) {
+  if exists(s) {
     // An image must have a relationship to the renderer to be able
     // to create a texture. Images should be created AFTER the
     // visual module, as the visual module includes a renderer.

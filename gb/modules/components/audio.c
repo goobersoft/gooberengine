@@ -56,15 +56,6 @@ audio_t * audio() {
 // funcs //
 ///////////
 
-/*
-void audio_set_channels( audio_t * self, int n ) {
-  audio_num_channels(self) = n;
-  Mix_AllocateChannels(n);
-  free( audio_channel_state(self) );
-  audio_channel_state(self) = allocv(int,n);
-}
-*/
-
 void audio_play( audio_t * self, sound_t * s, int c ) {
   c = wrap(c,0,audio_num_channels());
   Mix_PlayChannel( c, sound_source(s), 0 );
@@ -89,7 +80,7 @@ void audio_stop( audio_t * self, int c ) {
 
 void audio_update( audio_t * self ) {
   loop(i,audio_num_channels()) {
-    if (Mix_Playing(i)==true()) {
+    if istrue(Mix_Playing(i)) {
       audio_channel_state(self)[i] = audio_channel_playing();
     }
     else {

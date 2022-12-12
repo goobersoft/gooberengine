@@ -59,7 +59,7 @@ palette_t * palette__gameboy() {
   static bool_t  _init;
 
   // first call, needs initializing
-  if (not _init) {
+  if (_init==false()) {
     _cl[0] = make_color_index(4);
     _cl[1] = make_color_index(9);
     _cl[2] = make_color_index(14);
@@ -106,7 +106,7 @@ void palette_copy( palette_t * self, palette_t * ot ) {
 }
 
 void palette_set_color( palette_t * self, int n, color_t c ) {
-  if (inrange(n,0,palette_max_colors())) {
+  if inrange(n,0,palette_max_colors()) {
     palette_colors(self)[n] = c;
   }
 }

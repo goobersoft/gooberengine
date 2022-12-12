@@ -6,7 +6,7 @@ type() {
   // in order to use graphics from a separate colormap,
   // you will need to swap the colormap after drawing a
   // portion of the tilemap (see the graph module).
-  colormap_t * colormap;
+  foreign( colormap_t * colormap );
   // the size in tiles
   point_t      size;
   // the size of the tile itself
@@ -16,7 +16,7 @@ type() {
   point_t      offset;
 
   // data holds 
-  point_t *    data;
+  local( point_t * data );
 
 } tilemap_t;
 
@@ -79,7 +79,7 @@ void tilemap_get_tile( tilemap_t * self, int x, int y, point_t * r ) {
 ////////////////////
 
 void tilemap_plot_data( tilemap_t * self, int tx, int ty, int nx, int ny ) {
-  if (inrect(tx,ty,0,0,point_x(tilemap_size(self)),point_y(tilemap_size(self)))) {
+  if inrect(tx,ty,0,0,point_x(tilemap_size(self)),point_y(tilemap_size(self))) {
     int c = (point_x(tilemap_size(self))*ty) + tx;
     point_set( ref(tilemap_data(self)[c]), nx, ny );
   }
