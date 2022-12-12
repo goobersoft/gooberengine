@@ -4,5 +4,5 @@ echo "-----------------------------------------------------"
 echo "-- COMPILING...                                    --"
 echo "-----------------------------------------------------"
 echo ""
-gcc editor.c -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_net -lGL -o editor.app
+gcc ed.c -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_net -lGL -o app-ed
 

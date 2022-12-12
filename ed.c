@@ -19,7 +19,7 @@
 ///////////////////////////////////////
 
 #include "gb/gb.c"
-#include "ma/ma.c"
+#include "ed/ed.c"
 
 ////////////
 // events //
@@ -38,33 +38,33 @@ void init() {
   Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 1, 4096 );
 
   gb_init();
-  ma_init();
+  ed_init();
 }
 
 void load() {
   gb_load();
-  ma_load();
+  ed_load();
 }
 
 void start() {
   gb_start();
-  ma_start();
+  ed_start();
 }
 
 void update() {
   gb_update();
-  ma_update();
+  ed_update();
 }
 
 void draw() {
   gb_draw_pre();
-  ma_draw();
+  ed_draw();
   gb_draw_post();
 }
 
 void quit() {
   gb_quit();
-  ma_quit();
+  ed_quit();
   SDL_Quit();
 }
 
