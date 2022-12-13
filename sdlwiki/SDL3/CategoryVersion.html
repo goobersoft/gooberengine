@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>CategoryVersion</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+</head>
+<body>
+<nav id="TOC">
+<ul>
+<li><a href="#querying-sdl-version">Querying SDL Version</a><ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#structures">Structures</a></li>
+<li><a href="#functions">Functions</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="querying-sdl-version">Querying SDL Version</h1>
+<p><strong>Include File(s):</strong> <a href="http://hg.libsdl.org/SDL/file/default/include/SDL_version.h.html">SDL_version.h</a>, <a href="http://hg.libsdl.org/SDL/file/default/include/SDL_revision.h.html">SDL_revision.h</a></p>
+<h2 id="introduction">Introduction</h2>
+<p>These functions are used to collect or display information about the version of SDL that is currently being used by the program or that it was compiled against.</p>
+<dl>
+<dt></dt>
+<dd>The version consists of three segments (X.Y.Z)
+</dd>
+</dl>
+<ul>
+<li>X = <strong>Major Version</strong>, which increments with massive changes, additions, and enhancements</li>
+<li>Y = <strong>Minor Version</strong>, which increments with backwards-compatible changes to the major revision</li>
+<li>Z = <strong>Patchlevel</strong>, which increments with fixes to the minor revision<br />
+</li>
+</ul>
+<p><em><code>Example:</code></em><code> The first version of SDL 2 was 2.0.0</code></p>
+<dl>
+<dt></dt>
+<dd>The version may also be reported as a 4-digit numeric value where the thousands place represents the major version, the hundreds place represents the minor version, and the tens and ones places represent the patchlevel (update version).
+</dd>
+</dl>
+<p><em><code>Example:</code></em><code> The first version number of SDL 2 was 2000</code></p>
+<p>SDL_revision.h must be included in your program explicitly if you want to use the SDL_REVISION constant.</p>
+<h2 id="structures">Structures</h2>
+<p>&lt;&lt;FullSearchCached(category:CategoryStruct CategoryVersion -title:SGStructures)&gt;&gt;</p>
+<h2 id="functions">Functions</h2>
+<p>&lt;&lt;FullSearchCached(category:CategoryVersion -CategoryStruct -CategoryEnum -title:SGFunctions)&gt;&gt;</p>
+<ul>
+<li><a href="SDL_COMPILEDVERSION.html" title="wikilink">SDL_COMPILEDVERSION</a></li>
+<li><a href="SDL_GetRevision.html" title="wikilink">SDL_GetRevision</a></li>
+<li><a href="SDL_GetRevisionNumber.html" title="wikilink">SDL_GetRevisionNumber</a></li>
+<li><a href="SDL_GetVersion.html" title="wikilink">SDL_GetVersion</a></li>
+<li><a href="SDL_REVISION.html" title="wikilink">SDL_REVISION</a></li>
+<li><a href="SDL_VERSION.html" title="wikilink">SDL_VERSION</a></li>
+<li><a href="SDL_version.html" title="wikilink">SDL_version</a></li>
+<li><a href="SDL_VERSION_ATLEAST.html" title="wikilink">SDL_VERSION_ATLEAST</a></li>
+<li><a href="SDL_VERSIONNUM.html" title="wikilink">SDL_VERSIONNUM</a></li>
+</ul>
+<hr />
+<p>CategoryCategory</p>
+</body>
+</html>

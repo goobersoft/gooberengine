@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>CategoryLog</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+</head>
+<body>
+<nav id="TOC">
+<ul>
+<li><a href="#log-handling">Log Handling</a><ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#enumerations">Enumerations</a></li>
+<li><a href="#functions">Functions</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="log-handling">Log Handling</h1>
+<p><strong>Include File(s):</strong> <a href="http://hg.libsdl.org/SDL/file/default/include/SDL_log.h.html">SDL_log.h</a></p>
+<h2 id="introduction">Introduction</h2>
+<p>This category contains functions for handling simple log messages with categories and priorities.</p>
+<p>&lt;&lt;Include(SDL_LogPriority, , , from="Start Include Default Priority", to="## End Include Default Priority")&gt;&gt;</p>
+<p>If you're debugging SDL you might want to call:</p>
+<p><strong><code>SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);</code></strong></p>
+<p>Here's where the messages go on different platforms:</p>
+<table>
+<tbody>
+<tr class="odd">
+<td><p>Windows</p></td>
+<td><p>debug output stream</p></td>
+</tr>
+<tr class="even">
+<td><p>Android</p></td>
+<td><p>log output</p></td>
+</tr>
+<tr class="odd">
+<td><p>PSP</p></td>
+<td><p>"SDL_Log.txt"</p></td>
+</tr>
+<tr class="even">
+<td><p>Others</p></td>
+<td><p>standard error output (stderr)</p></td>
+</tr>
+</tbody>
+</table>
+<p>Messages longer than the maximum size (4096 bytes) will be truncated.</p>
+<h2 id="enumerations">Enumerations</h2>
+<p>&lt;&lt;FullSearchCached(category:CategoryEnum CategoryLog -title:SGEnumerations)&gt;&gt;</p>
+<h2 id="functions">Functions</h2>
+<p>&lt;&lt;FullSearchCached(category:CategoryLog -CategoryEnum -CategoryStruct -title:SGFunctions)&gt;&gt;</p>
+<ul>
+<li><a href="SDL_Log.html" title="wikilink">SDL_Log</a></li>
+<li><a href="SDL_LOG_CATEGORY.html" title="wikilink">SDL_LOG_CATEGORY</a></li>
+<li><a href="SDL_LogCritical.html" title="wikilink">SDL_LogCritical</a></li>
+<li><a href="SDL_LogDebug.html" title="wikilink">SDL_LogDebug</a></li>
+<li><a href="SDL_LogError.html" title="wikilink">SDL_LogError</a></li>
+<li><a href="SDL_LogGetOutputFunction.html" title="wikilink">SDL_LogGetOutputFunction</a></li>
+<li><a href="SDL_LogGetPriority.html" title="wikilink">SDL_LogGetPriority</a></li>
+<li><a href="SDL_LogInfo.html" title="wikilink">SDL_LogInfo</a></li>
+<li><a href="SDL_LogMessage.html" title="wikilink">SDL_LogMessage</a></li>
+<li><a href="SDL_LogMessageV.html" title="wikilink">SDL_LogMessageV</a></li>
+<li><a href="SDL_LogPriority.html" title="wikilink">SDL_LogPriority</a></li>
+<li><a href="SDL_LogResetPriorities.html" title="wikilink">SDL_LogResetPriorities</a></li>
+<li><a href="SDL_LogSetAllPriority.html" title="wikilink">SDL_LogSetAllPriority</a></li>
+<li><a href="SDL_LogSetOutputFunction.html" title="wikilink">SDL_LogSetOutputFunction</a></li>
+<li><a href="SDL_LogSetPriority.html" title="wikilink">SDL_LogSetPriority</a></li>
+<li><a href="SDL_LogVerbose.html" title="wikilink">SDL_LogVerbose</a></li>
+<li><a href="SDL_LogWarn.html" title="wikilink">SDL_LogWarn</a></li>
+</ul>
+<hr />
+<p>CategoryCategory</p>
+</body>
+</html>

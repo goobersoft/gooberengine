@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>CategoryVulkan</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+</head>
+<body>
+<nav id="TOC">
+<ul>
+<li><a href="#vulkan-support">Vulkan Support</a><ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#functions">Functions</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="vulkan-support">Vulkan Support</h1>
+<p><strong>Include File(s):</strong> <a href="http://hg.libsdl.org/SDL/file/default/include/SDL_vulkan.h.html">SDL_vulkan.h</a></p>
+<h2 id="introduction">Introduction</h2>
+<p>This category contains functions for creating a Vulkan instance with the required Vulkan extensions for surface creation.</p>
+<p>The general flow of a Vulkan backed SDL application will be the following:</p>
+<ol>
+<li>Create your SDL window with the SDL_WINDOW_VULKAN flag.</li>
+<li>If necessary, use <a href="SDL_Vulkan_LoadLibrary.html" title="wikilink">SDL_Vulkan_LoadLibrary</a> and <a href="SDL_Vulkan_GetVkInstanceProcAddr.html" title="wikilink">SDL_Vulkan_GetVkInstanceProcAddr</a> to load the Vulkan library and query for driver function pointers (after initializing the video subsystem)</li>
+<li>Query for required extensions using <a href="SDL_Vulkan_GetInstanceExtensions.html" title="wikilink">SDL_Vulkan_GetInstanceExtensions</a> and use this information to create a ```VkInstance```</li>
+<li>Create a surface for the window to draw on using <a href="SDL_Vulkan_CreateSurface.html" title="wikilink">SDL_Vulkan_CreateSurface</a></li>
+<li>When setting up pipelines and framebuffers for your newly created surface, use <a href="SDL_Vulkan_GetDrawableSize.html" title="wikilink">SDL_Vulkan_GetDrawableSize</a> to query the surface extent</li>
+</ol>
+<h2 id="functions">Functions</h2>
+<ul>
+<li><a href="SDL_Vulkan_CreateSurface.html" title="wikilink">SDL_Vulkan_CreateSurface</a></li>
+<li><a href="SDL_Vulkan_GetDrawableSize.html" title="wikilink">SDL_Vulkan_GetDrawableSize</a></li>
+<li><a href="SDL_Vulkan_GetInstanceExtensions.html" title="wikilink">SDL_Vulkan_GetInstanceExtensions</a></li>
+<li><a href="SDL_Vulkan_GetVkInstanceProcAddr.html" title="wikilink">SDL_Vulkan_GetVkInstanceProcAddr</a></li>
+<li><a href="SDL_Vulkan_LoadLibrary.html" title="wikilink">SDL_Vulkan_LoadLibrary</a></li>
+<li><a href="SDL_Vulkan_UnloadLibrary.html" title="wikilink">SDL_Vulkan_UnloadLibrary</a></li>
+</ul>
+<hr />
+<p><a href="CategoryCategory.html" title="wikilink">CategoryCategory</a></p>
+</body>
+</html>

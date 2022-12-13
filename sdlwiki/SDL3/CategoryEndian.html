@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>CategoryEndian</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+</head>
+<body>
+<nav id="TOC">
+<ul>
+<li><a href="#byte-order-and-byte-swapping">Byte Order and Byte Swapping</a><ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#functions">Functions</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="byte-order-and-byte-swapping">Byte Order and Byte Swapping</h1>
+<p><strong>Include File(s):</strong> <a href="http://hg.libsdl.org/SDL/file/default/include/SDL_endian.h.html">SDL_endian.h</a></p>
+<h2 id="introduction">Introduction</h2>
+<p>This category contains functions for handling endian-specific values.</p>
+<p>Simple data types like integers and floats consist of several bytes. A 32bit integer (Sint32), for example, uses four bytes (as each byte has 8 bits). Endianness describes how the system orders the bytes of this value in memory.</p>
+<p>Endianness comes in two forms - big and little.</p>
+<ul>
+<li>SDL_LIL_ENDIAN means byte order is 1234, where the least significant byte is stored first</li>
+<li>SDL_BIG_ENDIAN means byte order is 4321, where the most significant byte is stored first</li>
+</ul>
+<p><em>Example:</em> Imagine the 32bit integer number ```16,909,060``` in decimal.</p>
+<p><code>In hexadecimal that would be ~+```0x01020304```+~. </code><br />
+<code> ```0x01``` is the most significant byte (the one that increases the value the most.  </code><code> is the least significant byte (as it increases the value the least).</code><br />
+<br />
+<code>When that is stored in memory on a little-endian system they are stored with the least significant byte first, producing the byte stream:</code><br />
+<code> ```0x04 0x03 0x02 0x01```</code><br />
+<br />
+<code>When that is stored in memory on a big-endian system they are stored with the most significant byte first, producing the byte stream:</code><br />
+<code> ```0x01 0x02 0x03 0x04```</code><br />
+</p>
+<p>For further information about endianness read the <a href="https://en.wikipedia.org/wiki/Endianness.html">Wikipedia</a> article on the subject.</p>
+<p>SDL_BYTEORDER is a macro that corresponds to the byte order used by the processor type it was compiled for.</p>
+<ul>
+<li>SDL_BYTEORDER is SDL_LIL_ENDIAN for x86, x64, and similar systems that use the little endian byte order.</li>
+<li>SDL_BYTEORDER is SDL_BIG_ENDIAN for PowerPC and similar systems that use the big endian byte order.</li>
+</ul>
+<h2 id="functions">Functions</h2>
+<p>&lt;&lt;FullSearchCached(category:CategoryEndian -CategoryEnum -CategoryStruct -title:SGFunctions)&gt;&gt;</p>
+<ul>
+<li><a href="SDL_Swap16.html" title="wikilink">SDL_Swap16</a></li>
+<li><a href="SDL_Swap32.html" title="wikilink">SDL_Swap32</a></li>
+<li><a href="SDL_Swap64.html" title="wikilink">SDL_Swap64</a></li>
+<li><a href="SDL_SwapBE16.html" title="wikilink">SDL_SwapBE16</a></li>
+<li><a href="SDL_SwapBE32.html" title="wikilink">SDL_SwapBE32</a></li>
+<li><a href="SDL_SwapBE64.html" title="wikilink">SDL_SwapBE64</a></li>
+<li><a href="SDL_SwapFloat.html" title="wikilink">SDL_SwapFloat</a></li>
+<li><a href="SDL_SwapFloatBE.html" title="wikilink">SDL_SwapFloatBE</a></li>
+<li><a href="SDL_SwapFloatLE.html" title="wikilink">SDL_SwapFloatLE</a></li>
+<li><a href="SDL_SwapLE16.html" title="wikilink">SDL_SwapLE16</a></li>
+<li><a href="SDL_SwapLE32.html" title="wikilink">SDL_SwapLE32</a></li>
+<li><a href="SDL_SwapLE64.html" title="wikilink">SDL_SwapLE64</a></li>
+</ul>
+<hr />
+<p>CategoryCategory</p>
+</body>
+</html>

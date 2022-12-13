@@ -38,15 +38,24 @@ type() {
 
 } list_t;
 
+// getters
 #define list_first(self)    (self->first)
 #define list_last(self)     (self->last)
 #define list_count(self)    (self->count)
 
+/////////
+// new //
+/////////
+
+void list_init( list_t * self ) {
+  list_first(self)    = null();
+  list_last(self)     = null();
+  list_count(self)    = 0;
+}
+
 list_t * list() {
-  list_t * r       = alloc(list_t);
-  list_first(r)    = null();
-  list_last(r)     = null();
-  list_count(r)    = 0;
+  list_t * r = alloc(list_t);
+  list_init(r);
   return r;
 }
 
@@ -210,7 +219,7 @@ void * _foreach_set_listnode( list_t * d ) {
 
 void * _foreach_iterate() {
   _foreach_listnode = listnode_next(_foreach_listnode);
-  if (_foreach_listnode != null()) {
+  if exists(_foreach_listnode) {
     _foreach_data     = listnode_data(_foreach_listnode);
     return _foreach_data;
   }

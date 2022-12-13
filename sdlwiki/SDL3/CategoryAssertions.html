@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>CategoryAssertions</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+</head>
+<body>
+<nav id="TOC">
+<ul>
+<li><a href="#assertions">Assertions</a><ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#enumerations">Enumerations</a></li>
+<li><a href="#structures">Structures</a></li>
+<li><a href="#functions">Functions</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="assertions">Assertions</h1>
+<p><strong>Include File(s):</strong> <a href="http://hg.libsdl.org/SDL/file/default/include/SDL_assert.h.html">SDL_assert.h</a></p>
+<h2 id="introduction">Introduction</h2>
+<p>This category contains functions for managing assertions.</p>
+<p>A fairly detailed discussion of the features of SDL_assert vs the standard assert() macro, and some technical explanation about how this is implemented can be found <a href="http://web.archive.org/web/20190322035412/https://plus.google.com/103391075724026391227/posts/KzV6sLdALX7.html">in this Google+ post from Ryan</a>.</p>
+<p>SDL_ASSERT_LEVEL affects which assertions, if any, are processed during compiling based on which function was used to create the assertion (see functions below).</p>
+<p>SDL_ASSERT_LEVEL can be defined in your project. If not otherwise set, SDL_ASSERT_LEVEL will default to level 2 for debug builds or level 1 for release builds.</p>
+<p>The following table describes each SDL_ASSERT_LEVEL setting and the corresponding impact on the three SDL_assert functions:</p>
+<table>
+<tr style="background-color:#EDEDED;">
+<td>
+<p><strong>SDL_ASSERT_LEVEL</strong></p>
+</td>
+<td>
+<p><strong>Description</strong></p>
+</td>
+<td>
+<p><strong>Function</strong></p>
+</td>
+<td>
+<p><strong>Function Status</strong></p>
+</td>
+<tr>
+</tr>
+<td>
+<p>&lt;:&gt;<strong>0</strong></p>
+</td>
+<td>
+<p>all assertions disabled</p>
+</td>
+<td>
+<p>SDL_assert<br />
+SDL_assert_release<br />
+SDL_assert_paranoid</p>
+</td>
+<td>
+<p>disabled<br />
+disabled<br />
+disabled</p>
+</td>
+<tr>
+</tr>
+<td>
+<p>&lt;:&gt;<strong>1</strong></p>
+</td>
+<td>
+<p>for release (default)</p>
+</td>
+<td>
+<p>SDL_assert<br />
+SDL_assert_release<br />
+SDL_assert_paranoid</p>
+</td>
+<td>
+<p>disabled<br />
+<strong>enabled</strong><br />
+disabled</p>
+</td>
+<tr>
+</tr>
+<td>
+<p>&lt;:&gt;<strong>2</strong></p>
+</td>
+<td>
+<p>for debugging (default)</p>
+</td>
+<td>
+<p>SDL_assert<br />
+SDL_assert_release<br />
+SDL_assert_paranoid</p>
+</td>
+<td>
+<p><strong>enabled</strong><br />
+<strong>enabled</strong><br />
+disabled</p>
+</td>
+<tr>
+</tr>
+<td>
+<p>&lt;:&gt;<strong>3</strong></p>
+</td>
+<td>
+<p>stringent for detailed checking</p>
+</td>
+<td>
+<p>SDL_assert<br />
+SDL_assert_release<br />
+SDL_assert_paranoid</p>
+</td>
+<td>
+<p><strong>enabled</strong><br />
+<strong>enabled</strong><br />
+<strong>enabled</strong></p>
+</td>
+</tr>
+</table>
+<h2 id="enumerations">Enumerations</h2>
+<p>&lt;&lt;FullSearchCached(category:CategoryEnum CategoryAssertions -title:SGEnumerations)&gt;&gt;</p>
+<h2 id="structures">Structures</h2>
+<p>&lt;&lt;FullSearchCached(category:CategoryStruct CategoryAssertions -title:SGStructures)&gt;&gt;</p>
+<h2 id="functions">Functions</h2>
+<p>&lt;&lt;FullSearchCached(category:CategoryAssertions -CategoryEnum -CategoryStruct -title:SGFunctions)&gt;&gt;</p>
+<ul>
+<li><a href="SDL_assert.html" title="wikilink">SDL_assert</a></li>
+<li><a href="SDL_assert_data.html" title="wikilink">SDL_assert_data</a></li>
+<li><a href="SDL_assert_paranoid.html" title="wikilink">SDL_assert_paranoid</a></li>
+<li><a href="SDL_assert_release.html" title="wikilink">SDL_assert_release</a></li>
+<li><a href="SDL_AssertState.html" title="wikilink">SDL_AssertState</a></li>
+<li><a href="SDL_GetAssertionHandler.html" title="wikilink">SDL_GetAssertionHandler</a></li>
+<li><a href="SDL_GetAssertionReport.html" title="wikilink">SDL_GetAssertionReport</a></li>
+<li><a href="SDL_GetDefaultAssertionHandler.html" title="wikilink">SDL_GetDefaultAssertionHandler</a></li>
+<li><a href="SDL_ResetAssertionReport.html" title="wikilink">SDL_ResetAssertionReport</a></li>
+<li><a href="SDL_SetAssertionHandler.html" title="wikilink">SDL_SetAssertionHandler</a></li>
+<li><a href="SDL_TriggerBreakpoint.html" title="wikilink">SDL_TriggerBreakpoint</a></li>
+</ul>
+<hr />
+<p>CategoryCategory</p>
+</body>
+</html>

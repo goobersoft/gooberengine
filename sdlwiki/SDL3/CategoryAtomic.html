@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>CategoryAtomic</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+</head>
+<body>
+<nav id="TOC">
+<ul>
+<li><a href="#atomic-operations">Atomic Operations</a><ul>
+<li><a href="#introduction">Introduction</a><ul>
+<li><a href="#atomic-locks">Atomic Locks</a></li>
+</ul></li>
+<li><a href="#structures">Structures</a></li>
+<li><a href="#functions">Functions</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="atomic-operations">Atomic Operations</h1>
+<p><strong>Include File(s):</strong> <a href="http://hg.libsdl.org/SDL/file/default/include/SDL_atomic.h.html">SDL_atomic.h</a></p>
+<h2 id="introduction">Introduction</h2>
+<p>This category contains functions for handling atomic operations.</p>
+<p>/!\ <em>IMPORTANT</em>:</p>
+<dl>
+<dt></dt>
+<dd>If you are not an expert in concurrent lockless programming, you should only be using the atomic lock and reference counting functions in this file. In all other cases you should be protecting your data structures with full mutexes. <em>Seriously, here be dragons!</em>
+</dd>
+</dl>
+<p>"Safe" functions to use are:</p>
+<ul>
+<li><a href="SDL_AtomicLock.html" title="wikilink">SDL_AtomicLock</a>()</li>
+<li><a href="SDL_AtomicUnlock.html" title="wikilink">SDL_AtomicUnlock</a>()</li>
+<li><a href="SDL_AtomicIncRef.html" title="wikilink">SDL_AtomicIncRef</a>()</li>
+<li><a href="SDL_AtomicDecRef.html" title="wikilink">SDL_AtomicDecRef</a>()</li>
+</ul>
+<p>You can find out a little more about lockless programming and the subtle issues that can arise here:</p>
+<p><a href="http://msdn.microsoft.com/en-us/library/ee418650%28v=vs.85%29.aspx.html"><code>http://msdn.microsoft.com/en-us/library/ee418650%28v=vs.85%29.aspx</code></a></p>
+<p>There's also lots of good information here:</p>
+<p><a href="http://www.1024cores.net/home/lock-free-algorithms.html"><code>http://www.1024cores.net/home/lock-free-algorithms</code></a></p>
+<p><a href="http://preshing.com/.html"><code>http://preshing.com/</code></a></p>
+<p>These operations may or may not actually be implemented using processor specific atomic operations. When possible they are implemented as true processor specific atomic operations. When that is not possible the are implemented using locks that <strong>do</strong> use the available atomic operations.</p>
+<p>All of the atomic operations that modify memory are full memory barriers.</p>
+<h3 id="atomic-locks">Atomic Locks</h3>
+<p>The atomic locks are efficient spinlocks using CPU instructions, but are vulnerable to starvation and can spin forever if a thread holding a lock has been terminated. For this reason you should minimize the code executed inside an atomic lock and never do expensive things like API or system calls while holding them.</p>
+<p>/!\ The atomic locks are not safe to lock recursively.</p>
+<h2 id="structures">Structures</h2>
+<p>&lt;&lt;FullSearchCached(category:CategoryAtomic CategoryStruct -title:SGStructures)&gt;&gt;</p>
+<h2 id="functions">Functions</h2>
+<p>&lt;&lt;FullSearchCached(category:CategoryAtomic -CategoryEnum -CategoryStruct -title:SGFunctions)&gt;&gt;</p>
+<ul>
+<li><a href="SDL_atomic_t.html" title="wikilink">SDL_atomic_t</a></li>
+<li><a href="SDL_AtomicAdd.html" title="wikilink">SDL_AtomicAdd</a></li>
+<li><a href="SDL_AtomicCAS.html" title="wikilink">SDL_AtomicCAS</a></li>
+<li><a href="SDL_AtomicCASPtr.html" title="wikilink">SDL_AtomicCASPtr</a></li>
+<li><a href="SDL_AtomicDecRef.html" title="wikilink">SDL_AtomicDecRef</a></li>
+<li><a href="SDL_AtomicGet.html" title="wikilink">SDL_AtomicGet</a></li>
+<li><a href="SDL_AtomicGetPtr.html" title="wikilink">SDL_AtomicGetPtr</a></li>
+<li><a href="SDL_AtomicIncRef.html" title="wikilink">SDL_AtomicIncRef</a></li>
+<li><a href="SDL_AtomicLock.html" title="wikilink">SDL_AtomicLock</a></li>
+<li><a href="SDL_AtomicSet.html" title="wikilink">SDL_AtomicSet</a></li>
+<li><a href="SDL_AtomicSetPtr.html" title="wikilink">SDL_AtomicSetPtr</a></li>
+<li><a href="SDL_AtomicTryLock.html" title="wikilink">SDL_AtomicTryLock</a></li>
+<li><a href="SDL_AtomicUnlock.html" title="wikilink">SDL_AtomicUnlock</a></li>
+<li><a href="SDL_CompilerBarrier.html" title="wikilink">SDL_CompilerBarrier</a></li>
+</ul>
+<hr />
+<p>CategoryCategory</p>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>CategoryGameController</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+</head>
+<body>
+<nav id="TOC">
+<ul>
+<li><a href="#draft">Draft</a></li>
+<li><a href="#gamecontroller-and-joystick-mapping">GameController and Joystick Mapping</a><ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#enumerations">Enumerations</a></li>
+<li><a href="#functions">Functions</a></li>
+</ul></li>
+</ul>
+</nav>
+<h2 id="draft">Draft</h2>
+<p><strong>THIS PAGE IS A WORK IN PROGRESS</strong> ... Please make edits to this page to improve it!</p>
+<h1 id="gamecontroller-and-joystick-mapping">GameController and Joystick Mapping</h1>
+<p><strong>Include File(s):</strong> <a href="http://hg.libsdl.org/SDL/file/default/include/SDL_gamecontroller.h.html">SDL_gamecontroller.h</a></p>
+<h2 id="introduction">Introduction</h2>
+<p>This category contains functions for handling game controllers and for mapping joysticks to game controller semantics. This is built on top of the existing joystick API.</p>
+<p>SDL_GameController is an abstraction for gamepads ("controllers") similar to the xbox360-pad: They have a DPAD, two analog sticks, 4 buttons on the right (often called A, B, X, Y), shoulder buttons (two of which might be axes) and 3 buttons in the middle (Start, Back and usually some kind of logo-button).<br />
+This includes devices that have a similar layout, like the Playstation DualShock Controller, but different button names; SDL_GameController uses the naming-conventions of xbox360/XInput for all supported devices, so you'll know that SDL_CONTROLLER_AXIS_LEFTX is always the X-Axis of the left Analog Stick, or SDL_CONTROLLER_BUTTON_B is always the rightmost buttons of the 4 buttons on the right, for example. This makes providing consistent input bindings (for this kind of device) to your users easy, like "press B to jump, move around with the left analog stick" - with SDL_Joystick (and the underlying APIs like DirectInput) it's impossible to know which SDL (or DirectInput) axis or button corresponds to which physical axis/button on the device.</p>
+<p>If you are running your game from Steam, the game controller mapping is automatically provided for your game.</p>
+<h2 id="enumerations">Enumerations</h2>
+<p>&lt;&lt;FullSearchCached(category:CategoryGameController CategoryEnum -title:SGEnumerations)&gt;&gt;</p>
+<h2 id="functions">Functions</h2>
+<p>&lt;&lt;FullSearchCached(category:CategoryGameController -CategoryEnum -title:CategoryStruct)&gt;&gt;</p>
+<ul>
+<li><a href="SDL_GameControllerAddMapping.html" title="wikilink">SDL_GameControllerAddMapping</a></li>
+<li><a href="SDL_GameControllerAddMappingsFromFile.html" title="wikilink">SDL_GameControllerAddMappingsFromFile</a></li>
+<li><a href="SDL_GameControllerAddMappingsFromRW.html" title="wikilink">SDL_GameControllerAddMappingsFromRW</a></li>
+<li><a href="SDL_GameControllerAxis.html" title="wikilink">SDL_GameControllerAxis</a></li>
+<li><a href="SDL_GameControllerButton.html" title="wikilink">SDL_GameControllerButton</a></li>
+<li><a href="SDL_GameControllerClose.html" title="wikilink">SDL_GameControllerClose</a></li>
+<li><a href="SDL_GameControllerEventState.html" title="wikilink">SDL_GameControllerEventState</a></li>
+<li><a href="SDL_GameControllerFromInstanceID.html" title="wikilink">SDL_GameControllerFromInstanceID</a></li>
+<li><a href="SDL_GameControllerGetAttached.html" title="wikilink">SDL_GameControllerGetAttached</a></li>
+<li><a href="SDL_GameControllerGetAxis.html" title="wikilink">SDL_GameControllerGetAxis</a></li>
+<li><a href="SDL_GameControllerGetAxisFromString.html" title="wikilink">SDL_GameControllerGetAxisFromString</a></li>
+<li><a href="SDL_GameControllerGetBindForAxis.html" title="wikilink">SDL_GameControllerGetBindForAxis</a></li>
+<li><a href="SDL_GameControllerGetBindForButton.html" title="wikilink">SDL_GameControllerGetBindForButton</a></li>
+<li><a href="SDL_GameControllerGetButton.html" title="wikilink">SDL_GameControllerGetButton</a></li>
+<li><a href="SDL_GameControllerGetButtonFromString.html" title="wikilink">SDL_GameControllerGetButtonFromString</a></li>
+<li><a href="SDL_GameControllerGetJoystick.html" title="wikilink">SDL_GameControllerGetJoystick</a></li>
+<li><a href="SDL_GameControllerGetStringForAxis.html" title="wikilink">SDL_GameControllerGetStringForAxis</a></li>
+<li><a href="SDL_GameControllerGetStringForButton.html" title="wikilink">SDL_GameControllerGetStringForButton</a></li>
+<li><a href="SDL_GameControllerMapping.html" title="wikilink">SDL_GameControllerMapping</a></li>
+<li><a href="SDL_GameControllerMappingForGUID.html" title="wikilink">SDL_GameControllerMappingForGUID</a></li>
+<li><a href="SDL_GameControllerName.html" title="wikilink">SDL_GameControllerName</a></li>
+<li><a href="SDL_GameControllerNameForIndex.html" title="wikilink">SDL_GameControllerNameForIndex</a></li>
+<li><a href="SDL_GameControllerOpen.html" title="wikilink">SDL_GameControllerOpen</a></li>
+<li><a href="SDL_GameControllerUpdate.html" title="wikilink">SDL_GameControllerUpdate</a></li>
+<li><a href="SDL_IsGameController.html" title="wikilink">SDL_IsGameController</a></li>
+</ul>
+<hr />
+<p><a href="CategoryCategory.html" title="wikilink">CategoryCategory</a>, <a href="CategoryDraft.html" title="wikilink">CategoryDraft</a></p>
+</body>
+</html>
