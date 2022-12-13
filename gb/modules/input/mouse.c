@@ -66,7 +66,8 @@ type() {
 /////////
 
 void mouse_init( mouse_t * self, visual_t * v, colormap_t * c ) {
-  mouse_visible(self) = true();
+  mouse_visible(self) = false();
+  SDL_ShowCursor(SDL_ENABLE);
 
   point_set(mouse_pos(self), 0,0);
   point_set(mouse_pos_old(self), 0,0);

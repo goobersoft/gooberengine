@@ -32,9 +32,8 @@ void init() {
   IMG_Init     (IMG_INIT_PNG);
   Mix_Init     (MIX_INIT_OGG|MIX_INIT_MOD);
   SDLNet_Init  ();
-
   // open the audio device.
-  Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 1, 4096 );
+  Mix_OpenAudio( 48000, MIX_DEFAULT_FORMAT, 1, 4096 );
 
   gb_init();
 }
@@ -69,7 +68,7 @@ int main(int c, char ** v) {
   init();
   load();
   start();
-  while (gb_running()) {
+  while gb_running() {
     update();
     draw();
   }

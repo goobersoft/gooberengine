@@ -14,7 +14,8 @@ type() {
   // intensity of spray (0-1000)
   int       intensity;
 
-  // graph ref
+  // graph ref.
+  // gb_graph() does not yet exist in this section of the code.
   graph_t * graph;
 
 } sprayer_t;

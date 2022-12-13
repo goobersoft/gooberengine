@@ -29,6 +29,12 @@ void debug_load() {
 
 
 void debug_start() {
+  mouse_set_visible(gb_mouse(), false());
+
+  char * u1 = "true";
+  char * u2 = "true";
+
+  log("%p %p",u1,u2);
   
 }
 

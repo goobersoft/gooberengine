@@ -1,0 +1,65 @@
+
+----------------
+|  To-Do List  |
+----------------
+
+
+PATTERN EDITOR
+--------------
+  
+  Implement an editor so that I can make patterns and same them as
+  some sort of file format.
+
+  How would I even do that? Maybe a string which contains the id of
+  the colormap, the tile width and height, and the data?
+
+  An example of a 4x4 tilemap with all cells set to 0:
+  "gb-0,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0"
+
+  A typical colormap or image page for gooberengine is 400x240 pixels.
+  This means that there are 960 tiles per page. It does not make the string
+  any more compact to try and store this information as hex values.
+  I may however use the constant '-' instead of '0' to indicate that the
+  tile is empty, and should be transparent:
+  "gb-0 4 4 - - - - - - - - - - - - - - - -"
+
+  Using this method, the system knows that nothing should be in those cells,
+  and index 0 for the colormap could have something filled into it. The constant
+  '-' could either mean '-1' or a special transparent index which is one number
+  higher than the colormap's index range like '960'.
+
+  Just another thought: the above example uses spaces. We could string together
+  dashes to indicate a long line of transparent tiles:
+  "gb-0 4 4 -------- 10 10 10 10 ----"
+
+  We could also implement a number after a single dash to tell the program
+  that there's a long string of transparent tiles:
+  "gb-0 4 4 -8 10 10 10 10 -4"
+
+  This seems easy to understand, actually. The -x initially doesn't make
+  sense as a tile index, so the brain switches to it meaning x amount of
+  dashes. I like this, but I probably won't later.
+
+
+GENERATED SOUND
+---------------
+
+  While I do have the ability in the audio module to load and use sounds, I
+  would ideally like to bew able to generate waveforms so that I can utilize
+  manipulation of them and mix them into the game's audio output. I'm thinking
+  like modular tracker music or sounds which work off of patterns. These would
+  work as the engine's default sound output method, but also allow audio streams
+  from OGG files to be played?
+
+
+NETWORKING
+----------
+
+  There's nothing made in the network module yet. I just haven't gone around to
+  making it yet.
+
+
+MAKE A GAME ALREADY
+-------------------
+
+  Okay fine jeez.
