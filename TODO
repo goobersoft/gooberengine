@@ -4,6 +4,25 @@
 ----------------
 
 
+COLORMAP EDITOR
+---------------
+
+  Part of the editor application. I want to be able to make and edit colormaps
+  and then save them to some sort of string format that can be included in an
+  application elsewhere.
+
+  Sample format:
+  "4 4 -----ff--ff-----"
+
+  The dashes would mean transparent pixels. All pixel data would be in base64.
+  Since gooberengine only uses 64 colors, base64 would be very useful here.
+
+  One question to ask is if we should be allowed to set the size of the
+  colormap, or just restrict it to 400x240 pixels? If the latter is the case,
+  then we should be permitted to work on sections of the colormap, like tiles
+  or tile ranges.
+
+
 PATTERN EDITOR
 --------------
   
