@@ -17,14 +17,14 @@ typedef struct {
 // new //
 /////////
 
-void point_init( point_t * self, int x, int y ) {
+void init_point( point_t * self, int x, int y ) {
   point_x(self) = x;
   point_y(self) = y;
 }
 
 point_t * point(int x, int y) {
   point_t * r = alloc(point_t);
-  point_init(r,x,y);
+  init_point(r,x,y);
   return r;
 }
 

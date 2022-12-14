@@ -19,7 +19,7 @@
 ///////////////////////////////////////
 
 #include "gb/gb.c"
-#include "ma/ma.c"
+#include "games/ma/ma.c"
 
 ////////////
 // events //

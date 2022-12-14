@@ -4,6 +4,7 @@
 ----------------
 
 
+
 COLORMAP EDITOR
 ---------------
 
@@ -21,6 +22,8 @@ COLORMAP EDITOR
   colormap, or just restrict it to 400x240 pixels? If the latter is the case,
   then we should be permitted to work on sections of the colormap, like tiles
   or tile ranges.
+
+
 
 
 PATTERN EDITOR
@@ -60,6 +63,8 @@ PATTERN EDITOR
   dashes. I like this, but I probably won't later.
 
 
+
+
 GENERATED SOUND
 ---------------
 
@@ -71,11 +76,66 @@ GENERATED SOUND
   from OGG files to be played?
 
 
+
+
 NETWORKING
 ----------
 
   There's nothing made in the network module yet. I just haven't gone around to
   making it yet.
+
+
+
+
+GBML + GBS
+----------
+
+  These are objects which are utilized for markup and scripting respectively.
+  GBML: GooberMarkup
+  GBS:  GooberScript
+
+  ------
+
+  Example GBML:
+
+  a {                      <-- directory a
+    b = 10;                <-- b as a number
+    c = "Hello there.";    <-- c as a string
+    d {                    <-- d as a nested directory
+      e; f; g; h;          <-- e, f, g, h as keys with no values
+    }
+    i = #50;               <-- convert to integer
+    j = $60;               <-- convert to string
+  }
+
+  ------
+
+  GBS is meant to be a chain-based scripting language. What this means is that
+  the script does not operate on an array of commands internally, but rather
+  linked nodes. Currently the scripting syntax is not yet developed, but might
+  look loosely like:
+
+  decl x        <-- declare x as 0
+  decl y        <-- declare y as 0
+  let x 10      <-- set x to integer 10
+  let y 20      <-- set y to integer 20
+  let z 0       <-- set z to 0
+  add z x       <-- add x to z
+  add z y       <-- add y to z
+  print z       <-- print z (30)
+  let i 0       <-- set i to 0
+  label hello   <-- declare label named "hello"
+  add i 1       <-- add 1 to i
+  neq i 100     <-- execute next line if i is not 100
+  goto label    <-- this is skipped if i is 100
+
+  I think internally the variables used in the script will be held using
+  a dictionary, and since dictentries can hold IDs of their type, it would
+  be used to determine the actual data type of the internal data.
+
+  GBS would also keep track of declared labels as "bookmarks" and then skip
+  back to them when 'goto' is called with the label name.
+
 
 
 MAKE A GAME ALREADY

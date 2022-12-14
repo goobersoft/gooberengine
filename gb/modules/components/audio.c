@@ -36,7 +36,7 @@ type() {
 // new //
 /////////
 
-void audio_init( audio_t * self ) {
+void init_audio( audio_t * self ) {
   audio_data(self)              = allocv(int,audio_buffer_size());
   audio_channel_data(self)      = allocv(int*,audio_num_channels());
   loop(i,audio_num_channels()) {
@@ -48,7 +48,7 @@ void audio_init( audio_t * self ) {
 
 audio_t * audio() {
   audio_t * r = alloc(audio_t);
-  audio_init(r);
+  init_audio(r);
   return r;
 }
 

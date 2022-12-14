@@ -135,9 +135,18 @@ gb_t * gb;
 // helper functions //
 //////////////////////
 
-#define gb_get_colormap(c)   assets_get_colormap(gb_assets(),c)
-#define gb_get_sound(s)      assets_get_sound(gb_assets(),s)
-#define gb_get_font(f)       assets_get_font(gb_assets(),f)
+
+#define gb_get_image(a)       assets_get_image(gb_assets(),a)
+#define gb_get_colormap(a)    assets_get_colormap(gb_assets(),a)
+#define gb_get_sound(a)       assets_get_sound(gb_assets(),a)
+#define gb_get_font(a)        assets_get_font(gb_assets(),a)
+
+#define gb_set_image(a,p)     assets_set_image     (gb_assets(),a,image(p))
+#define gb_set_colormap(a,p)  assets_set_colormap  (gb_assets(),a,colormap_from_image(p))
+#define gb_set_sound(a,p)     assets_set_sound     (gb_assets(),a,sound(p))   
+#define gb_set_font(a,p)      assets_set_font      (gb_assets(),a,font(gb_get_colormap(p)))
+
+#define gb_button(a)             controller_get_button_state(gb_controller(),a)
 
 //////////////////////////
 // special debug module //
@@ -190,11 +199,11 @@ void gb_load() {
   // using a dictionary internally for assets instead of arrays
   // this will make it easier not to accidentally step over the same indices
   // when creating games for gb
-  assets_set_image(a,"gb-0",          image("gb/media/images/gb-0.png",v));
-  assets_set_image(a,"gb-1",          image("gb/media/images/gb-1.png",v));
-  assets_set_image(a,"editor-bg",     image("gb/media/images/editor-bg.png",v));
-  assets_set_image(a,"test",          image("gb/media/images/test.png",v));
-  assets_set_image(a,"gb-color-test", image("gb/media/images/gb-color-test.png",v));
+  assets_set_image(a,"gb-0",          image("gb/media/images/gb-0.png"));
+  assets_set_image(a,"gb-1",          image("gb/media/images/gb-1.png"));
+  assets_set_image(a,"editor-bg",     image("gb/media/images/editor-bg.png"));
+  assets_set_image(a,"test",          image("gb/media/images/test.png"));
+  assets_set_image(a,"gb-color-test", image("gb/media/images/gb-color-test.png"));
 
   // the assets object understands that we're looking for image_t* pointers.
   // internally the pointer is automatically cast in the dictionary from void* to image_t*

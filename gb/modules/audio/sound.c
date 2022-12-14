@@ -11,7 +11,7 @@ type() {
 // new //
 /////////
 
-void sound_init( sound_t * self, char * f ) {
+void init_sound( sound_t * self, char * f ) {
   
 }
 

@@ -1,5 +1,4 @@
 
-
 //////////
 // type //
 //////////
@@ -14,7 +13,7 @@ type() {
 // globals //
 /////////////
 
-debug_t         debug;
+debug_t debug;
 
 ////////////
 // events //
@@ -30,18 +29,15 @@ void debug_load() {
 
 void debug_start() {
   mouse_set_visible(gb_mouse(), false());
-  
 }
 
 void debug_update_pre() {
-  
 }
 
 void debug_update_post() {
 }
 
 void debug_draw_pre() {
-  
 }
 
 void debug_draw_post() {

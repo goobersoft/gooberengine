@@ -124,3 +124,65 @@ void boolean_toggle( boolean_t * self ) {
 char * boolean_to_string( boolean_t * self ) {
   return (boolean_value(self)==true()) ? "true" : "false";
 }
+
+//////////////////////
+// composite number //
+//////////////////////
+
+#define comp_min_whole() -1000000000
+#define comp_max_whole()  1000000000
+#define comp_max_part()         1000 // min is 0
+
+type() {
+  int whole;
+  int part;
+} comp_t;
+
+#define comp_whole(self) (self->whole)
+#define comp_part(self)  (self->part)
+
+void init_comp( comp_t * self, int w, int p ) {
+  w = clamp(w,comp_min_whole(),comp_max_whole());
+  if (w == comp_max_whole()) {
+    // if we reached the maximum, we cannot have a fractional amount
+    // over this maximum.
+    p = 0;
+  }
+  else {
+    p = wrap(p,0,comp_max_part());
+  }
+
+  comp_whole(self) = w;
+  comp_part(self)  = p;
+}
+
+comp_t * comp(int w, int p) {
+  comp_t * self = alloc(comp_t);
+  init_comp(self,w,p);
+  return self;
+}
+
+void comp_set( comp_t * self, int w, int p ) {
+  comp_whole(self)  = clamp(w,comp_min_whole(),comp_max_whole());
+  if (w == comp_max_whole())  p = 0;
+  else                        p = wrap(p,0,comp_max_part());
+  comp_part(self)   = p;
+}
+
+void comp_add( comp_t * self, int w, int p ) {
+  while (p < 0) {
+    p += comp_max_part();
+    w  = low(w-1,comp_min_whole());
+  }
+  while (p >= comp_max_part()) {
+    p -= comp_max_part();
+    w  = high(w+1,comp_max_whole());
+  }
+  comp_whole(self) = clamp( comp_whole(self)+w,
+    comp_min_whole(),comp_max_whole() );
+  comp_part(self) = p;
+}
+
+char * comp_to_string( comp_t * self ) {
+
+}

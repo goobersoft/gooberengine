@@ -6,7 +6,7 @@ type() {
   // texture rect
   rect_t      * rect;
   // offset from topleft
-  point_t     * origin;
+  point_t     * offset;
 
   bool_t        flip_x;
   bool_t        flip_y;
@@ -15,7 +15,7 @@ type() {
 
 #define sprite_colormap(self) (self->colormap)
 #define sprite_rect(self)     (self->rect)
-#define sprite_origin(self)   (self->origin)
+#define sprite_offset(self)   (self->offset)
 #define sprite_flip_x(self)   (self->flip_x)
 #define sprite_flip_y(self)   (self->flip_y)
 
@@ -29,7 +29,7 @@ type() {
 void sprite_init( sprite_t * self, colormap_t * c, int cx, int cy, int cw, int ch ) {
   sprite_colormap(self)  = c;
   sprite_rect(self)      = rect(cx,cy,cw,ch);
-  sprite_origin(self)    = point(0,0);
+  sprite_offset(self)    = point(0,0);
   sprite_flip_x(self)    = false();
   sprite_flip_y(self)    = false();
 }
@@ -44,7 +44,7 @@ sprite_t * clone_sprite( sprite_t * o ) {
   sprite_t * r       = alloc(sprite_t);
   sprite_colormap(r) = sprite_colormap(o);
   sprite_rect(r)     = clone_rect(sprite_rect(o));
-  sprite_origin(r)   = clone_point(sprite_origin(o));
+  sprite_offset(r)   = clone_point(sprite_offset(o));
   sprite_flip_x(r)   = sprite_flip_x(o);
   sprite_flip_y(r)   = sprite_flip_y(o);
   return r;
@@ -53,7 +53,7 @@ sprite_t * clone_sprite( sprite_t * o ) {
 void free_sprite( sprite_t * self ) {
   // does not free colormap - this is an external pointer
   free(sprite_rect(self));
-  free(sprite_origin(self));
+  free(sprite_offset(self));
   free(self);
 }
 
@@ -80,6 +80,6 @@ void sprite_set_rect_size( sprite_t * self, int w, int h ) {
   rect_set_size(sprite_rect(self), w, h);
 }
 
-void sprite_set_origin( sprite_t * self, int x, int y ) {
-  point_set( sprite_origin(self), x, y );
+void sprite_set_offset( sprite_t * self, int x, int y ) {
+  point_set( sprite_offset(self), x, y );
 }

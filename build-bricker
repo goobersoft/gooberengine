@@ -4,4 +4,4 @@ echo "-----------------------------------------------------"
 echo "-- COMPILING...                                    --"
 echo "-----------------------------------------------------"
 echo ""
-gcc main-ma.c -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_net -lGL -o app-ma
+gcc main-bricker.c -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_net -lGL -o app-bricker

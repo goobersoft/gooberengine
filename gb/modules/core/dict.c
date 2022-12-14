@@ -12,18 +12,27 @@ type() {
 
 } dictentry_t;
 
+// getters
 #define dictentry_key(self)   (self->key)
 #define dictentry_data(self)  (self->data)
 #define dictentry_tag(self)   (self->tag)
 #define dictentry_id(self)    tag_id(dictentry_tag(self))
 
-dictentry_t * dictentry( char * s, void * d ) {
-  dictentry_t * r      = alloc(dictentry_t);
-  dictentry_key(r)     = string_from(s);
-  dictentry_data(r)    = d;
+/////////
+// new //
+/////////
+
+void dictentry_init( dictentry_t * self, char * s, void * d ) {
+  dictentry_key(self)     = string_from(s);
+  dictentry_data(self)    = d;
   // using a tag can help us identify what type of data the dictentry
   // is holding in other modules.
-  dictentry_tag(r)     = tag(r,"dictentry");
+  dictentry_tag(self)     = tag(self,"dictentry");
+}
+
+dictentry_t * dictentry( char * s, void * d ) {
+  dictentry_t * r      = alloc(dictentry_t);
+  dictentry_init(r,s,d);
   return r;
 }
 
@@ -34,6 +43,10 @@ void free_dictentry( dictentry_t * self ) {
   free_tag(dictentry_tag(self));
   free(self);
 }
+
+///////////////
+// functions //
+///////////////
 
 // will free the previous string object and create a new one.
 void dictentry_set_key( dictentry_t * self, char * s ) {
@@ -47,10 +60,18 @@ void dictentry_set_data( dictentry_t * self, void * d ) {
   dictentry_data(self) = d;
 }
 
+// you can use the ID of the tag to hold the class of the data
+// the dictionary entry is holding.
+void dictentry_set_id( dictentry_t * self, char * id ) {
+  dictentry_id(self) = id;
+}
+
 bool_t dictentry_compare_key( dictentry_t * self, char * s ) {
   return streq( string_data(dictentry_key(self)), s );
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
 
 ///////////////
 // dict type //

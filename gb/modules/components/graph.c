@@ -142,7 +142,7 @@ type() {
 // new //
 /////////
 
-void graph_init( graph_t * self, visual_t * v ) {
+void init_graph( graph_t * self, visual_t * v ) {
   graph_visual(self)          = v;
 
   graph_flip_x(self)          = false();
@@ -180,7 +180,7 @@ void graph_init( graph_t * self, visual_t * v ) {
 
 graph_t * graph( visual_t * v ) {
   graph_t * r = alloc(graph_t);
-  graph_init(r,v);
+  init_graph(r,v);
   return r;
 }
 
@@ -743,7 +743,7 @@ void graph_draw_cls( graph_t * self ) {
 
 void graph_draw_sprite( graph_t * self, int x, int y, sprite_t * s ) {
   graph_set_flip( self, sprite_flip_x(s), sprite_flip_y(s) );
-  graph_draw_colormap_sub( self, x-point_x(sprite_origin(s)), y-point_y(sprite_origin(s)), sprite_colormap(s), 
+  graph_draw_colormap_sub( self, x-point_x(sprite_offset(s)), y-point_y(sprite_offset(s)), sprite_colormap(s), 
     rect_x(sprite_rect(s)), rect_y(sprite_rect(s)), rect_w(sprite_rect(s)), rect_h(sprite_rect(s)));
   graph_set_flip( self, false(), false() );
 }
