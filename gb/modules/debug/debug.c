@@ -28,7 +28,6 @@ void debug_load() {
 
 
 void debug_start() {
-  mouse_set_visible(gb_mouse(), false());
 }
 
 void debug_update_pre() {

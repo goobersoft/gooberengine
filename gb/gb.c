@@ -97,7 +97,7 @@ typedef struct {
   timing_t     * timing;
   graph_t      * graph;
   assets_t     * assets;
-  mouse_t      * mouse;
+  //mouse_t      * mouse;
   audio_t      * audio;
   controller_t * controller;
   input_t      * input;
@@ -127,7 +127,7 @@ gb_t * gb;
 #define gb_visual()     (gb->visual)
 #define gb_timing()     (gb->timing)
 #define gb_graph()      (gb->graph)
-#define gb_mouse()      (gb->mouse)
+//#define gb_mouse()      (gb->mouse)
 #define gb_audio()      (gb->audio)
 #define gb_controller() (gb->controller)
 #define gb_input()      (gb->input)
@@ -179,7 +179,7 @@ void gb_init() {
   gb_visual()      = visual();
   gb_timing()      = timing();
   gb_assets()      = assets(gb_visual());
-  gb_mouse()       = mouse(gb_visual(), null());
+  //gb_mouse()       = mouse(gb_visual(), null());
   gb_audio()       = audio();
   gb_graph()       = graph(gb_visual());
   gb_controller()  = controller();
@@ -224,26 +224,6 @@ void gb_load() {
   assets_set_sound(a,"jake-3",sound("gb/media/sounds/jake-3.ogg"));
   assets_set_sound(a,"jake-4",sound("gb/media/sounds/jake-4.ogg"));
 
-  /*
-  assets_set_image(a,0,image("gb/media/images/gb-0.png",v));
-  assets_set_image(a,1,image("gb/media/images/gb-1.png",v));
-  assets_set_image(a,2,image("gb/media/images/editor-bg.png",v));
-  assets_set_image(a,3,image("gb/media/images/test.png",v));
-  assets_set_image(a,4,image("gb/media/images/gb-color-test.png",v));
-
-  // load colormaps from images
-  assets_set_colormap(a,0,colormap_from_image(assets_get_image(a,0)));
-  assets_set_colormap(a,1,colormap_from_image(assets_get_image(a,1)));
-  assets_set_colormap(a,2,colormap_from_image(assets_get_image(a,2)));
-  assets_set_colormap(a,3,colormap_from_image(assets_get_image(a,3)));
-  assets_set_colormap(a,4,colormap_from_image(assets_get_image(a,4)));
-
-  // load sounds
-  assets_set_sound(a,0,sound("gb/media/sounds/jake-1.ogg"));
-  assets_set_sound(a,1,sound("gb/media/sounds/jake-2.ogg"));
-  assets_set_sound(a,2,sound("gb/media/sounds/jake-3.ogg"));
-  assets_set_sound(a,3,sound("gb/media/sounds/jake-4.ogg"));
-  */
   // load font 1
   font_t * f;
 
@@ -260,11 +240,6 @@ void gb_load() {
   font_set_tile_size   ( f, 10, 10 );
   font_set_tiles_size  ( f, 10, 10 );
   assets_set_font      ( a, "original", f );
-
-  // set the mouse's icon
-  mouse_colormap(gb_mouse())      = assets_get_colormap(gb_assets(),"gb-0");
-  mouse_set_colormap_rect         (gb_mouse(),40,200,10,10);
-  mouse_set_visible               (gb_mouse(),true());
 
   // debug
   debug_load();
@@ -309,7 +284,6 @@ void gb_update() {
   //-- Modules --//
 
   input_update      (gb_input());
-  mouse_update      (gb_mouse());
   controller_update (gb_controller());
 
   //-- debugging --//
@@ -345,7 +319,7 @@ void gb_draw_pre() {
 // post-draw event
 void gb_draw_post() {
   // all of the module drawing goes in here
-  graph_draw_mouse( gb_graph(), gb_mouse() );
+  //graph_draw_mouse( gb_graph(), gb_mouse_x(), gb_mouse_y(), gb_input() );
   // do some debug drawing at the end of everything else
   if (gb_flag_debug()) debug_draw_post();
   // present the screen

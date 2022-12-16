@@ -55,11 +55,11 @@ type() {
 #define mouse_colormap_pos(self)  (&self->colormap_pos)
 #define mouse_colormap_size(self) (&self->colormap_size)
 
-#define mouse_x(self) (self->pos.x)
-#define mouse_y(self) (self->pos.y)
+#define mouse_x(self)             (self->pos.x)
+#define mouse_y(self)             (self->pos.y)
 
-#define mouse_buttons(self) (self->buttons)
-#define mouse_visual(self)  (self->visual)
+#define mouse_buttons(self)       (self->buttons)
+#define mouse_visual(self)        (self->visual)
 
 /////////
 // new //

@@ -71,12 +71,13 @@ void debugpanel_draw( debugpanel_t * self ) {
     string_copy_number_at(debugpanel_string(self),25,u1);
     string_copy_at(debugpanel_string(self),25+uu,"\%");
 
+    // mouse
     int u2 = 0;
     u2 = string_copy_number_at(debugpanel_string(self),
-      30,point_x(mouse_pos(gb_mouse()))/visual_window_scale(gb_visual()));
+      30,point_x(input_mouse_pos(gb_input()))/visual_window_scale(gb_visual()));
     u2 = string_copy_at(debugpanel_string(self),u2,",");
     u2 = string_copy_number_at(debugpanel_string(self),
-      u2,point_y(mouse_pos(gb_mouse()))/visual_window_scale(gb_visual()));
+      u2,point_y(input_mouse_pos(gb_input()))/visual_window_scale(gb_visual()));
     
     u2 = string_copy_at(debugpanel_string(self),40,"CPU:");
     // will draw a bar instead of text
