@@ -38,7 +38,9 @@ debugpanel_t * debugpanel() {
 ////////////
 
 void debugpanel_update( debugpanel_t * self ) {
-  
+  if (input_get_key_pressed( gb_input(), input_key(F1) )) {
+    debugpanel_visible(self) = not(debugpanel_visible(self));
+  }
 }
 
 void debugpanel_draw( debugpanel_t * self ) {

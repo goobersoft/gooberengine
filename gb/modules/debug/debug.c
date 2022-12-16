@@ -31,6 +31,7 @@ void debug_start() {
 }
 
 void debug_update_pre() {
+  debugpanel_update(debug.panel);
 }
 
 void debug_update_post() {

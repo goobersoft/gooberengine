@@ -121,8 +121,8 @@ gb_t * gb;
 #define gb()            (gb)
 #define gb_assets()     (gb->assets)
 #define gb_running()    (gb->f_running)
-#define gb_flag_cls()   (gb->f_cls)
-#define gb_flag_debug() (gb->f_debug)
+#define gb_f_cls()      (gb->f_cls)
+#define gb_f_debug()    (gb->f_debug)
 #define gb_paused()     (gb->f_paused)
 #define gb_visual()     (gb->visual)
 #define gb_timing()     (gb->timing)
@@ -153,6 +153,14 @@ gb_t * gb;
 
 #define gb_button(a)          controller_get_button_state(gb_controller(),a)
 
+///////////////
+// functions //
+///////////////
+
+void gb_set_cls( bool_t b ) {
+  gb_f_cls() = bool(b);
+}
+
 //////////////////////////
 // special debug module //
 //////////////////////////
@@ -174,8 +182,8 @@ void gb_init() {
   gb()             = alloc(gb_t);
   gb_running()     = true();
   gb_paused()      = false();
-  gb_flag_cls()    = false();
-  gb_flag_debug()  = true();//false();
+  gb_f_cls()       = false();
+  gb_f_debug()     = true();
   gb_visual()      = visual();
   gb_timing()      = timing();
   gb_assets()      = assets(gb_visual());
@@ -306,14 +314,14 @@ void gb_update_post() {
 void gb_draw_pre() {
   
   // clear the graph colormap if the cls flag is enabled.
-  if (gb_flag_cls()) {
+  if (gb_f_cls()) {
     graph_cls(gb_graph());
   }
 
   // clear screen to black and set draw color back to white.
   visual_draw_pre(gb_visual());  
   // background drawing for debug
-  if (gb_flag_debug()) debug_draw_pre();
+  if (gb_f_debug()) debug_draw_pre();
 }
 
 // post-draw event
@@ -321,7 +329,7 @@ void gb_draw_post() {
   // all of the module drawing goes in here
   //graph_draw_mouse( gb_graph(), gb_mouse_x(), gb_mouse_y(), gb_input() );
   // do some debug drawing at the end of everything else
-  if (gb_flag_debug()) debug_draw_post();
+  if (gb_f_debug()) debug_draw_post();
   // present the screen
   graph_present(gb_graph());
   visual_draw_post(gb_visual());
