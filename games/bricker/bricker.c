@@ -59,16 +59,29 @@ void bricker_init() {
 }
 
 void bricker_load() {
-
+  
   // type casting is for pussies :-)
   void * u;
-  /*
-  u = image("./media/images/bricker-0");
+  
+  // asset loading is done from top-level, so you have to indicate
+  // the full path to this source file.
+  u = image("games/bricker/media/images/bricker-0.png");
+  log("%p",u);
+
   gb_set_image("bricker-0",u);
 
+
+  
   u = colormap_from_image(gb_get_image("bricker-0"));
   gb_set_colormap("bricker-0",u);
-  */
+  
+
+  font_t * f = font(null());
+  font_set(f,
+    gb_get_colormap("bricker-0"),
+    350,0, 5,10, 10,10);
+  gb_set_font("bricker-0",f);
+  
 }
 
 void bricker_start() {
@@ -78,6 +91,10 @@ void bricker_update() {
 }
 
 void bricker_draw() {
+  
+  graph_set_font(gb_graph(),gb_get_font("bricker-0"));
+  graph_draw_text(gb_graph(),0,100,"Hello world.");
+  
 }
 
 void bricker_quit() {

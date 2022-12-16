@@ -1,7 +1,7 @@
 
 #define gb_version_major() 2022
 #define gb_version_minor() 12
-#define gb_version_patch() 11
+#define gb_version_patch() 14
 
 //  submodules stack
 //  ----------------
@@ -100,6 +100,7 @@ typedef struct {
   mouse_t      * mouse;
   audio_t      * audio;
   controller_t * controller;
+  input_t      * input;
 
   scene_t      * scene;
   
@@ -129,24 +130,28 @@ gb_t * gb;
 #define gb_mouse()      (gb->mouse)
 #define gb_audio()      (gb->audio)
 #define gb_controller() (gb->controller)
+#define gb_input()      (gb->input)
 #define gb_scene()      (gb->scene)
 
 //////////////////////
 // helper functions //
 //////////////////////
 
+#define gb_get_key_state(a)   input_get_key_state   (gb_input(),a)
+#define gb_get_key_pressed(a) input_get_key_pressed (gb_input(),a)
+#define gb_get_key_held(a)    input_get_key_held    (gb_input(),a)
 
 #define gb_get_image(a)       assets_get_image(gb_assets(),a)
 #define gb_get_colormap(a)    assets_get_colormap(gb_assets(),a)
 #define gb_get_sound(a)       assets_get_sound(gb_assets(),a)
 #define gb_get_font(a)        assets_get_font(gb_assets(),a)
 
-#define gb_set_image(a,p)     assets_set_image     (gb_assets(),a,image(p))
-#define gb_set_colormap(a,p)  assets_set_colormap  (gb_assets(),a,colormap_from_image(p))
-#define gb_set_sound(a,p)     assets_set_sound     (gb_assets(),a,sound(p))   
-#define gb_set_font(a,p)      assets_set_font      (gb_assets(),a,font(gb_get_colormap(p)))
+#define gb_set_image(a,p)     assets_set_image     (gb_assets(),a,p)
+#define gb_set_colormap(a,p)  assets_set_colormap  (gb_assets(),a,p)
+#define gb_set_sound(a,p)     assets_set_sound     (gb_assets(),a,p)   
+#define gb_set_font(a,p)      assets_set_font      (gb_assets(),a,p)
 
-#define gb_button(a)             controller_get_button_state(gb_controller(),a)
+#define gb_button(a)          controller_get_button_state(gb_controller(),a)
 
 //////////////////////////
 // special debug module //
@@ -178,6 +183,7 @@ void gb_init() {
   gb_audio()       = audio();
   gb_graph()       = graph(gb_visual());
   gb_controller()  = controller();
+  gb_input()       = input();
 
   gb_scene()       = scene(gb(),"");
   scene_set_id(gb_scene(),"none");
@@ -302,6 +308,7 @@ void gb_update() {
 
   //-- Modules --//
 
+  input_update      (gb_input());
   mouse_update      (gb_mouse());
   controller_update (gb_controller());
 

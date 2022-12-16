@@ -108,7 +108,7 @@ void ma_init() {
 }
 
 void ma_load() {
-  image_t * a = image("ma/media/images/ma-0.png", gb_visual() );
+  image_t * a = image("games/ma/media/images/ma-0.png", gb_visual() );
   assets_set_image( gb_assets(), "ma-0", a );
   assets_set_colormap( gb_assets(), "ma-0", colormap_from_image(a) );
   ma_debug_load();

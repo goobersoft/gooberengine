@@ -5,76 +5,60 @@
 
 type() {
 
-  SDL_Renderer * renderer;
-  SDL_Surface  * surface;
-  
-  point_t        size;
-  char         * path;
-  color_t      * data;
-
-  /*
-  visual_t     * visual;
-  SDL_Texture  * texture;
-  */
+  local( SDL_Surface * surface );  
+  local( point_t * size );
+  // technically this would not need to be freed because it is a
+  // string constant.
+  foreign( char * path );
 
 } image_t;
 
-#define image_renderer(self) (self->renderer)
 #define image_surface(self)  (self->surface)
-#define image_size(self)     (&self->size)
+#define image_size(self)     (self->size)
 #define image_path(self)     (self->path)
 #define image_width(self)    point_x(image_size(self))
 #define image_height(self)   point_y(image_size(self))
 #define image_data(self)     (self->data)
-/*
-#define image_visual(self)   (self->visual)
-#define image_texture(self)  (self->texture)
-*/
+
 
 /////////
 // new //
 /////////
 
-void init_image( image_t * self, char * f ) {
+void free_image( image_t * self ) {
+  if image_surface(self) {
+    SDL_FreeSurface(image_surface(self));
+  }
 
+}
+
+void init_image( image_t * self, char * f ) {
+  image_size(self) = point(0,0);
+  // use surface as temporary pixel data storage
+  SDL_Surface * s   = IMG_Load(f);
+  // init the object only if the file has loaded.
+  if exists(s) {
+    image_surface(self)  = s;
+    image_width(self)    = s->w;
+    image_height(self)   = s->h;
+    image_path(self)     = f;
+  }
 }
 
 // width and height must be included.
 // SDL for this machine is using SDL_PIXELFORMAT_ABGR8888
 image_t * image( char * f ) {
-  
-  // if no dimensions are given, the default pixel screen size
-  // is used instead. This is the typical size for a tilesheet.
-  // if (w==0) w = 400;
-  // if (h==0) h = 240;
 
   image_t * r       = alloc(image_t);
+  init_image(r,f);
 
-  //image_init(r,f,v);
-
-  // use surface as temporary pixel data storage
-  SDL_Surface * s   = IMG_Load(f);
-  // init the object only if the file has loaded.
-  if exists(s) {
-    // An image must have a relationship to the renderer to be able
-    // to create a texture. Images should be created AFTER the
-    // visual module, as the visual module includes a renderer.
-    /*
-    image_visual(r)   = v;
-    image_texture(r)  = SDL_CreateTextureFromSurface(visual_renderer(v),s);
-    */
-    image_surface(r)  = s;
-    image_width(r)    = s->w;
-    image_height(r)   = s->h;
-    image_path(r)     = f;
-
-    //log("%s\n" , sdl_pixelformat_str(s->format->format));
-    //log("image '%s' loaded successfully." nl(),image_path(r));
+  if image_surface(r) {
     return r;
   }
-  // no need to free the SDL_Surface if it failed - it is null.
-  //log("image '%s' failed." nl(),f);
-  return null();
+  else {
+    free_image(r);
+    return null();
+  }
 }
 
 ///////////

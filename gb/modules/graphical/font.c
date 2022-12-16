@@ -84,3 +84,11 @@ void font_get_pos_at( font_t * self, char c, int * rx, int * ry ) {
   val(rx) = font_x(self) + (font_tile_width(self)*tx);
   val(ry) = font_y(self) + (font_tile_height(self)*ty);
 }
+
+void font_set( font_t * self, colormap_t * c, int px, int py, int sx, int sy, 
+  int tx, int ty ) {
+  font_set_colormap(self,c);
+  font_set_pos(self,px,py);
+  font_set_tile_size(self,sx,sy);
+  font_set_tiles_size(self,tx,ty);
+}
