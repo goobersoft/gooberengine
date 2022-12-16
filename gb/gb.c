@@ -179,11 +179,11 @@ void gb_init() {
   gb_visual()      = visual();
   gb_timing()      = timing();
   gb_assets()      = assets(gb_visual());
-  //gb_mouse()       = mouse(gb_visual(), null());
   gb_audio()       = audio();
   gb_graph()       = graph(gb_visual());
-  gb_controller()  = controller();
   gb_input()       = input();
+  gb_controller()  = controller(gb_input());
+  
 
   gb_scene()       = scene(gb(),"");
   scene_set_id(gb_scene(),"none");

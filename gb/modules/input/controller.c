@@ -20,26 +20,29 @@
 
 type() {
 
+  input_t * input;
   byte_t buttons[ controller_max_buttons() ];
 
 } controller_t;
 
+#define controller_input(self)   (self->input)
 #define controller_buttons(self) (self->buttons)
 
 /////////
 // new //
 /////////
 
-void controller_init( controller_t * self ) {
+void controller_init( controller_t * self, input_t * u ) {
   loop(i,controller_max_buttons()) {
     controller_buttons(self)[i] = controller_button_released();
   }
+  controller_input(self) = u;
 }
 
-controller_t * controller() {
-  controller_t * r = alloc(controller_t);
-  controller_init(r);
-  return r;
+controller_t * controller( input_t * u ) {
+  controller_t * self = alloc(controller_t);
+  controller_init(self,u);
+  return self;
 }
 
 ///////////////
@@ -84,7 +87,7 @@ void controller_update( controller_t * self ) {
     }
   }
 
-  const Uint8 * b = SDL_GetKeyboardState( null() );
+  byte_t * b = input_keyboard_keys(controller_input(self));
   if (b[SDL_SCANCODE_UP])      controller_press_button(self,controller_button_up());
   else                         controller_release_button(self,controller_button_up());
 
