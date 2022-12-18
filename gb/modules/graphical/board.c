@@ -2,11 +2,10 @@
 #define board_width()   400
 #define board_height()  240
 
-typedef struct {
+type() {
 
   SDL_Renderer * renderer;
   SDL_Texture  * texture;
-  SDL_Texture  * rawtexture;
   bool_t         locked;
   Uint32       * rawdata;
   int            rawpitch;

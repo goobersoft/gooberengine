@@ -647,6 +647,22 @@ void graph_draw_text( graph_t * self, int x, int y, char * t ) {
   }
 }
 
+// sm: sine magnitude - how high/low does the text characters go?
+// sv: sine velocity - how much is added to sine() after each character?
+// so: sine origin - starting sine position [0-999]
+/*
+void graph_draw_text_sine( graph_t * self, int x, int y, char * t, int sm, int sv, int so ) {
+  char u[2];
+  int ux;
+  int uy;
+  loop(i,strlen(t)) {
+
+    // draw the character
+    graph_draw_text( self, x, y, u );
+  }
+}
+*/
+
 void graph_draw_layer( graph_t * self, int d ) {
   d = wrap(d,0,graph_max_layers());
   // will only operate if the current layer is higher than 0
@@ -773,8 +789,6 @@ void graph_present( graph_t * self ) {
 
   colormap_t * cm = graph_data(self);
 
-  int xx  = 0;
-  int yy  = 0;
   int ci  = 0;
   color_t cc;
 
@@ -786,12 +800,8 @@ void graph_present( graph_t * self ) {
     cc = colormap_data(cm)[ci];
     px[ci++] = abgr(255,get_color_b(cc)*85,get_color_g(cc)*85,get_color_r(cc)*85);
     //ci++;
-    xx++;
-    if (xx==400) {
-      xx = 0;
-      yy += 1;
-    }
   } while (ci<graph_area());
+  
   board_unlock( bb );
   graph_frame_dots(self) = 0;
 }

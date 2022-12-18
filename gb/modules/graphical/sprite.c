@@ -61,6 +61,9 @@ void free_sprite( sprite_t * self ) {
 // funcs //
 ///////////
 
+#define sprite_set_pos(self,x,y)    rect_set_pos(sprite_rect(self),x,y)
+#define sprite_set_size(self,w,h)   rect_set_size(sprite_rect(self),w,h)
+
 // because sprite is defined BEFORE graph, the graph module will
 // have functions for drawing the sprite.
 

@@ -151,7 +151,7 @@ gb_t * gb;
 #define gb_set_sound(a,p)     assets_set_sound     (gb_assets(),a,p)   
 #define gb_set_font(a,p)      assets_set_font      (gb_assets(),a,p)
 
-#define gb_button(a)          controller_get_button_state(gb_controller(),a)
+#define gb_button(a)          controller_get_button(gb_controller(),a)
 
 ///////////////
 // functions //

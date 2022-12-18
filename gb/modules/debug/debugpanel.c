@@ -26,7 +26,7 @@ type() {
 
 debugpanel_t * debugpanel() {
   debugpanel_t * self        = alloc(debugpanel_t);
-  debugpanel_visible(self)   = true();
+  debugpanel_visible(self)   = false();
   debugpanel_pos(self)       = debugpanel_pos_top();
   debugpanel_string(self)    = string(debugpanel_max_text());
 
