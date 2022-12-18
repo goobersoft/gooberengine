@@ -1,7 +1,7 @@
 
 #define gb_version_major() 2022
 #define gb_version_minor() 12
-#define gb_version_patch() 14
+#define gb_version_patch() 18
 
 //  submodules stack
 //  ----------------
