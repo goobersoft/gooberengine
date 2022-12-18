@@ -60,6 +60,10 @@ visual_t * visual() {
 // functions //
 ///////////////
 
+void visual_set_title( visual_t * self, char * t ) {
+  SDL_SetWindowTitle( visual_window(self), t );
+}
+
 void visual_draw_scanlines( visual_t * self ) {
   SDL_Rect rr;
   
@@ -85,9 +89,6 @@ void visual_draw_scanlines( visual_t * self ) {
 
 void visual_update( visual_t * self ) {
   // pushing F4 will switch between fullscreen and windowed mode
-
-  
-
   // pushing F2 and F3 will change the window scale multiplier
 }
 

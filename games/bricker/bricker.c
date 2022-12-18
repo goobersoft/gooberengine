@@ -3,17 +3,16 @@
 #include "modules/paddle.c"
 #include "modules/pball.c"
 #include "modules/ui.c"
+
+#include "scenes/attract.c"
+
 #include "modules/debug.c"
 
 type() {
 
-  // paddle object
-  local( paddle_t * paddle );
+  local ( brickerui_t * ui );
 
-  // ball object(s)
-  local( list_t * balls );
-
-  local ( br_ui_t * br_ui );
+  local ( scene_t * scene );
 
   // score number, max at 99999999
   int score;
@@ -21,15 +20,17 @@ type() {
   int lives;
   // current level
   int level;
+  // current time left
+  int time;
 
 } bricker_t;
 
-#define bricker_paddle(self) (self->paddle)
-#define bricker_balls(self)  (self->balls)
-#define bricker_br_ui(self)  (self->br_ui)
+#define bricker_ui(self)     (self->ui)
+#define bricker_scene(self)  (self->scene)
 #define bricker_score(self)  (self->score)
-#define bricker_tries(self)  (self->tries)
+#define bricker_lives(self)  (self->lives)
 #define bricker_level(self)  (self->level)
+#define bricker_time(self)   (self->time)
 
 /////////////
 // globals //
@@ -42,7 +43,12 @@ bricker_t * _bricker;
 /////////
 
 void init_bricker( bricker_t * self ) {
-  bricker_br_ui(self) = br_ui();
+  bricker_ui(self) = brickerui();
+  bricker_scene(self) = scene_attract(self);
+  bricker_score(self) = 0;
+  bricker_lives(self) = 3;
+  bricker_level(self) = 0;
+  bricker_time(self)  = 0;
 }
 
 bricker_t * bricker() {
@@ -94,12 +100,13 @@ void bricker_load() {
 }
 
 void bricker_start() {
+  visual_set_title( gb_visual(), "--- BRICKER!! ---");
   graph_set_font(gb_graph(),gb_get_font("bricker-0"));
   bricker_debug_start(_bricker);
 }
 
 void bricker_update() {
-  br_ui_update(bricker_br_ui(_bricker));
+  brickerui_update(bricker_ui(_bricker));
   bricker_debug_update(_bricker);
 }
 
@@ -109,7 +116,7 @@ void bricker_draw() {
   graph_draw_colormap(gb_graph(),0,0,gb_get_colormap("bricker-bg"));
   graph_set_intensity(gb_graph(),u);
 
-  br_ui_draw( bricker_br_ui(_bricker) );
+  brickerui_draw( bricker_ui(_bricker) );
 
   bricker_debug_draw(_bricker);
   

@@ -647,6 +647,32 @@ void graph_draw_text( graph_t * self, int x, int y, char * t ) {
   }
 }
 
+// this function expects the number graphical data to be in the following
+// manner: 0123456789-
+void graph_draw_number( graph_t * self, int x, int y, int n, colormap_t * c,
+  int cx, int cy, int tw, int th ) {
+
+  // turn the number into a string
+  char * s = str(n);
+  // current character
+  int u = 0;
+  int l = strlen(s);
+  int nn = 0;
+
+  while (u < l) {
+    if (s[u] == '-') {
+      nn = 10;
+    }
+    else {
+      nn = s[u] - 48;
+    }
+    graph_draw_colormap_sub( self, x+(tw*u), y, c, cx+(tw*nn), cy, tw, th );
+    u++;
+  }
+
+
+}
+
 // sm: sine magnitude - how high/low does the text characters go?
 // sv: sine velocity - how much is added to sine() after each character?
 // so: sine origin - starting sine position [0-999]

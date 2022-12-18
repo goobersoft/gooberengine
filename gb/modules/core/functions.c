@@ -84,6 +84,7 @@ char * right( char * s, int l, char p ) {
   // get the current length of s
   int ll = strlen(s);
   // get the amount of padding we need
+  // number of pad chars = (desired length - length of string)
   int q = l - ll;
   // is q 0?
   if (q == 0) {
@@ -103,7 +104,7 @@ char * right( char * s, int l, char p ) {
     }
     // now copy the string
     loop(i,ll) {
-      r[ll+i] = s[i];
+      r[q+i] = s[i];
     }
     // terminate string and return
     r[l] = '\0';
