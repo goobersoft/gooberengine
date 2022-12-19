@@ -38,6 +38,13 @@ void free_point( point_t * self ) {
   free(self);
 }
 
+point_t make_point( int x, int y ) {
+  point_t r;
+  r.x = x;
+  r.y = y;
+  return r;
+}
+
 ///////////
 // funcs //
 ///////////

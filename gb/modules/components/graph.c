@@ -155,8 +155,8 @@ void init_graph( graph_t * self, visual_t * v ) {
   graph_depth_cls(self)       = graph_max_depth();
   graph_depth_enabled(self)   = false();
 
-  graph_intensity(self)       = 150;
-  graph_intensity_old(self)   = 150;
+  graph_intensity(self)       = 200;
+  graph_intensity_old(self)   = 200;
 
   graph_mode(self)            = graph_mode_normal();
 
@@ -657,31 +657,36 @@ void graph_draw_text( graph_t * self, int x, int y, char * t ) {
   }
 }
 
+// this function is used if the number is already in string format
+// and just want to use the number formatting stuff.
+void graph_draw_number_s( graph_t * self, int x, int y, char * n,
+  colormap_t * c, int cx, int cy, int tw, int th ) {
+  // current character
+  int u = 0;
+  int l = strlen(n);
+  int nn = 0;
+
+  while (u < l) {
+    if (n[u] == '-') {
+      nn = 10;
+    }
+    else {
+      nn = n[u] - 48;
+    }
+    graph_draw_colormap_sub( self, x+(tw*u), y, c, cx+(tw*nn), cy, tw, th );
+    u++;
+  }
+}
+
 // this function expects the number graphical data to be in the following
 // manner: 0123456789-
 void graph_draw_number( graph_t * self, int x, int y, int n, colormap_t * c,
   int cx, int cy, int tw, int th ) {
 
-  // turn the number into a string
-  char * s = str(n);
-  // current character
-  int u = 0;
-  int l = strlen(s);
-  int nn = 0;
-
-  while (u < l) {
-    if (s[u] == '-') {
-      nn = 10;
-    }
-    else {
-      nn = s[u] - 48;
-    }
-    graph_draw_colormap_sub( self, x+(tw*u), y, c, cx+(tw*nn), cy, tw, th );
-    u++;
-  }
-
-
+  graph_draw_number_s( self, x, y, str(n), c, cx, cy, tw, th );
 }
+
+
 
 // sm: sine magnitude - how high/low does the text characters go?
 // sv: sine velocity - how much is added to sine() after each character?

@@ -8,14 +8,28 @@
 
 #include "modules/debug.c"
 
+////////////
+// consts //
+////////////
+
+#define bricker_score_max() 9999999
+
+//////////
+// type //
+//////////
+
 type() {
 
+  // ui object
   local ( brickerui_t * ui );
 
+  // scene object
   local ( scene_t * scene );
 
-  // score number, max at 99999999
+  // score number, max at 9999999
   int score;
+  // high score (max 9999999)
+  int hiscore;
   // number of lives left
   int lives;
   // current level
@@ -25,12 +39,13 @@ type() {
 
 } bricker_t;
 
-#define bricker_ui(self)     (self->ui)
-#define bricker_scene(self)  (self->scene)
-#define bricker_score(self)  (self->score)
-#define bricker_lives(self)  (self->lives)
-#define bricker_level(self)  (self->level)
-#define bricker_time(self)   (self->time)
+#define bricker_ui(self)      (self->ui)
+#define bricker_scene(self)   (self->scene)
+#define bricker_score(self)   (self->score)
+#define bricker_hiscore(self) (self->hiscore)
+#define bricker_lives(self)   (self->lives)
+#define bricker_level(self)   (self->level)
+#define bricker_time(self)    (self->time)
 
 /////////////
 // globals //
@@ -44,11 +59,12 @@ bricker_t * _bricker;
 
 void init_bricker( bricker_t * self ) {
   bricker_ui(self) = brickerui();
-  bricker_scene(self) = scene_attract(self);
-  bricker_score(self) = 0;
-  bricker_lives(self) = 3;
-  bricker_level(self) = 0;
-  bricker_time(self)  = 0;
+  bricker_scene(self)    = scene_attract(self);
+  bricker_score(self)    = 0;
+  bricker_hiscore(self)  = 9999999;
+  bricker_lives(self)    = 3;
+  bricker_level(self)    = 0;
+  bricker_time(self)     = 9000;
 }
 
 bricker_t * bricker() {
@@ -106,6 +122,10 @@ void bricker_start() {
 }
 
 void bricker_update() {
+
+  bricker_time(_bricker) -= 1;
+  brickerui_set_time( bricker_ui(_bricker), bricker_time(_bricker) );
+
   brickerui_update(bricker_ui(_bricker));
   bricker_debug_update(_bricker);
 }
