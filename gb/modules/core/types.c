@@ -186,3 +186,43 @@ void fixed_add( fixed_t * self, int w, int p ) {
 char * fixed_to_string( fixed_t * self ) {
 
 }
+
+/////////////
+// array2d //
+/////////////
+
+type() {
+
+  int     size;
+  int     w, h;
+  void ** data;
+
+} array2d_t;
+
+#define array2d_data(self)   (self->data)
+#define array2d_width(self)  (self->w)
+#define array2d_height(self) (self->h)
+#define array2d_size(self)   (self->size)
+
+array2d_t * array2d( int w, int h ) {
+  array2d_t * self     = alloc(array2d_t);
+  array2d_data(self)   = allocv(void*,w*h);
+  array2d_width(self)  = w;
+  array2d_height(self) = h;
+  array2d_size(self)   = w*h;
+  return self;
+}
+
+void array2d_set( array2d_t * self, int x, int y, void * d ) {
+  int u = wrap( (y*array2d_width(self)) + x, 0, array2d_size(self) );
+  array2d_data(self)[ u ] = d;
+}
+
+void * array2d_get( array2d_t * self, int x, int y ) {
+  int u = wrap( (y*array2d_width(self)) + x, 0, array2d_size(self) );
+  return array2d_data(self)[ u ];
+}
+
+// helper macros
+#define a2set(a,x,y,d) array2d_set(a,x,y,d)
+#define a2get(a,x,y)   array2d_get(a,x,y)

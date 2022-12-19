@@ -124,6 +124,7 @@ typedef unsigned long  ulong_t;
 #define tile8(x)         (8*x)
 #define tile10(x)        (10*x)
 
+#define seconds(x)       (60*x)
 #define milliseconds(x)  (1000*x)
 #define microseconds(x)  (1000000*x)
 

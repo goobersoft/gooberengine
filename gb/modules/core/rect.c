@@ -83,3 +83,8 @@ void rect_add_size( rect_t * self, int w, int h ) {
   rect_w(self) += w;
   rect_h(self) += h;
 }
+
+bool_t rect_collide( rect_t * self, rect_t * other ) {
+  return rectinrect2( rect_x(self), rect_y(self), rect_w(self), rect_h(self), 
+    rect_x(other), rect_y(other), rect_w(other), rect_h(other) );
+}

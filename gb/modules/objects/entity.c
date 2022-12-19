@@ -4,31 +4,34 @@
 //////////
 
 type() {
+  
+  local( rect_t * rect );
 
-  local( point_t * pos );
-  local( point_t * size );
+  // a boolean for solidity.
+  // two entities may collide only if both of them are solid.
   bool_t solid;
 
+  // tag
+  local( tag_t * tag );
   // a pointer to the parent object
   foreign( void * parent );
 
 } entity_t;
 
-#define entity_pos(self)     (self->pos)
-#define entity_size(self)    (self->size)
+#define entity_rect(self)    (self->rect)
 #define entity_solid(self)   (self->solid)
+#define entity_tag(self)     (self->tag)
 #define entity_parent(self)  (self->parent)
 
-#define entity_pos_x(self)   point_x(entity_pos(self))
-#define entity_pos_y(self)   point_y(entity_pos(self))
-#define entity_size_x(self)  point_x(entity_size(self))
-#define entity_size_y(self)  point_y(entity_size(self))
-
-#define entity_make_rect(self) make_rect(entity_pos(self).x,entity_pos(self).y,entity_size(self).x,entity_size(self).y)
+#define entity_id(self)      tag_id(self->tag)
+#define entity_pos_x(self)   rect_x(entity_rect(self))
+#define entity_pos_y(self)   rect_y(entity_rect(self))
+#define entity_size_x(self)  rect_w(entity_rect(self))
+#define entity_size_y(self)  rect_h(entity_rect(self))
 
 //#define entity_set_parent(self,p)  set(self,parent,p)
-#define entity_set_pos(self,x,y)   point_set(entity_pos(self),x,y)
-#define entity_set_size(self,w,h)  point_set(entity_size(self),w,h)
+#define entity_set_pos(self,x,y)   rect_set_pos(entity_rect(self),x,y)
+#define entity_set_size(self,w,h)  rect_set_size(entity_rect(self),w,h)
 #define entity_set_solid(self,b)   set(self,solid,bool(b))
 
 /////////
@@ -36,9 +39,9 @@ type() {
 /////////
 
 void entity_init( entity_t * self, void * p ) {
-  entity_pos(self)         = point(0,0);
-  entity_size(self)        = point(10,10);
+  entity_rect(self)        = rect(0,0,10,10);
   entity_solid(self)       = true();
+  entity_tag(self)         = tag(self,"entity");
   entity_parent(self)      = p;
 }
 
@@ -49,8 +52,7 @@ entity_t * entity( void * p ) {
 }
 
 void free_entity( entity_t * self ) {
-  free_point(entity_pos(self));
-  free_point(entity_size(self));
+  free_rect(entity_rect(self));
   free(self);
 }
 
@@ -65,13 +67,17 @@ void free_entity( entity_t * self ) {
 void entity_set_parent( entity_t * self, void * p ) {
   entity_parent(self) = p;
 }
-
-bool_t entity_check_collide( entity_t * c1, entity_t * c2 ) {
-  if (entity_solid(c1) and entity_solid(c2)) {
+ 
+ // check if two entities are overlapping
+bool_t entity_collide( entity_t * self, entity_t * other ) {
+  if (entity_solid(self) and entity_solid(other)) {
+    return rect_collide( entity_rect(self), entity_rect(other) );
+    /*
     return rectinrect2(
       entity_pos_x(c1), entity_pos_y(c1), entity_size_x(c1), entity_size_y(c1),
       entity_pos_x(c2), entity_pos_y(c2), entity_size_x(c2), entity_size_y(c2)
     );
+    */
   }
 }
 

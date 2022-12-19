@@ -61,10 +61,10 @@ void init_bricker( bricker_t * self ) {
   bricker_ui(self) = brickerui();
   bricker_scene(self)    = scene_attract(self);
   bricker_score(self)    = 0;
-  bricker_hiscore(self)  = 9999999;
+  bricker_hiscore(self)  = seconds(10000);
   bricker_lives(self)    = 3;
   bricker_level(self)    = 0;
-  bricker_time(self)     = 9000;
+  bricker_time(self)     = 60000;
 }
 
 bricker_t * bricker() {
@@ -123,7 +123,7 @@ void bricker_start() {
 
 void bricker_update() {
 
-  bricker_time(_bricker) -= 1;
+  bricker_time(_bricker) = low(bricker_time(_bricker)-1,0);
   brickerui_set_time( bricker_ui(_bricker), bricker_time(_bricker) );
 
   brickerui_update(bricker_ui(_bricker));

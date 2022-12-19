@@ -670,8 +670,11 @@ void graph_draw_number_s( graph_t * self, int x, int y, char * n,
     if (n[u] == '-') {
       nn = 10;
     }
+    else if (n[u] == ' ') {
+      nn = 0;
+    }
     else {
-      nn = n[u] - 48;
+      nn = n[u] - 47;
     }
     graph_draw_colormap_sub( self, x+(tw*u), y, c, cx+(tw*nn), cy, tw, th );
     u++;
@@ -679,7 +682,7 @@ void graph_draw_number_s( graph_t * self, int x, int y, char * n,
 }
 
 // this function expects the number graphical data to be in the following
-// manner: 0123456789-
+// manner: ' 0123456789-'
 void graph_draw_number( graph_t * self, int x, int y, int n, colormap_t * c,
   int cx, int cy, int tw, int th ) {
 

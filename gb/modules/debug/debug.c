@@ -44,11 +44,6 @@ void debug_draw_pre() {
 
 void debug_draw_post() {
   debugpanel_draw(debug.panel);
-
-  int u = graph_set_intensity_max( gb_graph() );
-  graph_draw_number( gb_graph(), 200, 200, rnd(-999,9999), debug.colormap,
-    110, 0, 10, 20);
-  graph_set_intensity( gb_graph(), 100 );
 }
 
 void debug_quit() {

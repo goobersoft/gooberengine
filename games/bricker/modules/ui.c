@@ -153,7 +153,7 @@ void brickerui_draw( brickerui_t * self ) {
   // get the position of the hiscore as a point
   w = brickerui_hiscore_pos();
   graph_draw_number_s( gb_graph(), w.x, w.y, u, brickerui_colormap(self),
-    90,30, 10,10 );
+    80,30, 10,10 );
 
   // score element
   //---------------
@@ -162,7 +162,7 @@ void brickerui_draw( brickerui_t * self ) {
   u = right(u,7,' ');
   w = brickerui_score_pos();
   graph_draw_number_s( gb_graph(), w.x, w.y, u, brickerui_colormap(self),
-    110,0, 10,20 );
+    100,0, 10,20 );
   graph_reset_intensity( gb_graph() );
 
   // lives element
@@ -171,7 +171,7 @@ void brickerui_draw( brickerui_t * self ) {
   u = right(u,3,' ');
   w = brickerui_lives_pos();
   graph_draw_number_s( gb_graph(), w.x, w.y, u, brickerui_colormap(self),
-    110,0, 10,20 );
+    100,0, 10,20 );
 
   // level element
   //---------------
@@ -179,7 +179,7 @@ void brickerui_draw( brickerui_t * self ) {
   u = right(u,3,' ');
   w = brickerui_level_pos();
   graph_draw_number_s( gb_graph(), w.x, w.y, u, brickerui_colormap(self),
-    110,0, 10,20 );
+    100,0, 10,20 );
 
   // items element
   //---------------
@@ -197,7 +197,7 @@ void brickerui_draw( brickerui_t * self ) {
   u = right(u,4,' ');
   w = brickerui_time_sec_pos();
   graph_draw_number_s( gb_graph(), w.x, w.y, u, brickerui_colormap(self),
-    110,0, 10,20 );
+    100,0, 10,20 );
 
   // time (dsec) element
   //------------------------
@@ -206,6 +206,6 @@ void brickerui_draw( brickerui_t * self ) {
   u = right(u,2,'0');
   w = brickerui_time_dsec_pos();
   graph_draw_number_s( gb_graph(), w.x, w.y, u, brickerui_colormap(self),
-    90,30, 10,10 );
+    80,30, 10,10 );
   graph_reset_intensity( gb_graph() );
 }
