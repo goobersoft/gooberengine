@@ -19,13 +19,23 @@
 
 type() {
 
+  // score element
   int score;
-  int hiscore;
+  // destination score (score will accumulate until it hits
+  // this value
   int score_dest;
+  // hiscore value
+  int hiscore;
+  // lives value
   int lives;
+  // level value
   int level;
+  // items values (ids)
   int items[3];
+  // seconds on the timer
   int timer_sec;
+  // 100ths of a second on the timer
+  // (this will be calculated by x*100/60)
   int timer_dsec;
 
   bool_t pressstart_active;
@@ -38,6 +48,7 @@ type() {
 
 #define brickerui_score(self)          (self->score)
 #define brickerui_score_dest(self)     (self->score_dest)
+#define brickerui_hiscore(self)        (self->hiscore)
 #define brickerui_lives(self)          (self->lives)
 #define brickerui_level(self)          (self->level)
 #define brickerui_timer_sec(self)      (self->timer_sec)
@@ -94,15 +105,23 @@ void brickerui_update( brickerui_t * self ) {
 }
 
 void brickerui_draw( brickerui_t * self ) {
-
+  // set the colormap if it is not set.
   if (brickerui_colormap(self) == null()) {
     brickerui_colormap(self) = gb_get_colormap("bricker-0");
   }
 
+  // "press space" ui element
   if brickerui_pressstart_active(self) {
-    int u = graph_set_intensity_max( gb_graph() );
+    graph_set_intensity_max( gb_graph() );
     graph_draw_colormap_sub( gb_graph(), 160, 115, brickerui_colormap(self),
       0,220+(10*brickerui_pressstart_yoff(self)),80,10);
-    graph_set_intensity( gb_graph(), u );
+    graph_reset_intensity( gb_graph() );
   }
+
+  // hiscore element
+  // stringify the hiscore value
+  foreign() char * u = str(brickerui_hiscore(self));
+  // pad right with 0s to the left
+  u = right(u,8,'0');
+  // 
 }

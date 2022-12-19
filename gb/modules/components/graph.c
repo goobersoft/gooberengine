@@ -63,6 +63,7 @@ type() {
   int           depth_cls;
   // spray intensity [0-1000]
   int           intensity;
+  int           intensity_old;
 
   // the drawing mode
   int           mode;
@@ -114,6 +115,7 @@ type() {
 #define graph_depth_enabled(self)   (self->depth_enabled)
 
 #define graph_intensity(self)       (self->intensity)
+#define graph_intensity_old(self)   (self->intensity_old)
 
 //#define graph_clip(self)          (self->graph_clip)
 #define graph_clip_pos(self)        (&self->clip_pos)
@@ -154,6 +156,7 @@ void init_graph( graph_t * self, visual_t * v ) {
   graph_depth_enabled(self)   = false();
 
   graph_intensity(self)       = 150;
+  graph_intensity_old(self)   = 150;
 
   graph_mode(self)            = graph_mode_normal();
 
@@ -292,12 +295,19 @@ void graph_set_font( graph_t * self, font_t * f ) {
 
 int graph_set_intensity( graph_t * self, int n ) {
   int u = graph_intensity(self);
+  // keep track of the old value
+  graph_intensity_old(self) = graph_intensity(self);
   graph_intensity(self) = clamp(n,0,graph_max_intensity());
   return u;
 }
 
 int graph_set_intensity_max( graph_t * self ) {
   return graph_set_intensity( self, graph_max_intensity() );
+}
+
+int graph_reset_intensity( graph_t * self ) {
+  // set the value to the old one.
+  graph_intensity(self) = graph_intensity_old(self);
 }
 
 ///////////////////////
