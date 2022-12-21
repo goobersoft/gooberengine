@@ -5,8 +5,7 @@
 
 type() {
 
-  pball_t  * pball;
-  paddle_t * paddle;
+  playfield_t * playfield;
 
 } bricker_debug_t;
 
@@ -28,26 +27,29 @@ void bricker_debug_load() {
 }
 
 void bricker_debug_start() {
-  /*
-  bricker_debug.paddle  = paddle();
-  bricker_debug.pball   = pball();
-  */
+  bricker_debug.playfield = playfield();
+
+  fixed_t * f = fixed(-1,+995);
+  log("%s",fixed_to_string(f));
+  
+
+  loop(i,10) {
+    fixed_add( f, -1, 0 );
+    log("%s",fixed_to_string(f));
+    
+  }
 }
 
 void bricker_debug_update() {
-  /*
-  paddle_update(bricker_debug.paddle);
-  pball_update(bricker_debug.pball);
-  */
+  playfield_update( bricker_debug.playfield );
 }
 
-void bricker_debug_draw() {
-  /*
-  int u = graph_set_intensity(gb_graph(),1000);
-  paddle_draw(bricker_debug.paddle);
-  pball_draw(bricker_debug.pball);
-  graph_set_intensity(gb_graph(),u);
-  */
+void bricker_debug_draw_pre() {
+  playfield_draw( bricker_debug.playfield );
+}
+
+void bricker_debug_draw_post() {
+
 }
 
 void bricker_debug_quit() {

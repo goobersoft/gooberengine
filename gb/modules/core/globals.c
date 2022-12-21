@@ -135,10 +135,15 @@ typedef unsigned long  ulong_t;
 //    ag: arglist (char,int), etc
 #define fnptr(f1,f2,rt,ag) rt(*f1)ag=f2
 
-#define copy(a,b,ps,pf)         \
-  for (int i=0;i<pf-ps;i++) {   \
+// a: dest array
+// b: source array
+// ps: dest array start
+// l: length
+#define copy(a,b,ps,l)          \
+  for (int i=0;i<l;i++) {   \
     a[ps+i]=b[i];               \
   }
+
 
 #define cast(a,b) ((b)a)
 

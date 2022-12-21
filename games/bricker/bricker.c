@@ -3,6 +3,8 @@
 #include "modules/paddle.c"
 #include "modules/pball.c"
 #include "modules/ui.c"
+#include "modules/brick.c"
+#include "modules/playfield.c"
 
 #include "scenes/attract.c"
 
@@ -136,10 +138,11 @@ void bricker_draw() {
   graph_draw_colormap(gb_graph(),0,0,gb_get_colormap("bricker-bg"));
   graph_set_intensity(gb_graph(),u);
 
-  brickerui_draw( bricker_ui(_bricker) );
+  bricker_debug_draw_pre(_bricker);
 
-  bricker_debug_draw(_bricker);
+  brickerui_draw( bricker_ui(_bricker) );
   
+  bricker_debug_draw_post(_bricker);
 }
 
 void bricker_quit() {

@@ -7,27 +7,28 @@
 // type we use.
 
 // range constants
-#define integer_max_value()  2147483647
-#define integer_min_value() -2147483648
+#define integer_max_value()  1000000000
+#define integer_min_value() -1000000000
 
 // type
 type() {
 
+  tag_t * tag;
   int value;
 
 } integer_t;
 
 // getters
+#define integer_tag(self)   (self->tag)
 #define integer_value(self) (self->value)
-
-
 
 //-- new --//
 
 // not really necessary since it has just one field,
 // but kept for conventional purposes.
 void integer_init( integer_t * self, int n ) {
-  integer_value(self) = n;
+  integer_tag(self)     = tag(self,"integer");
+  integer_value(self)   = n;
 }
 
 integer_t * integer( int n ) {
@@ -128,6 +129,18 @@ char * boolean_to_string( boolean_t * self ) {
 /////////////////////////////
 // fixed-fractional number //
 /////////////////////////////
+// Keep in mind that the representation of a fixed number when in the negative
+// is not the same representation in general mathematics.
+// you can think of a fixed point number as [whole] + [parts].
+// for example: -1 whole + 995 parts is -0.005.
+// The internal storage uses -1 as the whole, and 995 as the parts.
+// There are 1,000 parts to a whole.
+// the to_string function takes this into consideration and converts it into
+// the modern mathematical representation
+//
+// NOTE: When making a new fixed object, you have to use the internal represent-
+//  ation. (ex: to get -1.5, use fixed(-2,500). )
+//  you can also use fixed(-2,+500) to make it make more sense.
 
 #define fixed_min_whole() -1000000000
 #define fixed_max_whole()  1000000000
@@ -170,6 +183,7 @@ void fixed_set( fixed_t * self, int w, int p ) {
 }
 
 void fixed_add( fixed_t * self, int w, int p ) {
+  p = fixed_part(self) + p;
   while (p < 0) {
     p += fixed_max_part();
     w  = low(w-1,fixed_min_whole());
@@ -183,9 +197,78 @@ void fixed_add( fixed_t * self, int w, int p ) {
   fixed_part(self) = p;
 }
 
+char _fixed_to_string[20];
 char * fixed_to_string( fixed_t * self ) {
+  loop(i,20) {
+    _fixed_to_string[i] = '\0';
+  }
+  
+  int rw = 0;
+  int rp = 0;
+  int dc = 0;
+  if ( (fixed_whole(self) < 0) and (fixed_part(self)>0)) {
+    rw = fixed_whole(self) + 1;
+    rp = 1000 - fixed_part(self);
+    
+    if (rw == 0) {
+      _fixed_to_string[0] = '-';
+      dc = 1;
+    }
+  }
+  else {
+    rw = fixed_whole(self);
+    rp = fixed_part(self);
+  }
 
+  // get the whole number as a string
+  char * u = str( rw );
+  // get the length of the string
+  int l = strlen(u);
+  // copy the string to return string
+  copy( _fixed_to_string, u, dc, l );
+  // dot the string for upcoming fractional part
+  _fixed_to_string[l+dc] = '.';
+  // get the fractional part, padded to 3 0s
+  u = right( str( rp ), 3, '0' );
+  // copy that to the return string just past the dot
+  copy( _fixed_to_string, u, l+dc+1, 3 );
+  // return the string
+  return _fixed_to_string;
 }
+
+///////////
+// array //
+///////////
+
+type() {
+
+  int     size;
+  void ** data;
+
+} array_t;
+
+#define array_size(self) (self->size)
+#define array_data(self) (self->data)
+
+array_t * array( int n ) {
+  array_t * self = alloc(array_t);
+  array_size(self) = clamp(n,1,1000000);
+  array_data(self) = allocv(void*,array_size(self));
+  return self;
+}
+
+void array_set( array_t * self, int n, void * d ) {
+  n = wrap(n,0,array_size(self));
+  array_data(self)[n] = d;
+}
+
+void * array_get( array_t * self, int n ) {
+  n = wrap(n,0,array_size(self));
+  return array_data(self)[n];
+}
+
+#define aset(a,n,v) array_set(a,n,v)
+#define aget(a,n)   array_get(a,n)
 
 /////////////
 // array2d //
@@ -211,6 +294,13 @@ array2d_t * array2d( int w, int h ) {
   array2d_height(self) = h;
   array2d_size(self)   = w*h;
   return self;
+}
+
+// keep in mind that the data inside of the 2d array should be handled
+// elsewhere because the array does not know what the data even is.
+void free_array2d( array2d_t * self ) {
+  free( array2d_data(self) );
+  free(self);
 }
 
 void array2d_set( array2d_t * self, int x, int y, void * d ) {

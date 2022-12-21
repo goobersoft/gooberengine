@@ -87,6 +87,14 @@ void free_tag( tag_t * self ) {
   free(self);
 }
 
+tag_t make_tag( void * src, char * cls ) {
+  tag_t self;
+  self.source   = src;
+  self.class    = cls;
+  self.id       = "";
+  return self;
+}
+
 ///////////////
 // functions //
 ///////////////

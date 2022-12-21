@@ -4,6 +4,7 @@
 ///////////////
 
 #include <stdio.h>
+#include <stdarg.h>
 #include <stdlib.h>
 #include <time.h>
 #include <sys/time.h>

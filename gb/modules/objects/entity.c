@@ -5,12 +5,12 @@
 
 type() {
   
-  local( rect_t * rect );
-
   // a boolean for solidity.
   // two entities may collide only if both of them are solid.
   bool_t solid;
 
+  // rect object to hold position and size data
+  local( rect_t * rect );
   // tag
   local( tag_t * tag );
   // a pointer to the parent object
@@ -24,8 +24,10 @@ type() {
 #define entity_parent(self)  (self->parent)
 
 #define entity_id(self)      tag_id(self->tag)
+#define entity_pos(self)     rect_pos(entity_rect(self))
 #define entity_pos_x(self)   rect_x(entity_rect(self))
 #define entity_pos_y(self)   rect_y(entity_rect(self))
+#define entity_size(self)    rect_size(entity_rect(self))
 #define entity_size_x(self)  rect_w(entity_rect(self))
 #define entity_size_y(self)  rect_h(entity_rect(self))
 
@@ -53,6 +55,7 @@ entity_t * entity( void * p ) {
 
 void free_entity( entity_t * self ) {
   free_rect(entity_rect(self));
+  free_tag(entity_tag(self));
   free(self);
 }
 
@@ -72,13 +75,19 @@ void entity_set_parent( entity_t * self, void * p ) {
 bool_t entity_collide( entity_t * self, entity_t * other ) {
   if (entity_solid(self) and entity_solid(other)) {
     return rect_collide( entity_rect(self), entity_rect(other) );
-    /*
-    return rectinrect2(
-      entity_pos_x(c1), entity_pos_y(c1), entity_size_x(c1), entity_size_y(c1),
-      entity_pos_x(c2), entity_pos_y(c2), entity_size_x(c2), entity_size_y(c2)
-    );
-    */
   }
+}
+
+// it is assumed that all of the objects inside of the list are
+// asso entity_t objects.
+entity_t * entity_collide_list( entity_t * self, list_t * ls ) {
+  bool_t b;
+  foreach(ls,dt) {
+    if (entity_collide( self, dt )) {
+      return dt;
+    }
+  }
+  return null();
 }
 
 // attempts to glide horizontally while checking against another entity.

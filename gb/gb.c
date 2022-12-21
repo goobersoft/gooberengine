@@ -1,7 +1,7 @@
 
 #define gb_version_major() 2022
 #define gb_version_minor() 12
-#define gb_version_patch() 19
+#define gb_version_patch() 20
 
 //  submodules stack
 //  ----------------
@@ -23,8 +23,8 @@
 #include "modules/core/functions_sine.c"      // sine and cosine function
 #include "modules/core/functions_sqroot.c"    // sqroot function
 #include "modules/core/functions_base64.c"    // sqroot function
-#include "modules/core/types.c"               // complex numerical types
 #include "modules/core/tag.c"                 // descriptive tag
+#include "modules/core/types.c"               // complex numerical types
 #include "modules/core/locker.c"
 /*
 #include "modules/rng.c"                      // implementation of mersenne twister in c
@@ -137,10 +137,12 @@ gb_t * gb;
 // helper functions //
 //////////////////////
 
+// input
 #define gb_get_key_state(a)   input_get_key_state   (gb_input(),a)
 #define gb_get_key_pressed(a) input_get_key_pressed (gb_input(),a)
 #define gb_get_key_held(a)    input_get_key_held    (gb_input(),a)
 
+// assets
 #define gb_get_image(a)       assets_get_image(gb_assets(),a)
 #define gb_get_colormap(a)    assets_get_colormap(gb_assets(),a)
 #define gb_get_sound(a)       assets_get_sound(gb_assets(),a)
@@ -151,7 +153,23 @@ gb_t * gb;
 #define gb_set_sound(a,p)     assets_set_sound     (gb_assets(),a,p)   
 #define gb_set_font(a,p)      assets_set_font      (gb_assets(),a,p)
 
+// controller
 #define gb_button(a)          controller_get_button(gb_controller(),a)
+
+// graph
+#define gb_cls()                      graph_cls(gb_graph())
+#define gb_set_intensity(x)           graph_set_intensity(gb_graph(),x)
+#define gb_set_intensity_max()        graph_set_intensity_max(gb_graph())
+#define gb_reset_intensity()          graph_reset_intensity(gb_graph())
+#define gb_set_color(r,g,b)           graph_set_color(gb_graph(),make_color(r,g,b))
+#define gb_draw_dot(x,y)              graph_draw_dot(gb_graph(),x,y)
+#define gb_draw_rect(x,y,w,h)         graph_draw_rect(gb_graph(),x,y,w,h)
+#define gb_draw_rect_line(x,y,w,h)    graph_draw_rect_line(gb_graph(),x,y,w,h)
+#define gb_draw_circle(x,y,r)         graph_draw_circle(gb_graph(),x,y,r)
+#define gb_draw_circle_line(x,y,r)    graph_draw_rect(gb_graph(),x,y,r)
+#define gb_draw_colormap(x,y,c)       graph_draw_colormap(gb_graph(),x,y,c)
+#define gb_draw_colormap_sub(x,y,c,cx,cy,cw,ch) \
+  graph_draw_colormap_sub(gb_graph(),x,y,c,cx,cy,cw,ch)
 
 ///////////////
 // functions //
