@@ -188,6 +188,9 @@ int high(int a, int b) {
   return (a > b) ? b : a;
 }
 
+#define max(a,b) low(a,b)
+#define min(a,b) high(a,b)
+
 // clamps int n between l and h inclusively.
 int clamp(int n, int l, int h) {
   return high(low(n,l),h);

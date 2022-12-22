@@ -90,28 +90,168 @@ entity_t * entity_collide_list( entity_t * self, list_t * ls ) {
   return null();
 }
 
-// attempts to glide horizontally while checking against another entity.
-int entity_glide_h( entity_t * self, int n, entity_t * other ) {
+///////////////////////
+// gliding functions //
+///////////////////////
+
+// this function will be useful for getting the entity that was collided
+// with in list-check functions. The idea is to set this function's internal
+// entity pointer with an entity in the function argument. This function will
+// always return the previous value before setting, so typically you'd do
+// something like this:
+// 
+// entity_check_result( e1 );                        <-- store collision
+// entity_t * e = entity_check_result( null() );     <-- retrieve collision
+//
+// If no collision occurred during the check function, the returned entity
+// should be null().
+entity_t * entity_check_result( entity_t * e ) {
+  // internal storage of collided entity.
+  static entity_t * self;
+  // get the stored entity
+  entity_t * r = self;
+  // update the stored entity with e.
+  self = e;
+  // return stored entity
+  return r;
 }
 
-// attempts to glide vertically while checking against another entity.
-int entity_glide_v( entity_t * self, int n, entity_t * other ) {
+int entity_check_up( entity_t * self, int n, entity_t * other ) {
+  bool_t b1 = inrange(entity_pos_x(self), entity_pos_x(other), entity_pos_x(other) + entity_size_x(other));
+  bool_t b2 = inrange(entity_pos_x(self) + entity_size_x(self) - 1, entity_pos_x(other), entity_pos_x(other) + entity_size_x(other));
+  bool_t b3 = inrange(entity_pos_x(other), entity_pos_x(self), entity_pos_x(self) + entity_size_x(self));
+  bool_t b4 = inrange(entity_pos_x(other) + entity_size_x(other) - 1, entity_pos_x(self), entity_pos_x(self) + entity_size_x(self));
+
+  // if one of the points of either entity bounding box is in the range
+  if (b1 or b2 or b3 or b4) {
+    // determine the distance from bottom of other to top of self
+    int u = entity_pos_y(self) - (entity_pos_y(other) + entity_size_y(other) );
+    
+    if (u >= 0) {
+      // return the lower of the two.
+      return high(u,n);
+    }
+  }
+
+  // no collision, return -1
+  return -1;
 }
 
-int entity_glide_h_list( entity_t * self, int n, list_t * l ) {
+int entity_check_up_list( entity_t * self, int n, list_t * l ) {
+  int u;
+  foreach(l,dt) {
+    u = entity_check_up( self, n, dt );
+    if (u >= 0) {
+      if (u < n) {
+        entity_check_result( dt );
+      }
+      n = min(n,u);
+    }
+  }
+  return n;
 }
 
-int entity_glide_v_hist( entity_t * self, int n, list_t * l ) {
+int entity_check_right( entity_t * self, int n, entity_t * other ) {
+  bool_t b1 = inrange(entity_pos_y(self), entity_pos_y(other), entity_pos_y(other) + entity_size_y(other));
+  bool_t b2 = inrange(entity_pos_y(self) + entity_size_y(self) - 1, entity_pos_y(other), entity_pos_y(other) + entity_size_y(other));
+  bool_t b3 = inrange(entity_pos_y(other), entity_pos_y(self), entity_pos_y(self) + entity_size_y(self));
+  bool_t b4 = inrange(entity_pos_y(other) + entity_size_y(other) - 1, entity_pos_y(self), entity_pos_y(self) + entity_size_y(self));
+
+  // if one of the points of either entity bounding box is in the range
+  if (b1 or b2 or b3 or b4) {
+    // determine the distance from bottom of other to top of self
+    int u = (entity_pos_x(other)) - (entity_pos_x(self) + entity_size_x(self));
+    
+    if (u >= 0) {
+      // return the lower of the two.
+      return high(u,n);
+    }
+  }
+
+  // no collision, return -1
+  return -1;
 }
 
-int entity_glide_hv( entity_t * self, int dx, int dy, entity_t * other ) {
+int entity_check_right_list( entity_t * self, int n, list_t * l ) {
+  int u;
+  foreach(l,dt) {
+    u = entity_check_right( self, n, dt );
+    if (u >= 0) {
+      if (u < n) {
+        entity_check_result( dt );
+      }
+      n = min(n,u);
+    }
+  }
+  return n;
 }
 
-int entity_glide_vh( entity_t * self, int dx, int dy, entity_t * other ) {
+int entity_check_down( entity_t * self, int n, entity_t * other ) {
+  bool_t b1 = inrange(entity_pos_x(self), entity_pos_x(other), entity_pos_x(other) + entity_size_x(other));
+  bool_t b2 = inrange(entity_pos_x(self) + entity_size_x(self) - 1, entity_pos_x(other), entity_pos_x(other) + entity_size_x(other));
+  bool_t b3 = inrange(entity_pos_x(other), entity_pos_x(self), entity_pos_x(self) + entity_size_x(self));
+  bool_t b4 = inrange(entity_pos_x(other) + entity_size_x(other) - 1, entity_pos_x(self), entity_pos_x(self) + entity_size_x(self));
+
+  // if one of the points of either entity bounding box is in the range
+  if (b1 or b2 or b3 or b4) {
+    // determine the distance from bottom of other to top of self
+    int u = entity_pos_y(other) - (entity_pos_y(self) + entity_size_y(other));
+    
+    if (u >= 0) {
+      // return the lower of the two.
+      return high(u,n);
+    }
+  }
+
+  // no collision, return -1
+  return -1;
 }
 
-int entity_glide_hv_list( entity_t * self, int dx, int dy, list_t * l ) {
+int entity_check_down_list( entity_t * self, int n, list_t * l ) {
+  int u;
+  foreach(l,dt) {
+    u = entity_check_down( self, n, dt );
+    if (u >= 0) {
+      if (u < n) {
+        entity_check_result( dt );
+      }
+      n = min(n,u);
+    }
+  }
+  return n;
 }
 
-int entity_glide_vh_list( entity_t * self, int dx, int dy, list_t * l ) {
+int entity_check_left( entity_t * self, int n, entity_t * other ) {
+  bool_t b1 = inrange(entity_pos_y(self), entity_pos_y(other), entity_pos_y(other) + entity_size_y(other));
+  bool_t b2 = inrange(entity_pos_y(self) + entity_size_y(self) - 1, entity_pos_y(other), entity_pos_y(other) + entity_size_y(other));
+  bool_t b3 = inrange(entity_pos_y(other), entity_pos_y(self), entity_pos_y(self) + entity_size_y(self));
+  bool_t b4 = inrange(entity_pos_y(other) + entity_size_y(other) - 1, entity_pos_y(self), entity_pos_y(self) + entity_size_y(self));
+
+  // if one of the points of either entity bounding box is in the range
+  if (b1 or b2 or b3 or b4) {
+    // determine the distance from bottom of other to top of self
+    int u = entity_pos_x(self) - (entity_pos_x(other) + entity_size_x(other)); 
+    
+    if (u >= 0) {
+      // return the lower of the two.
+      return high(u,n);
+    }
+  }
+
+  // no collision, return -1
+  return -1;
+}
+
+int entity_check_left_list( entity_t * self, int n, list_t * l ) {
+  int u;
+  foreach(l,dt) {
+    u = entity_check_left( self, n, dt );
+    if (u >= 0) {
+      if (u < n) {
+        entity_check_result( dt );
+      }
+      n = min(n,u);
+    }
+  }
+  return n;
 }

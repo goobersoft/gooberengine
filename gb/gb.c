@@ -170,6 +170,7 @@ gb_t * gb;
 #define gb_draw_colormap(x,y,c)       graph_draw_colormap(gb_graph(),x,y,c)
 #define gb_draw_colormap_sub(x,y,c,cx,cy,cw,ch) \
   graph_draw_colormap_sub(gb_graph(),x,y,c,cx,cy,cw,ch)
+#define gb_draw_text(x,y,t)           graph_draw_text(gb_graph(),x,y,t)
 
 ///////////////
 // functions //

@@ -21,6 +21,7 @@ type() {
 void init_brick( brick_t * self ) {
   brick_tag(self)     = tag(self,"brick");
   brick_entity(self)  = entity(self);
+  entity_set_size( brick_entity(self), 20, 10 );
   brick_sprite(self)  = sprite( gb_get_colormap("bricker-0"), 30,0,20,10 );
 }
 

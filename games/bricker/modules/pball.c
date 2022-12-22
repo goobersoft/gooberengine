@@ -92,6 +92,7 @@ void pball_update( pball_t * self ) {
 
 void pball_draw( pball_t * self ) {
   graph_set_intensity_max( gb_graph() );
+  graph_set_color(gb_graph(), make_color(0,0,3));
   graph_draw_sprite( gb_graph(), pball_pos_x(self), pball_pos_y(self), pball_sprite(self) );
   graph_reset_intensity( gb_graph() );
 }

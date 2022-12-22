@@ -117,8 +117,8 @@ void playfield_update( playfield_t * self ) {
 
       if ( entity_collide( be, pe ) ) {
         brick_set_id( po, "" );
-        point_mul( pball_velo(bo), -1, -1 );
-        
+        //point_mul( pball_velo(bo), -1, -1 );
+        point_set( pball_pos(bo), 200, 200 );
       }
 
       list_rotate_next( playfield_bricks(self) );
