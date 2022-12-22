@@ -14,14 +14,14 @@ type() {
   // tag
   local( tag_t * tag );
   // a pointer to the parent object
-  foreign( void * parent );
+  foreign( void * source );
 
 } entity_t;
 
 #define entity_rect(self)    (self->rect)
 #define entity_solid(self)   (self->solid)
 #define entity_tag(self)     (self->tag)
-#define entity_parent(self)  (self->parent)
+#define entity_source(self)  (self->source)
 
 #define entity_id(self)      tag_id(self->tag)
 #define entity_pos(self)     rect_pos(entity_rect(self))
@@ -33,6 +33,7 @@ type() {
 
 //#define entity_set_parent(self,p)  set(self,parent,p)
 #define entity_set_pos(self,x,y)   rect_set_pos(entity_rect(self),x,y)
+#define entity_add_pos(self,x,y)   rect_add_pos(entity_rect(self),x,y)
 #define entity_set_size(self,w,h)  rect_set_size(entity_rect(self),w,h)
 #define entity_set_solid(self,b)   set(self,solid,bool(b))
 
@@ -44,7 +45,7 @@ void entity_init( entity_t * self, void * p ) {
   entity_rect(self)        = rect(0,0,10,10);
   entity_solid(self)       = true();
   entity_tag(self)         = tag(self,"entity");
-  entity_parent(self)      = p;
+  entity_source(self)      = p;
 }
 
 entity_t * entity( void * p ) {
@@ -67,8 +68,8 @@ void free_entity( entity_t * self ) {
 // knowing the owner actor of this entity. The reason why the
 // pointer is void is because different types may use the
 // entity type for collisions.
-void entity_set_parent( entity_t * self, void * p ) {
-  entity_parent(self) = p;
+void entity_set_source( entity_t * self, void * p ) {
+  entity_source(self) = p;
 }
  
  // check if two entities are overlapping
@@ -117,6 +118,8 @@ entity_t * entity_check_result( entity_t * e ) {
 }
 
 int entity_check_up( entity_t * self, int n, entity_t * other ) {
+  if (!entity_solid(self) || !entity_solid(other)) return -1;
+
   bool_t b1 = inrange(entity_pos_x(self), entity_pos_x(other), entity_pos_x(other) + entity_size_x(other));
   bool_t b2 = inrange(entity_pos_x(self) + entity_size_x(self) - 1, entity_pos_x(other), entity_pos_x(other) + entity_size_x(other));
   bool_t b3 = inrange(entity_pos_x(other), entity_pos_x(self), entity_pos_x(self) + entity_size_x(self));
@@ -152,6 +155,7 @@ int entity_check_up_list( entity_t * self, int n, list_t * l ) {
 }
 
 int entity_check_right( entity_t * self, int n, entity_t * other ) {
+  if (!entity_solid(self) || !entity_solid(other)) return -1;
   bool_t b1 = inrange(entity_pos_y(self), entity_pos_y(other), entity_pos_y(other) + entity_size_y(other));
   bool_t b2 = inrange(entity_pos_y(self) + entity_size_y(self) - 1, entity_pos_y(other), entity_pos_y(other) + entity_size_y(other));
   bool_t b3 = inrange(entity_pos_y(other), entity_pos_y(self), entity_pos_y(self) + entity_size_y(self));
@@ -187,6 +191,7 @@ int entity_check_right_list( entity_t * self, int n, list_t * l ) {
 }
 
 int entity_check_down( entity_t * self, int n, entity_t * other ) {
+  if (!entity_solid(self) || !entity_solid(other)) return -1;
   bool_t b1 = inrange(entity_pos_x(self), entity_pos_x(other), entity_pos_x(other) + entity_size_x(other));
   bool_t b2 = inrange(entity_pos_x(self) + entity_size_x(self) - 1, entity_pos_x(other), entity_pos_x(other) + entity_size_x(other));
   bool_t b3 = inrange(entity_pos_x(other), entity_pos_x(self), entity_pos_x(self) + entity_size_x(self));
@@ -222,6 +227,7 @@ int entity_check_down_list( entity_t * self, int n, list_t * l ) {
 }
 
 int entity_check_left( entity_t * self, int n, entity_t * other ) {
+  if (!entity_solid(self) || !entity_solid(other)) return -1;
   bool_t b1 = inrange(entity_pos_y(self), entity_pos_y(other), entity_pos_y(other) + entity_size_y(other));
   bool_t b2 = inrange(entity_pos_y(self) + entity_size_y(self) - 1, entity_pos_y(other), entity_pos_y(other) + entity_size_y(other));
   bool_t b3 = inrange(entity_pos_y(other), entity_pos_y(self), entity_pos_y(self) + entity_size_y(self));

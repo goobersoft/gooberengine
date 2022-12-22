@@ -28,16 +28,6 @@ void bricker_debug_load() {
 
 void bricker_debug_start() {
   bricker_debug.playfield = playfield();
-
-  fixed_t * f = fixed(-1,+995);
-  log("%s",fixed_to_string(f));
-  
-
-  loop(i,10) {
-    fixed_add( f, -1, 0 );
-    log("%s",fixed_to_string(f));
-    
-  }
 }
 
 void bricker_debug_update() {

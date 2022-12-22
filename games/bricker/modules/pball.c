@@ -68,7 +68,6 @@ void free_pball( pball_t * self ) {
 ////////////
 
 void pball_update( pball_t * self ) {
-  point_add_p( pball_pos(self), pball_velo(self) );
 
   if (pball_pos_x(self)+pball_size_x(self) >= 300) {
     pball_pos_x(self) = 300 - pball_size_x(self);

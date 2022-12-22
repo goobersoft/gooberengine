@@ -32,6 +32,10 @@ void free_listnode( listnode_t * self ) {
 
 type() {
 
+  // (foreach)
+  listnode_t * iter;
+  void       * iter_data;
+
   listnode_t * first;
   listnode_t * last;
   int          count;
@@ -39,9 +43,11 @@ type() {
 } list_t;
 
 // getters
-#define list_first(self)    (self->first)
-#define list_last(self)     (self->last)
-#define list_count(self)    (self->count)
+#define list_iter(self)       (self->iter)
+#define list_iter_data(self)  (self->iter_data)
+#define list_first(self)      (self->first)
+#define list_last(self)       (self->last)
+#define list_count(self)      (self->count)
 
 /////////
 // new //
@@ -204,29 +210,44 @@ void * list_get_last( list_t * self ) {
 //
 //  it's not a good idea to use foreach() more than one at a time.
 
-
+/*
 listnode_t * _foreach_listnode;
 void       * _foreach_data;
+*/
 
 void * _foreach_set_listnode( list_t * d ) {
   if (list_count(d)>0) {
-  _foreach_listnode  = list_first(d);
-  _foreach_data      = listnode_data(_foreach_listnode);
-  return _foreach_data;
+    list_iter(d)          = list_first(d);
+    list_iter_data(d)     = listnode_data(list_iter(d));
+    return list_iter_data(d);
+    /*
+    _foreach_listnode  = list_first(d);
+    _foreach_data      = listnode_data(_foreach_listnode);
+    return _foreach_data;
+    */
   }
   return null();
 }
 
-void * _foreach_iterate() {
+void * _foreach_iterate( list_t * d ) {
+  list_iter(d) = listnode_next(list_iter(d));
+  if exists(list_iter(d)) {
+    list_iter_data(d) = listnode_data(list_iter(d));
+    return list_iter_data(d);
+  }
+  return null();
+  /*
   _foreach_listnode = listnode_next(_foreach_listnode);
   if exists(_foreach_listnode) {
     _foreach_data     = listnode_data(_foreach_listnode);
     return _foreach_data;
   }
   return null();
+  */
 }
 
-#define foreach(self,dt) for(void*dt=_foreach_set_listnode(self);_foreach_listnode!=null();dt=_foreach_iterate())
+#define foreach(self,dt) for(void*dt=_foreach_set_listnode(self);list_iter(self)!=null();dt=_foreach_iterate(self))
+// #define foreach(self,dt) for(void*dt=_foreach_set_listnode(self);_foreach_listnode!=null();dt=_foreach_iterate(self))
 
 /////////////////
 // other funcs //
