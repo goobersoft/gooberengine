@@ -31,6 +31,12 @@ scene_t * scene_attract() {
   return scene_attract_scene(self);
 }
 
+void free_scene_attract( scene_attract_t * self ) {
+  free_playfield  (scene_attract_playfield(self));
+  free_scene      (scene_attract_scene(self));
+  free            (self);
+}
+
 ////////////
 // events //
 ////////////

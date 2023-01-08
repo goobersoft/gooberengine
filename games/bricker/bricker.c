@@ -1,5 +1,4 @@
 
-
 #include "modules/pball.c"
 #include "modules/paddle.c"
 
@@ -9,6 +8,7 @@
 #include "modules/gameinfo.c"
 
 #include "scenes/attract.c"
+#include "scenes/game.c"
 
 #include "modules/debug.c"
 
@@ -16,7 +16,9 @@
 // consts //
 ////////////
 
-
+#define bricker_scene_none()    0
+#define bricker_scene_attract() 1
+#define bricker_scene_game()    2
 
 //////////
 // type //
@@ -49,7 +51,7 @@ bricker_t * _bricker;
 
 void init_bricker( bricker_t * self ) {
   bricker_ui(self)        = brickerui();
-  bricker_scene(self)     = scene_attract(self);
+  bricker_scene(self)     = null();
   bricker_gameinfo(self)  = gameinfo();
 }
 
@@ -62,6 +64,43 @@ bricker_t * bricker() {
 ///////////////
 // functions //
 ///////////////
+
+void bricker_set_scene( bricker_t * self, int n ) {
+  
+  if (bricker_scene(self)) {
+    tag_t * ss = scene_tag(bricker_scene(self));
+
+    if streq(tag_id(ss),"attract") {
+      scene_attract_t * u = scene_source(bricker_scene(self));
+      free_scene_attract(u);
+    }
+    else if streq(tag_id(ss),"game") {
+      scene_game_t * u = scene_source(bricker_scene(self));
+      free_scene_game(u);
+    }
+  }
+
+  // set the new scene
+  switch(n) {
+
+    case bricker_scene_none():
+      bricker_scene(_bricker) = null();
+      break;
+
+    case bricker_scene_attract():
+      // set the scene to the new attract scene
+      bricker_scene(_bricker) = scene_attract(_bricker);
+      break;
+    
+    case bricker_scene_game():
+      // set the scene to the new attract scene
+      bricker_scene(_bricker) = scene_game(_bricker);
+      break;
+
+  }
+  // set the gb scene ref so debugpanel can see it
+  gb_set_scene(bricker_scene(_bricker));
+}
 
 ////////////
 // events //
@@ -107,6 +146,8 @@ void bricker_start() {
   visual_set_title( gb_visual(), "--- BRICKER!! ---");
   graph_set_font(gb_graph(),gb_get_font("bricker-0"));
 
+  bricker_set_scene(_bricker, bricker_scene_attract() );
+
   bricker_debug_start(_bricker);
 }
 
@@ -115,11 +156,13 @@ void bricker_update() {
   gameinfo_update( bricker_gameinfo(_bricker) );
   brickerui_set_time( bricker_ui(_bricker), number_value(gameinfo_time(bricker_gameinfo(_bricker))) );
 
-  tag_t * y = scene_tag( bricker_scene(_bricker) );
-  if (streq(tag_id(y),"attract")) {
-    scene_attract_t * s;
-    s = scene_source( bricker_scene(_bricker) );
-    scene_attract_update(s);
+  if (bricker_scene(_bricker)) {
+    tag_t * y = scene_tag( bricker_scene(_bricker) );
+    if (streq(tag_id(y),"attract")) {
+      scene_attract_t * s;
+      s = scene_source( bricker_scene(_bricker) );
+      scene_attract_update(s);
+    }
   }
 
   brickerui_update(bricker_ui(_bricker));
@@ -134,14 +177,16 @@ void bricker_draw() {
 
   bricker_debug_draw_pre(_bricker);
 
-  tag_t * y = scene_tag( bricker_scene(_bricker) );
-  if (streq(tag_id(y),"attract")) {
-    scene_attract_t * s;
-    s = scene_source( bricker_scene(_bricker) );
-    scene_attract_update(s);
+
+  if (bricker_scene(_bricker)) {
+    tag_t * y = scene_tag( bricker_scene(_bricker) );
+    if (streq(tag_id(y),"attract")) {
+      scene_attract_t * s;
+      s = scene_source( bricker_scene(_bricker) );
+      scene_attract_update(s);
+    }
   }
 
-  //playfield_draw( bricker_playfield(_bricker) );
   brickerui_draw( bricker_ui(_bricker) );
   
   bricker_debug_draw_post(_bricker);

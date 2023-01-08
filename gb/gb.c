@@ -127,7 +127,6 @@ gb_t * gb;
 #define gb_visual()     (gb->visual)
 #define gb_timing()     (gb->timing)
 #define gb_graph()      (gb->graph)
-//#define gb_mouse()      (gb->mouse)
 #define gb_audio()      (gb->audio)
 #define gb_controller() (gb->controller)
 #define gb_input()      (gb->input)
@@ -172,12 +171,17 @@ gb_t * gb;
   graph_draw_colormap_sub(gb_graph(),x,y,c,cx,cy,cw,ch)
 #define gb_draw_text(x,y,t)           graph_draw_text(gb_graph(),x,y,t)
 
+
 ///////////////
 // functions //
 ///////////////
 
 void gb_set_cls( bool_t b ) {
   gb_f_cls() = bool(b);
+}
+
+void gb_set_scene( scene_t * s ) {
+  gb_scene() = s;
 }
 
 //////////////////////////
@@ -211,9 +215,8 @@ void gb_init() {
   gb_input()       = input();
   gb_controller()  = controller(gb_input());
   
-
-  gb_scene()       = scene(gb(),"");
-  scene_set_id(gb_scene(),"none");
+  // current scene is null.
+  gb_scene()       = null();
 
   debug_init();
   
@@ -296,13 +299,14 @@ void gb_update() {
     }
   }
 
-  const Uint8 * b = SDL_GetKeyboardState( null() );
-  
+  /*
   if (b[SDL_SCANCODE_P]) {
     gb_paused() = ! gb_paused();
   }
+  */
   
-  
+  // panic button
+  const Uint8 * b = SDL_GetKeyboardState( null() );
   if (b[SDL_SCANCODE_ESCAPE]) {
     log("quit.");
     exit(0);

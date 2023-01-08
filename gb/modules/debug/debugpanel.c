@@ -90,9 +90,13 @@ void debugpanel_draw( debugpanel_t * self ) {
     u2 = string_copy_at ( debugpanel_string(self), 65, ":" );
     u2 = string_copy_at ( debugpanel_string(self), 66, rstr(timing_clock_seconds(gb_timing()),2) );
 
+    // scene
     u2 = string_copy_at ( debugpanel_string(self), 70, "S:");
     if (gb_scene()) {
       u2 = string_copy_at ( debugpanel_string(self), 72, scene_id(gb_scene()));
+    }
+    else {
+      u2 = string_copy_at ( debugpanel_string(self), 72, "null");
     }
 
     /////////////
