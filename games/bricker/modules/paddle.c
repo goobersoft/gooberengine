@@ -24,6 +24,9 @@ type() {
   // segments with a powerup. 
   int width;
 
+  // indicates if the paddle is active and can collide with other things.
+  bool_t active;
+
 } paddle_t;
 
 #define paddle_tag(self)    (self->tag)

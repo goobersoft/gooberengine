@@ -1,10 +1,12 @@
 
 
-#include "modules/paddle.c"
 #include "modules/pball.c"
+#include "modules/paddle.c"
+
 #include "modules/ui.c"
 #include "modules/brick.c"
 #include "modules/playfield.c"
+#include "modules/gameinfo.c"
 
 #include "scenes/attract.c"
 
@@ -14,7 +16,7 @@
 // consts //
 ////////////
 
-#define bricker_score_max() 9999999
+
 
 //////////
 // type //
@@ -23,31 +25,17 @@
 type() {
 
   // ui object
-  local ( brickerui_t * ui );
-
+  local( brickerui_t * ui );
   // scene object
-  local ( scene_t * scene );
-
-  // score number, max at 9999999
-  int score;
-  // high score (max 9999999)
-  int hiscore;
-  // number of lives left
-  int lives;
-  // current level
-  int level;
-  // current time left
-  int time;
+  local( scene_t * scene );
+  // gameinfo
+  local( gameinfo_t * gameinfo );
 
 } bricker_t;
 
-#define bricker_ui(self)      (self->ui)
-#define bricker_scene(self)   (self->scene)
-#define bricker_score(self)   (self->score)
-#define bricker_hiscore(self) (self->hiscore)
-#define bricker_lives(self)   (self->lives)
-#define bricker_level(self)   (self->level)
-#define bricker_time(self)    (self->time)
+#define bricker_ui(self)          (self->ui)
+#define bricker_scene(self)       (self->scene)
+#define bricker_gameinfo(self)    (self->gameinfo)
 
 /////////////
 // globals //
@@ -60,13 +48,9 @@ bricker_t * _bricker;
 /////////
 
 void init_bricker( bricker_t * self ) {
-  bricker_ui(self) = brickerui();
-  bricker_scene(self)    = scene_attract(self);
-  bricker_score(self)    = 0;
-  bricker_hiscore(self)  = 20000;
-  bricker_lives(self)    = 3;
-  bricker_level(self)    = 0;
-  bricker_time(self)     = 0;
+  bricker_ui(self)        = brickerui();
+  bricker_scene(self)     = scene_attract(self);
+  bricker_gameinfo(self)  = gameinfo();
 }
 
 bricker_t * bricker() {
@@ -108,25 +92,35 @@ void bricker_load() {
   u = colormap_from_image(gb_get_image("bricker-bg"));
   gb_set_colormap("bricker-bg",u);
 
+  // font
   font_t * f = font(null());
   font_set(f,
     gb_get_colormap("bricker-0"),
     350,0, 5,10, 10,10);
   gb_set_font("bricker-0",f);
   
+  // debugging
   bricker_debug_load(_bricker);
 }
 
 void bricker_start() {
   visual_set_title( gb_visual(), "--- BRICKER!! ---");
   graph_set_font(gb_graph(),gb_get_font("bricker-0"));
+
   bricker_debug_start(_bricker);
 }
 
 void bricker_update() {
 
-  bricker_time(_bricker) = low(bricker_time(_bricker)-1,0);
-  brickerui_set_time( bricker_ui(_bricker), bricker_time(_bricker) );
+  gameinfo_update( bricker_gameinfo(_bricker) );
+  brickerui_set_time( bricker_ui(_bricker), number_value(gameinfo_time(bricker_gameinfo(_bricker))) );
+
+  tag_t * y = scene_tag( bricker_scene(_bricker) );
+  if (streq(tag_id(y),"attract")) {
+    scene_attract_t * s;
+    s = scene_source( bricker_scene(_bricker) );
+    scene_attract_update(s);
+  }
 
   brickerui_update(bricker_ui(_bricker));
   bricker_debug_update(_bricker);
@@ -140,6 +134,14 @@ void bricker_draw() {
 
   bricker_debug_draw_pre(_bricker);
 
+  tag_t * y = scene_tag( bricker_scene(_bricker) );
+  if (streq(tag_id(y),"attract")) {
+    scene_attract_t * s;
+    s = scene_source( bricker_scene(_bricker) );
+    scene_attract_update(s);
+  }
+
+  //playfield_draw( bricker_playfield(_bricker) );
   brickerui_draw( bricker_ui(_bricker) );
   
   bricker_debug_draw_post(_bricker);
