@@ -8,12 +8,11 @@ type() {
   list_t      * balls;
   paddle_t    * paddle;
 
-
 } playfield_t;
 
-#define playfield_bricks(self) (self->bricks)
-#define playfield_balls(self)  (self->balls)
-#define playfield_paddle(self) (self->paddle)
+#define playfield_bricks(self)    (self->bricks)
+#define playfield_balls(self)     (self->balls)
+#define playfield_paddle(self)    (self->paddle)
 
 /////////
 // new //
@@ -28,15 +27,7 @@ void init_playfield( playfield_t * self ) {
     loop(j,sz.y) {
       // set all bricks to blank bricks
       b = brick();
-
-      int uu = rnd(1,6);
-      if (uu==1)      brick_set_id(b,"1");
-      else if (uu==2) brick_set_id(b,"2");
-      else if (uu==3) brick_set_id(b,"3");
-      else if (uu==4) brick_set_id(b,"4");
-      else if (uu==5) brick_set_id(b,"5");
-      else if (uu==6) brick_set_id(b,"6");
-
+      
       entity_set_pos( brick_entity(b), 100+(i*20), (j*10) );
       entity_set_solid( brick_entity(b), true() );
 
@@ -45,11 +36,9 @@ void init_playfield( playfield_t * self ) {
     }
   }
 
+  // make the list of balls
   playfield_balls(self)   = list();
-    // store the entity, not the ball
-    list_add_last( playfield_balls(self), pball_entity(pball()) );
-
-  playfield_paddle(self)  = paddle();
+  playfield_paddle(self)    = paddle();
 }
 
 playfield_t * playfield() {
@@ -73,6 +62,21 @@ void free_playfield( playfield_t * self ) {
     free_brick(u);
   }
   free_list( playfield_bricks(self) );
+}
+
+///////////////
+// functions //
+///////////////
+
+// x: x pos of ball (relative to playfield)
+// y: y pos of ball (relative to playfield)
+// t: the type of ball (future feature?)
+void playfield_add_ball( int x, int y, int t ) {
+
+}
+
+void playfield_set_brick( int bx, int by, int b ) {
+
 }
 
 ////////////
@@ -132,7 +136,7 @@ void playfield_update( playfield_t * self ) {
     else if (pball_velo_y(ba) > 0) {
       du = entity_check_down_list( e1, abs(pball_velo_y(ba)), playfield_bricks(self) );
       entity_add_pos( e1, 0, du );
-      
+
       e2 = entity_check_result(null());
       if (e2) {
         pball_velo_y(ba) = -pball_velo_y(ba);
