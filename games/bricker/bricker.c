@@ -67,39 +67,41 @@ bricker_t * bricker() {
 
 void bricker_set_scene( bricker_t * self, int n ) {
   
+  // delete the old scene
   if (bricker_scene(self)) {
     tag_t * ss = scene_tag(bricker_scene(self));
 
     if streq(tag_id(ss),"attract") {
       scene_attract_t * u = scene_source(bricker_scene(self));
+      scene_attract_quit(u);
       free_scene_attract(u);
     }
     else if streq(tag_id(ss),"game") {
       scene_game_t * u = scene_source(bricker_scene(self));
+      scene_game_quit(u);
       free_scene_game(u);
     }
   }
 
   // set the new scene
-  switch(n) {
-
-    case bricker_scene_none():
-      bricker_scene(_bricker) = null();
-      break;
-
-    case bricker_scene_attract():
-      // set the scene to the new attract scene
-      bricker_scene(_bricker) = scene_attract(_bricker);
-      break;
-    
-    case bricker_scene_game():
-      // set the scene to the new attract scene
-      bricker_scene(_bricker) = scene_game(_bricker);
-      break;
-
+  if (n == bricker_scene_none()) {
+    bricker_scene(_bricker) = null();
   }
+  else if (n == bricker_scene_attract()) {
+    scene_attract_t * u = scene_attract(_bricker);
+    scene_attract_start(u);
+    // set the scene to the new attract scene
+    bricker_scene(_bricker) = scene_attract_scene(u);
+  }
+  else if (n == bricker_scene_game()) {
+    scene_game_t * u = scene_game(_bricker);
+    scene_game_start(u);
+    // set the scene to the new attract scene
+    bricker_scene(_bricker) = scene_game_scene(u);
+  }
+
   // set the gb scene ref so debugpanel can see it
-  gb_set_scene(bricker_scene(_bricker));
+  gb_scene() = bricker_scene(_bricker);
 }
 
 ////////////
@@ -143,11 +145,13 @@ void bricker_load() {
 }
 
 void bricker_start() {
+  // set the window title
   visual_set_title( gb_visual(), "--- BRICKER!! ---");
+  // set the font to the new bricker font
   graph_set_font(gb_graph(),gb_get_font("bricker-0"));
-
+  // set to attract scene
   bricker_set_scene(_bricker, bricker_scene_attract() );
-
+  // start the debug event
   bricker_debug_start(_bricker);
 }
 
@@ -171,9 +175,9 @@ void bricker_update() {
 
 void bricker_draw() {
 
-  int u = graph_set_intensity(gb_graph(),50);
+  graph_set_intensity(gb_graph(),50);
   graph_draw_colormap(gb_graph(),0,0,gb_get_colormap("bricker-bg"));
-  graph_set_intensity(gb_graph(),u);
+  graph_reset_intensity(gb_graph());
 
   bricker_debug_draw_pre(_bricker);
 

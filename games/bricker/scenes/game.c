@@ -18,14 +18,30 @@ void init_scene_game( scene_game_t * self ) {
   scene_game_playfield(self)  = playfield();
 }
 
-scene_t * scene_game() {
+scene_game_t * scene_game() {
   scene_game_t * self = alloc(scene_game_t);
   init_scene_game(self);
-  return scene_game_scene(self);
+  return self;
 }
 
 void free_scene_game( scene_game_t * self ) {
   free_playfield  (scene_game_playfield(self));
   free_scene      (scene_game_scene(self));
   free            (self);
+}
+
+////////////
+// events //
+////////////
+
+void scene_game_start( scene_game_t * self ) {
+}
+
+void scene_game_update( scene_game_t * self ) {
+}
+
+void scene_game_draw( scene_game_t * self ) {
+}
+
+void scene_game_quit( scene_game_t * self ) {
 }
