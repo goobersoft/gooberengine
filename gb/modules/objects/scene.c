@@ -7,8 +7,10 @@ type() {
   local( tag_t * tag );
   // a counter for the scene's lifespan
   uint_t ticks;
-  // a flag indicating that the scene is finished playing. 
+  // a flag indicating that the scene is finished playing.
   bool_t finished;
+  // a constant string which determines the next scene id
+  foreign( char * next );
   // a pointer to the parent scene
   foreign( void * source );
 
@@ -19,6 +21,7 @@ type() {
 #define scene_size(self)          (self->size)
 #define scene_ticks(self)         (self->ticks)
 #define scene_finished(self)      (self->finished)
+#define scene_next(self)          (self->next)
 #define scene_source(self)        (self->source)
 
 // helper macros
@@ -32,7 +35,8 @@ type() {
 void scene_init( scene_t * self, void * p, char * id ) {
   scene_tag(self)            = tag(self,"scene");
   scene_id(self)             = id;
-  scene_finished(self)       = false();
+  scene_finished(self)       = 0;
+  scene_next(self)           = null();
   scene_source(self)         = p;
 }
 

@@ -74,6 +74,11 @@ void scene_attract_update( scene_attract_t * self ) {
   // update base scene object
   scene_update( scene_attract_scene(self) );
   playfield_update( scene_attract_playfield(self) );
+
+  if (gb_button(controller_button_select()) == 2) {
+    scene_finished( scene_attract_scene(self) ) = true();
+    scene_next( scene_attract_scene(self) ) = "game";
+  }
 }
 
 void scene_attract_draw( scene_attract_t * self ) {

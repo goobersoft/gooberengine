@@ -163,7 +163,6 @@ void playfield_update( playfield_t * self ) {
 }
 
 void playfield_draw( playfield_t * self ) {
-
   // draw the bricks
   foreach( playfield_bricks(self), dt ) {
     brick_draw(dt);
