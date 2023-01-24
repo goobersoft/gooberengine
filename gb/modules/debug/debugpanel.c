@@ -113,6 +113,13 @@ void debugpanel_draw( debugpanel_t * self ) {
     // record prev intensity, and set the intensity to max
     int u = graph_set_intensity_max(gb_graph());
 
+    graph_set_color(gb_graph(),make_color(1,1,1));
+    loop(i,40) {
+      loop(j,24) {
+        graph_draw_dot(gb_graph(),i*10,j*10);
+      }
+    }
+
     // set color to black
     graph_set_color(gb_graph(),make_color(0,0,0));
     // draw the background strip at the top

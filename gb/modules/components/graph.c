@@ -794,7 +794,7 @@ void graph_draw_cls( graph_t * self ) {
   int v      = graph_set_mode( self, graph_mode_replace() );
   graph_draw_rect( self, 0, 0, 400, 240 );
   graph_set_color( self, u );
-  graph_set_mode( self, v);
+  graph_set_mode( self, v );
 }
 
 ///////////////////////////////////

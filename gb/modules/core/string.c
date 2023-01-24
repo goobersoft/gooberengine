@@ -12,6 +12,7 @@ type() {
 #define string_length(self) (self->length)
 // macro to get the inner character data from the string.
 #define string_data(self)   (self->data)
+#define string_value(self)  string_data(self)
 // macro to determine what C would see in terms of a string length
 // using strlen(). Note that this will check for a null terminator.
 // if the first character is a null terminator, then the virtual

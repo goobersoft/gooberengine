@@ -38,6 +38,11 @@
 #include "modules/core/rect.c"                // 
 #include "modules/core/number.c"              // integer number with min and max bounds
 #include "modules/core/alarm.c"               // timers
+#include "modules/core/menu.c"
+#include "modules/core/entity.c"               // AABB collisions
+#include "modules/core/gbs.c"                  // GooberScript
+#include "modules/core/gbml.c"                 // markup
+#include "modules/core/scene.c"                // scene base object
 
 #include "modules/graphical/color.c"          // 6-bit color with transparency bit
 #include "modules/graphical/board.c"          // drawing durfaces
@@ -48,7 +53,6 @@
 #include "modules/graphical/font.c"           // bitmap fonts which utilize image colormaps
 #include "modules/graphical/sprite.c"         // instanced object with a reference to a colormap
 #include "modules/graphical/tilemap.c"        // instanceable grids of variable colormap sections
-
 
 #include "modules/input/input.c"              // user input
 #include "modules/input/mouse.c"              // mouse interface
@@ -61,25 +65,6 @@
 #include "modules/components/assets.c"        // asset container object (sound/image/font)
 #include "modules/components/timing.c"        // fps/timing interface
 #include "modules/components/graph.c"         // drawing interface
-
-///////////////////////
-// top layer objects //
-///////////////////////
-// one thing to note is that top layer objects are aware of the graph module.
-// this means that these objects will have their own drawing functions which reference
-// the graph module instead.
-
-#include "modules/objects/gbs.c"                  // GooberScript
-#include "modules/objects/gbml.c"                 // markup
-#include "modules/objects/entity.c"               // AABB collisions
-#include "modules/objects/scene.c"                // scene base object
-
-#include "modules/objects/graphical/sprayer.c"    // sprays the screen with colored pixels
-#include "modules/objects/graphical/camera.c"     // determines how a scene should render
-
-#include "modules/objects/toys/jake.c"            // slithers across the screen slowly
-#include "modules/objects/toys/ball.c"            // bounces based on arrow keys
-#include "modules/objects/toys/fountain.c"        // sprays sprites from a center
 
 
 
@@ -170,7 +155,7 @@ gb_t * gb;
 #define gb_draw_colormap_sub(x,y,c,cx,cy,cw,ch) \
   graph_draw_colormap_sub(gb_graph(),x,y,c,cx,cy,cw,ch)
 #define gb_draw_text(x,y,t)           graph_draw_text(gb_graph(),x,y,t)
-
+#define gb_draw_tilemap(x,y,t)        graph_draw_tilemap(gb_graph(),x,y,t)
 
 ///////////////
 // functions //
@@ -189,6 +174,21 @@ void gb_set_scene( scene_t * s ) {
 //////////////////////////
 // the debug module has visibility of the gb globals
 // this will help with debugging immensely.
+
+///////////////////////
+// top layer objects //
+///////////////////////
+// one thing to note is that top layer objects are aware of the graph module.
+// this means that these objects will have their own drawing functions which reference
+// the graph module instead.
+
+#include "objects/graphical/sprayer.c"    // sprays the screen with colored pixels
+#include "objects/graphical/camera.c"     // determines how a scene should render
+#include "objects/graphical/menu.c"
+
+#include "objects/toys/jake.c"            // slithers across the screen slowly
+#include "objects/toys/ball.c"            // bounces based on arrow keys
+#include "objects/toys/fountain.c"        // sprays sprites from a center
 
 #include "modules/debug/debugpanel.c"
 #include "modules/debug/debug.c"

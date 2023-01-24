@@ -8,48 +8,61 @@ type() {
   // portion of the tilemap (see the graph module).
   foreign( colormap_t * colormap );
   // the size in tiles
-  point_t      size;
+  local( point_t * size );
   // the size of the tile itself
-  point_t      tile_size;
+  local( point_t * tile_size );
   // a pixel offset determining the topleft of the tilemap's
   // origin.
-  point_t      offset;
-
+  local( point_t * offset );
   // data holds 
   local( point_t * data );
 
 } tilemap_t;
 
+// getters
 #define tilemap_colormap(self)  (self->colormap)
-#define tilemap_size(self)      (&self->size)
-#define tilemap_tile_size(self) (&self->tile_size)
-#define tilemap_offset(self)    (&self->offset)
+#define tilemap_size(self)      (self->size)
+#define tilemap_tile_size(self) (self->tile_size)
+#define tilemap_offset(self)    (self->offset)
 #define tilemap_data(self)      (self->data)
+// helpers
+#define tilemap_size_x(self)        point_x(tilemap_size(self))
+#define tilemap_size_y(self)        point_y(tilemap_size(self))
+#define tilemap_tile_size_x(self)   point_x(tilemap_tile_size(self))
+#define tilemap_tile_size_y(self)   point_y(tilemap_tile_size(self))
+#define tilemap_offset_x(self)      point_x(tilemap_offset(self))
+#define tilemap_offset_y(self)      point_y(tilemap_offset(self))
 
 /////////
 // new //
 /////////
 
-void tilemap_init( tilemap_t * self, int w, int h, colormap_t * c ) {
+void init_tilemap( tilemap_t * self, int w, int h, colormap_t * c ) {
   // c may be null()
-  tilemap_colormap(self) = c;
+  tilemap_colormap(self)  = c;
 
   // you cannot change the size of a tilemap once it is created
-  point_set             (tilemap_size(self),w,h);
+  tilemap_size(self)      = point(w,h);
   // you can however change the size of the tile after creation.
-  point_set             (tilemap_tile_size(self),10,10);
-  point_set             (tilemap_offset(self),0,0);
+  tilemap_tile_size(self) = point(10,10);
+  tilemap_offset(self)    = point(0,0);
   // the tilemap's data can be altered after creation.
-  tilemap_data(self)    = allocv(point_t,w*h);
+  tilemap_data(self)      = allocv(point_t,w*h);
 
 }
 
 tilemap_t * tilemap( int w, int h, colormap_t * c ) {
+  tilemap_t * self = alloc(tilemap_t);
+  init_tilemap(self,w,h,c);
+  return self;
+}
 
-  tilemap_t * rtn       = alloc(tilemap_t);
-  tilemap_init(rtn,w,h,c);
-  return rtn;
-
+void free_tilemap( tilemap_t * self ) {
+  free_point  ( tilemap_size(self) );
+  free_point  ( tilemap_tile_size(self) );
+  free_point  ( tilemap_offset(self) );
+  free        ( tilemap_data(self) );
+  free        ( self );
 }
 
 ///////////

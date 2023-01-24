@@ -9,6 +9,7 @@
 
 #include "scenes/attract.c"
 #include "scenes/game.c"
+#include "scenes/menu.c"
 
 #include "modules/debug.c"
 
@@ -18,7 +19,8 @@
 
 #define bricker_scene_none()    0
 #define bricker_scene_attract() 1
-#define bricker_scene_game()    2
+#define bricker_scene_menu()    2
+#define bricker_scene_game()    3
 
 //////////
 // type //
@@ -76,6 +78,11 @@ void bricker_set_scene( bricker_t * self, int n ) {
       scene_attract_quit(u);
       free_scene_attract(u);
     }
+    else if streq(tag_id(ss),"menu") {
+      scene_menu_t * u = scene_source(bricker_scene(self));
+      scene_menu_quit(u);
+      free_scene_menu(u);
+    }
     else if streq(tag_id(ss),"game") {
       scene_game_t * u = scene_source(bricker_scene(self));
       scene_game_quit(u);
@@ -92,6 +99,11 @@ void bricker_set_scene( bricker_t * self, int n ) {
     scene_attract_start(u);
     // set the scene to the new attract scene
     bricker_scene(_bricker) = scene_attract_scene(u);
+  }
+  else if (n == bricker_scene_menu()) {
+    scene_menu_t * u = scene_menu(_bricker);
+    scene_menu_start(u);
+    bricker_scene(_bricker) = scene_menu_scene(u);
   }
   else if (n == bricker_scene_game()) {
     scene_game_t * u = scene_game(_bricker);
@@ -178,9 +190,14 @@ void bricker_update() {
         // disable the press start ui element
         brickerui_pressstart_active(bricker_ui(_bricker)) = false();
         // switch to game scene
-        bricker_set_scene( _bricker, bricker_scene_game() );
+        bricker_set_scene( _bricker, bricker_scene_menu() );
       }
 
+    }
+    else if streq(tag_id(y),"menu") {
+      scene_menu_t * s;
+      s = scene_source( bricker_scene(_bricker) );
+      scene_menu_update(s);
     }
     // game
     else if streq(tag_id(y),"game") {
@@ -213,6 +230,11 @@ void bricker_draw() {
       scene_attract_t * s;
       s = scene_source( bricker_scene(_bricker) );
       scene_attract_draw(s);
+    }
+    else if streq(tag_id(y),"menu") {
+      scene_menu_t * s;
+      s = scene_source( bricker_scene(_bricker) );
+      scene_menu_draw(s);
     }
     // game
     else if streq(tag_id(y),"game") {
