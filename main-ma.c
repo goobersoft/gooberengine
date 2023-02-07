@@ -14,6 +14,12 @@
 #include </usr/include/SDL2/SDL_image.h>
 #include </usr/include/SDL2/SDL_net.h>
 
+/*
+#include </usr/include/lua5.3/lua.h>
+#include </usr/include/lua5.3/lauxlib.h>
+#include </usr/include/lua5.3/lualib.h>
+*/
+
 ///////////////////////////////////////
 // include the GB master module      //
 // as well as the game being loaded. //
