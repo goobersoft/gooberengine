@@ -1,15 +1,17 @@
 
-#include "modules/pball.c"
-#include "modules/paddle.c"
+// entities
+#include "modules/entities/pball.c"
+#include "modules/entities/paddle.c"
+#include "modules/entities/brick.c"
 
-#include "modules/ui.c"
-#include "modules/brick.c"
-#include "modules/playfield.c"
-#include "modules/gameinfo.c"
+#include "modules/core/gameinfo.c"
 
-#include "scenes/attract.c"
-#include "scenes/game.c"
-#include "scenes/menu.c"
+#include "modules/graphical/ui.c"
+#include "modules/graphical/playfield.c"
+
+#include "modules/scenes/attract.c"
+#include "modules/scenes/game.c"
+#include "modules/scenes/menu.c"
 
 #include "modules/debug.c"
 
@@ -147,13 +149,19 @@ void bricker_load() {
   u = colormap_from_image(gb_get_image("bricker-bg"));
   gb_set_colormap("bricker-bg",u);
 
-  // font
+  // font (normal)
   font_t * f = font(null());
   font_set(f,
     gb_get_colormap("bricker-0"),
     350,0, 5,10, 10,10);
   gb_set_font("bricker-0",f);
-  
+  // font (underlined)
+  f = font(null());
+  font_set(f,
+    gb_get_colormap("bricker-0"),
+    300,0, 5,10, 10,10);
+  gb_set_font("bricker-1",f);
+
   // debugging
   bricker_debug_load(_bricker);
 }

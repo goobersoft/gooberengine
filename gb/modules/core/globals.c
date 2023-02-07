@@ -106,10 +106,12 @@ typedef unsigned long  ulong_t;
 
 // local / foreign are just syntactic sugar.
 // the purpose of these are to indicate when the object is freed:
-//    LOCAL fields are freed with the object
-//    FOREIGN fields do not get freed with the object
+//    LOCAL     fields are freed with the object
+//    FOREIGN   fields do not get freed with the object
+//    TRANSIENT fields negotiate their ownership with other modules
 #define local(x)          x
 #define foreign(x)        x
+#define transient(x)      x
 
 #define null()            NULL
 
@@ -129,19 +131,21 @@ typedef unsigned long  ulong_t;
 #define microseconds(x)  (1000000*x)
 
 //  function pointers
-//    f1: function 1 identifier
-//    f2: function 2 identifier
-//    rt: return types
+//    f1: function dest
+//    f2: function source
+//    rt: return type
 //    ag: arglist (char,int), etc
+//  example:
+//    fnptr(do_thing,other_thing,int,(int,int,int))
 #define fnptr(f1,f2,rt,ag) rt(*f1)ag=f2
 
 // a: dest array
 // b: source array
 // ps: dest array start
 // l: length
-#define copy(a,b,ps,l)          \
+#define copy(a,b,ps,l)      \
   for (int i=0;i<l;i++) {   \
-    a[ps+i]=b[i];               \
+    a[ps+i]=b[i];           \
   }
 
 

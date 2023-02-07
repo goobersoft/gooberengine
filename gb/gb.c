@@ -1,7 +1,7 @@
 
 #define gb_version_major() 2023
-#define gb_version_minor() 1
-#define gb_version_patch() 24
+#define gb_version_minor() 2
+#define gb_version_patch() 07
 
 //  submodules stack
 //  ----------------
@@ -36,13 +36,15 @@
 #include "modules/core/point.c"               // 2d integer point
 #include "modules/core/point3.c"              // 2d integer point
 #include "modules/core/rect.c"                // 
+#include "modules/core/file.c"                // file type
 #include "modules/core/number.c"              // integer number with min and max bounds
 #include "modules/core/alarm.c"               // timers
 #include "modules/core/menu.c"
-#include "modules/core/entity.c"               // AABB collisions
-#include "modules/core/gbs.c"                  // GooberScript
-#include "modules/core/gbml.c"                 // markup
-#include "modules/core/scene.c"                // scene base object
+#include "modules/core/entity.c"              // AABB collisions
+#include "modules/core/gbs.c"                 // GooberScript
+#include "modules/core/gbml.c"                // markup
+#include "modules/core/scene.c"               // scene base object
+#include "modules/core/settings.c"            // settings container
 
 #include "modules/graphical/color.c"          // 6-bit color with transparency bit
 #include "modules/graphical/board.c"          // drawing durfaces
@@ -86,8 +88,11 @@ typedef struct {
   audio_t      * audio;
   controller_t * controller;
   input_t      * input;
+  settings_t   * settings;
 
   scene_t      * scene;
+
+  //lua_State    * lua;
   
 } gb_t;
 
@@ -115,7 +120,9 @@ gb_t * gb;
 #define gb_audio()      (gb->audio)
 #define gb_controller() (gb->controller)
 #define gb_input()      (gb->input)
+#define gb_settings()   (gb->settings)
 #define gb_scene()      (gb->scene)
+#define gb_lua()        (gb->lua)
 
 //////////////////////
 // helper functions //
@@ -202,22 +209,26 @@ void gb_init() {
 
   // the master object does not have an allocation function.
   // instead it is done here in init()
-  gb()             = alloc(gb_t);
-  gb_running()     = true();
-  gb_paused()      = false();
-  gb_f_cls()       = false();
-  gb_f_debug()     = true();
-  gb_visual()      = visual();
-  gb_timing()      = timing();
-  gb_assets()      = assets(gb_visual());
-  gb_audio()       = audio();
-  gb_graph()       = graph(gb_visual());
-  gb_input()       = input();
-  gb_controller()  = controller(gb_input());
+  gb()              = alloc(gb_t);
+  gb_running()      = true();
+  gb_paused()       = false();
+  gb_f_cls()        = false();
+  gb_f_debug()      = true();
+  gb_visual()       = visual();
+  gb_timing()       = timing();
+  gb_assets()       = assets(gb_visual());
+  gb_audio()        = audio();
+  gb_graph()        = graph(gb_visual());
+  gb_input()        = input();
+  gb_settings()     = settings();
+  gb_controller()   = controller(gb_input());
   
   // current scene is null.
   gb_scene()       = null();
-
+  /*
+  gb_lua() = lua_open();
+  luaL_openlibs(gb_lua());
+  */
   debug_init();
   
 }

@@ -123,6 +123,28 @@ int string_end( string_t * self, int n ) {
   return 0;
 }
 
+// this function will look for a null terminator between the start
+// and the length of the allocated string amount. If it finds one, realloc
+// the string data with the exact characters needed.
+void string_crop( string_t * self ) {
+  // get the length
+  int l = strlen(string_data(self));
+  if (l < string_length(self)) {
+    // store the char array in a temp var
+    char * v = string_data(self);
+    // create a new temporary string with the new length + 1 (for null terminator)
+    char * u = allocv(char,l+1);
+    // copy the string into the new char array
+    copy(u,string_data(self),0,l);
+    // set the string's data to the new array
+    string_data(self) = u;
+    // set the new string length
+    string_length(self) = l;
+    // free the old array
+    free(v);
+  }
+}
+
 /////////////
 // alt new //
 /////////////

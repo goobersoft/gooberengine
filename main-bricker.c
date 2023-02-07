@@ -14,6 +14,12 @@
 #include </usr/include/SDL2/SDL_image.h>
 #include </usr/include/SDL2/SDL_net.h>
 
+/*
+#include </usr/include/lua5.1/lua.h>
+#include </usr/include/lua5.1/lauxlib.h>
+#include </usr/include/lua5.1/lualib.h>
+*/
+
 ///////////////////////////////////////
 // include the GB master module      //
 // as well as the game being loaded. //
@@ -36,6 +42,8 @@ void init() {
   SDLNet_Init  ();
   // open the audio device.
   Mix_OpenAudio( 48000, MIX_DEFAULT_FORMAT, 1, 4096 );
+
+
 
   gb_init();
   bricker_init();
