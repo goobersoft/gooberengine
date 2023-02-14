@@ -127,42 +127,6 @@ char * rstr( int n, int l ) {
   return right(str(n),l,'0');
 }
 
-/*
-int  _tokenize_len;
-char _tokenize_str[1024][64];
-char ** tokenize ( char * s, char u ) {
-  // set current tokenized list to 0
-  _tokenize_len = 0;
-  // current character
-  char c;
-  // current word
-  char w[64];
-  // current word index
-  int wi = 0;
-  // length of input str
-  int l = strlen(s);
-
-  loop(i,l) {
-    
-    if (s[i] == u) {
-      if (wi > 0) {
-        copy( _tokenize_str[_tokenize_len], w, 0, wi );
-        wi = 0;
-        _tokenize_len += 1;
-      }
-    }
-    else {
-      w[wi]  = u;
-      wi    += 1;
-    }
-
-  }
-
-  return _tokenize_str;
-
-}
-*/
-
 char _bits[36];
 char * bits(uint_t n) {
   loop(i,32) {
@@ -206,8 +170,8 @@ int wrap(int n, int l, int h) {
 
 // resizes an int array, coping all values.
 // if new array is shorter, data will be lost.
-int * resize(int * a, int os, int ns) {
-  int * r = allocv(int,ns);
+void ** resize(void ** a, int os, int ns) {
+  void ** r = allocv(void*,ns);
   for (int i = 0; i < high(os,ns); i++) {
     r[i] = a[i];
   }

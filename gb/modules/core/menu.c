@@ -73,15 +73,16 @@ void menu_set_action( menu_t * self, int n ) {
 }
 
 void menu_cursor_up( menu_t * self ) {
-  menu_cursor(self) = high(menu_cursor(self)+1,menu_maxlines(self)-1);
-}
-
-void menu_cursor_down( menu_t * self ) {
   menu_cursor(self) = low(menu_cursor(self)-1,0);
 }
 
-void menu_select( menu_t * self ) {
+void menu_cursor_down( menu_t * self ) {
+  menu_cursor(self) = high(menu_cursor(self)+1,menu_maxlines(self)-1);
+}
+
+int menu_select( menu_t * self ) {
   menu_selected(self) = menu_cursor(self);
+  return menu_selected(self);
 }
 
 void menu_unselect( menu_t * self ) {

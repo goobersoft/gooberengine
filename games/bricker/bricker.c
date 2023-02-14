@@ -76,19 +76,19 @@ void bricker_set_scene( bricker_t * self, int n ) {
     tag_t * ss = scene_tag(bricker_scene(self));
 
     if streq(tag_id(ss),"attract") {
-      scene_attract_t * u = scene_source(bricker_scene(self));
-      scene_attract_quit(u);
-      free_scene_attract(u);
+      sceneattract_t * u = scene_source(bricker_scene(self));
+      sceneattract_quit(u);
+      free_sceneattract(u);
     }
     else if streq(tag_id(ss),"menu") {
-      scene_menu_t * u = scene_source(bricker_scene(self));
-      scene_menu_quit(u);
-      free_scene_menu(u);
+      scenemenu_t * u = scene_source(bricker_scene(self));
+      scenemenu_quit(u);
+      free_scenemenu(u);
     }
     else if streq(tag_id(ss),"game") {
-      scene_game_t * u = scene_source(bricker_scene(self));
-      scene_game_quit(u);
-      free_scene_game(u);
+      scenegame_t * u = scene_source(bricker_scene(self));
+      scenegame_quit(u);
+      free_scenegame(u);
     }
   }
 
@@ -97,21 +97,21 @@ void bricker_set_scene( bricker_t * self, int n ) {
     bricker_scene(_bricker) = null();
   }
   else if (n == bricker_scene_attract()) {
-    scene_attract_t * u = scene_attract(_bricker);
-    scene_attract_start(u);
+    sceneattract_t * u = sceneattract(_bricker);
+    sceneattract_start(u);
     // set the scene to the new attract scene
-    bricker_scene(_bricker) = scene_attract_scene(u);
+    bricker_scene(_bricker) = sceneattract_scene(u);
   }
   else if (n == bricker_scene_menu()) {
-    scene_menu_t * u = scene_menu(_bricker);
-    scene_menu_start(u);
-    bricker_scene(_bricker) = scene_menu_scene(u);
+    scenemenu_t * u = scenemenu(_bricker);
+    scenemenu_start(u);
+    bricker_scene(_bricker) = scenemenu_scene(u);
   }
   else if (n == bricker_scene_game()) {
-    scene_game_t * u = scene_game(_bricker);
-    scene_game_start(u);
+    scenegame_t * u = scenegame(_bricker);
+    scenegame_start(u);
     // set the scene to the new attract scene
-    bricker_scene(_bricker) = scene_game_scene(u);
+    bricker_scene(_bricker) = scenegame_scene(u);
   }
 
   // set the gb scene ref so debugpanel can see it
@@ -162,6 +162,22 @@ void bricker_load() {
     300,0, 5,10, 10,10);
   gb_set_font("bricker-1",f);
 
+  // sounds
+  gb_set_sound("ball-1",sound("games/bricker/media/sounds/ball1.wav"));
+  gb_set_sound("ball-2",sound("games/bricker/media/sounds/ball2.wav"));
+  gb_set_sound("bounce-1",sound("games/bricker/media/sounds/bounce1.wav"));
+  gb_set_sound("bounce-2",sound("games/bricker/media/sounds/bounce2.wav"));
+  gb_set_sound("brick-1",sound("games/bricker/media/sounds/brick1.wav"));
+  gb_set_sound("brick-2",sound("games/bricker/media/sounds/brick2.wav"));
+  gb_set_sound("dizzy-1",sound("games/bricker/media/sounds/dizzy1.wav"));
+  gb_set_sound("fall-1",sound("games/bricker/media/sounds/fall1.wav"));
+  gb_set_sound("laser-1",sound("games/bricker/media/sounds/laser1.wav"));
+  gb_set_sound("menu-1",sound("games/bricker/media/sounds/menu1.wav"));
+  gb_set_sound("menu-2",sound("games/bricker/media/sounds/menu2.wav"));
+  gb_set_sound("next-1",sound("games/bricker/media/sounds/next1.wav"));
+  gb_set_sound("ok-1",sound("games/bricker/media/sounds/ok1.wav"));
+  gb_set_sound("respawn-1",sound("games/bricker/media/sounds/respawn1.wav"));
+
   // debugging
   bricker_debug_load(_bricker);
 }
@@ -190,11 +206,11 @@ void bricker_update() {
     tag_t * y = scene_tag( bricker_scene(_bricker) );
     // attract
     if (streq(tag_id(y),"attract")) {
-      scene_attract_t * s;
+      sceneattract_t * s;
       s = scene_source( bricker_scene(_bricker) );
-      scene_attract_update(s);
+      sceneattract_update(s);
       // if user presses space, change to game
-      if (scene_finished(scene_attract_scene(s))) {
+      if (scene_finished(sceneattract_scene(s))) {
         // disable the press start ui element
         brickerui_pressstart_active(bricker_ui(_bricker)) = false();
         // switch to game scene
@@ -203,15 +219,15 @@ void bricker_update() {
 
     }
     else if streq(tag_id(y),"menu") {
-      scene_menu_t * s;
+      scenemenu_t * s;
       s = scene_source( bricker_scene(_bricker) );
-      scene_menu_update(s);
+      scenemenu_update(s);
     }
     // game
     else if streq(tag_id(y),"game") {
-      scene_game_t * s;
+      scenegame_t * s;
       s = scene_source( bricker_scene(_bricker) );
-      scene_game_update(s);
+      scenegame_update(s);
     }
   }
 
@@ -235,20 +251,20 @@ void bricker_draw() {
     tag_t * y = scene_tag( bricker_scene(_bricker) );
     // attract
     if (streq(tag_id(y),"attract")) {
-      scene_attract_t * s;
+      sceneattract_t * s;
       s = scene_source( bricker_scene(_bricker) );
-      scene_attract_draw(s);
+      sceneattract_draw(s);
     }
     else if streq(tag_id(y),"menu") {
-      scene_menu_t * s;
+      scenemenu_t * s;
       s = scene_source( bricker_scene(_bricker) );
-      scene_menu_draw(s);
+      scenemenu_draw(s);
     }
     // game
     else if streq(tag_id(y),"game") {
-      scene_game_t * s;
+      scenegame_t * s;
       s = scene_source( bricker_scene(_bricker) );
-      scene_game_draw(s);
+      scenegame_draw(s);
     }
   }
 

@@ -240,6 +240,10 @@ char * fixed_to_string( fixed_t * self ) {
 // array //
 ///////////
 
+#define array_token_quote() '\"'
+#define array_token_space() ' '
+#define array_max_tokens()  1024
+
 type() {
 
   int     size;
@@ -251,7 +255,7 @@ type() {
 #define array_data(self) (self->data)
 
 array_t * array( int n ) {
-  array_t * self = alloc(array_t);
+  array_t * self   = alloc(array_t);
   array_size(self) = clamp(n,1,1000000);
   array_data(self) = allocv(void*,array_size(self));
   return self;
@@ -265,6 +269,117 @@ void array_set( array_t * self, int n, void * d ) {
 void * array_get( array_t * self, int n ) {
   n = wrap(n,0,array_size(self));
   return array_data(self)[n];
+}
+
+// this function will replace the 'tokenize' function.
+// Since tokenize was on the functions module layer, it cannot
+// make use of the array_t object. As such, we need to make the tokenize
+// process part of this module instead.
+// The tokenizer will check for spaces as delimiters.
+array_t * array_from_string( char * s ) {
+  array_t * self = array(1024);
+
+  // current char
+  char c;
+  // current word
+  char w[1024];
+  // word counter
+  int  wc = 0;
+  // cyrrent array index
+  int  ai = 0;
+  // quote mode
+  int  qm = false();
+  // character array
+  char * ca;
+
+  for (int i = 0; i < strlen(s); i++) {
+    // get current char
+    c = s[i];
+    //log("%c",c);
+    // is it a space?
+    if (c == array_token_space()) {
+      //log("%s","---SPACE");
+      // is quote mode enabled?
+      if (qm) {
+        //log("%s","---QUOTE MODE IS ON");
+        // add the space
+        w[wc] = c;
+        // increment the word counter
+        wc += 1;
+        //log("wc: %d",wc);
+      }
+      // is the word counter larger than 0?
+      else if (wc > 0) {
+        //log("%s","---ADD WORD");
+        // mark the index as a null terminator
+        w[wc] = '\0';
+        //log("word: %s",w);
+        // create a new char array with the size of the word counter
+        ca = allocv(char,wc+1);
+        // fill the new char array with the word data
+        copy(ca,w,0,wc+1);
+        // add this to the array
+        array_data(self)[ai] = ca;
+        // set the word counter to 0
+        wc = 0;
+        // increment the array index
+        ai += 1;
+        //log("wc: %d",wc);
+        //log("ai: %d",ai);
+      }
+    }
+    // is it a quote?
+    else if (c == array_token_quote()) {
+      //log("%s","---TOGGLE QUOTE MODE");
+      // toggle the quote mode
+      qm = !qm;
+      //log("qm: %d",qm);
+    }
+    // otherwise
+    else {
+      //log("%s","---ADD CHAR");
+      // add the character
+      w[wc] = c;
+      // increment the word counter
+      wc += 1;
+      //log("wc: %d",wc);
+    }
+  }
+
+  // is there any trailing characters in the current word?
+  if (wc > 0) {
+    //log("%s","---LEFTOVERS");
+    // mark the index as a null terminator
+    w[wc] = '\0';
+    //log("word: %s",w);
+    // create a new char array with the size of the word counter
+    ca = allocv(char,wc+1);
+    // fill the new char array with the word data
+    copy(ca,w,0,wc+1);
+    // add this to the array
+    array_data(self)[ai] = ca;
+    // set wc to 0
+    wc = 0;
+    // increment the array index
+    ai += 1;
+    //log("wc: %d",wc);
+    //log("ai: %d",ai);
+  }
+
+  // resize the array to be only the data we need.
+  array_data(self) = resize(array_data(self),1024,ai);
+  // set the size of the array
+  array_size(self) = ai;
+
+
+  loop(i,ai) {
+    char * ss = array_data(self)[i];
+    log("%p",ss);
+  }
+
+  // return the array
+  return self;
+
 }
 
 #define aset(a,n,v) array_set(a,n,v)

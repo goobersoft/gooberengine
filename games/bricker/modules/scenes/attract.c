@@ -7,33 +7,33 @@ type() {
   // playfield
   local( playfield_t * playfield );
 
-} scene_attract_t;
+} sceneattract_t;
 
-#define scene_attract_scene(self)       (self->scene)
-#define scene_attract_playfield(self)   (self->playfield)
+#define sceneattract_scene(self)       (self->scene)
+#define sceneattract_playfield(self)   (self->playfield)
 
 /////////
 // new //
 /////////
 
-void init_scene_attract( scene_attract_t * self ) {
+void init_sceneattract( sceneattract_t * self ) {
   // set scene object id to "attract"
-  scene_attract_scene(self)      = scene(self,"attract");
-  scene_attract_playfield(self)  = playfield();
+  sceneattract_scene(self)      = scene(self,"attract");
+  sceneattract_playfield(self)  = playfield();
 }
 
-scene_attract_t * scene_attract() {
-  scene_attract_t * self = alloc(scene_attract_t);
-  init_scene_attract(self);
+sceneattract_t * sceneattract() {
+  sceneattract_t * self = alloc(sceneattract_t);
+  init_sceneattract(self);
   // return the scene, not itself.
   // Since the scene object has this object as its source,
   // we can cast the internal source pointer later.
   return self;
 }
 
-void free_scene_attract( scene_attract_t * self ) {
-  free_playfield  (scene_attract_playfield(self));
-  free_scene      (scene_attract_scene(self));
+void free_sceneattract( sceneattract_t * self ) {
+  free_playfield  (sceneattract_playfield(self));
+  free_scene      (sceneattract_scene(self));
   free            (self);
 }
 
@@ -42,8 +42,8 @@ void free_scene_attract( scene_attract_t * self ) {
 ////////////
 
 
-void scene_attract_start( scene_attract_t * self ) {
-  playfield_t * pf = scene_attract_playfield(self);
+void sceneattract_start( sceneattract_t * self ) {
+  playfield_t * pf = sceneattract_playfield(self);
   
 
   int uu;
@@ -70,21 +70,21 @@ void scene_attract_start( scene_attract_t * self ) {
   
 }
 
-void scene_attract_update( scene_attract_t * self ) {
+void sceneattract_update( sceneattract_t * self ) {
   // update base scene object
-  scene_update( scene_attract_scene(self) );
-  playfield_update( scene_attract_playfield(self) );
+  scene_update( sceneattract_scene(self) );
+  playfield_update( sceneattract_playfield(self) );
 
   if (gb_button(controller_button_select()) == 2) {
-    scene_finished( scene_attract_scene(self) ) = true();
-    scene_next( scene_attract_scene(self) ) = "game";
+    scene_finished( sceneattract_scene(self) ) = true();
+    scene_next( sceneattract_scene(self) ) = "game";
   }
 }
 
-void scene_attract_draw( scene_attract_t * self ) {
-  playfield_draw( scene_attract_playfield(self) );
+void sceneattract_draw( sceneattract_t * self ) {
+  playfield_draw( sceneattract_playfield(self) );
 }
 
-void scene_attract_quit( scene_attract_t * self ) {
+void sceneattract_quit( sceneattract_t * self ) {
 
 }

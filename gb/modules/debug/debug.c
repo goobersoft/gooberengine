@@ -36,9 +36,20 @@ void debug_load() {
 void debug_start() {
   debug.colormap = gb_get_colormap("bricker-0");
 
+  /*
   settings_t * u = settings();
   string_t * s = settings_to_string(u);
   log("%s %d",string_data(s),string_length(s));
+  */
+  char * xx = "abcdefghij klmnop 1 2 3 4 5 6";
+  array_t * aa = array_from_string(xx);
+  log("%d",array_size(aa));
+  
+  loop(i,array_size(aa)) {
+    char * x2 = array_data(aa)[i];
+    log("%s",x2);
+  }
+  
 }
 
 void debug_update_pre() {

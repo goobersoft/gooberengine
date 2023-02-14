@@ -148,7 +148,6 @@ typedef unsigned long  ulong_t;
     a[ps+i]=b[i];           \
   }
 
-
 #define cast(a,b) ((b)a)
 
 #define isnull(a)  (a==null())

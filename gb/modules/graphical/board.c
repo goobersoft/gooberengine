@@ -2,6 +2,11 @@
 #define board_width()   400
 #define board_height()  240
 
+#define board_blend_mode_normal()   0
+#define board_blend_mode_add()      1
+#define board_blend_mode_multiply() 2
+#define board_blend_mode_opaque()   3
+
 type() {
 
   SDL_Renderer * renderer;
@@ -72,4 +77,65 @@ bool_t board_unlock( board_t * self ) {
     return true();
   }
   return false();
+}
+
+///////////////////////
+// drawing functions //
+///////////////////////
+
+void board_set_color( board_t * self, byte_t r, byte_t g, byte_t b ) {
+  SDL_SetRenderDrawColor( board_renderer(self), r, g, b, 255 );
+}
+
+void board_reset_color( board_t * self ) {
+  board_set_color( self, 255, 255, 255 );
+}
+
+void board_draw_dot( board_t * self, int x, int y ) {
+  SDL_RenderDrawPoint( board_renderer(self), x, y );
+}
+
+void board_draw_line( board_t * self, int x1, int y1, int x2, int y2 ) {
+  SDL_RenderDrawLine( board_renderer(self), x1, y1, x2, y2 );
+}
+
+void board_draw_rect( board_t * self, int x, int y, int w, int h ) {
+  SDL_Rect rct;
+  rct.x = x;
+  rct.y = y;
+  rct.w = w;
+  rct.h = h;
+  SDL_RenderFIllRect( board_renderer(self), rct );
+}
+
+void board_draw_rect_outline( board_t * self, int x, int y, int w, int h ) {
+  SDL_Rect rct;
+  rct.x = x;
+  rct.y = y;
+  rct.w = w;
+  rct.h = h;
+  SDL_RenderDrawRect( board_renderer(self), rct );
+}
+
+void board_draw_hline( board_t * self, int x, int y, int w ) {
+  board_draw_rect( self, x, y, w, 1 );
+}
+
+void board_draw_vline( board_t * self, int x, int y, int h ) {
+  board_draw_rect( self, x, y, 1, h );
+}
+
+void board_set_blend_mode( board_t * self, int b ) {
+  if (b == board_blend_mode_normal()) {
+    SDL_RenderSetBlendMode( board_renderer(self), SDL_BLENDMODE_BLEND );
+  }
+  else if (b == board_blend_mode_add()) {
+    SDL_RenderSetBlendMode( board_renderer(self), SDL_BLENDMODE_ADD );
+  }
+  else if (b == board_blend_mode_multiply()) {
+    SDL_RenderSetBlendMode( board_renderer(self), SDL_BLENDMODE_MOD );
+  }
+  else if (b == board_blend_mode_opaque()) {
+    SDL_RenderSetBlendMode( board_renderer(self), SDL_BLENDMODE_NONE );
+  }
 }

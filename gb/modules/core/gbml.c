@@ -10,22 +10,39 @@ typedef dict_t gbml_t;
 #define gbml_token_number()     '#'
 #define gbml_token_string()     '$'
 
+/////////
+// new //
+/////////
+
+dict_t * gbml( char * s ) {
+  dict_t * self = dict();
+
+  // if a path is given, get the file.
+  if (s) {
+    log("a file was given - yadda.");
+  }
+
+  return self;
+}
+
 ///////////////
 // functions //
 ///////////////
 
-void gbml_to_string( gbml_t * in ) {
+// convert a GBML object into GBML notation (string)
+string_t * gbml_to_string( gbml_t * in ) {
 } 
 
-void gbml_from_string( char * in ) {
+// create a gbml object from string input
+dict_t * gbml_from_string( char * in ) {
 }
 
+// get the data of a key in the gbml dictionary
 void * gbml_read( gbml_t * self, char * p ) {
-
 }
 
+// write data into the key of a gbml object
 void gbml_write( gbml_t * self, char * p, void * v ) {
-
 }
 
 ////////////

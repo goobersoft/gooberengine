@@ -164,6 +164,9 @@ gb_t * gb;
 #define gb_draw_text(x,y,t)           graph_draw_text(gb_graph(),x,y,t)
 #define gb_draw_tilemap(x,y,t)        graph_draw_tilemap(gb_graph(),x,y,t)
 
+// audio
+#define gb_sound(s,c)                 audio_play(gb_audio(),s,c)
+
 ///////////////
 // functions //
 ///////////////
