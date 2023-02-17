@@ -19,13 +19,16 @@
 /////////////
 
 #include "modules/core/globals.c"             // includes many macro definitions
+
 #include "modules/core/functions.c"           // core functions
 #include "modules/core/functions_sine.c"      // sine and cosine function
 #include "modules/core/functions_sqroot.c"    // sqroot function
 #include "modules/core/functions_base64.c"    // sqroot function
+
 #include "modules/core/tag.c"                 // descriptive tag
 #include "modules/core/types.c"               // complex numerical types
-#include "modules/core/locker.c"
+#include "modules/core/bitfield.c"              // bitfield
+#include "modules/core/bintree.c"             // binary tree
 /*
 #include "modules/rng.c"                      // implementation of mersenne twister in c
 */
@@ -39,12 +42,13 @@
 #include "modules/core/file.c"                // file type
 #include "modules/core/number.c"              // integer number with min and max bounds
 #include "modules/core/alarm.c"               // timers
-#include "modules/core/menu.c"
 #include "modules/core/entity.c"              // AABB collisions
 #include "modules/core/gbs.c"                 // GooberScript
 #include "modules/core/gbml.c"                // markup
 #include "modules/core/scene.c"               // scene base object
 #include "modules/core/settings.c"            // settings container
+
+#include "modules/mechanical/menu.c"          // works for UIs
 
 #include "modules/graphical/color.c"          // 6-bit color with transparency bit
 #include "modules/graphical/board.c"          // drawing durfaces
@@ -177,6 +181,10 @@ void gb_set_cls( bool_t b ) {
 
 void gb_set_scene( scene_t * s ) {
   gb_scene() = s;
+}
+
+void gb_exit() {
+  gb_running() = false();
 }
 
 //////////////////////////

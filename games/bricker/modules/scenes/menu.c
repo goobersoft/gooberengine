@@ -1,4 +1,17 @@
 
+////////////
+// consts //
+////////////
+
+#define scenemenu_endmenu_selection_start()       0
+#define scenemenu_entmenu_selection_customgame()  1
+#define scenemenu_entmenu_selection_options()     2
+#define scenemenu_entmenu_selection_exit()        3
+
+//////////
+// type //
+//////////
+
 type() {
 
   local( scene_t * scene );
@@ -9,6 +22,7 @@ type() {
 
 } scenemenu_t;
 
+// getters
 #define scenemenu_scene(self)     (self->scene)
 #define scenemenu_entmenu(self)   (self->entmenu)
 #define scenemenu_snd_menu1(self) (self->snd_menu1)
@@ -78,6 +92,10 @@ void scenemenu_update( scenemenu_t * self ) {
   if (gb_button(controller_button_select())==controller_button_pressed()) {
     entmenu_select(scenemenu_entmenu(self));
     gb_sound( scenemenu_snd_menu2(self), 0 );
+
+    if (entmenu_cursor(scenemenu_entmenu(self))==scenemenu_entmenu_selection_exit()) {
+      gb_exit();
+    }
   }
 }
 

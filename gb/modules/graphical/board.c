@@ -105,7 +105,7 @@ void board_draw_rect( board_t * self, int x, int y, int w, int h ) {
   rct.y = y;
   rct.w = w;
   rct.h = h;
-  SDL_RenderFIllRect( board_renderer(self), rct );
+  SDL_RenderFillRect( board_renderer(self), ref(rct) );
 }
 
 void board_draw_rect_outline( board_t * self, int x, int y, int w, int h ) {
@@ -114,7 +114,7 @@ void board_draw_rect_outline( board_t * self, int x, int y, int w, int h ) {
   rct.y = y;
   rct.w = w;
   rct.h = h;
-  SDL_RenderDrawRect( board_renderer(self), rct );
+  SDL_RenderDrawRect( board_renderer(self), ref(rct) );
 }
 
 void board_draw_hline( board_t * self, int x, int y, int w ) {
@@ -127,15 +127,15 @@ void board_draw_vline( board_t * self, int x, int y, int h ) {
 
 void board_set_blend_mode( board_t * self, int b ) {
   if (b == board_blend_mode_normal()) {
-    SDL_RenderSetBlendMode( board_renderer(self), SDL_BLENDMODE_BLEND );
+    SDL_SetRenderDrawBlendMode( board_renderer(self), SDL_BLENDMODE_BLEND );
   }
   else if (b == board_blend_mode_add()) {
-    SDL_RenderSetBlendMode( board_renderer(self), SDL_BLENDMODE_ADD );
+    SDL_SetRenderDrawBlendMode( board_renderer(self), SDL_BLENDMODE_ADD );
   }
   else if (b == board_blend_mode_multiply()) {
-    SDL_RenderSetBlendMode( board_renderer(self), SDL_BLENDMODE_MOD );
+    SDL_SetRenderDrawBlendMode( board_renderer(self), SDL_BLENDMODE_MOD );
   }
   else if (b == board_blend_mode_opaque()) {
-    SDL_RenderSetBlendMode( board_renderer(self), SDL_BLENDMODE_NONE );
+    SDL_SetRenderDrawBlendMode( board_renderer(self), SDL_BLENDMODE_NONE );
   }
 }

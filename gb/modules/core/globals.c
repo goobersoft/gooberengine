@@ -74,6 +74,11 @@ typedef unsigned long  ulong_t;
 #define lt(a,b)   (a<b)
 #define lte(a,b)  (a<=b)
 
+#define bit(b)      (1<<(b))
+#define bon(a,b)    (a | bit(b))
+#define boff(a,b)   (a & (~bit(b)))
+#define btog(a,b)   (a ^ bit(b))
+#define bget(a,b)   ((a&bit(b))==bit(b))
 
 
 // newline character
@@ -90,11 +95,11 @@ typedef unsigned long  ulong_t;
 
 #define var(x)          void*x
 
-#define loop(i,b)         for(int i=0;i<b;i++)
-#define loop2(i,a,b)      for(int i=a;i<b;i++)
+#define loop(i,b)       for(int i=0;i<b;i++)
+#define loop2(i,a,b)    for(int i=a;i<b;i++)
 
-#define type()            typedef struct
-#define union()           typedef union
+#define type()          typedef struct
+#define union()         typedef union
 
 // this is used inside of a type() block.
 // x: the name of the field
@@ -144,11 +149,17 @@ typedef unsigned long  ulong_t;
 // ps: dest array start
 // l: length
 #define copy(a,b,ps,l)      \
-  for (int i=0;i<l;i++) {   \
+  for(int i=0;i<l;i++) {    \
     a[ps+i]=b[i];           \
   }
 
-#define cast(a,b) ((b)a)
+#define clear(a,v,l)        \
+  for(int i=0;i<l;i++) {    \
+    a[i]=v;                 \
+  }
+
+#define cast(a,b)   ((b)a)
+#define ptrtoint(a) (cast(a,uintptr_t))
 
 #define isnull(a)  (a==null())
 #define exists(a)  (a!=null())

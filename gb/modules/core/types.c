@@ -93,18 +93,21 @@ char * integer_to_string( integer_t * self ) {
 
 type() {
 
+  tag_t * tag;
   bool_t value;
 
 } boolean_t;
 
+#define boolean_tag(self)   (self->tag)
 #define boolean_value(self) (self->value)
 
 // -- new -- //
 
 boolean_t * boolean( bool_t b ) {
-  boolean_t * r = alloc(boolean_t);
-  boolean_value(r) = bool(b);
-  return r;
+  boolean_t * self      = alloc(boolean_t);
+  boolean_tag(self)     = tag(self,"boolean");
+  boolean_value(self)   = bool(b);
+  return self;
 }
 
 // -- funcs -- //
@@ -147,10 +150,12 @@ char * boolean_to_string( boolean_t * self ) {
 #define fixed_max_part()         1000 // min is 0
 
 type() {
+  tag_t * tag;
   int whole;
   int part;
 } fixed_t;
 
+#define fixed_tag(self)   (self->tag)
 #define fixed_whole(self) (self->whole)
 #define fixed_part(self)  (self->part)
 
@@ -246,16 +251,19 @@ char * fixed_to_string( fixed_t * self ) {
 
 type() {
 
+  tag_t * tag;
   int     size;
   void ** data;
 
 } array_t;
 
+#define array_tag(self)  (self->tag)
 #define array_size(self) (self->size)
 #define array_data(self) (self->data)
 
 array_t * array( int n ) {
   array_t * self   = alloc(array_t);
+  array_tag(self)  = tag(self,"array");
   array_size(self) = clamp(n,1,1000000);
   array_data(self) = allocv(void*,array_size(self));
   return self;
@@ -391,12 +399,14 @@ array_t * array_from_string( char * s ) {
 
 type() {
 
+  tag_t * tag;
   int     size;
   int     w, h;
   void ** data;
 
 } array2d_t;
 
+#define array2d_tag(self)    (self->tag)
 #define array2d_data(self)   (self->data)
 #define array2d_width(self)  (self->w)
 #define array2d_height(self) (self->h)
@@ -404,6 +414,7 @@ type() {
 
 array2d_t * array2d( int w, int h ) {
   array2d_t * self     = alloc(array2d_t);
+  array2d_tag(self)    = tag(self,"array2d");
   array2d_data(self)   = allocv(void*,w*h);
   array2d_width(self)  = w;
   array2d_height(self) = h;

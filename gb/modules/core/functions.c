@@ -128,17 +128,57 @@ char * rstr( int n, int l ) {
 }
 
 char _bits[36];
-char * bits(uint_t n) {
+
+char * bits(uint_t n, int l) {
+  clear(_bits,0,36);
   loop(i,32) {
     _bits[31-i] = (n&1) ? '1' : '0';
     n = n>>1;
   }
+  return _bits;
+}
+
+char * bits8(uint_t n) {
+  clear(_bits,0,36);
+  loop(i,8) {
+    _bits[7-i] = (n&1) ? '1' : '0';
+    n = n>>1;
+  }
+  return _bits;
+}
+
+char * bits16(uint_t n) {
+  clear(_bits,0,36);
+  loop(i,16) {
+    _bits[15-i] = (n&1) ? '1' : '0';
+    n = n>>1;
+  }
+  return _bits;
+}
+
+char * bits32(uint_t n) {
+  clear(_bits,0,36);
+  loop(i,32) {
+    _bits[31-i] = (n&1) ? '1' : '0';
+    n = n>>1;
+  }
+  return _bits;
 }
 
 void swap(int * a, int * b) {
   a[0] ^= b[0];
   b[0] ^= a[0];
   a[0] ^= b[0];
+}
+
+int strtoint( char * u ) {
+  int r = 0;
+  if (u) {
+    for (int i = 0; i < strlen(u); i++) {
+      r += u[i];
+    }
+  }
+  return r;
 }
 
 
@@ -310,8 +350,6 @@ int rounded( int a, int d ) {
 int evenize( int a ) {
   return (a&1)?a+1:a;
 }
-
-
 
 ////////////////
 // collisions //
