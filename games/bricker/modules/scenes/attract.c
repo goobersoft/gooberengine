@@ -48,26 +48,29 @@ void scene_attract_start( scene_attract_t * self ) {
 
   int uu;
   foreach( playfield_bricks(pf), dt) {
+    entity_t * e = dt;
+    entity_brick_t * eb = entity_get_spec(e);
+
     uu = rnd(1,6);
-    if (uu==1)      entity_brick_set_id(dt,"1");
-    else if (uu==2) entity_brick_set_id(dt,"2");
-    else if (uu==3) entity_brick_set_id(dt,"3");
-    else if (uu==4) entity_brick_set_id(dt,"4");
-    else if (uu==5) entity_brick_set_id(dt,"5");
-    else if (uu==6) entity_brick_set_id(dt,"6");
+    if (uu==1)      entity_brick_set_id(eb,"1");
+    else if (uu==2) entity_brick_set_id(eb,"2");
+    else if (uu==3) entity_brick_set_id(eb,"3");
+    else if (uu==4) entity_brick_set_id(eb,"4");
+    else if (uu==5) entity_brick_set_id(eb,"5");
+    else if (uu==6) entity_brick_set_id(eb,"6");
   }
   
   entity_pball_t * a;
   a = entity_pball();
   point_set( entity_pball_velo(a), 2,1 );
-  list_add_last( playfield_balls(pf), a );
+  list_add_last( playfield_balls(pf), entity_pball_entity(a) );
   a = entity_pball();
   point_set( entity_pball_velo(a), -1,2 );
-  list_add_last( playfield_balls(pf), a );
+  list_add_last( playfield_balls(pf), entity_pball_entity(a) );
   a = entity_pball();
   point_set( entity_pball_velo(a), 1,3 );
-  list_add_last( playfield_balls(pf), a );
-  
+  list_add_last( playfield_balls(pf), entity_pball_entity(a) );
+
 }
 
 void scene_attract_update( scene_attract_t * self ) {

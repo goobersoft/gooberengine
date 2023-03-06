@@ -46,7 +46,7 @@ bricker_t * _bricker;
 
 void init_bricker( bricker_t * self ) {
   bricker_ui(self)        = brickerui();
-  bricker_scene(self)     = null();
+  bricker_scene(self)     = scene("none",null());
   bricker_gameinfo(self)  = gameinfo();
 }
 
@@ -61,24 +61,26 @@ bricker_t * bricker() {
 ///////////////
 
 void bricker_clear_scene( bricker_t * self ) {
-  if (bricker_scene(self)) {
-    char * ss = scene_class(bricker_scene(self));
+  char * ss = scene_class(bricker_scene(self));
 
-    if streq(ss,"attract") {
-      scene_attract_t * u = scene_get_spec(bricker_scene(self));
-      scene_attract_quit(u);
-      free_scene_attract(u);
-    }
-    else if streq(ss,"menu") {
-      scene_menu_t * u = scene_get_spec(bricker_scene(self));
-      scene_menu_quit(u);
-      free_scene_menu(u);
-    }
-    else if streq(ss,"game") {
-      scene_game_t * u = scene_get_spec(bricker_scene(self));
-      scene_game_quit(u);
-      free_scene_game(u);
-    }
+  if streq(ss,"attract") {
+    scene_attract_t * u = scene_get_spec(bricker_scene(self));
+    scene_attract_quit(u);
+    free_scene_attract(u);
+  }
+  else if streq(ss,"menu") {
+    scene_menu_t * u = scene_get_spec(bricker_scene(self));
+    scene_menu_quit(u);
+    free_scene_menu(u);
+  }
+  else if streq(ss,"game") {
+    scene_game_t * u = scene_get_spec(bricker_scene(self));
+    scene_game_quit(u);
+    free_scene_game(u);
+  }
+  else {
+    // empty scene
+    free_scene(bricker_scene(self));
   }
 }
 
@@ -173,6 +175,8 @@ void bricker_load() {
   gb_set_sound("ok-1",sound("games/bricker/media/sounds/ok1.wav"));
   gb_set_sound("respawn-1",sound("games/bricker/media/sounds/respawn1.wav"));
 
+  
+
   // debugging
   bricker_debug_load(_bricker);
 }
@@ -184,6 +188,7 @@ void bricker_start() {
   // set the font to the new bricker font
   graph_set_font(gb_graph(),gb_get_font("bricker-0"));
   // set to attract scene
+
   bricker_set_scene(_bricker, "attract" );
   // start the debug event
   bricker_debug_start(_bricker);

@@ -40,7 +40,7 @@ void init_entity_pball( entity_pball_t * self ) {
   entity_pball_sprite(self)  = sprite(gb_get_colormap("bricker-0"),30,30,10,10);
   // the sprite will be offset by 1 pixel in x and y direction
   // to account for the smaller bounding box.
-  sprite_set_offset(entity_pball_sprite(self),1,1);
+  sprite_set_offset   (entity_pball_sprite(self),1,1);
   
   entity_set_pos      (entity_pball_entity(self), 200, 200 );
   entity_set_size     (entity_pball_entity(self), 8, 8 );
@@ -89,12 +89,10 @@ void entity_pball_update( entity_pball_t * self ) {
     entity_pball_pos_y(self) = 0;
     entity_pball_velo_y(self) = -entity_pball_velo_y(self);
   }
-
 }
 
 void entity_pball_draw( entity_pball_t * self ) {
   graph_set_intensity_max( gb_graph() );
-  graph_set_color(gb_graph(), make_color(0,0,3));
   graph_draw_sprite( gb_graph(), entity_pball_pos_x(self), entity_pball_pos_y(self), entity_pball_sprite(self) );
   graph_reset_intensity( gb_graph() );
 }

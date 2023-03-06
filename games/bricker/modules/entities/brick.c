@@ -20,8 +20,8 @@ type() {
 
 void init_entity_brick( entity_brick_t * self ) {
   entity_brick_entity(self)  = entity("brick",self);
-  
-  entity_set_size( entity_brick_entity(self), 20, 10 );
+  entity_t * e = entity_brick_entity(self);
+  entity_set_size( e, 20, 10 );
   entity_brick_sprite(self)  = sprite( gb_get_colormap("bricker-0"), 30,0,20,10 );
 }
 
@@ -42,20 +42,22 @@ void free_entity_brick( entity_brick_t * self ) {
 ///////////////
 
 void entity_brick_set_id( entity_brick_t * self, char * id ) {
-  
+  entity_t * e = entity_brick_entity(self);
+  sprite_t * s = entity_brick_sprite(self);
+
   if streq(id,"") {
-    sprite_set_pos(entity_brick_sprite(self),0,0);
-    sprite_set_size(entity_brick_sprite(self),10,10);
-    entity_set_solid(entity_brick_entity(self),false());
+    sprite_set_pos(s,0,0);
+    sprite_set_size(s,10,10);
+    entity_set_solid(e,false());
   }
   else {
-    if streq(id,"1")   sprite_set_pos(entity_brick_sprite(self),30,0);
-    if streq(id,"2")   sprite_set_pos(entity_brick_sprite(self),30,10);
-    if streq(id,"3")   sprite_set_pos(entity_brick_sprite(self),30,20);
-    if streq(id,"4")   sprite_set_pos(entity_brick_sprite(self),50,0);
-    if streq(id,"5")   sprite_set_pos(entity_brick_sprite(self),30,10);
-    if streq(id,"6")   sprite_set_pos(entity_brick_sprite(self),30,20);
-    entity_set_solid(entity_brick_entity(self),true());
+    if streq(id,"1")   sprite_set_pos(s,30,0);
+    if streq(id,"2")   sprite_set_pos(s,30,10);
+    if streq(id,"3")   sprite_set_pos(s,30,20);
+    if streq(id,"4")   sprite_set_pos(s,50,0);
+    if streq(id,"5")   sprite_set_pos(s,30,10);
+    if streq(id,"6")   sprite_set_pos(s,30,20);
+    entity_set_solid(e,true());
   }
 }
 
@@ -68,8 +70,10 @@ void entity_brick_update( entity_brick_t * self ) {
 }
 
 void entity_brick_draw( entity_brick_t * self ) {
+  entity_t * e = entity_brick_entity(self);
+  sprite_t * s = entity_brick_sprite(self);
+
   graph_set_intensity_max( gb_graph() );
-  graph_draw_sprite( gb_graph(), entity_pos_x(entity_brick_entity(self)), 
-    entity_pos_y(entity_brick_entity(self)), entity_brick_sprite(self));
+  graph_draw_sprite( gb_graph(), entity_pos_x(e), entity_pos_y(e), s );
   graph_reset_intensity( gb_graph() );
 }
