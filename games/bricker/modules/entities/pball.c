@@ -1,29 +1,30 @@
 
 type() {
 
+  local( entity_t * entity );
+
   local( point_t * velo );
   // size
   local( point_t * size );
   // sprite
   local( sprite_t * sprite );
   // entity
-  local( entity_t * entity );
+  
 
-} pball_t;
+} entity_pball_t;
 
-#define pball_tag(self)     (self->tag)
-#define pball_id(self)      (self->tag->id)
-#define pball_velo(self)    (self->velo)
-#define pball_velo_x(self)  point_x(pball_velo(self))
-#define pball_velo_y(self)  point_y(pball_velo(self))
-#define pball_sprite(self)  (self->sprite)
-#define pball_entity(self)  (self->entity)
-#define pball_pos(self)     entity_pos(pball_entity(self))
-#define pball_pos_x(self)   point_x(pball_pos(self))
-#define pball_pos_y(self)   point_y(pball_pos(self))
-#define pball_size(self)    entity_size(pball_entity(self))
-#define pball_size_x(self)  point_x(pball_size(self))
-#define pball_size_y(self)  point_y(pball_size(self))
+#define entity_pball_entity(self)  (self->entity)
+#define entity_pball_pos(self)     entity_pos(entity_pball_entity(self))
+#define entity_pball_pos_x(self)   point_x(entity_pball_pos(self))
+#define entity_pball_pos_y(self)   point_y(entity_pball_pos(self))
+#define entity_pball_size(self)    entity_size(entity_pball_entity(self))
+#define entity_pball_size_x(self)  point_x(entity_pball_size(self))
+#define entity_pball_size_y(self)  point_y(entity_pball_size(self))
+#define entity_pball_velo(self)    (self->velo)
+#define entity_pball_velo_x(self)  point_x(entity_pball_velo(self))
+#define entity_pball_velo_y(self)  point_y(entity_pball_velo(self))
+#define entity_pball_sprite(self)  (self->sprite)
+
 
 
 
@@ -32,27 +33,29 @@ type() {
 // new //
 /////////
 
-void init_pball( pball_t * self ) {
-  pball_velo(self)    = point(2,1);
-  pball_sprite(self)  = sprite(gb_get_colormap("bricker-0"),30,30,10,10);
+void init_entity_pball( entity_pball_t * self ) {
+  entity_pball_entity(self)  = entity("pball",self);
+
+  entity_pball_velo(self)    = point(2,1);
+  entity_pball_sprite(self)  = sprite(gb_get_colormap("bricker-0"),30,30,10,10);
   // the sprite will be offset by 1 pixel in x and y direction
   // to account for the smaller bounding box.
-  sprite_set_offset(pball_sprite(self),1,1);
-  pball_entity(self)  = entity(self);
-  entity_set_pos      (pball_entity(self), 200, 200 );
-  entity_set_size     (pball_entity(self), 8, 8 );
+  sprite_set_offset(entity_pball_sprite(self),1,1);
+  
+  entity_set_pos      (entity_pball_entity(self), 200, 200 );
+  entity_set_size     (entity_pball_entity(self), 8, 8 );
 
 }
 
-pball_t * pball() {
-  pball_t * self = alloc(pball_t);
-  init_pball(self);
+entity_pball_t * entity_pball() {
+  entity_pball_t * self = alloc(entity_pball_t);
+  init_entity_pball(self);
   return self;
 }
 
-void free_pball( pball_t * self ) {
-  free_point  ( pball_velo(self) );
-  free_sprite ( pball_sprite(self) );
+void free_entity_pball( entity_pball_t * self ) {
+  free_point  ( entity_pball_velo(self) );
+  free_sprite ( entity_pball_sprite(self) );
   free(self);
 }
 
@@ -67,31 +70,31 @@ void free_pball( pball_t * self ) {
 // events //
 ////////////
 
-void pball_update( pball_t * self ) {
+void entity_pball_update( entity_pball_t * self ) {
 
-  if (pball_pos_x(self)+pball_size_x(self) >= 300) {
-    pball_pos_x(self) = 300 - pball_size_x(self);
-    pball_velo_x(self) = -pball_velo_x(self);
+  if (entity_pball_pos_x(self)+entity_pball_size_x(self) >= 300) {
+    entity_pball_pos_x(self) = 300 - entity_pball_size_x(self);
+    entity_pball_velo_x(self) = -entity_pball_velo_x(self);
   }
-  else if (pball_pos_x(self) < 100) {
-    pball_pos_x(self) = 100;
-    pball_velo_x(self) = -pball_velo_x(self);
+  else if (entity_pball_pos_x(self) < 100) {
+    entity_pball_pos_x(self) = 100;
+    entity_pball_velo_x(self) = -entity_pball_velo_x(self);
   }
 
-  if (pball_pos_y(self)+pball_size_y(self) >= 240) {
-    pball_pos_y(self) = 240 - pball_size_y(self);
-    pball_velo_y(self) = -pball_velo_y(self);
+  if (entity_pball_pos_y(self)+entity_pball_size_y(self) >= 240) {
+    entity_pball_pos_y(self) = 240 - entity_pball_size_y(self);
+    entity_pball_velo_y(self) = -entity_pball_velo_y(self);
   }
-  else if (pball_pos_y(self) < 0) {
-    pball_pos_y(self) = 0;
-    pball_velo_y(self) = -pball_velo_y(self);
+  else if (entity_pball_pos_y(self) < 0) {
+    entity_pball_pos_y(self) = 0;
+    entity_pball_velo_y(self) = -entity_pball_velo_y(self);
   }
 
 }
 
-void pball_draw( pball_t * self ) {
+void entity_pball_draw( entity_pball_t * self ) {
   graph_set_intensity_max( gb_graph() );
   graph_set_color(gb_graph(), make_color(0,0,3));
-  graph_draw_sprite( gb_graph(), pball_pos_x(self), pball_pos_y(self), pball_sprite(self) );
+  graph_draw_sprite( gb_graph(), entity_pball_pos_x(self), entity_pball_pos_y(self), entity_pball_sprite(self) );
   graph_reset_intensity( gb_graph() );
 }

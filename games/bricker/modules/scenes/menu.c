@@ -3,10 +3,10 @@
 // consts //
 ////////////
 
-#define scenemenu_endmenu_selection_start()       0
-#define scenemenu_entmenu_selection_customgame()  1
-#define scenemenu_entmenu_selection_options()     2
-#define scenemenu_entmenu_selection_exit()        3
+#define scene_menu_entmenu_selection_start()       0
+#define scene_menu_entmenu_selection_customgame()  1
+#define scene_menu_entmenu_selection_options()     2
+#define scene_menu_entmenu_selection_exit()        3
 
 //////////
 // type //
@@ -15,56 +15,56 @@
 type() {
 
   local( scene_t * scene );
-  local( entmenu_t * entmenu );
+  local( entity_menu_t * entmenu );
 
   foreign( sound_t * snd_menu1 );
   foreign( sound_t * snd_menu2 );
 
-} scenemenu_t;
+} scene_menu_t;
 
 // getters
-#define scenemenu_scene(self)     (self->scene)
-#define scenemenu_entmenu(self)   (self->entmenu)
-#define scenemenu_snd_menu1(self) (self->snd_menu1)
-#define scenemenu_snd_menu2(self) (self->snd_menu2)
+#define scene_menu_scene(self)         (self->scene)
+#define scene_menu_entmenu(self)       (self->entmenu)
+#define scene_menu_snd_menu1(self)     (self->snd_menu1)
+#define scene_menu_snd_menu2(self)     (self->snd_menu2)
 
 /////////
 // new //
 /////////
 
-void init_scenemenu( scenemenu_t * self ) {
+void init_scene_menu( scene_menu_t * self ) {
   // make the base scene object
-  scenemenu_scene(self) = scene(self,"menu");
+  scene_menu_scene(self) = scene("menu",self);
   // 4 entries
-  scenemenu_entmenu(self) = entmenu(4);
+  scene_menu_entmenu(self) = entity_menu(4);
 
-  entmenu_colormap(scenemenu_entmenu(self)) = gb_get_colormap("bricker-0");
-  tilemap_set_offset        (entmenu_tilemap(scenemenu_entmenu(self)), 80, 70 );
-  entmenu_set_cursor_pos    (scenemenu_entmenu(self), 30, 30);
-  entity_set_pos            (entmenu_entity(scenemenu_entmenu(self)), 140, 20 );
+  entity_menu_colormap(scene_menu_entmenu(self)) = gb_get_colormap("bricker-0");
+  tilemap_set_offset            (entity_menu_tilemap(scene_menu_entmenu(self)), 80, 70 );
+  entity_menu_set_cursor_pos    (scene_menu_entmenu(self), 30, 30);
+  entity_set_pos                (entity_menu_entity(scene_menu_entmenu(self)), 140, 20 );
 
-  entmenu_set_title( scenemenu_entmenu(self), "    --MAIN MENU--" );
-  entmenu_set_label( scenemenu_entmenu(self), 0, "Start!" );
-  entmenu_set_label( scenemenu_entmenu(self), 1, "Custom Game" );
-  entmenu_set_label( scenemenu_entmenu(self), 2, "Options" );
-  entmenu_set_label( scenemenu_entmenu(self), 3, "Exit" );
+  entity_menu_set_title( scene_menu_entmenu(self), "    --MAIN MENU--" );
+  entity_menu_set_label( scene_menu_entmenu(self), 0, "Start!" );
+  entity_menu_set_label( scene_menu_entmenu(self), 1, "Custom Game" );
+  entity_menu_set_label( scene_menu_entmenu(self), 2, "Options" );
+  entity_menu_set_label( scene_menu_entmenu(self), 3, "Exit" );
 
-  entmenu_decorate_tilemap (scenemenu_entmenu(self));
+  entity_menu_decorate_tilemap (scene_menu_entmenu(self));
 
-  scenemenu_snd_menu1(self) = gb_get_sound("menu-1");
-  scenemenu_snd_menu2(self) = gb_get_sound("menu-2");
+  scene_menu_snd_menu1(self) = gb_get_sound("menu-1");
+  scene_menu_snd_menu2(self) = gb_get_sound("menu-2");
 }
 
-scenemenu_t * scenemenu() {
-  scenemenu_t * self = alloc(scenemenu_t);
-  init_scenemenu(self);
+scene_menu_t * scene_menu() {
+  scene_menu_t * self = alloc(scene_menu_t);
+  init_scene_menu(self);
   return self;
 }
 
-void free_scenemenu( scenemenu_t * self ) {
-  free_scene    (scenemenu_scene(self));
-  free_entmenu  (scenemenu_entmenu(self));
-  free          (self);
+void free_scene_menu( scene_menu_t * self ) {
+  free_scene        (scene_menu_scene(self));
+  free_entity_menu  (scene_menu_entmenu(self));
+  free              (self);
 }
 
 ///////////////
@@ -75,37 +75,37 @@ void free_scenemenu( scenemenu_t * self ) {
 // events //
 ////////////
 
-void scenemenu_start( scenemenu_t * self ) {
+void scene_menu_start( scene_menu_t * self ) {
 }
 
-void scenemenu_update( scenemenu_t * self ) {
+void scene_menu_update( scene_menu_t * self ) {
   // handle the cursor moving
   if (gb_button(controller_button_down())==controller_button_pressed()) {
-    entmenu_cursor_down( scenemenu_entmenu(self) );
-    gb_sound( scenemenu_snd_menu1(self), 0 );
+    entity_menu_cursor_down( scene_menu_entmenu(self) );
+    gb_sound( scene_menu_snd_menu1(self), 0 );
   }
   else if (gb_button(controller_button_up())==controller_button_pressed()) {
-    entmenu_cursor_up( scenemenu_entmenu(self) );
-    gb_sound( scenemenu_snd_menu1(self), 0 );
+    entity_menu_cursor_up( scene_menu_entmenu(self) );
+    gb_sound( scene_menu_snd_menu1(self), 0 );
   }
   // handle selecting an action with spacebar
   if (gb_button(controller_button_select())==controller_button_pressed()) {
-    entmenu_select(scenemenu_entmenu(self));
-    gb_sound( scenemenu_snd_menu2(self), 0 );
+    entity_menu_select(scene_menu_entmenu(self));
+    gb_sound( scene_menu_snd_menu2(self), 0 );
 
-    if (entmenu_cursor(scenemenu_entmenu(self))==scenemenu_entmenu_selection_exit()) {
+    if (entity_menu_cursor(scene_menu_entmenu(self))==scene_menu_entmenu_selection_exit()) {
       gb_exit();
     }
   }
 }
 
-void scenemenu_draw( scenemenu_t * self ) {
+void scene_menu_draw( scene_menu_t * self ) {
   gb_set_intensity_max();
-  entmenu_draw( scenemenu_entmenu(self) );
+  entity_menu_draw( scene_menu_entmenu(self) );
   gb_reset_intensity();
 }
 
-void scenemenu_quit( scenemenu_t * self ) {
+void scene_menu_quit( scene_menu_t * self ) {
 }
 
 

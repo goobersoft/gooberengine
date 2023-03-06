@@ -8,15 +8,12 @@ type() {
 
   string_t  * key;
   void      * data;
-  tag_t     * tag;
 
 } dictentry_t;
 
 // getters
 #define dictentry_key(self)   (self->key)
 #define dictentry_data(self)  (self->data)
-#define dictentry_tag(self)   (self->tag)
-#define dictentry_id(self)    tag_id(dictentry_tag(self))
 
 /////////
 // new //
@@ -27,7 +24,6 @@ void dictentry_init( dictentry_t * self, char * s, void * d ) {
   dictentry_data(self)    = d;
   // using a tag can help us identify what type of data the dictentry
   // is holding in other modules.
-  dictentry_tag(self)     = tag(self,"dictentry");
 }
 
 dictentry_t * dictentry( char * s, void * d ) {
@@ -40,7 +36,6 @@ dictentry_t * dictentry( char * s, void * d ) {
 // does not destroy data, be careful!
 void free_dictentry( dictentry_t * self ) {
   free_string(dictentry_key(self));
-  free_tag(dictentry_tag(self));
   free(self);
 }
 
@@ -58,12 +53,6 @@ void dictentry_set_key( dictentry_t * self, char * s ) {
 // exists. This is up to the user.
 void dictentry_set_data( dictentry_t * self, void * d ) {
   dictentry_data(self) = d;
-}
-
-// you can use the ID of the tag to hold the class of the data
-// the dictionary entry is holding.
-void dictentry_set_id( dictentry_t * self, char * id ) {
-  dictentry_id(self) = id;
 }
 
 bool_t dictentry_compare_key( dictentry_t * self, char * s ) {

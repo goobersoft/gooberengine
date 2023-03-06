@@ -25,9 +25,9 @@
 #include "modules/core/functions_sqroot.c"    // sqroot function
 #include "modules/core/functions_base64.c"    // sqroot function
 
-#include "modules/core/tag.c"                 // descriptive tag
+#include "modules/core/object.c"              // descriptive tag
 #include "modules/core/types.c"               // complex numerical types
-#include "modules/core/bitfield.c"              // bitfield
+#include "modules/core/bitfield.c"            // bitfield
 #include "modules/core/bintree.c"             // binary tree
 /*
 #include "modules/rng.c"                      // implementation of mersenne twister in c
@@ -200,13 +200,13 @@ void gb_exit() {
 // this means that these objects will have their own drawing functions which reference
 // the graph module instead.
 
-#include "objects/graphical/sprayer.c"    // sprays the screen with colored pixels
-#include "objects/graphical/camera.c"     // determines how a scene should render
-#include "objects/graphical/menu.c"
+#include "modules/objects/graphical/test.c"
+#include "modules/objects/graphical/sprayer.c"    // sprays the screen with colored pixels
+#include "modules/objects/graphical/menu.c"
 
-#include "objects/toys/jake.c"            // slithers across the screen slowly
-#include "objects/toys/ball.c"            // bounces based on arrow keys
-#include "objects/toys/fountain.c"        // sprays sprites from a center
+#include "modules/objects/toys/jake.c"            // slithers across the screen slowly
+#include "modules/objects/toys/ball.c"            // bounces based on arrow keys
+#include "modules/objects/toys/fountain.c"        // sprays sprites from a center
 
 #include "modules/debug/debugpanel.c"
 #include "modules/debug/debug.c"

@@ -3,61 +3,53 @@
 
 type() {
 
-  // tag
-  local( tag_t * tag );
   // a counter for the scene's lifespan
   uint_t ticks;
   // a flag indicating that the scene is finished playing.
   bool_t finished;
-  // a constant string which determines the next scene id
-  foreign( char * next );
-  // a pointer to the parent scene
-  foreign( void * source );
+  // a constant integer which determines the next scene id
+  char * next;
+  //
+  local( object_t * spec );
+  //
+
 
 } scene_t;
 
-#define scene_tag(self)           (self->tag)
-#define scene_id(self)            tag_id(scene_tag(self))
-#define scene_size(self)          (self->size)
 #define scene_ticks(self)         (self->ticks)
 #define scene_finished(self)      (self->finished)
 #define scene_next(self)          (self->next)
-#define scene_source(self)        (self->source)
+#define scene_spec(self)          (self->spec)
 
-// helper macros
-#define scene_set_id(self,id)     tag_set_id(scene_tag(self),id)
-
+#define scene_set_spec(self,a,b)  object_set(scene_spec(self),a,b)
+#define scene_class(self)         object_class(scene_spec(self))
+#define scene_get_spec(self)      object_data(scene_spec(self))
 
 /////////
 // new //
 /////////
 
-void scene_init( scene_t * self, void * p, char * id ) {
-  scene_tag(self)            = tag(self,"scene");
-  scene_id(self)             = id;
-  scene_finished(self)       = 0;
-  scene_next(self)           = null();
-  scene_source(self)         = p;
+void scene_init( scene_t * self, char * cls, void * dt) {
+  scene_spec(self)           = object(cls,dt);
+  scene_finished(self)       = false();
+  scene_next(self)           = "";
+  
 }
 
-scene_t * scene(void * p, char * id) {
-  scene_t * r       = alloc(scene_t);
-  scene_init        (r,p,id);
-  return r;
+scene_t * scene(char * cls, void * dt) {
+  scene_t * self    = alloc(scene_t);
+  scene_init        (self,cls,dt);
+  return self;
 }
 
 void free_scene( scene_t * self ) {
-  free_tag    (scene_tag(self));
+  free_object (scene_spec(self));
   free        (self);
 }
 
 ///////////////
 // functions //
 ///////////////
-
-void scene_set_source( scene_t * self, void * src ) {
-  scene_source(self) = src;
-}
 
 void scene_finish( scene_t * self ) {
   scene_finished(self) = true();

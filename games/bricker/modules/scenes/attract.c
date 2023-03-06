@@ -7,33 +7,33 @@ type() {
   // playfield
   local( playfield_t * playfield );
 
-} sceneattract_t;
+} scene_attract_t;
 
-#define sceneattract_scene(self)       (self->scene)
-#define sceneattract_playfield(self)   (self->playfield)
+#define scene_attract_scene(self)       (self->scene)
+#define scene_attract_playfield(self)   (self->playfield)
 
 /////////
 // new //
 /////////
 
-void init_sceneattract( sceneattract_t * self ) {
+void init_scene_attract( scene_attract_t * self ) {
   // set scene object id to "attract"
-  sceneattract_scene(self)      = scene(self,"attract");
-  sceneattract_playfield(self)  = playfield();
+  scene_attract_scene(self)      = scene("attract",self);
+  scene_attract_playfield(self)  = playfield();
 }
 
-sceneattract_t * sceneattract() {
-  sceneattract_t * self = alloc(sceneattract_t);
-  init_sceneattract(self);
+scene_attract_t * scene_attract() {
+  scene_attract_t * self = alloc(scene_attract_t);
+  init_scene_attract(self);
   // return the scene, not itself.
   // Since the scene object has this object as its source,
   // we can cast the internal source pointer later.
   return self;
 }
 
-void free_sceneattract( sceneattract_t * self ) {
-  free_playfield  (sceneattract_playfield(self));
-  free_scene      (sceneattract_scene(self));
+void free_scene_attract( scene_attract_t * self ) {
+  free_scene      (scene_attract_scene(self));
+  free_playfield  (scene_attract_playfield(self));
   free            (self);
 }
 
@@ -42,49 +42,49 @@ void free_sceneattract( sceneattract_t * self ) {
 ////////////
 
 
-void sceneattract_start( sceneattract_t * self ) {
-  playfield_t * pf = sceneattract_playfield(self);
+void scene_attract_start( scene_attract_t * self ) {
+  playfield_t * pf = scene_attract_playfield(self);
   
 
   int uu;
   foreach( playfield_bricks(pf), dt) {
     uu = rnd(1,6);
-    if (uu==1)      brick_set_id(dt,"1");
-    else if (uu==2) brick_set_id(dt,"2");
-    else if (uu==3) brick_set_id(dt,"3");
-    else if (uu==4) brick_set_id(dt,"4");
-    else if (uu==5) brick_set_id(dt,"5");
-    else if (uu==6) brick_set_id(dt,"6");
+    if (uu==1)      entity_brick_set_id(dt,"1");
+    else if (uu==2) entity_brick_set_id(dt,"2");
+    else if (uu==3) entity_brick_set_id(dt,"3");
+    else if (uu==4) entity_brick_set_id(dt,"4");
+    else if (uu==5) entity_brick_set_id(dt,"5");
+    else if (uu==6) entity_brick_set_id(dt,"6");
   }
   
-  pball_t * a;
-  a = pball();
-  point_set( pball_velo(a), 2,1 );
+  entity_pball_t * a;
+  a = entity_pball();
+  point_set( entity_pball_velo(a), 2,1 );
   list_add_last( playfield_balls(pf), a );
-  a = pball();
-  point_set( pball_velo(a), -1,2 );
+  a = entity_pball();
+  point_set( entity_pball_velo(a), -1,2 );
   list_add_last( playfield_balls(pf), a );
-  a = pball();
-  point_set( pball_velo(a), 1,3 );
+  a = entity_pball();
+  point_set( entity_pball_velo(a), 1,3 );
   list_add_last( playfield_balls(pf), a );
   
 }
 
-void sceneattract_update( sceneattract_t * self ) {
+void scene_attract_update( scene_attract_t * self ) {
   // update base scene object
-  scene_update( sceneattract_scene(self) );
-  playfield_update( sceneattract_playfield(self) );
+  scene_update( scene_attract_scene(self) );
+  playfield_update( scene_attract_playfield(self) );
 
   if (gb_button(controller_button_select()) == 2) {
-    scene_finished( sceneattract_scene(self) ) = true();
-    scene_next( sceneattract_scene(self) ) = "game";
+    scene_finished( scene_attract_scene(self) ) = true();
+    scene_next( scene_attract_scene(self) ) = "game";
   }
 }
 
-void sceneattract_draw( sceneattract_t * self ) {
-  playfield_draw( sceneattract_playfield(self) );
+void scene_attract_draw( scene_attract_t * self ) {
+  playfield_draw( scene_attract_playfield(self) );
 }
 
-void sceneattract_quit( sceneattract_t * self ) {
+void scene_attract_quit( scene_attract_t * self ) {
 
 }

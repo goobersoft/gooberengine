@@ -4,15 +4,13 @@
 
 type() {
 
-  list_t      * bricks;
-  list_t      * brickents;
-  list_t      * balls;
-  paddle_t    * paddle;
+  list_t            * bricks; // entities
+  list_t            * balls;  // entities
+  entity_paddle_t   * paddle;
 
 } playfield_t;
 
 #define playfield_bricks(self)     (self->bricks)
-#define playfield_brickents(self)  (self->brickents)
 #define playfield_balls(self)      (self->balls)
 #define playfield_paddle(self)     (self->paddle)
 
@@ -24,26 +22,24 @@ type() {
 void init_playfield( playfield_t * self ) {
   point_t sz                = playfield_bricks_size();
   playfield_bricks(self)    = list();
-  playfield_brickents(self) = list();
 
-  brick_t * b;
+  entity_brick_t * b;
   loop(i,sz.x) {
     loop(j,sz.y) {
       // set all bricks to blank bricks
-      b = brick();
+      b = entity_brick();
       
-      entity_set_pos( brick_entity(b), 100+(i*20), (j*10) );
-      entity_set_solid( brick_entity(b), true() );
+      entity_set_pos( entity_brick_entity(b), 100+(i*20), (j*10) );
+      entity_set_solid( entity_brick_entity(b), true() );
 
       // store the entity, not the brick
-      list_add_last( playfield_bricks(self), b );
-      list_add_last( playfield_brickents(self), brick_entity(b) );
+      list_add_last( playfield_bricks(self), entity_brick_entity(b) );
     }
   }
 
   // make the list of balls
   playfield_balls(self)     = list();
-  playfield_paddle(self)    = paddle();
+  playfield_paddle(self)    = entity_paddle();
 }
 
 playfield_t * playfield() {
@@ -53,18 +49,22 @@ playfield_t * playfield() {
 }
 
 void free_playfield( playfield_t * self ) {
-  void * u;
+  entity_t       * e;
+  entity_pball_t * eb;
+  entity_brick_t * et;
   // remove all balls first
   while (list_count( playfield_balls(self) ) > 0) {
-    u = list_remove_first( playfield_balls(self) );
-    free_pball(u);
+    e = list_remove_first( playfield_balls(self) );
+    eb = entity_get_spec(e);
+    free_entity_pball(eb);
   }
   // now free the list
   free_list( playfield_balls(self) );
 
   while (list_count( playfield_balls(self) ) > 0) {
-    u = list_remove_first( playfield_bricks(self) );
-    free_brick(u);
+    e = list_remove_first( playfield_bricks(self) );
+    et = entity_get_spec(e); 
+    free_entity_brick(et);
   }
   free_list( playfield_bricks(self) );
 }
@@ -91,85 +91,88 @@ void playfield_set_brick( int bx, int by, int b ) {
 void playfield_update( playfield_t * self ) {
 
   // ball's entity
-  entity_t * ea;
+  entity_t * ent_a;
   // brick's entity
-  entity_t * eb;
+  entity_t * ent_b;
   // ref to current ball
-  pball_t * ba;
+  entity_pball_t * pball;
   // ref to current brick
-  brick_t * bb;
+  entity_brick_t * brick;
   // result for glide functions
   int du;
 
-  foreach( playfield_balls(self), bat ) {
+  foreach( playfield_balls(self), dt ) {
     // cast the void pointer to a pball object
-    ba = cast(bat,pball_t*);
+    ent_a = dt;
     // get the entity for the ball
-    ea = pball_entity(ba);
+    pball = entity_get_spec(ent_a);
     
     
     // if the ball is moving left
-    if (pball_velo_x(ba) < 0) {
-      du = entity_check_left_list( ea, abs(pball_velo_x(ba)), playfield_brickents(self) );
-      entity_add_pos( ea, -du, 0 );
+    if (entity_pball_velo_x(pball) < 0) {
+      du = entity_check_left_list( ent_a, abs(entity_pball_velo_x(pball)), playfield_bricks(self) );
+      entity_add_pos( ent_a, -du, 0 );
 
-      eb = entity_check_result(null());
-      if (eb) {
-        pball_velo_x(ba) = -pball_velo_x(ba);
-        bb = entity_source(eb);
-        brick_set_id(bb,"");
+      ent_b = entity_check_result(null());
+      if (ent_b) {
+        entity_pball_velo_x(pball) = -entity_pball_velo_x(pball);
+        brick = entity_get_spec(ent_b);
+        entity_brick_set_id(brick,"");
       }
     }
     // if the ball is moving right
-    else if (pball_velo_x(ba) > 0) {
-      du = entity_check_right_list( ea, abs(pball_velo_x(ba)), playfield_brickents(self) );
-      entity_add_pos( ea, du, 0 );
+    else if (entity_pball_velo_x(pball) > 0) {
+      du = entity_check_right_list( ent_a, abs(entity_pball_velo_x(pball)), playfield_bricks(self) );
+      entity_add_pos( ent_a, du, 0 );
 
-      eb = entity_check_result(null());
-      if (eb) {
-        pball_velo_x(ba) = -pball_velo_x(ba);
-        bb = entity_source(eb);
-        brick_set_id(bb,"");
+      ent_b = entity_check_result(null());
+      if (ent_b) {
+        entity_pball_velo_x(pball) = -entity_pball_velo_x(pball);
+        brick = entity_get_spec(ent_b);
+        entity_brick_set_id(brick,"");
       }
     }
 
     // if the ball is moving up
-    if (pball_velo_y(ba) < 0) {
-      du = entity_check_up_list( ea, abs(pball_velo_y(ba)), playfield_brickents(self) );
-      entity_add_pos( ea, 0, -du );
+    if (entity_pball_velo_y(pball) < 0) {
+      du = entity_check_up_list( ent_a, abs(entity_pball_velo_y(pball)), playfield_bricks(self) );
+      entity_add_pos( ent_a, 0, -du );
 
-      eb = entity_check_result(null());
-      if (eb) {
-        pball_velo_y(ba) = -pball_velo_y(ba);
-        bb = entity_source(eb);
-        brick_set_id(bb,"");
+      ent_b = entity_check_result(null());
+      if (ent_b) {
+        entity_pball_velo_y(pball) = -entity_pball_velo_y(pball);
+        brick = entity_get_spec(ent_b);
+        entity_brick_set_id(brick,"");
       }
     }
     // if the ball is moving down
-    else if (pball_velo_y(ba) > 0) {
-      du = entity_check_down_list( ea, abs(pball_velo_y(ba)), playfield_brickents(self) );
-      entity_add_pos( ea, 0, du );
+    else if (entity_pball_velo_y(pball) > 0) {
+      du = entity_check_down_list( ent_a, abs(entity_pball_velo_y(pball)), playfield_bricks(self) );
+      entity_add_pos( ent_a, 0, du );
 
-      eb = entity_check_result(null());
-      if (eb) {
-        pball_velo_y(ba) = -pball_velo_y(ba);
-        bb = entity_source(eb);
-        brick_set_id(bb,"");
+      ent_b = entity_check_result(null());
+      if (ent_b) {
+        entity_pball_velo_y(pball) = -entity_pball_velo_y(pball);
+        brick = entity_get_spec(ent_b);
+        entity_brick_set_id(brick,"");
       }
     }
 
-    pball_update(ba);
+    entity_pball_update(pball);
   }
 }
 
 void playfield_draw( playfield_t * self ) {
+  entity_t * e;
   // draw the bricks
   foreach( playfield_bricks(self), dt ) {
-    brick_draw(dt);
+    e = dt;
+    entity_brick_draw(entity_get_spec(e));
   }
 
   foreach( playfield_balls(self), dt ) {
-    pball_draw(dt);
+    e = dt;
+    entity_pball_draw(entity_get_spec(e));
   }
 
 }

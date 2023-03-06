@@ -11,19 +11,15 @@ type() {
 
   // rect object to hold position and size data
   local( rect_t * rect );
-  // tag
-  local( tag_t * tag );
-  // a pointer to the parent object
-  foreign( void * source );
+  //
+  local( object_t * spec );
 
 } entity_t;
 
 #define entity_rect(self)    (self->rect)
 #define entity_solid(self)   (self->solid)
-#define entity_tag(self)     (self->tag)
-#define entity_source(self)  (self->source)
+#define entity_spec(self)    (self->spec)
 
-#define entity_id(self)      tag_id(self->tag)
 #define entity_pos(self)     rect_pos(entity_rect(self))
 #define entity_pos_x(self)   rect_x(entity_rect(self))
 #define entity_pos_y(self)   rect_y(entity_rect(self))
@@ -37,40 +33,35 @@ type() {
 #define entity_set_size(self,w,h)  rect_set_size(entity_rect(self),w,h)
 #define entity_set_solid(self,b)   set(self,solid,bool(b))
 
+#define entity_class(self)         object_class(entity_spec(self))
+#define entity_set_spec(self,a,b)  object_set(entity_spec(self),a,b)
+#define entity_get_spec(self)      object_data(entity_spec(self))
+
 /////////
 // new //
 /////////
 
-void entity_init( entity_t * self, void * p ) {
+void entity_init( entity_t * self, char * cls, void * dt ) {
   entity_rect(self)        = rect(0,0,10,10);
   entity_solid(self)       = true();
-  entity_tag(self)         = tag(self,"entity");
-  entity_source(self)      = p;
+  entity_spec(self)        = object(cls,dt);
 }
 
-entity_t * entity( void * p ) {
-  entity_t * r = alloc(entity_t);
-  entity_init(r,p);
-  return r;
+entity_t * entity( char * cls, void * dt ) {
+  entity_t * self = alloc(entity_t);
+  entity_init(self,cls,dt);
+  return self;
 }
 
 void free_entity( entity_t * self ) {
   free_rect(entity_rect(self));
-  free_tag(entity_tag(self));
+  free_object(entity_spec(self));
   free(self);
 }
 
 ///////////
 // funcs //
 ///////////
-
-// setting a parent for this entity object would be useful for
-// knowing the owner actor of this entity. The reason why the
-// pointer is void is because different types may use the
-// entity type for collisions.
-void entity_set_source( entity_t * self, void * p ) {
-  entity_source(self) = p;
-}
  
  // check if two entities are overlapping
 bool_t entity_collide( entity_t * self, entity_t * other ) {

@@ -6,9 +6,6 @@
 // sounds, and fonts. Additional media types may be added in the future.
 
 type() {
-  
-  // tag object
-  local( tag_t * tag );
   // a dictionary of images
   local( dict_t * images );
   // a dictionary of colormaps
@@ -20,7 +17,6 @@ type() {
 
 } assets_t;
 
-#define assets_tag(self)           (self->tag)
 #define assets_images(self)        (self->images)
 #define assets_colormaps(self)     (self->colormaps)
 #define assets_sounds(self)        (self->sounds)
@@ -31,7 +27,6 @@ type() {
 /////////
 
 void init_assets( assets_t * self ) {
-  assets_tag(self)           = tag(self,"assets");
   assets_images(self)        = dict();
   assets_colormaps(self)     = dict();
   assets_sounds(self)        = dict();

@@ -15,15 +15,6 @@
 
 #include "modules/debug.c"
 
-////////////
-// consts //
-////////////
-
-#define bricker_scene_none()    0
-#define bricker_scene_attract() 1
-#define bricker_scene_menu()    2
-#define bricker_scene_game()    3
-
 //////////
 // type //
 //////////
@@ -69,49 +60,53 @@ bricker_t * bricker() {
 // functions //
 ///////////////
 
-void bricker_set_scene( bricker_t * self, int n ) {
+void bricker_clear_scene( bricker_t * self ) {
+  if (bricker_scene(self)) {
+    char * ss = scene_class(bricker_scene(self));
+
+    if streq(ss,"attract") {
+      scene_attract_t * u = scene_get_spec(bricker_scene(self));
+      scene_attract_quit(u);
+      free_scene_attract(u);
+    }
+    else if streq(ss,"menu") {
+      scene_menu_t * u = scene_get_spec(bricker_scene(self));
+      scene_menu_quit(u);
+      free_scene_menu(u);
+    }
+    else if streq(ss,"game") {
+      scene_game_t * u = scene_get_spec(bricker_scene(self));
+      scene_game_quit(u);
+      free_scene_game(u);
+    }
+  }
+}
+
+void bricker_set_scene( bricker_t * self, char * id ) {
   
   // delete the old scene
-  if (bricker_scene(self)) {
-    tag_t * ss = scene_tag(bricker_scene(self));
-
-    if streq(tag_id(ss),"attract") {
-      sceneattract_t * u = scene_source(bricker_scene(self));
-      sceneattract_quit(u);
-      free_sceneattract(u);
-    }
-    else if streq(tag_id(ss),"menu") {
-      scenemenu_t * u = scene_source(bricker_scene(self));
-      scenemenu_quit(u);
-      free_scenemenu(u);
-    }
-    else if streq(tag_id(ss),"game") {
-      scenegame_t * u = scene_source(bricker_scene(self));
-      scenegame_quit(u);
-      free_scenegame(u);
-    }
-  }
+  bricker_clear_scene(self);
 
   // set the new scene
-  if (n == bricker_scene_none()) {
-    bricker_scene(_bricker) = null();
+  if (streq(id,"")) {
+    bricker_scene(_bricker) = scene("",null());
   }
-  else if (n == bricker_scene_attract()) {
-    sceneattract_t * u = sceneattract(_bricker);
-    sceneattract_start(u);
+  else if (streq(id,"attract")) {
+    scene_attract_t * u = scene_attract();
+    scene_attract_start(u);
     // set the scene to the new attract scene
-    bricker_scene(_bricker) = sceneattract_scene(u);
+    bricker_scene(_bricker) = scene_attract_scene(u);
   }
-  else if (n == bricker_scene_menu()) {
-    scenemenu_t * u = scenemenu(_bricker);
-    scenemenu_start(u);
-    bricker_scene(_bricker) = scenemenu_scene(u);
+  else if (streq(id,"menu"))  {
+    scene_menu_t * u = scene_menu(_bricker);
+    scene_menu_start(u);
+    bricker_scene(_bricker) = scene_menu_scene(u);
   }
-  else if (n == bricker_scene_game()) {
-    scenegame_t * u = scenegame(_bricker);
-    scenegame_start(u);
+  else if (streq(id,"game")) {
+    scene_game_t * u = scene_game(_bricker);
+    scene_game_start(u);
     // set the scene to the new attract scene
-    bricker_scene(_bricker) = scenegame_scene(u);
+    bricker_scene(_bricker) = scene_game_scene(u);
   }
 
   // set the gb scene ref so debugpanel can see it
@@ -189,7 +184,7 @@ void bricker_start() {
   // set the font to the new bricker font
   graph_set_font(gb_graph(),gb_get_font("bricker-0"));
   // set to attract scene
-  bricker_set_scene(_bricker, bricker_scene_attract() );
+  bricker_set_scene(_bricker, "attract" );
   // start the debug event
   bricker_debug_start(_bricker);
 }
@@ -203,31 +198,31 @@ void bricker_update() {
 
   // is there a scene?
   if (bricker_scene(_bricker)) {
-    tag_t * y = scene_tag( bricker_scene(_bricker) );
+    char * ss = scene_class( bricker_scene(_bricker) );
     // attract
-    if (streq(tag_id(y),"attract")) {
-      sceneattract_t * s;
-      s = scene_source( bricker_scene(_bricker) );
-      sceneattract_update(s);
+    if (streq(ss,"attract")) {
+      scene_attract_t * s;
+      s = scene_get_spec( bricker_scene(_bricker) );
+      scene_attract_update(s);
       // if user presses space, change to game
-      if (scene_finished(sceneattract_scene(s))) {
+      if (scene_finished(scene_attract_scene(s))) {
         // disable the press start ui element
         brickerui_pressstart_active(bricker_ui(_bricker)) = false();
         // switch to game scene
-        bricker_set_scene( _bricker, bricker_scene_menu() );
+        bricker_set_scene( _bricker, "menu" );
       }
 
     }
-    else if streq(tag_id(y),"menu") {
-      scenemenu_t * s;
-      s = scene_source( bricker_scene(_bricker) );
-      scenemenu_update(s);
+    else if streq(ss,"menu") {
+      scene_menu_t * s;
+      s = scene_get_spec( bricker_scene(_bricker) );
+      scene_menu_update(s);
     }
     // game
-    else if streq(tag_id(y),"game") {
-      scenegame_t * s;
-      s = scene_source( bricker_scene(_bricker) );
-      scenegame_update(s);
+    else if streq(ss,"game") {
+      scene_game_t * s;
+      s = scene_get_spec( bricker_scene(_bricker) );
+      scene_game_update(s);
     }
   }
 
@@ -248,23 +243,23 @@ void bricker_draw() {
 
   // is there a scene?
   if (bricker_scene(_bricker)) {
-    tag_t * y = scene_tag( bricker_scene(_bricker) );
+    char * ss = scene_class( bricker_scene(_bricker) );
     // attract
-    if (streq(tag_id(y),"attract")) {
-      sceneattract_t * s;
-      s = scene_source( bricker_scene(_bricker) );
-      sceneattract_draw(s);
+    if (streq(ss,"attract")) {
+      scene_attract_t * s;
+      s = scene_get_spec( bricker_scene(_bricker) );
+      scene_attract_draw(s);
     }
-    else if streq(tag_id(y),"menu") {
-      scenemenu_t * s;
-      s = scene_source( bricker_scene(_bricker) );
-      scenemenu_draw(s);
+    else if streq(ss,"menu") {
+      scene_menu_t * s;
+      s = scene_get_spec( bricker_scene(_bricker) );
+      scene_menu_draw(s);
     }
     // game
-    else if streq(tag_id(y),"game") {
-      scenegame_t * s;
-      s = scene_source( bricker_scene(_bricker) );
-      scenegame_draw(s);
+    else if streq(ss,"game") {
+      scene_game_t * s;
+      s = scene_get_spec( bricker_scene(_bricker) );
+      scene_game_draw(s);
     }
   }
 

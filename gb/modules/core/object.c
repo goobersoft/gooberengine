@@ -40,38 +40,35 @@
 //   ... do specific stuff for the specific scene object here
 // }
 
-#define object_max_id_length() 32
-
 type() {
-
-  // a generic pointer to another object.
-  foreign( void * source );
   // a string literal which represents the class of the object
   // containing this object
   foreign( char * class );
+  // specific data
+  foreign( void * data );
 
 } object_t;
 
 // getters
-#define object_data(self)         (self->data)
-#define object_class(self)        (self->class)
+#define object_class(self)   (self->class)
+#define object_data(self)    (self->data)
 
 
 /////////
 // new //
 /////////
 
-void object_init( object_t * self, char * cls, void * data ) {
-  object_source(self)    = data;
+void object_init( object_t * self, char * cls, void * dt ) {
   object_class(self)     = cls;
+  object_data(self)      = dt;
 }
 
 // src: source pointer back to owner of object
 // cls: a string indicating the type of the object.
-object_t * object( char * cls, void * data ) {
-  object_t * r = alloc(object_t);
-  object_init(r,cls,data);
-  return r;
+object_t * object( char * cls, void * dt ) {
+  object_t * self = alloc(object_t);
+  object_init(self,cls,dt);
+  return self;
 }
 
 // obligatory free function.
@@ -86,11 +83,6 @@ void free_object( object_t * self ) {
 // functions //
 ///////////////
 
-// set the pointer of the object's owner
-void object_set_data( object_t * self, void * s ) {
-  object_source(self) = s;
-}
-
 // set the class of the object to a string constant.
 // you could theoretically use an allocated string,
 // but it is not recommended.
@@ -98,8 +90,20 @@ void object_set_class( object_t * self, char * cs ) {
   object_class(self) = cs;
 }
 
-void object_set( object_t * self, char * cls, void * data ) {
-  object_set_class(self,cls);
-  object_set_data(self,data);
+// set the ID of the object to a string constant.
+void object_set_data( object_t * self, void * dt ) {
+  object_data(self) = dt;
 }
 
+void object_set( object_t * self, char * cs, void * dt ) {
+  object_set_class(self,cs);
+  object_set_data(self,dt);
+}
+
+bool_t object_has_class( object_t * self, char * cs ) {
+  return streq(object_class(self),cs);
+}
+
+bool_t object_has_data( object_t * self ) {
+  return (object_data(self)!=null());
+}

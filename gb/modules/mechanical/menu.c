@@ -31,8 +31,8 @@ void init_menu( menu_t * self, int n ) {
   menu_cursor(self)     = 0;
   menu_maxlines(self)   = n;
   menu_selected(self)   = -1;
-  menu_labels(self)     = allocv(string_t,n);
-  menu_actions(self)    = allocv(integer_t,n);
+  menu_labels(self)     = allocv(string_t*,n);
+  menu_actions(self)    = allocv(integer_t*,n);
 
   loop(i,menu_maxlines(self)) {
     menu_labels(self)[i]  = string(menu_max_label_length());

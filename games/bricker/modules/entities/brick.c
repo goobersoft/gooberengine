@@ -3,38 +3,37 @@
 
 type() {
 
-  tag_t     * tag;
+  
   entity_t  * entity;
   sprite_t  * sprite;
+  char      * id;
 
-} brick_t;
+} entity_brick_t;
 
-#define brick_tag(self)     (self->tag)
-#define brick_id(self)      tag_id(self->tag)
-#define brick_entity(self)  (self->entity)
-#define brick_sprite(self)  (self->sprite)
+#define entity_brick_entity(self)  (self->entity)
+#define entity_brick_sprite(self)  (self->sprite)
+#define entity_brick_id(self)      (self->id)
 
 /////////
 // new //
 /////////
 
-void init_brick( brick_t * self ) {
-  brick_tag(self)     = tag(self,"brick");
-  brick_entity(self)  = entity(self);
-  entity_set_size( brick_entity(self), 20, 10 );
-  brick_sprite(self)  = sprite( gb_get_colormap("bricker-0"), 30,0,20,10 );
+void init_entity_brick( entity_brick_t * self ) {
+  entity_brick_entity(self)  = entity("brick",self);
+  
+  entity_set_size( entity_brick_entity(self), 20, 10 );
+  entity_brick_sprite(self)  = sprite( gb_get_colormap("bricker-0"), 30,0,20,10 );
 }
 
-brick_t * brick() {
-  brick_t * self      = alloc(brick_t);
-  init_brick(self);
+entity_brick_t * entity_brick() {
+  entity_brick_t * self      = alloc(entity_brick_t);
+  init_entity_brick(self);
   return self;
 }
 
-void free_brick( brick_t * self ) {
-  free_tag    ( brick_tag(self) );
-  free_entity ( brick_entity(self) );
-  free_sprite ( brick_sprite(self) );
+void free_entity_brick( entity_brick_t * self ) {
+  free_entity ( entity_brick_entity(self) );
+  free_sprite ( entity_brick_sprite(self) );
   free(self);
 }
 
@@ -42,21 +41,21 @@ void free_brick( brick_t * self ) {
 // functions //
 ///////////////
 
-void brick_set_id( brick_t * self, char * id ) {
+void entity_brick_set_id( entity_brick_t * self, char * id ) {
   
   if streq(id,"") {
-    sprite_set_pos(brick_sprite(self),0,0);
-    sprite_set_size(brick_sprite(self),10,10);
-    entity_set_solid(brick_entity(self),false());
+    sprite_set_pos(entity_brick_sprite(self),0,0);
+    sprite_set_size(entity_brick_sprite(self),10,10);
+    entity_set_solid(entity_brick_entity(self),false());
   }
   else {
-    if streq(id,"1")   sprite_set_pos(brick_sprite(self),30,0);
-    if streq(id,"2")   sprite_set_pos(brick_sprite(self),30,10);
-    if streq(id,"3")   sprite_set_pos(brick_sprite(self),30,20);
-    if streq(id,"4")   sprite_set_pos(brick_sprite(self),50,0);
-    if streq(id,"5")   sprite_set_pos(brick_sprite(self),30,10);
-    if streq(id,"6")   sprite_set_pos(brick_sprite(self),30,20);
-    entity_set_solid(brick_entity(self),true());
+    if streq(id,"1")   sprite_set_pos(entity_brick_sprite(self),30,0);
+    if streq(id,"2")   sprite_set_pos(entity_brick_sprite(self),30,10);
+    if streq(id,"3")   sprite_set_pos(entity_brick_sprite(self),30,20);
+    if streq(id,"4")   sprite_set_pos(entity_brick_sprite(self),50,0);
+    if streq(id,"5")   sprite_set_pos(entity_brick_sprite(self),30,10);
+    if streq(id,"6")   sprite_set_pos(entity_brick_sprite(self),30,20);
+    entity_set_solid(entity_brick_entity(self),true());
   }
 }
 
@@ -64,13 +63,13 @@ void brick_set_id( brick_t * self, char * id ) {
 // events //
 ////////////
 
-void brick_update( brick_t * self ) {
+void entity_brick_update( entity_brick_t * self ) {
 
 }
 
-void brick_draw( brick_t * self ) {
+void entity_brick_draw( entity_brick_t * self ) {
   graph_set_intensity_max( gb_graph() );
-  graph_draw_sprite( gb_graph(), entity_pos_x(brick_entity(self)), 
-    entity_pos_y(brick_entity(self)), brick_sprite(self));
+  graph_draw_sprite( gb_graph(), entity_pos_x(entity_brick_entity(self)), 
+    entity_pos_y(entity_brick_entity(self)), entity_brick_sprite(self));
   graph_reset_intensity( gb_graph() );
 }
