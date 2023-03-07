@@ -37,7 +37,9 @@ type() {
 
 #define entity_menu_cursor_down(self)  menu_cursor_down(entity_menu_menu(self))
 #define entity_menu_cursor_up(self)    menu_cursor_up(entity_menu_menu(self))
-#define entity_menu_select(self)       menu_select(entity_menu_menu(self))
+#define entity_menu_select(self)       menu_select(entity_menu_menu(self),0)
+#define entity_menu_cursor_left(self)  menu_cursor_left(entity_menu_menu(self))
+#define entity_menu_cursor_right(self) menu_cursor_right(entity_menu_menu(self))
 
 
 /////////

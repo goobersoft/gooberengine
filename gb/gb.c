@@ -1,7 +1,7 @@
 
 #define gb_version_major() 2023
-#define gb_version_minor() 2
-#define gb_version_patch() 07
+#define gb_version_minor() 3
+#define gb_version_patch() 7
 
 //  submodules stack
 //  ----------------
@@ -50,15 +50,15 @@
 
 #include "modules/mechanical/menu.c"          // works for UIs
 
-#include "modules/graphical/color.c"          // 6-bit color with transparency bit
-#include "modules/graphical/board.c"          // drawing durfaces
-#include "modules/graphical/visual.c"         // window and renderer interface
-#include "modules/graphical/image.c"          // uses SDL2_image
-#include "modules/graphical/palette.c"        // storage of a list of 6-bit colors.
-#include "modules/graphical/colormap.c"       // a 2d array of colors
-#include "modules/graphical/font.c"           // bitmap fonts which utilize image colormaps
-#include "modules/graphical/sprite.c"         // instanced object with a reference to a colormap
-#include "modules/graphical/tilemap.c"        // instanceable grids of variable colormap sections
+#include "modules/graphics/color.c"          // 6-bit color with transparency bit
+#include "modules/graphics/board.c"          // drawing durfaces
+#include "modules/graphics/image.c"          // uses SDL2_image
+#include "modules/graphics/palette.c"        // storage of a list of 6-bit colors.
+#include "modules/graphics/colormap.c"       // a 2d array of colors
+#include "modules/graphics/font.c"           // bitmap fonts which utilize image colormaps
+#include "modules/graphics/sprite.c"         // instanced object with a reference to a colormap
+#include "modules/graphics/tilemap.c"        // instanceable grids of variable colormap sections
+#include "modules/graphics/actor.c"          // sprite + entity. Extendable.
 
 #include "modules/input/input.c"              // user input
 #include "modules/input/mouse.c"              // mouse interface
@@ -66,6 +66,7 @@
 
 #include "modules/audio/sound.c"              // sound interface
 
+#include "modules/components/visual.c"         // window and renderer interface
 #include "modules/components/audio.c"         // audio mixer
 #include "modules/components/network.c"       // networking (TCP/UDP)
 #include "modules/components/assets.c"        // asset container object (sound/image/font)

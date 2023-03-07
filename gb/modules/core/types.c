@@ -12,7 +12,7 @@
 
 // type
 type() {
-
+  
   int value;
 
 } integer_t;
@@ -146,12 +146,15 @@ char * boolean_to_string( boolean_t * self ) {
 type() {
   int whole;
   int part;
+  int part_max;
 } fixed_t;
 
-#define fixed_whole(self) (self->whole)
-#define fixed_part(self)  (self->part)
+#define fixed_whole(self)     (self->whole)
+#define fixed_part(self)      (self->part)
+#define fixed_part_max(self)  (self->part_max)
 
-void init_fixed( fixed_t * self, int w, int p ) {
+void init_fixed( fixed_t * self, int w, int p, int d ) {
+  fixed_part_max(self) = low(d,1);
   w = clamp(w,fixed_min_whole(),fixed_max_whole());
   if (w == fixed_max_whole()) {
     // if we reached the maximum, we cannot have a fractional amount
@@ -159,39 +162,43 @@ void init_fixed( fixed_t * self, int w, int p ) {
     p = 0;
   }
   else {
-    p = wrap(p,0,fixed_max_part());
+    p = wrap(p,0,fixed_part_max(self));
   }
 
   fixed_whole(self) = w;
   fixed_part(self)  = p;
 }
 
-fixed_t * fixed(int w, int p) {
+fixed_t * fixed(int w, int p, int d) {
   fixed_t * self = alloc(fixed_t);
-  init_fixed(self,w,p);
+  init_fixed(self,w,p,d);
   return self;
 }
 
 void fixed_set( fixed_t * self, int w, int p ) {
   fixed_whole(self)  = clamp(w,fixed_min_whole(),fixed_max_whole());
-  if (w == fixed_max_whole())  p = 0;
-  else                        p = wrap(p,0,fixed_max_part());
-  fixed_part(self)   = p;
+  if (w == fixed_part_max(self))  p = 0;
+  else                            p = wrap(p,0,fixed_part_max(self));
+  fixed_part(self)                = p;
 }
 
 void fixed_add( fixed_t * self, int w, int p ) {
   p = fixed_part(self) + p;
   while (p < 0) {
-    p += fixed_max_part();
+    p += fixed_part_max(self);
     w  = low(w-1,fixed_min_whole());
   }
-  while (p >= fixed_max_part()) {
-    p -= fixed_max_part();
+  while (p >= fixed_part_max(self)) {
+    p -= fixed_part_max(self);
     w  = high(w+1,fixed_max_whole());
   }
   fixed_whole(self) = clamp( fixed_whole(self)+w,
     fixed_min_whole(),fixed_max_whole() );
   fixed_part(self) = p;
+}
+
+void fixed_mul( fixed_t * self, int w, int p ) {
+
 }
 
 char _fixed_to_string[20];
@@ -205,7 +212,7 @@ char * fixed_to_string( fixed_t * self ) {
   int dc = 0;
   if ( (fixed_whole(self) < 0) and (fixed_part(self)>0)) {
     rw = fixed_whole(self) + 1;
-    rp = 1000 - fixed_part(self);
+    rp = fixed_part_max(self) - fixed_part(self);
     
     if (rw == 0) {
       _fixed_to_string[0] = '-';

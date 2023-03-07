@@ -749,6 +749,7 @@ void graph_draw_layer_sub( graph_t * self, int d, int sx, int sy, int sw, int sh
 }
 
 void graph_draw_mouse( graph_t * self, mouse_t * m ) {
+  /*
   if mouse_visible(m) {
     int u = graph_intensity(self);
     graph_set_intensity(self,1000);
@@ -763,6 +764,7 @@ void graph_draw_mouse( graph_t * self, mouse_t * m ) {
     
     graph_set_intensity(self,u);
   }
+  */
 }
 
 void graph_draw_tilemap( graph_t * self, int x, int y, tilemap_t * t ) {

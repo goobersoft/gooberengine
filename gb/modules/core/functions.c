@@ -130,7 +130,7 @@ char * rstr( int n, int l ) {
 char _bits[36];
 
 char * bits(uint_t n, int l) {
-  clear(_bits,0,36);
+  clear(_bits,36,0);
   loop(i,32) {
     _bits[31-i] = (n&1) ? '1' : '0';
     n = n>>1;
@@ -139,7 +139,7 @@ char * bits(uint_t n, int l) {
 }
 
 char * bits8(uint_t n) {
-  clear(_bits,0,36);
+  clear(_bits,36,0);
   loop(i,8) {
     _bits[7-i] = (n&1) ? '1' : '0';
     n = n>>1;
@@ -148,7 +148,7 @@ char * bits8(uint_t n) {
 }
 
 char * bits16(uint_t n) {
-  clear(_bits,0,36);
+  clear(_bits,36,0);
   loop(i,16) {
     _bits[15-i] = (n&1) ? '1' : '0';
     n = n>>1;
@@ -157,7 +157,7 @@ char * bits16(uint_t n) {
 }
 
 char * bits32(uint_t n) {
-  clear(_bits,0,36);
+  clear(_bits,36,0);
   loop(i,32) {
     _bits[31-i] = (n&1) ? '1' : '0';
     n = n>>1;

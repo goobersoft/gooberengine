@@ -108,7 +108,11 @@ entity_t * entity_check_result( entity_t * e ) {
   return r;
 }
 
-int entity_check_up( entity_t * self, int n, entity_t * other ) {
+void entity_clear_result() {
+  entity_check_result(null());
+}
+
+int _entity_check_up( entity_t * self, int n, entity_t * other ) {
   if (!entity_solid(self) || !entity_solid(other)) return -1;
 
   bool_t b1 = inrange(entity_pos_x(self), entity_pos_x(other), entity_pos_x(other) + entity_size_x(other));
@@ -131,21 +135,7 @@ int entity_check_up( entity_t * self, int n, entity_t * other ) {
   return -1;
 }
 
-int entity_check_up_list( entity_t * self, int n, list_t * l ) {
-  int u;
-  foreach(l,dt) {
-    u = entity_check_up( self, n, dt );
-    if (u >= 0) {
-      if (u < n) {
-        entity_check_result( dt );
-      }
-      n = min(n,u);
-    }
-  }
-  return n;
-}
-
-int entity_check_right( entity_t * self, int n, entity_t * other ) {
+int _entity_check_right( entity_t * self, int n, entity_t * other ) {
   if (!entity_solid(self) || !entity_solid(other)) return -1;
   bool_t b1 = inrange(entity_pos_y(self), entity_pos_y(other), entity_pos_y(other) + entity_size_y(other));
   bool_t b2 = inrange(entity_pos_y(self) + entity_size_y(self) - 1, entity_pos_y(other), entity_pos_y(other) + entity_size_y(other));
@@ -167,21 +157,7 @@ int entity_check_right( entity_t * self, int n, entity_t * other ) {
   return -1;
 }
 
-int entity_check_right_list( entity_t * self, int n, list_t * l ) {
-  int u;
-  foreach(l,dt) {
-    u = entity_check_right( self, n, dt );
-    if (u >= 0) {
-      if (u < n) {
-        entity_check_result( dt );
-      }
-      n = min(n,u);
-    }
-  }
-  return n;
-}
-
-int entity_check_down( entity_t * self, int n, entity_t * other ) {
+int _entity_check_down( entity_t * self, int n, entity_t * other ) {
   if (!entity_solid(self) || !entity_solid(other)) return -1;
   bool_t b1 = inrange(entity_pos_x(self), entity_pos_x(other), entity_pos_x(other) + entity_size_x(other));
   bool_t b2 = inrange(entity_pos_x(self) + entity_size_x(self) - 1, entity_pos_x(other), entity_pos_x(other) + entity_size_x(other));
@@ -203,21 +179,7 @@ int entity_check_down( entity_t * self, int n, entity_t * other ) {
   return -1;
 }
 
-int entity_check_down_list( entity_t * self, int n, list_t * l ) {
-  int u;
-  foreach(l,dt) {
-    u = entity_check_down( self, n, dt );
-    if (u >= 0) {
-      if (u < n) {
-        entity_check_result( dt );
-      }
-      n = min(n,u);
-    }
-  }
-  return n;
-}
-
-int entity_check_left( entity_t * self, int n, entity_t * other ) {
+int _entity_check_left( entity_t * self, int n, entity_t * other ) {
   if (!entity_solid(self) || !entity_solid(other)) return -1;
   bool_t b1 = inrange(entity_pos_y(self), entity_pos_y(other), entity_pos_y(other) + entity_size_y(other));
   bool_t b2 = inrange(entity_pos_y(self) + entity_size_y(self) - 1, entity_pos_y(other), entity_pos_y(other) + entity_size_y(other));
@@ -239,10 +201,100 @@ int entity_check_left( entity_t * self, int n, entity_t * other ) {
   return -1;
 }
 
+
+//////////////////////////
+
+
+int entity_check_up( entity_t * self, int n, entity_t * other ) {
+  int u = _entity_check_up( self, n, other);
+  if (u >= 0) {
+    if (u < n) {
+      entity_check_result( other );
+    }
+    n = min(n,u);
+  }
+  return n;
+}
+
+int entity_check_up_list( entity_t * self, int n, list_t * l ) {
+  int u;
+  foreach(l,dt) {
+    u = _entity_check_up( self, n, dt );
+    if (u >= 0) {
+      if (u < n) {
+        entity_check_result( dt );
+      }
+      n = min(n,u);
+    }
+  }
+  return n;
+}
+
+int entity_check_right( entity_t * self, int n, entity_t * other ) {
+  int u = _entity_check_right( self, n, other );
+  if (u >= 0) {
+    if (u < n) {
+      entity_check_result( other );
+    }
+    n = min(n,u);
+  }
+  return n;
+}
+
+int entity_check_right_list( entity_t * self, int n, list_t * l ) {
+  int u;
+  foreach(l,dt) {
+    u = _entity_check_right( self, n, dt );
+    if (u >= 0) {
+      if (u < n) {
+        entity_check_result( dt );
+      }
+      n = min(n,u);
+    }
+  }
+  return n;
+}
+
+int entity_check_down( entity_t * self, int n, entity_t * other ) {
+  int u = _entity_check_down( self, n, other );
+  if (u >= 0) {
+    if (u < n) {
+      entity_check_result( other );
+    }
+    n = min(n,u);
+  }
+  return n;
+}
+
+int entity_check_down_list( entity_t * self, int n, list_t * l ) {
+  int u;
+  foreach(l,dt) {
+    u = _entity_check_down( self, n, dt );
+    if (u >= 0) {
+      if (u < n) {
+        entity_check_result( dt );
+      }
+      n = min(n,u);
+    }
+  }
+  return n;
+}
+
+int entity_check_left( entity_t * self, int n, entity_t * other ) {
+  int u = _entity_check_up( self, n, other);
+  if (u >= 0) {
+    if (u < n) {
+      entity_check_result( other );
+    }
+    n = min(n,u);
+  }
+  return n;
+}
+
 int entity_check_left_list( entity_t * self, int n, list_t * l ) {
   int u;
   foreach(l,dt) {
-    u = entity_check_left( self, n, dt );
+    u = _entity_check_left( self, n, dt );
     if (u >= 0) {
       if (u < n) {
         entity_check_result( dt );

@@ -30,16 +30,8 @@ type() {
   point_t click_pos;
   int     click_time;
 
-  // mouse icon
-  colormap_t * colormap;
-  point_t colormap_pos;
-  point_t colormap_size;
-
   // buttons
   int buttons[mouse_max_buttons()];
-
-  // visual
-  visual_t * visual;
 
 } mouse_t;
 
@@ -51,21 +43,16 @@ type() {
 #define mouse_click_pos(self)     (&self->click_pos)
 #define mouse_click_time(self)    (self->click_time)
 
-#define mouse_colormap(self)      (self->colormap)
-#define mouse_colormap_pos(self)  (&self->colormap_pos)
-#define mouse_colormap_size(self) (&self->colormap_size)
-
 #define mouse_x(self)             (self->pos.x)
 #define mouse_y(self)             (self->pos.y)
 
 #define mouse_buttons(self)       (self->buttons)
-#define mouse_visual(self)        (self->visual)
 
 /////////
 // new //
 /////////
 
-void mouse_init( mouse_t * self, visual_t * v, colormap_t * c ) {
+void mouse_init( mouse_t * self ) {
   mouse_visible(self) = false();
   SDL_ShowCursor(SDL_ENABLE);
 
@@ -76,21 +63,15 @@ void mouse_init( mouse_t * self, visual_t * v, colormap_t * c ) {
   point_set(mouse_click_pos(self), 0,0);
   mouse_click_time(self) = mouse_click_time_max();
 
-  mouse_visual(self) = v;
-  
-  mouse_colormap(self) = c;
-  point_set(mouse_colormap_pos(self),  0,0);
-  point_set(mouse_colormap_size(self), 10,10);
-
   loop(i,mouse_max_buttons()) {
     mouse_buttons(self)[i] = mouse_button_released();
   }
 }
 
-mouse_t * mouse( visual_t * v, colormap_t * c ) {
-  mouse_t * r = alloc(mouse_t);
-  mouse_init( r, v, c );
-  return r;
+mouse_t * mouse( ) {
+  mouse_t * self = alloc(mouse_t);
+  mouse_init( self );
+  return self;
 }
 
 ///////////////
@@ -105,15 +86,6 @@ void mouse_set_visible( mouse_t * self, bool_t b ) {
   else {
     SDL_ShowCursor(SDL_ENABLE);
   }
-}
-
-void mouse_set_colormap( mouse_t * self, colormap_t * c ) {
-  mouse_colormap(self) = c;
-}
-
-void mouse_set_colormap_rect( mouse_t * self, int x, int y, int w, int h ) {
-  point_set(mouse_colormap_pos(self),x,y);
-  point_set(mouse_colormap_size(self),w,h);
 }
 
 void mouse_click( mouse_t * self, int x, int y, int b ) {

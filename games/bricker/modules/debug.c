@@ -19,7 +19,6 @@ bricker_debug_t bricker_debug;
 ////////////
 
 void bricker_debug_init() {
-  
 }
 
 void bricker_debug_load() {

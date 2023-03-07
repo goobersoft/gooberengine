@@ -7,10 +7,15 @@ type() {
   // playfield
   local( playfield_t * playfield );
 
+  int mtimer;
+  int mdir;
+
 } scene_attract_t;
 
 #define scene_attract_scene(self)       (self->scene)
 #define scene_attract_playfield(self)   (self->playfield)
+#define scene_attract_mtimer(self)      (self->mtimer)
+#define scene_attract_mdir(self)        (self->mdir)
 
 /////////
 // new //
@@ -20,6 +25,8 @@ void init_scene_attract( scene_attract_t * self ) {
   // set scene object id to "attract"
   scene_attract_scene(self)      = scene("attract",self);
   scene_attract_playfield(self)  = playfield();
+  scene_attract_mtimer(self)     = 0;
+  scene_attract_mdir(self)       = 0;
 }
 
 scene_attract_t * scene_attract() {
@@ -43,40 +50,56 @@ void free_scene_attract( scene_attract_t * self ) {
 
 
 void scene_attract_start( scene_attract_t * self ) {
+  
   playfield_t * pf = scene_attract_playfield(self);
   
 
   int uu;
   foreach( playfield_bricks(pf), dt) {
-    entity_t * e = dt;
-    entity_brick_t * eb = entity_get_spec(e);
+    entity_t      * e  = dt;
+    actor_t       * ea = entity_get_spec(e);
+    actor_brick_t * eb = actor_get_spec(ea);
 
     uu = rnd(1,6);
-    if (uu==1)      entity_brick_set_id(eb,"1");
-    else if (uu==2) entity_brick_set_id(eb,"2");
-    else if (uu==3) entity_brick_set_id(eb,"3");
-    else if (uu==4) entity_brick_set_id(eb,"4");
-    else if (uu==5) entity_brick_set_id(eb,"5");
-    else if (uu==6) entity_brick_set_id(eb,"6");
+    if (uu==1)      actor_brick_set_id(eb,"1");
+    else if (uu==2) actor_brick_set_id(eb,"2");
+    else if (uu==3) actor_brick_set_id(eb,"3");
+    else if (uu==4) actor_brick_set_id(eb,"4");
+    else if (uu==5) actor_brick_set_id(eb,"5");
+    else if (uu==6) actor_brick_set_id(eb,"6");
   }
   
-  entity_pball_t * a;
-  a = entity_pball();
-  point_set( entity_pball_velo(a), 2,1 );
-  list_add_last( playfield_balls(pf), entity_pball_entity(a) );
-  a = entity_pball();
-  point_set( entity_pball_velo(a), -1,2 );
-  list_add_last( playfield_balls(pf), entity_pball_entity(a) );
-  a = entity_pball();
-  point_set( entity_pball_velo(a), 1,3 );
-  list_add_last( playfield_balls(pf), entity_pball_entity(a) );
+  actor_pball_t * a;
+  a = actor_pball();
+  point_set( actor_pball_velo(a), 2,1 );
+  list_add_last( playfield_balls(pf), actor_pball_entity(a) );
+  a = actor_pball();
+  point_set( actor_pball_velo(a), -1,2 );
+  list_add_last( playfield_balls(pf), actor_pball_entity(a) );
+  a = actor_pball();
+  point_set( actor_pball_velo(a), 1,3 );
+  list_add_last( playfield_balls(pf), actor_pball_entity(a) );
 
+  
 }
 
 void scene_attract_update( scene_attract_t * self ) {
   // update base scene object
   scene_update( scene_attract_scene(self) );
   playfield_update( scene_attract_playfield(self) );
+
+  scene_attract_mtimer(self) += 1;
+  if (scene_attract_mtimer(self) == 30) {
+    scene_attract_mtimer(self) = 0;
+    scene_attract_mdir(self) = rnd(-1,2);
+  }
+
+  if (scene_attract_mdir(self) == -1) {
+    paddle_move_left(playfield_paddle(scene_attract_playfield(self)));
+  }
+  else if (scene_attract_mdir(self) == 1) {
+    paddle_move_right(playfield_paddle(scene_attract_playfield(self)));
+  }
 
   if (gb_button(controller_button_select()) == 2) {
     scene_finished( scene_attract_scene(self) ) = true();

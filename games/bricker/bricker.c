@@ -1,8 +1,9 @@
 
 // entities
-#include "modules/entities/pball.c"
-#include "modules/entities/paddle.c"
-#include "modules/entities/brick.c"
+
+#include "modules/actors/paddle.c"
+#include "modules/actors/brick.c"
+#include "modules/actors/pball.c"
 
 #include "modules/core/gameinfo.c"
 

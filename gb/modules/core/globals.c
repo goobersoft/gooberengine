@@ -38,12 +38,13 @@
 #define ftoi(f) ((int)f*1000)
 
 // typedefs
-typedef size_t         index_t;
-typedef unsigned char  bool_t;
-typedef unsigned char  byte_t;
-typedef unsigned short uword_t;
-typedef unsigned int   uint_t;
-typedef unsigned long  ulong_t;
+typedef size_t         index_t;     // an integer 0 to 4 billion
+typedef unsigned char  bool_t;      // meant to be true or false
+typedef unsigned char  byte_t;      // integer 0-255
+typedef unsigned short ushort_t;    // integer 0-65535 
+typedef unsigned int   uint_t;      // integer 0-4.2bil
+typedef unsigned long  ulong_t;     // integer 0-1.844674407e19
+typedef char *         cstr_t;      // a atring literal
 
 #define int2ptr(x)    ((void*)(size_t)(x))
 #define ptr2int(x)    ((int)(size_t)(x))
@@ -153,7 +154,7 @@ typedef unsigned long  ulong_t;
     a[ps+i]=b[i];           \
   }
 
-#define clear(a,v,l)        \
+#define clear(a,l,v)        \
   for(int i=0;i<l;i++) {    \
     a[i]=v;                 \
   }

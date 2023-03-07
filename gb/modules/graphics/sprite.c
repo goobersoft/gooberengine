@@ -90,3 +90,8 @@ void sprite_set_rect_size( sprite_t * self, int w, int h ) {
 void sprite_set_offset( sprite_t * self, int x, int y ) {
   point_set( sprite_offset(self), x, y );
 }
+
+void sprite_set( sprite_t * self, colormap_t * c, int x, int y, int w, int h ) {
+  sprite_set_rect(self,x,y,w,h);
+  sprite_set_colormap(self,c);
+}

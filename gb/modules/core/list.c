@@ -193,6 +193,12 @@ void * list_get_last( list_t * self ) {
   return listnode_data(list_last(self));
 }
 
+void list_clear( list_t * self ) {
+  while (list_count(self) > 0) {
+    list_remove_last(self);
+  }
+}
+
 /////////////
 // foreach //
 /////////////

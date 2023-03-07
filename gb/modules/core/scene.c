@@ -10,6 +10,8 @@ type() {
   // a constant integer which determines the next scene id
   char * next;
   //
+  list_t * events;
+  //
   local( object_t * spec );
   //
 
@@ -19,11 +21,15 @@ type() {
 #define scene_ticks(self)         (self->ticks)
 #define scene_finished(self)      (self->finished)
 #define scene_next(self)          (self->next)
+#define scene_events(self)        (self->events)
 #define scene_spec(self)          (self->spec)
 
 #define scene_set_spec(self,a,b)  object_set(scene_spec(self),a,b)
 #define scene_class(self)         object_class(scene_spec(self))
 #define scene_get_spec(self)      object_data(scene_spec(self))
+
+#define scene_add_event(self,b)   list_add_last(scene_events(self),b)
+#define scene_clear_events(self)  list_clear(scene_events(self))
 
 /////////
 // new //
@@ -33,7 +39,7 @@ void scene_init( scene_t * self, char * cls, void * dt) {
   scene_spec(self)           = object(cls,dt);
   scene_finished(self)       = false();
   scene_next(self)           = "";
-  
+  scene_events(self)         = list(); 
 }
 
 scene_t * scene(char * cls, void * dt) {
