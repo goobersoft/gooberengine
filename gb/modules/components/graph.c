@@ -32,7 +32,7 @@
 #define graph_layer_base()          0
 #define graph_layer_top()           9
 #define graph_max_layers()         10
-#define graph_max_frame_dots() 100000
+#define graph_max_framedots() 100000
 
 #define graph_max_intensity()    1000
 
@@ -46,7 +46,8 @@ type() {
   foreign( visual_t * visual );
   
   // the number of dots which were processed in the frame.
-  uint_t        frame_dots;
+  uint_t        framedots;
+  uint_t        framedots_max;
 
   // the draw color
   color_t       color;
@@ -82,14 +83,14 @@ type() {
   // default palette
   foreign( palette_t * palette_default );
   // transparency level
-  byte_t        trans;
+  byte_t trans;
 
   // color data (colormap)
   foreign( colormap_t * data );
   // depth data
   local( int * data_depth );
   // current layer
-  int           layer;
+  int layer;
   // extra colormaps
   local( colormap_t ** layers );
 
@@ -99,13 +100,14 @@ type() {
 
 } graph_t;
 
-#define graph_visual(self)        (self->visual)
-#define graph_renderer(self)      (self->renderer)
+#define graph_visual(self)          (self->visual)
+#define graph_renderer(self)        (self->renderer)
 
 #define graph_flip_x(self)          (self->flip_x)
 #define graph_flip_y(self)          (self->flip_y)
 
-#define graph_frame_dots(self)      (self->frame_dots)
+#define graph_framedots(self)       (self->framedots)
+#define graph_framedots_max(self)   (self->framedots_max)
 
 #define graph_color(self)           (self->color)
 #define graph_color_cls(self)       (self->color_cls)
@@ -154,6 +156,9 @@ void init_graph( graph_t * self, visual_t * v ) {
   graph_depth(self)           = 0;
   graph_depth_cls(self)       = graph_max_depth();
   graph_depth_enabled(self)   = false();
+
+  graph_framedots(self)       = 0;
+  graph_framedots_max(self)   = graph_max_framedots();
 
   graph_intensity(self)       = 200;
   graph_intensity_old(self)   = 200;
@@ -211,6 +216,10 @@ int _graph_calc_palette_index( color_t c ) {
     return (c.b*16) + (c.g*4) + c.r;
   }
   return palette_index_trans();
+}
+
+void graph_set_max_framedots( graph_t * self, int m ) {
+  graph_framedots_max(self) = clamp(m,100000,1000000000);
 }
 
 void graph_set_flip( graph_t * self, bool_t x, bool_t y ) {
@@ -359,11 +368,11 @@ int graph_get_pixel_depth( graph_t * self, int x, int y ) {
 // is applied instead.
 void graph_draw_dot( graph_t * self, int x, int y ) {
 
-  if ( graph_frame_dots(self) < graph_max_frame_dots() ) {
+  if ( graph_framedots(self) < graph_framedots_max(self) ) {
     if inrect(x,y,graph_clip_x(self),graph_clip_y(self),graph_clip_w(self),graph_clip_h(self)) {
       // depth mode is not affected by spray intensity
       if eq(graph_mode(self), graph_mode_depth()) {
-        graph_frame_dots(self) += 1;
+        graph_framedots(self) += 1;
         graph_plot_depth(self,x,y,graph_depth(self));
       }
       else if prob(graph_intensity(self)) {
@@ -371,37 +380,37 @@ void graph_draw_dot( graph_t * self, int x, int y ) {
         if graph_depth_enabled(self) {
           fb = fb && (graph_depth(self) <= graph_get_pixel_depth(self,x,y));
           if (fb == true()) {
-            graph_frame_dots(self) += 1;
+            graph_framedots(self) += 1;
             graph_plot_depth(self,x,y,graph_depth(self));
           }
         }
         if (fb == true()) {
           if ( graph_mode(self) == graph_mode_normal() ) {
-            graph_frame_dots(self) += 1;
+            graph_framedots(self) += 1;
             colormap_plot( graph_data(self), x, y, graph_color(self) );
           }
           else if ( graph_mode(self) == graph_mode_replace() ) {
-            graph_frame_dots(self) += 1;
+            graph_framedots(self) += 1;
             colormap_plot_replace( graph_data(self), x, y, graph_color(self) );
           }
           else if ( graph_mode(self) == graph_mode_add() ) {
-            graph_frame_dots(self) += 1;
+            graph_framedots(self) += 1;
             colormap_plot_add( graph_data(self), x, y, graph_color(self) );
           }
           else if ( graph_mode(self) == graph_mode_sub() ) {
-            graph_frame_dots(self) += 1;
+            graph_framedots(self) += 1;
             colormap_plot_sub( graph_data(self), x, y, graph_color(self) );
           }
           else if ( graph_mode(self) == graph_mode_high() ) {
-            graph_frame_dots(self) += 1;
+            graph_framedots(self) += 1;
             colormap_plot_high( graph_data(self), x, y, graph_color(self) );
           }
           else if ( graph_mode(self) == graph_mode_low() ) {
-            graph_frame_dots(self) += 1;
+            graph_framedots(self) += 1;
             colormap_plot_low( graph_data(self), x, y, graph_color(self) );
           }
           else if ( graph_mode(self) == graph_mode_avg() ) {
-            graph_frame_dots(self) += 1;
+            graph_framedots(self) += 1;
             colormap_plot_avg( graph_data(self), x, y, graph_color(self) );
           }
         }
@@ -849,5 +858,5 @@ void graph_present( graph_t * self ) {
   } while (ci<graph_area());
   
   board_unlock( bb );
-  graph_frame_dots(self) = 0;
+  graph_framedots(self) = 0;
 }

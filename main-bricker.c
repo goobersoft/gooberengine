@@ -61,12 +61,16 @@ void start() {
 
 void update() {
   gb_update();
-  bricker_update();
+  if (visual_fpstick(gb_visual())==0) {
+    bricker_update();
+  }
 }
 
 void draw() {
   gb_draw_pre();
-  bricker_draw();
+  if (visual_fpstick(gb_visual())==0) {
+    bricker_draw();
+  }
   gb_draw_post();
 }
 

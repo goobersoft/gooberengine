@@ -31,6 +31,11 @@ void debug_load() {
 
 void debug_start() {
   debug.colormap = gb_get_colormap("bricker-0");
+  
+  rng_t * rr = rng();
+  loop(i,100) {
+    log("%lu",rng_get(rr));
+  }
 }
 
 void debug_update_pre() {

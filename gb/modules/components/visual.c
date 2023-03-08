@@ -23,6 +23,8 @@ typedef struct {
   point_t         window_size;
   int             window_scale;
   bool_t          fullscreen;
+  bool_t          fpsmode;
+  int             fpstick;
 
 } visual_t;
 
@@ -32,6 +34,8 @@ typedef struct {
 #define visual_window_size(self)     (&self->window_size)
 #define visual_window_scale(self)    (self->window_scale)
 #define visual_fullscreen(self)      (self->fullscreen)
+#define visual_fpsmode(self)         (self->fpsmode)
+#define visual_fpstick(self)         (self->fpstick)
 
 /////////
 // new //
@@ -47,7 +51,8 @@ void visual_init( visual_t * self ) {
   visual_screen(self) = board(visual_renderer(self));
   point_set( visual_window_size(self), visual_window_width_d(), visual_window_height_d() );
   visual_window_scale(self) = visual_window_scale_d();
-  visual_fullscreen(self) = false();
+  visual_fullscreen(self)   = false();
+  visual_fpsmode(self)      = 0;
 }
 
 visual_t * visual() {
@@ -83,13 +88,20 @@ void visual_draw_scanlines( visual_t * self ) {
   }
 }
 
+// should the game run at 60 or 30 fps?
+void visual_set_fpsmode( visual_t * self, bool_t b ) {
+  visual_fpsmode(self) = bool(b);
+  visual_fpstick(self) = 0;
+}
+
 ////////////
 // events //
 ////////////
 
 void visual_update( visual_t * self ) {
-  // pushing F4 will switch between fullscreen and windowed mode
-  // pushing F2 and F3 will change the window scale multiplier
+  if (visual_fpsmode(self)) {
+    visual_fpstick(self) = !visual_fpstick(self);
+  }
 }
 
 void visual_draw_pre( visual_t * self ) {

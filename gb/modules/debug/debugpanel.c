@@ -67,7 +67,7 @@ void debugpanel_draw( debugpanel_t * self ) {
     // copy the dots string
     string_copy_at(debugpanel_string(self),20,"DOTS:");
 
-    int u1 = graph_frame_dots(gb_graph())/1000;
+    int u1 = graph_framedots(gb_graph())/1000;
     int uu = digits(u1);
 
     string_copy_number_at(debugpanel_string(self),25,u1);

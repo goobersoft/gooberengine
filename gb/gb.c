@@ -27,6 +27,7 @@
 
 #include "modules/core/object.c"              // descriptive tag
 #include "modules/core/types.c"               // complex numerical types
+#include "modules/core/rng.c"
 #include "modules/core/bitfield.c"            // bitfield
 #include "modules/core/bintree.c"             // binary tree
 /*
@@ -311,6 +312,7 @@ void gb_update() {
   //-- Timing --//
 
   timing_update_pre(gb_timing());
+  visual_update(gb_visual());
 
   //-- SDL Events --//
 

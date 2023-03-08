@@ -9,6 +9,7 @@ type() {
 
   int mtimer;
   int mdir;
+  int mbend;
 
 } scene_attract_t;
 
@@ -16,6 +17,7 @@ type() {
 #define scene_attract_playfield(self)   (self->playfield)
 #define scene_attract_mtimer(self)      (self->mtimer)
 #define scene_attract_mdir(self)        (self->mdir)
+#define scene_attract_mbend(self)       (self->mbend)
 
 /////////
 // new //
@@ -27,6 +29,7 @@ void init_scene_attract( scene_attract_t * self ) {
   scene_attract_playfield(self)  = playfield();
   scene_attract_mtimer(self)     = 0;
   scene_attract_mdir(self)       = 0;
+  scene_attract_mbend(self)      = 0;
 }
 
 scene_attract_t * scene_attract() {
@@ -91,14 +94,22 @@ void scene_attract_update( scene_attract_t * self ) {
   scene_attract_mtimer(self) += 1;
   if (scene_attract_mtimer(self) == 30) {
     scene_attract_mtimer(self) = 0;
-    scene_attract_mdir(self) = rnd(-1,2);
+    scene_attract_mdir(self)   = rnd(-1,2);
+    scene_attract_mbend(self)  = rnd(-1,2);
   }
 
   if (scene_attract_mdir(self) == -1) {
-    paddle_move_left(playfield_paddle(scene_attract_playfield(self)));
+    actor_paddle_move_left(playfield_paddle(scene_attract_playfield(self)));
   }
   else if (scene_attract_mdir(self) == 1) {
-    paddle_move_right(playfield_paddle(scene_attract_playfield(self)));
+    actor_paddle_move_right(playfield_paddle(scene_attract_playfield(self)));
+  }
+
+  if (scene_attract_mbend(self) == -1) {
+    actor_paddle_bend_down(playfield_paddle(scene_attract_playfield(self)));
+  }
+  else if (scene_attract_mbend(self) == 1) {
+    actor_paddle_bend_up(playfield_paddle(scene_attract_playfield(self)));
   }
 
   if (gb_button(controller_button_select()) == 2) {
