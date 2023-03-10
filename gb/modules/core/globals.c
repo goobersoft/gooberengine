@@ -46,6 +46,8 @@ typedef unsigned int   uint_t;      // integer 0-4.2bil
 typedef unsigned long  ulong_t;     // integer 0-1.844674407e19
 typedef char *         cstr_t;      // a atring literal
 
+typedef struct timeval timeval_t;
+
 #define int2ptr(x)    ((void*)(size_t)(x))
 #define ptr2int(x)    ((int)(size_t)(x))
 
@@ -167,3 +169,5 @@ typedef char *         cstr_t;      // a atring literal
 #define iszero(a)  (a==0)
 #define istrue(a)  (a==true())
 #define isfalse(a) (a==false())
+
+#define new(a) a##_t*a(){a##_t*self=alloc(a##_t);init_##a(self);return self;}

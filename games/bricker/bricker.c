@@ -28,12 +28,15 @@ type() {
   local( scene_t * scene );
   // gameinfo
   local( gameinfo_t * gameinfo );
+  //
+  local( colormap_t * colormap );
 
 } bricker_t;
 
 #define bricker_ui(self)          (self->ui)
 #define bricker_scene(self)       (self->scene)
 #define bricker_gameinfo(self)    (self->gameinfo)
+#define bricker_colormap(self)    (self->colormap)
 
 /////////////
 // globals //
@@ -49,6 +52,7 @@ void init_bricker( bricker_t * self ) {
   bricker_ui(self)        = brickerui();
   bricker_scene(self)     = scene("none",null());
   bricker_gameinfo(self)  = gameinfo();
+  bricker_colormap(self)  = null();
 }
 
 bricker_t * bricker() {
@@ -62,27 +66,14 @@ bricker_t * bricker() {
 ///////////////
 
 void bricker_clear_scene( bricker_t * self ) {
-  char * ss = scene_class(bricker_scene(self));
+  scene_t * s = bricker_scene(self);
+  log("%p",s);
+  scene_quit(s);
+  log("%p",s);
+  
 
-  if streq(ss,"attract") {
-    scene_attract_t * u = scene_get_spec(bricker_scene(self));
-    scene_attract_quit(u);
-    free_scene_attract(u);
-  }
-  else if streq(ss,"menu") {
-    scene_menu_t * u = scene_get_spec(bricker_scene(self));
-    scene_menu_quit(u);
-    free_scene_menu(u);
-  }
-  else if streq(ss,"game") {
-    scene_game_t * u = scene_get_spec(bricker_scene(self));
-    scene_game_quit(u);
-    free_scene_game(u);
-  }
-  else {
-    // empty scene
-    free_scene(bricker_scene(self));
-  }
+  free_scene(bricker_scene(self));
+  bricker_scene(self) = null();
 }
 
 void bricker_set_scene( bricker_t * self, char * id ) {
@@ -96,24 +87,23 @@ void bricker_set_scene( bricker_t * self, char * id ) {
   }
   else if (streq(id,"attract")) {
     scene_attract_t * u = scene_attract();
-    scene_attract_start(u);
     // set the scene to the new attract scene
     bricker_scene(_bricker) = scene_attract_scene(u);
   }
   else if (streq(id,"menu"))  {
     scene_menu_t * u = scene_menu(_bricker);
-    scene_menu_start(u);
     bricker_scene(_bricker) = scene_menu_scene(u);
   }
   else if (streq(id,"game")) {
     scene_game_t * u = scene_game(_bricker);
-    scene_game_start(u);
     // set the scene to the new attract scene
     bricker_scene(_bricker) = scene_game_scene(u);
   }
 
   // set the gb scene ref so debugpanel can see it
-  gb_scene() = bricker_scene(_bricker);
+  scene_t * s = bricker_scene(_bricker);
+  gb_scene() = s;
+  scene_start(s);
 }
 
 ////////////
@@ -140,12 +130,14 @@ void bricker_load() {
   gb_set_image("bricker-0",u);
   u = colormap_from_image(gb_get_image("bricker-0"));
   gb_set_colormap("bricker-0",u);
+  
 
   // background
   u = image("games/bricker/media/images/bricker-bg2.png");
   gb_set_image("bricker-bg",u);
   u = colormap_from_image(gb_get_image("bricker-bg"));
   gb_set_colormap("bricker-bg",u);
+  bricker_colormap(_bricker) = u;
 
   // font (normal)
   font_t * f = font(null());
@@ -176,8 +168,6 @@ void bricker_load() {
   gb_set_sound("ok-1",sound("games/bricker/media/sounds/ok1.wav"));
   gb_set_sound("respawn-1",sound("games/bricker/media/sounds/respawn1.wav"));
 
-  
-
   // debugging
   bricker_debug_load(_bricker);
 }
@@ -192,6 +182,7 @@ void bricker_start() {
 
   bricker_set_scene(_bricker, "attract" );
   // start the debug event
+
   bricker_debug_start(_bricker);
 }
 
@@ -204,31 +195,19 @@ void bricker_update() {
 
   // is there a scene?
   if (bricker_scene(_bricker)) {
-    char * ss = scene_class( bricker_scene(_bricker) );
-    // attract
-    if (streq(ss,"attract")) {
-      scene_attract_t * s;
-      s = scene_get_spec( bricker_scene(_bricker) );
-      scene_attract_update(s);
+    scene_t * ss = bricker_scene(_bricker);
+    scene_update(ss);
+
+    char * cls = scene_class( bricker_scene(_bricker) );
+
+    if (streq(cls,"attract")) {
       // if user presses space, change to game
-      if (scene_finished(scene_attract_scene(s))) {
+      if (scene_finished(ss)) {
         // disable the press start ui element
         brickerui_pressstart_active(bricker_ui(_bricker)) = false();
         // switch to game scene
         bricker_set_scene( _bricker, "menu" );
       }
-
-    }
-    else if streq(ss,"menu") {
-      scene_menu_t * s;
-      s = scene_get_spec( bricker_scene(_bricker) );
-      scene_menu_update(s);
-    }
-    // game
-    else if streq(ss,"game") {
-      scene_game_t * s;
-      s = scene_get_spec( bricker_scene(_bricker) );
-      scene_game_update(s);
     }
   }
 
@@ -242,31 +221,15 @@ void bricker_update() {
 void bricker_draw() {
 
   graph_set_intensity(gb_graph(),50);
-  graph_draw_colormap(gb_graph(),0,0,gb_get_colormap("bricker-bg"));
+  
+  graph_draw_colormap(gb_graph(),0,0,bricker_colormap(_bricker));
   graph_reset_intensity(gb_graph());
 
   bricker_debug_draw_pre(_bricker);
 
   // is there a scene?
   if (bricker_scene(_bricker)) {
-    char * ss = scene_class( bricker_scene(_bricker) );
-    // attract
-    if (streq(ss,"attract")) {
-      scene_attract_t * s;
-      s = scene_get_spec( bricker_scene(_bricker) );
-      scene_attract_draw(s);
-    }
-    else if streq(ss,"menu") {
-      scene_menu_t * s;
-      s = scene_get_spec( bricker_scene(_bricker) );
-      scene_menu_draw(s);
-    }
-    // game
-    else if streq(ss,"game") {
-      scene_game_t * s;
-      s = scene_get_spec( bricker_scene(_bricker) );
-      scene_game_draw(s);
-    }
+    scene_draw(bricker_scene(_bricker));
   }
 
   // draw the ui

@@ -28,6 +28,51 @@ type() {
 #define scene_menu_snd_menu1(self)     (self->snd_menu1)
 #define scene_menu_snd_menu2(self)     (self->snd_menu2)
 
+///////////////
+// callbacks //
+///////////////
+
+void scene_menu_start( void * _ ) {
+  scene_t * _self     = _;
+  scene_menu_t * self = scene_get_spec(_self);
+}
+
+void scene_menu_update( void * _ ) {
+  scene_t * _self     = _;
+  scene_menu_t * self = scene_get_spec(_self);
+  // handle the cursor moving
+  if (gb_button(controller_button_down())==controller_button_pressed()) {
+    entity_menu_cursor_down( scene_menu_entmenu(self) );
+    gb_sound( scene_menu_snd_menu1(self), 0 );
+  }
+  else if (gb_button(controller_button_up())==controller_button_pressed()) {
+    entity_menu_cursor_up( scene_menu_entmenu(self) );
+    gb_sound( scene_menu_snd_menu1(self), 0 );
+  }
+  // handle selecting an action with spacebar
+  if (gb_button(controller_button_select())==controller_button_pressed()) {
+    entity_menu_select(scene_menu_entmenu(self));
+    gb_sound( scene_menu_snd_menu2(self), 0 );
+
+    if (entity_menu_cursor(scene_menu_entmenu(self))==scene_menu_entmenu_selection_exit()) {
+      gb_exit();
+    }
+  }
+}
+
+void scene_menu_draw( void * _ ) {
+  scene_t * _self     = _;
+  scene_menu_t * self = scene_get_spec(_self);
+  gb_set_intensity_max();
+  entity_menu_draw( scene_menu_entmenu(self) );
+  gb_reset_intensity();
+}
+
+void scene_menu_quit( void * _ ) {
+  scene_t * _self     = _;
+  scene_menu_t * self = scene_get_spec(_self);
+}
+
 /////////
 // new //
 /////////
@@ -53,6 +98,11 @@ void init_scene_menu( scene_menu_t * self ) {
 
   scene_menu_snd_menu1(self) = gb_get_sound("menu-1");
   scene_menu_snd_menu2(self) = gb_get_sound("menu-2");
+
+  scene_set_funcs( scene_menu_scene(self),
+    scene_menu_start, scene_menu_update,
+    scene_menu_draw, scene_menu_quit
+  );
 }
 
 scene_menu_t * scene_menu() {
@@ -67,45 +117,7 @@ void free_scene_menu( scene_menu_t * self ) {
   free              (self);
 }
 
-///////////////
-// functions //
-///////////////
 
-////////////
-// events //
-////////////
 
-void scene_menu_start( scene_menu_t * self ) {
-}
-
-void scene_menu_update( scene_menu_t * self ) {
-  // handle the cursor moving
-  if (gb_button(controller_button_down())==controller_button_pressed()) {
-    entity_menu_cursor_down( scene_menu_entmenu(self) );
-    gb_sound( scene_menu_snd_menu1(self), 0 );
-  }
-  else if (gb_button(controller_button_up())==controller_button_pressed()) {
-    entity_menu_cursor_up( scene_menu_entmenu(self) );
-    gb_sound( scene_menu_snd_menu1(self), 0 );
-  }
-  // handle selecting an action with spacebar
-  if (gb_button(controller_button_select())==controller_button_pressed()) {
-    entity_menu_select(scene_menu_entmenu(self));
-    gb_sound( scene_menu_snd_menu2(self), 0 );
-
-    if (entity_menu_cursor(scene_menu_entmenu(self))==scene_menu_entmenu_selection_exit()) {
-      gb_exit();
-    }
-  }
-}
-
-void scene_menu_draw( scene_menu_t * self ) {
-  gb_set_intensity_max();
-  entity_menu_draw( scene_menu_entmenu(self) );
-  gb_reset_intensity();
-}
-
-void scene_menu_quit( scene_menu_t * self ) {
-}
 
 

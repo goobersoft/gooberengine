@@ -40,7 +40,10 @@ assets_t * assets() {
 }
 
 void free_assets( assets_t * self ) {
-  
+  free_dict( assets_images(self) );
+  free_dict( assets_colormaps(self) );
+  free_dict( assets_sounds(self) );
+  free_dict( assets_fonts(self) );
 }
 
 

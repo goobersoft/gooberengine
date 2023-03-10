@@ -20,6 +20,7 @@ type() {
 #define actor_offset_x(self) point_x(actor_offset(self))d
 #define actor_offset_y(self) point_y(actor_offset(self))
 
+#define actor_class(self)        object_class(actor_spec(self))
 #define actor_set_spec(self,a,b) object_set(actor_spec(self),a,b)
 #define actor_get_spec(self)     object_data(actor_spec(self))
 

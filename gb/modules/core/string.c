@@ -145,6 +145,15 @@ void string_crop( string_t * self ) {
   }
 }
 
+void string_expand( string_t * self, int l ) {
+  char * new = allocv(char,l+1);
+  char * old = string_data(self);
+  copy(new,old,0,high(string_length(self),l));
+  string_data(self)   = new;
+  string_length(self) = l;
+  free(old);
+}
+
 /////////////
 // alt new //
 /////////////

@@ -28,6 +28,8 @@ void init_playfield( playfield_t * self ) {
   playfield_events(self)    = list();
   point_t sz                = playfield_bricks_size();
   playfield_bricks(self)    = list();
+  playfield_balls(self)     = list();
+  playfield_paddle(self)    = actor_paddle();
 
   actor_brick_t * b;
   actor_t       * ba;
@@ -36,7 +38,7 @@ void init_playfield( playfield_t * self ) {
   loop(i,sz.x) {
     loop(j,sz.y) {
       // set all bricks to blank bricks
-      b = actor_brick();
+      b  = actor_brick();
       ba = actor_brick_actor(b);
       ae = actor_entity(ba);
       
@@ -47,10 +49,7 @@ void init_playfield( playfield_t * self ) {
       list_add_last( playfield_bricks(self), ae );
     }
   }
-
-  // make the list of balls
-  playfield_balls(self)     = list();
-  playfield_paddle(self)    = actor_paddle();
+  
 }
 
 playfield_t * playfield() {
@@ -66,11 +65,11 @@ void free_playfield( playfield_t * self ) {
   actor_brick_t  * at;
 
   // remove all balls first
-  
+
   while (list_count( playfield_balls(self) ) > 0) {
     e = list_remove_first( playfield_balls(self) );
     ea = entity_get_spec(e);
-    ab = actor_get_spec(e);
+    ab = actor_get_spec(ea);
     free_actor_pball(ab);
   }
   // now free the list
@@ -83,7 +82,6 @@ void free_playfield( playfield_t * self ) {
     free_actor_brick(at);
   }
   free_list( playfield_bricks(self) );
-
   free_list( playfield_events(self) );
 }
 
@@ -210,7 +208,7 @@ void playfield_update( playfield_t * self ) {
   char * se;
   foreach( playfield_events(self), dt ) {
     se = dt;
-    log("event: %s",se);
+    //log("event: %s",se);
   }
 }
 

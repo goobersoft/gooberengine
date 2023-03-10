@@ -6,7 +6,7 @@
 // struct //
 ////////////
 
-typedef struct timeval timeval_t;
+
 
 typedef struct {
 

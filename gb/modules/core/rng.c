@@ -97,7 +97,7 @@ rng_t * rng() {
   return self;
 }
 
-ulong_t rng_get( rng_t * self ) {
+int rng_get( rng_t * self ) {
   ulong_t y;
   static ulong_t mag01[2] = {0x0UL, 0x9908b0dfUL};
   if (rng_mti(self) >= rng_mt_len()) {

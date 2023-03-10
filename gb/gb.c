@@ -1,7 +1,7 @@
 
 #define gb_version_major() 2023
 #define gb_version_minor() 3
-#define gb_version_patch() 7
+#define gb_version_patch() 10
 
 //  submodules stack
 //  ----------------
@@ -20,6 +20,7 @@
 
 #include "modules/core/globals.c"             // includes many macro definitions
 
+#include "modules/core/rng.c"
 #include "modules/core/functions.c"           // core functions
 #include "modules/core/functions_sine.c"      // sine and cosine function
 #include "modules/core/functions_sqroot.c"    // sqroot function
@@ -27,7 +28,7 @@
 
 #include "modules/core/object.c"              // descriptive tag
 #include "modules/core/types.c"               // complex numerical types
-#include "modules/core/rng.c"
+
 #include "modules/core/bitfield.c"            // bitfield
 #include "modules/core/bintree.c"             // binary tree
 /*
@@ -43,6 +44,7 @@
 #include "modules/core/file.c"                // file type
 #include "modules/core/number.c"              // integer number with min and max bounds
 #include "modules/core/alarm.c"               // timers
+#include "modules/core/stopwatch.c"
 #include "modules/core/entity.c"              // AABB collisions
 #include "modules/core/gbs.c"                 // GooberScript
 #include "modules/core/gbml.c"                // markup

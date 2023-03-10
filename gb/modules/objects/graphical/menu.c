@@ -158,6 +158,7 @@ void entity_menu_update( entity_menu_t * self ) {
 
 void entity_menu_draw( entity_menu_t * self ) {
   entity_t * base = entity_menu_entity(self);
+  log("%p",base);
   // draw the window
   gb_draw_tilemap( entity_pos_x(base), entity_pos_y(base), 
     entity_menu_tilemap(self) );

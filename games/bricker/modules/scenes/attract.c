@@ -19,41 +19,14 @@ type() {
 #define scene_attract_mdir(self)        (self->mdir)
 #define scene_attract_mbend(self)       (self->mbend)
 
-/////////
-// new //
-/////////
+///////////////////////
+// function pointers //
+///////////////////////
 
-void init_scene_attract( scene_attract_t * self ) {
-  // set scene object id to "attract"
-  scene_attract_scene(self)      = scene("attract",self);
-  scene_attract_playfield(self)  = playfield();
-  scene_attract_mtimer(self)     = 0;
-  scene_attract_mdir(self)       = 0;
-  scene_attract_mbend(self)      = 0;
-}
+void scene_attract_start( void * _ ) {
+  scene_t * _self = _;
+  scene_attract_t * self = scene_get_spec(_self);
 
-scene_attract_t * scene_attract() {
-  scene_attract_t * self = alloc(scene_attract_t);
-  init_scene_attract(self);
-  // return the scene, not itself.
-  // Since the scene object has this object as its source,
-  // we can cast the internal source pointer later.
-  return self;
-}
-
-void free_scene_attract( scene_attract_t * self ) {
-  free_scene      (scene_attract_scene(self));
-  free_playfield  (scene_attract_playfield(self));
-  free            (self);
-}
-
-////////////
-// events //
-////////////
-
-
-void scene_attract_start( scene_attract_t * self ) {
-  
   playfield_t * pf = scene_attract_playfield(self);
   
 
@@ -63,7 +36,7 @@ void scene_attract_start( scene_attract_t * self ) {
     actor_t       * ea = entity_get_spec(e);
     actor_brick_t * eb = actor_get_spec(ea);
 
-    uu = rnd(1,6);
+    uu = rnd(1,7);
     if (uu==1)      actor_brick_set_id(eb,"1");
     else if (uu==2) actor_brick_set_id(eb,"2");
     else if (uu==3) actor_brick_set_id(eb,"3");
@@ -82,13 +55,12 @@ void scene_attract_start( scene_attract_t * self ) {
   a = actor_pball();
   point_set( actor_pball_velo(a), 1,3 );
   list_add_last( playfield_balls(pf), actor_pball_entity(a) );
-
-  
 }
 
-void scene_attract_update( scene_attract_t * self ) {
+void scene_attract_update( void * _ ) {
+  scene_t * _self = _;
+  scene_attract_t * self = scene_get_spec(_self);
   // update base scene object
-  scene_update( scene_attract_scene(self) );
   playfield_update( scene_attract_playfield(self) );
 
   scene_attract_mtimer(self) += 1;
@@ -116,12 +88,54 @@ void scene_attract_update( scene_attract_t * self ) {
     scene_finished( scene_attract_scene(self) ) = true();
     scene_next( scene_attract_scene(self) ) = "game";
   }
+  
 }
 
-void scene_attract_draw( scene_attract_t * self ) {
+void scene_attract_draw( void * _ ) {
+  scene_t * _self = _;
+  scene_attract_t * self = scene_get_spec(_self);
   playfield_draw( scene_attract_playfield(self) );
 }
 
-void scene_attract_quit( scene_attract_t * self ) {
+void scene_attract_quit( void * _ ) {
+  scene_t * _self = _;
+  scene_attract_t * self = scene_get_spec(_self);
 
+  playfield_t * pf = scene_attract_playfield(self);
+  free_playfield  (pf);
+  free            (self);
 }
+
+/////////
+// new //
+/////////
+
+void init_scene_attract( scene_attract_t * self ) {
+  // set scene object id to "attract"
+  scene_attract_scene(self)      = scene("attract",self);
+  scene_attract_playfield(self)  = playfield();
+  scene_attract_mtimer(self)     = 0;
+  scene_attract_mdir(self)       = 0;
+  scene_attract_mbend(self)      = 0;
+  scene_t * s = scene_attract_scene(self);
+  scene_set_funcs( s,
+    scene_attract_start, scene_attract_update,
+    scene_attract_draw, scene_attract_quit
+  );
+}
+
+scene_attract_t * scene_attract() {
+  scene_attract_t * self = alloc(scene_attract_t);
+  init_scene_attract(self);
+  // return the scene, not itself.
+  // Since the scene object has this object as its source,
+  // we can cast the internal source pointer later.
+  return self;
+}
+
+void free_scene_attract( scene_attract_t * self ) {
+  free_scene      (scene_attract_scene(self));
+  free_playfield  (scene_attract_playfield(self));
+  free            (self);
+}
+

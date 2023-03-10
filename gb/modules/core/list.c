@@ -259,16 +259,6 @@ void * _foreach_iterate( list_t * d ) {
 // other funcs //
 /////////////////
 
-bool_t list_contains( list_t * self, void * dt ) {
-  foreach(self,dl) {
-    if (dl == dt) {
-      return true();
-    }
-  }
-  false();
-}
-
-
 // rotating a list allows you to check the contents of the list at either
 // the head or the tail.
 void list_rotate_next(list_t * self) {
@@ -285,17 +275,17 @@ void list_rotate_prev(list_t * self) {
   }
 }
 
-// returns true and places the item in the front of the list if it
-// is inside of the list. Returns false otherwise.
-bool_t list_find(list_t * self, void * v) {
-  // check to see if the item exists in the list.
-  // if it does, continue to rotate the list until it is the first
-  // item in the list.
-  if (list_contains(self,v)) {
-    while(list_get_first(self) != v) {
+
+bool_t list_contains( list_t * self, void * dt ) {
+  int u = list_count(self);
+  while (u > 0) {
+    if (list_get_first(self) == dt) {
+      return true();
+    }
+    else {
       list_rotate_next(self);
     }
-    return true();
+    u--;
   }
   return false();
 }

@@ -127,10 +127,10 @@ char * rstr( int n, int l ) {
   return right(str(n),l,'0');
 }
 
-char _bits[36];
+char _bits[80];
 
 char * bits(uint_t n, int l) {
-  clear(_bits,36,0);
+  clear(_bits,80,0);
   loop(i,32) {
     _bits[31-i] = (n&1) ? '1' : '0';
     n = n>>1;
@@ -139,7 +139,7 @@ char * bits(uint_t n, int l) {
 }
 
 char * bits8(uint_t n) {
-  clear(_bits,36,0);
+  clear(_bits,80,0);
   loop(i,8) {
     _bits[7-i] = (n&1) ? '1' : '0';
     n = n>>1;
@@ -148,7 +148,7 @@ char * bits8(uint_t n) {
 }
 
 char * bits16(uint_t n) {
-  clear(_bits,36,0);
+  clear(_bits,80,0);
   loop(i,16) {
     _bits[15-i] = (n&1) ? '1' : '0';
     n = n>>1;
@@ -156,10 +156,19 @@ char * bits16(uint_t n) {
   return _bits;
 }
 
-char * bits32(uint_t n) {
-  clear(_bits,36,0);
+char * bits32(ulong_t n) {
+  clear(_bits,80,0);
   loop(i,32) {
     _bits[31-i] = (n&1) ? '1' : '0';
+    n = n>>1;
+  }
+  return _bits;
+}
+
+char * bits64(ulong_t n) {
+  clear(_bits,80,0);
+  loop(i,64) {
+    _bits[63-i] = (n&1) ? '1' : '0';
     n = n>>1;
   }
   return _bits;
@@ -302,7 +311,15 @@ char * sdl_pixelformat_str( uint_t f ) {
 // rng //
 /////////
 
-#define rnd(a,b)     (((b-a)==0)?(a):(a+(rand()%(b-a))))
+int rnd(int a, int b) {
+  static rng_t * _rng;
+  if (_rng == null()) _rng = rng();
+  //if ( (b-a) == 0 ) return a;
+  return a + (((uint_t)rng_get(_rng)) % (b-a));
+}
+
+
+//#define rnd(a,b)     (((b-a)==0)?(a):(a+(rand()%(b-a))))
 #define chance(x,y)  (rnd(0,y)<x)
 #define prob(x)      ((x==1000)?(1):(chance(x,1000)))
 #define sqr(a)       ((a)*(a))
