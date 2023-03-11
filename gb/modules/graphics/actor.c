@@ -51,6 +51,10 @@ void free_actor( actor_t * self ) {
   free( self );
 }
 
-//
-//
-//
+////////////
+// events //
+////////////
+
+void actor_update( actor_t * self ) {
+  sprite_update( actor_sprite(self) );
+}

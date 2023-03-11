@@ -11,16 +11,22 @@ type() {
   bool_t        flip_x;
   bool_t        flip_y;
 
+  local( animation_t * animation );
+
 } sprite_t;
 
-#define sprite_colormap(self) (self->colormap)
-#define sprite_rect(self)     (self->rect)
-#define sprite_offset(self)   (self->offset)
-#define sprite_flip_x(self)   (self->flip_x)
-#define sprite_flip_y(self)   (self->flip_y)
+#define sprite_colormap(self)       (self->colormap)
+#define sprite_rect(self)           (self->rect)
+#define sprite_offset(self)         (self->offset)
+#define sprite_flip_x(self)         (self->flip_x)
+#define sprite_flip_y(self)         (self->flip_y)
+#define sprite_animation(self)      (self->animation)
+#define sprite_has_animation(self)  animation_has_frameset(sprite_animation(self))
 
-#define sprite_width(self)    rect_w(sprite_rect(self)) 
-#define sprite_height(self)   rect_h(sprite_rect(self))
+#define sprite_width(self)          rect_w(sprite_rect(self)) 
+#define sprite_height(self)         rect_h(sprite_rect(self))
+#define sprite_set_pos(self,x,y)    rect_set_pos(sprite_rect(self),x,y)
+#define sprite_set_size(self,w,h)   rect_set_size(sprite_rect(self),w,h)
 
 /////////
 // new //
@@ -32,6 +38,7 @@ void sprite_init( sprite_t * self, colormap_t * c, int cx, int cy, int cw, int c
   sprite_offset(self)    = point(0,0);
   sprite_flip_x(self)    = false();
   sprite_flip_y(self)    = false();
+  sprite_animation(self) = animation(null());
 }
 
 sprite_t * sprite( colormap_t * c, int cx, int cy, int cw, int ch ) {
@@ -65,8 +72,7 @@ void free_sprite( sprite_t * self ) {
 // funcs //
 ///////////
 
-#define sprite_set_pos(self,x,y)    rect_set_pos(sprite_rect(self),x,y)
-#define sprite_set_size(self,w,h)   rect_set_size(sprite_rect(self),w,h)
+
 
 // because sprite is defined BEFORE graph, the graph module will
 // have functions for drawing the sprite.
@@ -94,4 +100,16 @@ void sprite_set_offset( sprite_t * self, int x, int y ) {
 void sprite_set( sprite_t * self, colormap_t * c, int x, int y, int w, int h ) {
   sprite_set_rect(self,x,y,w,h);
   sprite_set_colormap(self,c);
+}
+
+
+////////////
+// events //
+////////////
+
+void sprite_update( sprite_t * self ) {
+  if (sprite_has_animation(self)) {
+    animation_update(sprite_animation(self));
+    rect_copy( sprite_rect(self), animation_get_curr_rect(sprite_animation(self)) );
+  }
 }

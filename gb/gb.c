@@ -1,7 +1,7 @@
 
 #define gb_version_major() 2023
 #define gb_version_minor() 3
-#define gb_version_patch() 10
+#define gb_version_patch() 11
 
 //  submodules stack
 //  ----------------
@@ -58,6 +58,7 @@
 #include "modules/graphics/image.c"          // uses SDL2_image
 #include "modules/graphics/palette.c"        // storage of a list of 6-bit colors.
 #include "modules/graphics/colormap.c"       // a 2d array of colors
+#include "modules/graphics/animation.c"
 #include "modules/graphics/font.c"           // bitmap fonts which utilize image colormaps
 #include "modules/graphics/sprite.c"         // instanced object with a reference to a colormap
 #include "modules/graphics/tilemap.c"        // instanceable grids of variable colormap sections

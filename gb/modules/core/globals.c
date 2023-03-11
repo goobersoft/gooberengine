@@ -93,7 +93,7 @@ typedef struct timeval timeval_t;
 #define ref(x)          (&x)
 #define ptr(x)          (x*)
 #define aptr(x)         (x**)
-#define val(x)          (*x)
+#define val(x)          x[0]
 #define valn(x,n)       x[n]
 
 #define var(x)          void*x

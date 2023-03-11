@@ -61,6 +61,10 @@ void rect_set( rect_t * self, int x, int y, int w, int h ) {
   point_set( rect_size(self), w, h );
 }
 
+void rect_copy( rect_t * self, rect_t * other ) {
+  val(self) = val(other);
+}
+
 void rect_set_pos( rect_t * self, int x, int y ) {
   point_set( rect_pos(self), x, y );
 }

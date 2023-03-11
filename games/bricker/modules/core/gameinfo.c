@@ -63,7 +63,6 @@ gameinfo_t * gameinfo() {
 // functions //
 ///////////////
 
-
 ////////////
 // events //
 ////////////

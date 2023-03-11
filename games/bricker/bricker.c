@@ -67,11 +67,7 @@ bricker_t * bricker() {
 
 void bricker_clear_scene( bricker_t * self ) {
   scene_t * s = bricker_scene(self);
-  log("%p",s);
   scene_quit(s);
-  log("%p",s);
-  
-
   free_scene(bricker_scene(self));
   bricker_scene(self) = null();
 }
