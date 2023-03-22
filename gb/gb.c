@@ -76,6 +76,7 @@
 #include "modules/components/assets.c"        // asset container object (sound/image/font)
 #include "modules/components/timing.c"        // fps/timing interface
 #include "modules/components/graph.c"         // drawing interface
+//#include "modules/components/canvas.c"
 
 
 
@@ -89,9 +90,11 @@ typedef struct {
   bool_t         f_paused;
   bool_t         f_cls;
   bool_t         f_debug;
+
   visual_t     * visual;
   timing_t     * timing;
   graph_t      * graph;
+  //canvas_t     * canvas;
   assets_t     * assets;
   //mouse_t      * mouse;
   audio_t      * audio;
@@ -126,6 +129,7 @@ gb_t * gb;
 #define gb_visual()     (gb->visual)
 #define gb_timing()     (gb->timing)
 #define gb_graph()      (gb->graph)
+#define gb_canvas()     (gb->canvas)
 #define gb_audio()      (gb->audio)
 #define gb_controller() (gb->controller)
 #define gb_input()      (gb->input)
@@ -235,6 +239,7 @@ void gb_init() {
   gb_assets()       = assets(gb_visual());
   gb_audio()        = audio();
   gb_graph()        = graph(gb_visual());
+  //gb_canvas()       = canvas(gb_visual());
   gb_input()        = input();
   gb_settings()     = settings();
   gb_controller()   = controller(gb_input());
@@ -348,7 +353,6 @@ void gb_update() {
   //-- debugging --//
 
   debug_update_pre();
-
   debug_update_post();
 
 }
@@ -363,11 +367,9 @@ void gb_update_post() {
 
 // pre-draw event
 void gb_draw_pre() {
-  
-  // clear the graph colormap if the cls flag is enabled.
-  if (gb_f_cls()) {
-    graph_cls(gb_graph());
-  }
+
+  graph_draw_pre(gb_graph());
+  //canvas_draw_pre(gb_canvas());
 
   // clear screen to black and set draw color back to white.
   visual_draw_pre(gb_visual());  
@@ -382,7 +384,8 @@ void gb_draw_post() {
   // do some debug drawing at the end of everything else
   if (gb_f_debug()) debug_draw_post();
   // present the screen
-  graph_present(gb_graph());
+  graph_draw_post(gb_graph());
+  //canvas_draw_post(gb_canvas());
   visual_draw_post(gb_visual());
 
   timing_update_post(gb_timing());

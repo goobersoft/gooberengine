@@ -13,23 +13,23 @@ type() {
 // callbacks //
 ///////////////
 
-void scene_game_start( void * _ ) {
-  scene_t * _self = _;
+void scene_game_fn_start( void * _base ) {
+  scene_t * _self = _base;
   scene_game_t * self = scene_get_spec(_self);
 }
 
-void scene_game_update( void * _ ) {
-  scene_t * _self = _;
+void scene_game_fn_update( void * _base ) {
+  scene_t * _self = _base;
   scene_game_t * self = scene_get_spec(_self);
 }
 
-void scene_game_draw( void * _ ) {
-  scene_t * _self = _;
+void scene_game_fn_draw( void * _base ) {
+  scene_t * _self = _base;
   scene_game_t * self = scene_get_spec(_self);
 }
 
-void scene_game_quit( void * _ ) {
-  scene_t * _self = _;
+void scene_game_fn_quit( void * _base ) {
+  scene_t * _self = _base;
   scene_game_t * self = scene_get_spec(_self);
 
   free_scene      (scene_game_scene(self));
@@ -45,8 +45,8 @@ void init_scene_game( scene_game_t * self ) {
   scene_game_scene(self)      = scene("game",self);
   scene_game_playfield(self)  = playfield();
   scene_set_funcs( scene_game_scene(self),
-    scene_game_start, scene_game_update,
-    scene_game_draw, scene_game_quit
+    scene_game_fn_start, scene_game_fn_update,
+    scene_game_fn_draw, scene_game_fn_quit
   );
 }
 

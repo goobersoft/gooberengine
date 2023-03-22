@@ -23,8 +23,8 @@ type() {
 // function pointers //
 ///////////////////////
 
-void scene_attract_start( void * _ ) {
-  scene_t * _self = _;
+void scene_attract_fn_start( void * _base ) {
+  scene_t * _self = _base;
   scene_attract_t * self = scene_get_spec(_self);
 
   playfield_t * pf = scene_attract_playfield(self);
@@ -57,8 +57,8 @@ void scene_attract_start( void * _ ) {
   list_add_last( playfield_balls(pf), actor_pball_entity(a) );
 }
 
-void scene_attract_update( void * _ ) {
-  scene_t * _self = _;
+void scene_attract_fn_update( void * _base ) {
+  scene_t * _self = _base;
   scene_attract_t * self = scene_get_spec(_self);
   // update base scene object
   playfield_update( scene_attract_playfield(self) );
@@ -91,14 +91,14 @@ void scene_attract_update( void * _ ) {
   
 }
 
-void scene_attract_draw( void * _ ) {
-  scene_t * _self = _;
+void scene_attract_fn_draw( void * _base ) {
+  scene_t * _self = _base;
   scene_attract_t * self = scene_get_spec(_self);
   playfield_draw( scene_attract_playfield(self) );
 }
 
-void scene_attract_quit( void * _ ) {
-  scene_t * _self = _;
+void scene_attract_fn_quit( void * _base ) {
+  scene_t * _self = _base;
   scene_attract_t * self = scene_get_spec(_self);
 
   playfield_t * pf = scene_attract_playfield(self);
@@ -119,8 +119,8 @@ void init_scene_attract( scene_attract_t * self ) {
   scene_attract_mbend(self)      = 0;
   scene_t * s = scene_attract_scene(self);
   scene_set_funcs( s,
-    scene_attract_start, scene_attract_update,
-    scene_attract_draw, scene_attract_quit
+    scene_attract_fn_start, scene_attract_fn_update,
+    scene_attract_fn_draw, scene_attract_fn_quit
   );
 }
 

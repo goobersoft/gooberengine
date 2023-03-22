@@ -9,10 +9,10 @@
 
 type() {
 
-  SDL_Renderer * renderer;
-  SDL_Texture  * texture;
+  foreign ( SDL_Renderer * renderer );
+  local   ( SDL_Texture * texture );
+  foreign ( Uint32 * rawdata );
   bool_t         locked;
-  Uint32       * rawdata;
   int            rawpitch;
 
 } board_t;
@@ -83,6 +83,7 @@ bool_t board_unlock( board_t * self ) {
 // drawing functions //
 ///////////////////////
 
+/*
 void board_set_color( board_t * self, byte_t r, byte_t g, byte_t b ) {
   SDL_SetRenderDrawColor( board_renderer(self), r, g, b, 255 );
 }
@@ -139,3 +140,4 @@ void board_set_blend_mode( board_t * self, int b ) {
     SDL_SetRenderDrawBlendMode( board_renderer(self), SDL_BLENDMODE_NONE );
   }
 }
+*/

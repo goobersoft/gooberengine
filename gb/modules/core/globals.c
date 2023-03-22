@@ -45,6 +45,7 @@ typedef unsigned short ushort_t;    // integer 0-65535
 typedef unsigned int   uint_t;      // integer 0-4.2bil
 typedef unsigned long  ulong_t;     // integer 0-1.844674407e19
 typedef char *         cstr_t;      // a atring literal
+typedef int            mint_t;      // "milli-int" stands for 1/1000th of a whole
 
 typedef struct timeval timeval_t;
 

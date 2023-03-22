@@ -30,6 +30,7 @@ type() {
 #define scene_set_spec(self,a,b)  object_set(scene_spec(self),a,b)
 #define scene_class(self)         object_class(scene_spec(self))
 #define scene_get_spec(self)      object_data(scene_spec(self))
+#define scene_to_spec(_base)      scene_get_spec(((scene_t*)_base))
 
 #define scene_add_event(self,b)   list_add_last(scene_events(self),b)
 #define scene_clear_events(self)  list_clear(scene_events(self))
@@ -38,6 +39,8 @@ type() {
 #define scene_fn_update(self)     (self->fn_update)
 #define scene_fn_draw(self)       (self->fn_draw)
 #define scene_fn_quit(self)       (self->fn_quit)
+
+
 
 /////////
 // new //
@@ -106,23 +109,31 @@ void (*fn3)(void*), void (*fn4)(void*) ) {
 ////////////
 
 void scene_start( scene_t * self ) {
-  scene_fn_start(self)(self);
+  if (scene_fn_start(self)) {
+    scene_fn_start(self)(self);
+  }
 }
 
 void scene_update( scene_t * self ) {
   // a scene will stop playing if it is flagged as finished.
   if (scene_finished(self) == false()) {
     scene_ticks(self) += 1;
-    scene_fn_update(self)(self);
+    if (scene_fn_update(self)) {
+      scene_fn_update(self)(self);
+    }
   }
 }
 
 void scene_draw( scene_t * self ) {
-  scene_fn_draw(self)(self);
+  if (scene_fn_draw(self)) {
+    scene_fn_draw(self)(self);
+  }
 }
 
 void scene_quit( scene_t * self ) {
-  scene_fn_quit(self)(self);
+  if (scene_fn_quit(self)) {
+    scene_fn_quit(self)(self);
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////////

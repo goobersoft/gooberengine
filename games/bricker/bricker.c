@@ -13,6 +13,7 @@
 #include "modules/scenes/attract.c"
 #include "modules/scenes/game.c"
 #include "modules/scenes/menu.c"
+#include "modules/scenes/test.c"
 
 #include "modules/debug.c"
 

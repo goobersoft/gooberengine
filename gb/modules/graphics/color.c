@@ -30,7 +30,7 @@ type() {
 // RR GG BB <-- each color channel is two bits.
 // transparent color is treated as -1
 
-void color_init( color_t * self, byte_t r, byte_t g, byte_t b, byte_t a ) {
+void init_color( color_t * self, byte_t r, byte_t g, byte_t b, byte_t a ) {
   color_r(self) = r&3;
   color_g(self) = g&3;
   color_b(self) = b&3;
@@ -39,7 +39,7 @@ void color_init( color_t * self, byte_t r, byte_t g, byte_t b, byte_t a ) {
 
 color_t * color(byte_t r, byte_t g, byte_t b) {  
   color_t  * rr = alloc(color_t);
-  color_init( rr, r, g, b, 1 );
+  init_color( rr, r, g, b, 1 );
   return rr;
 }
 

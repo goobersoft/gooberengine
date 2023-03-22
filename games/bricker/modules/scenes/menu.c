@@ -32,13 +32,13 @@ type() {
 // callbacks //
 ///////////////
 
-void scene_menu_start( void * _ ) {
-  scene_t * _self     = _;
+void scene_menu_fn_start( void * _base ) {
+  scene_t * _self     = _base;
   scene_menu_t * self = scene_get_spec(_self);
 }
 
-void scene_menu_update( void * _ ) {
-  scene_t * _self     = _;
+void scene_menu_fn_update( void * _base ) {
+  scene_t * _self     = _base;
   scene_menu_t * self = scene_get_spec(_self);
   // handle the cursor moving
   if (gb_button(controller_button_down())==controller_button_pressed()) {
@@ -60,16 +60,16 @@ void scene_menu_update( void * _ ) {
   }
 }
 
-void scene_menu_draw( void * _ ) {
-  scene_t * _self     = _;
+void scene_menu_fn_draw( void * _base ) {
+  scene_t * _self     = _base;
   scene_menu_t * self = scene_get_spec(_self);
   gb_set_intensity_max();
   entity_menu_draw( scene_menu_entmenu(self) );
   gb_reset_intensity();
 }
 
-void scene_menu_quit( void * _ ) {
-  scene_t * _self     = _;
+void scene_menu_fn_quit( void * _base ) {
+  scene_t * _self     = _base;
   scene_menu_t * self = scene_get_spec(_self);
 }
 
@@ -100,8 +100,8 @@ void init_scene_menu( scene_menu_t * self ) {
   scene_menu_snd_menu2(self) = gb_get_sound("menu-2");
 
   scene_set_funcs( scene_menu_scene(self),
-    scene_menu_start, scene_menu_update,
-    scene_menu_draw, scene_menu_quit
+    scene_menu_fn_start, scene_menu_fn_update,
+    scene_menu_fn_draw, scene_menu_fn_quit
   );
 }
 

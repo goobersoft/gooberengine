@@ -45,6 +45,9 @@ type() {
   // the reference to the visual + renderer
   foreign( visual_t * visual );
   
+  bool_t        active;
+  bool_t        clsmode;
+
   // the number of dots which were processed in the frame.
   uint_t        framedots;
   uint_t        framedots_max;
@@ -101,7 +104,8 @@ type() {
 } graph_t;
 
 #define graph_visual(self)          (self->visual)
-#define graph_renderer(self)        (self->renderer)
+#define graph_clsmode(self)         (self->clsmode)
+#define graph_active(self)          (self->active)
 
 #define graph_flip_x(self)          (self->flip_x)
 #define graph_flip_y(self)          (self->flip_y)
@@ -148,6 +152,8 @@ type() {
 
 void init_graph( graph_t * self, visual_t * v ) {
   graph_visual(self)          = v;
+  graph_active(self)          = true();
+  graph_clsmode(self)         = false();
 
   graph_flip_x(self)          = false();
   graph_flip_y(self)          = false();
@@ -828,12 +834,6 @@ void graph_draw_sprite_tiled( graph_t * self, int x, int y, sprite_t * s, int w,
 }
 
 
-
-
-////////////
-// events //
-////////////
-
 void graph_present( graph_t * self ) {
   // pixel format = ABGR8888
   visual_t  * vv  = graph_visual(self);
@@ -860,3 +860,18 @@ void graph_present( graph_t * self ) {
   board_unlock( bb );
   graph_framedots(self) = 0;
 }
+
+////////////
+// events //
+////////////
+
+void graph_draw_pre( graph_t * self) {
+  if (graph_clsmode(self)) {
+    graph_cls(self);
+  }
+}
+
+void graph_draw_post( graph_t * self ) {
+  graph_present(self);
+}
+
