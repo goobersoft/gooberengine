@@ -11,14 +11,11 @@ type() {
 
   // rect object to hold position and size data
   local( rect_t * rect );
-  //
-  local( object_t * spec );
 
 } entity_t;
 
 #define entity_rect(self)    (self->rect)
 #define entity_solid(self)   (self->solid)
-#define entity_spec(self)    (self->spec)
 
 #define entity_pos(self)     rect_pos(entity_rect(self))
 #define entity_pos_x(self)   rect_x(entity_rect(self))
@@ -33,29 +30,23 @@ type() {
 #define entity_set_size(self,w,h)  rect_set_size(entity_rect(self),w,h)
 #define entity_set_solid(self,b)   set(self,solid,bool(b))
 
-#define entity_class(self)         object_class(entity_spec(self))
-#define entity_set_spec(self,a,b)  object_set(entity_spec(self),a,b)
-#define entity_get_spec(self)      object_data(entity_spec(self))
-
 /////////
 // new //
 /////////
 
-void entity_init( entity_t * self, char * cls, void * dt ) {
+void entity_init( entity_t * self ) {
   entity_rect(self)        = rect(0,0,10,10);
   entity_solid(self)       = true();
-  entity_spec(self)        = object(cls,dt);
 }
 
-entity_t * entity( char * cls, void * dt ) {
+entity_t * entity(void) {
   entity_t * self = alloc(entity_t);
-  entity_init(self,cls,dt);
+  entity_init(self);
   return self;
 }
 
 void free_entity( entity_t * self ) {
   free_rect(entity_rect(self));
-  free_object(entity_spec(self));
   free(self);
 }
 
@@ -281,7 +272,7 @@ int entity_check_down_list( entity_t * self, int n, list_t * l ) {
 }
 
 int entity_check_left( entity_t * self, int n, entity_t * other ) {
-  int u = _entity_check_up( self, n, other);
+  int u = _entity_check_left( self, n, other);
   if (u >= 0) {
     if (u < n) {
       entity_check_result( other );

@@ -26,7 +26,7 @@
 ///////////////////////////////////////
 
 #include "gb/gb.c"
-#include "ed/ed.c"
+#include "apps/ed/ed.c"
 
 ////////////
 // events //

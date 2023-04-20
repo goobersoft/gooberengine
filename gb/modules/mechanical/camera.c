@@ -33,7 +33,7 @@ void init_camera( camera_t * self ) {
   camera_size(self)    = point(400,240);
 }
 
-camera_t * camera() {
+camera_t * camera(void) {
   camera_t * self = alloc(camera_t);
   init_camera(self);
   return self;

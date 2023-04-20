@@ -23,7 +23,7 @@ animframe_t * animframe( int x, int y, int w, int h, int d ) {
   return self;
 }
 
-animframe_t * animframe_as_blank() {
+animframe_t * animframe_as_blank(void) {
   return animframe(0,0,10,10,1);
 }
 

@@ -26,7 +26,7 @@
 ///////////////////////////////////////
 
 #include "gb/gb.c"
-#include "games/bricker/bricker.c"
+#include "apps/bricker/bricker.c"
 
 ////////////
 // events //

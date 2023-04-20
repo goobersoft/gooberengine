@@ -26,7 +26,7 @@
 ///////////////////////////////////////
 
 #include "gb/gb.c"
-#include "games/ma/ma.c"
+#include "apps/ma/ma.c"
 
 ////////////
 // events //

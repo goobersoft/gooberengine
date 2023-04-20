@@ -68,7 +68,7 @@ void mouse_init( mouse_t * self ) {
   }
 }
 
-mouse_t * mouse( ) {
+mouse_t * mouse(void) {
   mouse_t * self = alloc(mouse_t);
   mouse_init( self );
   return self;

@@ -19,6 +19,8 @@ type() {
   local ( int * actions_left );
   //
   local ( int * actions_right );
+  //
+  bool_t wrappable;
   
 
 } menu_t;
@@ -31,6 +33,7 @@ type() {
 #define menu_actions(self)        (self->actions)
 #define menu_actions_left(self)   (self->actions_left)
 #define menu_actions_right(self)  (self->actions_right)
+#define menu_wrappable(self)      (self->wrappable)
 
 /////////
 // new //
@@ -45,6 +48,7 @@ void init_menu( menu_t * self, int n ) {
   menu_actions(self)        = allocv(int,n);
   menu_actions_left(self)   = allocv(int,n);
   menu_actions_right(self)  = allocv(int,n);
+  menu_wrappable(self)      = true();
 
   loop(i,menu_maxlines(self)) {
     menu_labels(self)[i]        = string(menu_max_label_length());
@@ -102,12 +106,23 @@ void menu_set_action_right( menu_t * self, int n, int m ) {
 }
 
 void menu_cursor_up( menu_t * self ) {
-  menu_cursor(self) = low(menu_cursor(self)-1,0);
+  if (menu_wrappable(self)) {
+    menu_cursor(self) = wrap(menu_cursor(self)-1,0,menu_maxlines(self));
+  }
+  else {
+    menu_cursor(self) = low(menu_cursor(self)-1,0);
+  }
 }
 
 void menu_cursor_down( menu_t * self ) {
-  menu_cursor(self) = high(menu_cursor(self)+1,menu_maxlines(self)-1);
+  if (menu_wrappable(self)) {
+    menu_cursor(self) = wrap(menu_cursor(self)+1,0,menu_maxlines(self));
+  }
+  else {
+    menu_cursor(self) = high(menu_cursor(self)+1,menu_maxlines(self)-1);
+  }
 }
+
 
 void menu_select( menu_t * self, int d ) {
   menu_selection(self)      = menu_cursor(self);

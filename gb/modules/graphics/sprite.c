@@ -47,7 +47,7 @@ sprite_t * sprite( colormap_t * c, int cx, int cy, int cw, int ch ) {
   return r;
 }
 
-sprite_t * sprite_as_blank() {
+sprite_t * sprite_as_blank(void) {
   return sprite(null(),0,0,10,10);
 }
 

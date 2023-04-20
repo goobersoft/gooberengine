@@ -92,3 +92,8 @@ void point_clamp( point_t * self, int x, int y, int w, int h ) {
   point_x(self) = clamp(point_x(self),x,x+w-1);
   point_y(self) = clamp(point_y(self),y,y+h-1);
 }
+
+void wrap_clamp( point_t * self, int x, int y, int w, int h ) {
+  point_x(self) = wrap(point_x(self),x,x+w);
+  point_y(self) = wrap(point_y(self),y,y+h);
+}

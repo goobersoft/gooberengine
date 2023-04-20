@@ -80,20 +80,23 @@ void debugpanel_draw( debugpanel_t * self ) {
     u2 = string_copy_at(debugpanel_string(self),u2,",");
     u2 = string_copy_number_at(debugpanel_string(self),
       u2,point_y(input_mouse_pos(gb_input()))/visual_window_scale(gb_visual()));
-    
-    u2 = string_copy_at(debugpanel_string(self),40,"CPU:");
-    // will draw a bar instead of text
 
-    u2 = string_copy_at ( debugpanel_string(self), 60, rstr(timing_clock_hours(gb_timing()),2) );
+    // CPU usage
+    u2 = 38;
+    u2 = string_copy_at(debugpanel_string(self),u2,"CPU:");
+    u2 = string_copy_number_at(debugpanel_string(self),49,stopwatch_time_diff(timing_stopwatch(gb_timing()))*100/16667);
+    u2 = string_copy_at(debugpanel_string(self),u2,"%");
+
+    u2 = string_copy_at ( debugpanel_string(self), 60, rstr(wallclock_hours(timing_wallclock(gb_timing())),2) );
     u2 = string_copy_at ( debugpanel_string(self), 62, ":" );
-    u2 = string_copy_at ( debugpanel_string(self), 63, rstr(timing_clock_minutes(gb_timing()),2) );
+    u2 = string_copy_at ( debugpanel_string(self), 63, rstr(wallclock_minutes(timing_wallclock(gb_timing())),2) );
     u2 = string_copy_at ( debugpanel_string(self), 65, ":" );
-    u2 = string_copy_at ( debugpanel_string(self), 66, rstr(timing_clock_seconds(gb_timing()),2) );
+    u2 = string_copy_at ( debugpanel_string(self), 66, rstr(wallclock_seconds(timing_wallclock(gb_timing())),2) );
 
     // scene
     u2 = string_copy_at ( debugpanel_string(self), 70, "S:");
     if (gb_scene()) {
-      u2 = string_copy_at ( debugpanel_string(self), 72, scene_class(gb_scene()));
+      u2 = string_copy_at ( debugpanel_string(self), 72, scene_id(gb_scene()));
     }
     else {
       u2 = string_copy_at ( debugpanel_string(self), 72, "null");
@@ -113,7 +116,8 @@ void debugpanel_draw( debugpanel_t * self ) {
     // record prev intensity, and set the intensity to max
     int u = graph_set_intensity_max(gb_graph());
 
-    graph_set_color(gb_graph(),make_color(1,1,1));
+    // draw the graph grid dots
+    graph_set_color(gb_graph(),make_color(2,1,0));
     loop(i,40) {
       loop(j,24) {
         graph_draw_dot(gb_graph(),i*10,j*10);
@@ -125,15 +129,21 @@ void debugpanel_draw( debugpanel_t * self ) {
     // draw the background strip at the top
     graph_draw_rect(gb_graph(),0,0,400,10);
 
-    // set color to red
-    graph_set_color(gb_graph(),make_color(3,0,0));
-    // make the CPU bar
-    graph_draw_rect(gb_graph(),220,2,timing_cpu_usage(gb_timing())/2,6);
-
     // set color to white
     graph_set_color(gb_graph(),make_color(3,3,3));
     // draw the debugging string
-    graph_draw_text(gb_graph(),0,0,string_data(debugpanel_string(self)));
+    graph_draw_text(gb_graph(),0,1,string_data(debugpanel_string(self)));
+
+    
+    graph_set_color(gb_graph(),make_color(3,2,0));
+    graph_draw_rect(
+      gb_graph(), 210, 3,
+      high(
+        stopwatch_time_diff(
+          timing_stopwatch(gb_timing())) / 500, 33),
+      4);
+    graph_set_color(gb_graph(),make_color(3,2,0));
+    graph_draw_rect_line(gb_graph(), 209, 2, 35, 6);
 
     // reset the intensity
     graph_set_intensity(gb_graph(),u);

@@ -1,7 +1,7 @@
 
 #define gb_version_major() 2023
-#define gb_version_minor() 3
-#define gb_version_patch() 11
+#define gb_version_minor() 4
+#define gb_version_patch() 20
 
 //  submodules stack
 //  ----------------
@@ -37,7 +37,7 @@
 #include "modules/core/string.c"              // fixed-length character arrays
 #include "modules/core/list.c"                // linked list data type
 #include "modules/core/dict.c"                // dictionary
-#include "modules/core/pstack.c"              // LIFO-style priority stack object
+#include "modules/core/order.c"               // LIFO-style priority stack object
 #include "modules/core/point.c"               // 2d integer point
 #include "modules/core/point3.c"              // 2d integer point
 #include "modules/core/rect.c"                // 
@@ -45,6 +45,7 @@
 #include "modules/core/number.c"              // integer number with min and max bounds
 #include "modules/core/alarm.c"               // timers
 #include "modules/core/stopwatch.c"
+#include "modules/core/wallclock.c"
 #include "modules/core/entity.c"              // AABB collisions
 #include "modules/core/gbs.c"                 // GooberScript
 #include "modules/core/gbml.c"                // markup
@@ -176,6 +177,7 @@ gb_t * gb;
   graph_draw_colormap_sub(gb_graph(),x,y,c,cx,cy,cw,ch)
 #define gb_draw_text(x,y,t)           graph_draw_text(gb_graph(),x,y,t)
 #define gb_draw_tilemap(x,y,t)        graph_draw_tilemap(gb_graph(),x,y,t)
+#define gb_draw_sprite(x,y,s)         graph_draw_sprite(gb_graph(),x,y,s)
 
 // audio
 #define gb_sound(s,c)                 audio_play(gb_audio(),s,c)
@@ -209,13 +211,12 @@ void gb_exit() {
 // this means that these objects will have their own drawing functions which reference
 // the graph module instead.
 
-#include "modules/objects/graphical/test.c"
+#include "modules/objects/graphical/enttest.c"    //
 #include "modules/objects/graphical/sprayer.c"    // sprays the screen with colored pixels
-#include "modules/objects/graphical/menu.c"
-
-#include "modules/objects/toys/jake.c"            // slithers across the screen slowly
-#include "modules/objects/toys/ball.c"            // bounces based on arrow keys
-#include "modules/objects/toys/fountain.c"        // sprays sprites from a center
+#include "modules/objects/graphical/entmenu.c"    //
+#include "modules/objects/graphical/jake.c"       // slithers across the screen slowly
+#include "modules/objects/graphical/ball.c"       // bounces based on arrow keys
+#include "modules/objects/graphical/fountain.c"   // sprays sprites from a center
 
 #include "modules/debug/debugpanel.c"
 #include "modules/debug/debug.c"

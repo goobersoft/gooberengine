@@ -22,7 +22,7 @@ typedef struct {
 // new //
 /////////
 
-palette_t * palette() {
+palette_t * palette(void) {
   palette_t * r     = alloc(palette_t);
   int cr = 0;
   int cg = 0;

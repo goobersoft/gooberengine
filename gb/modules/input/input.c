@@ -70,7 +70,7 @@ void init_input( input_t * self ) {
   }
 }
 
-input_t * input() {
+input_t * input(void) {
   input_t * self = alloc(input_t);
   init_input(self);
   return self;

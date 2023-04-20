@@ -172,3 +172,5 @@ typedef struct timeval timeval_t;
 #define isfalse(a) (a==false())
 
 #define new(a) a##_t*a(){a##_t*self=alloc(a##_t);init_##a(self);return self;}
+
+#define center(wl,w) ((wl-w)/2) 
