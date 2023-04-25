@@ -31,9 +31,7 @@
 
 #include "modules/core/bitfield.c"            // bitfield
 #include "modules/core/bintree.c"             // binary tree
-/*
-#include "modules/rng.c"                      // implementation of mersenne twister in c
-*/
+
 #include "modules/core/string.c"              // fixed-length character arrays
 #include "modules/core/list.c"                // linked list data type
 #include "modules/core/dict.c"                // dictionary
@@ -97,7 +95,6 @@ typedef struct {
   graph_t      * graph;
   //canvas_t     * canvas;
   assets_t     * assets;
-  //mouse_t      * mouse;
   audio_t      * audio;
   controller_t * controller;
   input_t      * input;
