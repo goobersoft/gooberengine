@@ -853,7 +853,9 @@ void graph_present( graph_t * self ) {
   do {
     //log("%d %d",xx,yy);
     cc = colormap_data(cm)[ci];
-    px[ci++] = abgr(255,get_color_b(cc)*85,get_color_g(cc)*85,get_color_r(cc)*85);
+    //rr = 
+    px[ci++] = abgr(255,(get_color_b(cc)<<6)|16,(get_color_g(cc)<<6)|16,(get_color_r(cc)<<6)|16);
+    //px[ci++] = abgr(255,get_color_b(cc)*85,get_color_g(cc)*85,get_color_r(cc)*85);
     //ci++;
   } while (ci<graph_area());
   

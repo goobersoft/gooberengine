@@ -117,6 +117,6 @@ void visual_draw_pre( visual_t * self ) {
 
 void visual_draw_post( visual_t * self ) {
   SDL_RenderCopy       ( visual_renderer(self), board_texture(visual_screen(self)), NULL, NULL);
-  visual_draw_scanlines(self);
+  //visual_draw_scanlines(self);
   SDL_RenderPresent    ( visual_renderer(self) );
 }
