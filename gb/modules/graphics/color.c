@@ -17,11 +17,15 @@ type() {
 #define color_g(c)      c->g
 #define color_b(c)      c->b
 #define color_a(c)      c->a
+#define color_i(c)      c->i
 
 #define get_color_r(c)  c.r
 #define get_color_g(c)  c.g
 #define get_color_b(c)  c.b
 #define get_color_a(c)  c.a
+#define get_color_i(c)  c.i
+
+Uint8 _color_vals[4] = {0,85,170,255};
 
 ////////////
 // Colors //
@@ -163,4 +167,14 @@ void color_to_string( color_t c, string_t * s ) {
   u = string_copy_number_at(s,u,c.g);
   u = string_copy_number_at(s,u,c.b);
   u = string_copy_number_at(s,u,c.a);
+}
+
+Uint32 color_to_uint32( color_t c ) {
+  Uint32 ret2;
+  Uint8 * u = (Uint8*) &ret2;
+  u[0] = _color_vals[c.r];
+  u[1] = _color_vals[c.g];
+  u[2] = _color_vals[c.b];
+  u[3] = _color_vals[c.a];
+  return ret2;
 }

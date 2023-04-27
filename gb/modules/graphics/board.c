@@ -1,6 +1,7 @@
 
 #define board_width()   400
 #define board_height()  240
+#define board_area()    board_width()*board_height()
 
 #define board_blend_mode_normal()   0
 #define board_blend_mode_add()      1
@@ -23,6 +24,18 @@ type() {
 #define board_locked(self)     (self->locked)
 #define board_rawdata(self)    (self->rawdata)
 #define board_rawpitch(self)   (self->rawpitch)
+
+//////////////
+// typedefs //
+//////////////
+
+
+type() {
+
+  Uint32 data[96000];
+
+} board_rawdata_t;
+
 
 /////////
 // new //

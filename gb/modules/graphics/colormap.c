@@ -19,6 +19,10 @@ typedef struct {
 #define colormap_area(self)        (self->area)
 #define colormap_draw_offset(self) (self->draw_offset)
 
+//////////////
+// typedefs //
+//////////////
+
 /////////
 // new //
 /////////

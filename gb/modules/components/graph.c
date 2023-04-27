@@ -852,10 +852,8 @@ void graph_present( graph_t * self ) {
   // do-while  = do first, check after
   do {
     //log("%d %d",xx,yy);
-    cc = colormap_data(cm)[ci];
-    //rr = 
-    px[ci++] = abgr(255,(get_color_b(cc)<<6)|16,(get_color_g(cc)<<6)|16,(get_color_r(cc)<<6)|16);
-    //px[ci++] = abgr(255,get_color_b(cc)*85,get_color_g(cc)*85,get_color_r(cc)*85);
+    //cc = ;
+    px[ci++] = color_to_uint32(colormap_data(cm)[ci]);
     //ci++;
   } while (ci<graph_area());
   
