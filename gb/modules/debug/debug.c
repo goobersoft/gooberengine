@@ -31,6 +31,7 @@ void debug_load() {
 
 void debug_start() {
   debug.colormap = gb_get_colormap("bricker-0");
+  log("%d",rnd(0,10));
 }
 
 void debug_update_pre() {
