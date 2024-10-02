@@ -128,7 +128,6 @@ char * rstr( int n, int l ) {
 }
 
 char _bits[80];
-
 char * bits(uint_t n, int l) {
   clear(_bits,80,0);
   loop(i,32) {
@@ -329,7 +328,9 @@ int rnd(int a, int b) {
   sqroot(sqr(x2-x1)+sqr(y2-y1))
 
 
+// 
 int ceiled( int a, int d ) {
+  if (d==0) d = 10;
   int u = abs(a)%d;
   if (u>0) {
     if (a < 0) {
@@ -343,6 +344,7 @@ int ceiled( int a, int d ) {
 }
 
 int floored( int a, int d ) {
+  if (d==0) d = 10;
   int u = abs(a)%d;
   if (u>0) {
     if (a < 0) {

@@ -32,7 +32,7 @@
 #define graph_layer_base()          0
 #define graph_layer_top()           9
 #define graph_max_layers()         10
-#define graph_max_framedots() 100000
+#define graph_max_framedots()  100000
 
 #define graph_max_intensity()    1000
 

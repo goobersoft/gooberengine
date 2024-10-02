@@ -122,18 +122,25 @@ typedef struct timeval timeval_t;
 #define foreign(x)        x
 #define transient(x)      x
 
+// null() -> NULL -> 0
 #define null()            NULL
 
+// arbitrary layer constants.
+// you can use x as an offset
 #define layer_top(x)      (1000+x)
 #define layer_fg(x)       (800+x)
 #define layer_normal(x)   (500+x)
 #define layer_bg(x)       (200+x)
 #define layer_bottom(x)   (x)
 
+// It's PI * 100000
 #define pi()              3141592
 
-#define tile8(x)         (8*x)
-#define tile10(x)        (10*x)
+#define tile8(x)         (x/8)
+#define tile10(x)        (x/10)
+
+#define pixel8(x)        (x*8)
+#define pixel10(x)       (x*10)
 
 #define seconds(x)       (60*x)
 #define milliseconds(x)  (1000*x)
@@ -157,6 +164,9 @@ typedef struct timeval timeval_t;
     a[ps+i]=b[i];           \
   }
 
+// a: array
+// l: array length
+// v: value to use
 #define clear(a,l,v)        \
   for(int i=0;i<l;i++) {    \
     a[i]=v;                 \
@@ -171,6 +181,7 @@ typedef struct timeval timeval_t;
 #define istrue(a)  (a==true())
 #define isfalse(a) (a==false())
 
+// I don't remember writing this.
 #define new(a) a##_t*a(){a##_t*self=alloc(a##_t);init_##a(self);return self;}
 
 #define center(wl,w) ((wl-w)/2) 

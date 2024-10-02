@@ -87,7 +87,7 @@ void bricker_init() {
 //-- Load --//
 void bricker_load() {
   
-  // type casting is for pussies :-)
+  
   void * u;
   
   // asset loading is done from top-level, so you have to indicate
