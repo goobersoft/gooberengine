@@ -1,7 +1,7 @@
 
-#define gb_version_major() 2023
-#define gb_version_minor() 4
-#define gb_version_patch() 20
+#define gb_version_major() 2026
+#define gb_version_minor() 3
+#define gb_version_patch() 15
 
 //  submodules stack
 //  ----------------
@@ -83,116 +83,85 @@
 // gb type //
 /////////////
 
-typedef struct {
+bool_t          gb_f_running;
+bool_t          gb_f_paused;
+bool_t          gb_f_cls;
+bool_t          gb_f_debug;
 
-  bool_t         f_running;
-  bool_t         f_paused;
-  bool_t         f_cls;
-  bool_t         f_debug;
+assets_t      * gb_assets;
+visual_t      * gb_visual;
+timing_t      * gb_timing;
+graph_t       * gb_graph;
+//canvas_t    * gb_canvas;
+audio_t       * gb_audio;
+controller_t  * gb_controller;
+input_t       * gb_input;
+settings_t    * gb_settings;
+scene_t       * gb_scene;
 
-  visual_t     * visual;
-  timing_t     * timing;
-  graph_t      * graph;
-  //canvas_t     * canvas;
-  assets_t     * assets;
-  audio_t      * audio;
-  controller_t * controller;
-  input_t      * input;
-  settings_t   * settings;
-
-  scene_t      * scene;
-
-  //lua_State    * lua;
-  
-} gb_t;
-
-/////////////
-// globals //
-/////////////
-
-gb_t * gb;
 
 ///////////////
 // functions //
 ///////////////
-
-// these are essentially convenience getters
-// also I hate using the -> operator.
-#define gb()            (gb)
-#define gb_assets()     (gb->assets)
-#define gb_running()    (gb->f_running)
-#define gb_f_cls()      (gb->f_cls)
-#define gb_f_debug()    (gb->f_debug)
-#define gb_paused()     (gb->f_paused)
-#define gb_visual()     (gb->visual)
-#define gb_timing()     (gb->timing)
-#define gb_graph()      (gb->graph)
-#define gb_canvas()     (gb->canvas)
-#define gb_audio()      (gb->audio)
-#define gb_controller() (gb->controller)
-#define gb_input()      (gb->input)
-#define gb_settings()   (gb->settings)
-#define gb_scene()      (gb->scene)
-#define gb_lua()        (gb->lua)
 
 //////////////////////
 // helper functions //
 //////////////////////
 
 // input
-#define gb_get_key_state(a)   input_get_key_state   (gb_input(),a)
-#define gb_get_key_pressed(a) input_get_key_pressed (gb_input(),a)
-#define gb_get_key_held(a)    input_get_key_held    (gb_input(),a)
+#define gb_get_key_state(a)   input_get_key_state   (gb_input,a)
+#define gb_get_key_pressed(a) input_get_key_pressed (gb_input,a)
+#define gb_get_key_held(a)    input_get_key_held    (gb_input,a)
 
 // assets
-#define gb_get_image(a)       assets_get_image(gb_assets(),a)
-#define gb_get_colormap(a)    assets_get_colormap(gb_assets(),a)
-#define gb_get_sound(a)       assets_get_sound(gb_assets(),a)
-#define gb_get_font(a)        assets_get_font(gb_assets(),a)
+#define gb_get_image(a)       assets_get_image(gb_assets,a)
+#define gb_get_colormap(a)    assets_get_colormap(gb_assets,a)
+#define gb_get_sound(a)       assets_get_sound(gb_assets,a)
+#define gb_get_font(a)        assets_get_font(gb_assets,a)
 
-#define gb_set_image(a,p)     assets_set_image     (gb_assets(),a,p)
-#define gb_set_colormap(a,p)  assets_set_colormap  (gb_assets(),a,p)
-#define gb_set_sound(a,p)     assets_set_sound     (gb_assets(),a,p)   
-#define gb_set_font(a,p)      assets_set_font      (gb_assets(),a,p)
+#define gb_set_image(a,p)     assets_set_image     (gb_assets,a,p)
+#define gb_set_colormap(a,p)  assets_set_colormap  (gb_assets,a,p)
+#define gb_set_sound(a,p)     assets_set_sound     (gb_assets,a,p)   
+#define gb_set_font(a,p)      assets_set_font      (gb_assets,a,p)
 
 // controller
-#define gb_button(a)          controller_get_button(gb_controller(),a)
+#define gb_button(a)          controller_get_button(gb_controller,a)
 
 // graph
-#define gb_cls()                      graph_cls(gb_graph())
-#define gb_set_intensity(x)           graph_set_intensity(gb_graph(),x)
-#define gb_set_intensity_max()        graph_set_intensity_max(gb_graph())
-#define gb_reset_intensity()          graph_reset_intensity(gb_graph())
-#define gb_set_color(r,g,b)           graph_set_color(gb_graph(),make_color(r,g,b))
-#define gb_draw_dot(x,y)              graph_draw_dot(gb_graph(),x,y)
-#define gb_draw_rect(x,y,w,h)         graph_draw_rect(gb_graph(),x,y,w,h)
-#define gb_draw_rect_line(x,y,w,h)    graph_draw_rect_line(gb_graph(),x,y,w,h)
-#define gb_draw_circle(x,y,r)         graph_draw_circle(gb_graph(),x,y,r)
-#define gb_draw_circle_line(x,y,r)    graph_draw_rect(gb_graph(),x,y,r)
-#define gb_draw_colormap(x,y,c)       graph_draw_colormap(gb_graph(),x,y,c)
+#define gb_cls()                      graph_cls(gb_graph)
+#define gb_set_intensity(x)           graph_set_intensity(gb_graph,x)
+#define gb_set_intensity_max()        graph_set_intensity_max(gb_graph)
+#define gb_reset_intensity()          graph_reset_intensity(gb_graph)
+#define gb_set_color(r,g,b)           graph_set_color(gb_graph,make_color(r,g,b))
+#define gb_draw_dot(x,y)              graph_draw_dot(gb_graph,x,y)
+#define gb_draw_rect(x,y,w,h)         graph_draw_rect(gb_graph,x,y,w,h)
+#define gb_draw_rect_line(x,y,w,h)    graph_draw_rect_line(gb_graph,x,y,w,h)
+#define gb_draw_circle(x,y,r)         graph_draw_circle(gb_graph,x,y,r)
+#define gb_draw_circle_line(x,y,r)    graph_draw_rect(gb_graph,x,y,r)
+#define gb_draw_colormap(x,y,c)       graph_draw_colormap(gb_graph,x,y,c)
 #define gb_draw_colormap_sub(x,y,c,cx,cy,cw,ch) \
-  graph_draw_colormap_sub(gb_graph(),x,y,c,cx,cy,cw,ch)
-#define gb_draw_text(x,y,t)           graph_draw_text(gb_graph(),x,y,t)
-#define gb_draw_tilemap(x,y,t)        graph_draw_tilemap(gb_graph(),x,y,t)
-#define gb_draw_sprite(x,y,s)         graph_draw_sprite(gb_graph(),x,y,s)
+  graph_draw_colormap_sub(gb_graph,x,y,c,cx,cy,cw,ch)
+#define gb_draw_text(x,y,t)           graph_draw_text(gb_graph,x,y,t)
+#define gb_draw_tilemap(x,y,t)        graph_draw_tilemap(gb_graph,x,y,t)
+#define gb_draw_sprite(x,y,s)         graph_draw_sprite(gb_graph,x,y,s)
 
 // audio
-#define gb_sound(s,c)                 audio_play(gb_audio(),s,c)
+#define gb_sound(s,c)                 audio_play(gb_audio,s,c)
 
 ///////////////
 // functions //
 ///////////////
 
 void gb_set_cls( bool_t b ) {
-  gb_f_cls() = bool(b);
+  gb_f_cls = bool(b); 
 }
 
 void gb_set_scene( scene_t * s ) {
-  gb_scene() = s;
+  gb_scene = s;
 }
 
 void gb_exit() {
-  gb_running() = false();
+  gb_running = false();
 }
 
 //////////////////////////
@@ -227,23 +196,22 @@ void gb_init() {
 
   // the master object does not have an allocation function.
   // instead it is done here in init()
-  gb()              = alloc(gb_t);
-  gb_running()      = true();
-  gb_paused()       = false();
-  gb_f_cls()        = false();
-  gb_f_debug()      = true();
-  gb_visual()       = visual();
-  gb_timing()       = timing();
-  gb_assets()       = assets(gb_visual());
-  gb_audio()        = audio();
-  gb_graph()        = graph(gb_visual());
-  //gb_canvas()       = canvas(gb_visual());
-  gb_input()        = input();
-  gb_settings()     = settings();
-  gb_controller()   = controller(gb_input());
+  gb_running    = true();
+  gb_paused     = false();
+  gb_f_cls      = false();
+  gb_f_debug    = true();
+  gb_visual     = visual();
+  gb_timing     = timing();
+  gb_assets     = assets(gb_visual);
+  gb_audio      = audio();
+  gb_graph      = graph(gb_visual);
+  //gb_canvas = canvas(gb_visual);
+  gb_input      = input();
+  gb_settings   = settings();
+  gb_controller = controller(gb_input);
   
   // current scene is null.
-  gb_scene()       = null();
+  gb_scene = null();
   /*
   gb_lua() = lua_open();
   luaL_openlibs(gb_lua());
@@ -259,35 +227,35 @@ void gb_init() {
 void gb_load() {
   // load the default assets
   // load images
-  assets_t * a = gb_assets();
-  visual_t * v = gb_visual();
+  assets_t * a = gb_assets;
+  visual_t * v = gb_visual;
 
   // using a dictionary internally for assets instead of arrays
   // this will make it easier not to accidentally step over the same indices
   // when creating games for gb
-  assets_set_image(a,"gb-0",          image("gb/media/images/gb-0.png"));
-  assets_set_image(a,"gb-1",          image("gb/media/images/gb-1.png"));
-  assets_set_image(a,"editor-bg",     image("gb/media/images/editor-bg.png"));
-  assets_set_image(a,"test",          image("gb/media/images/test.png"));
-  assets_set_image(a,"gb-color-test", image("gb/media/images/gb-color-test.png"));
+  assets_set_image(gb_assets,"gb-0",          image("gb/media/images/gb-0.png"));
+  assets_set_image(gb_assets,"gb-1",          image("gb/media/images/gb-1.png"));
+  assets_set_image(gb_assets,"editor-bg",     image("gb/media/images/editor-bg.png"));
+  assets_set_image(gb_assets,"test",          image("gb/media/images/test.png"));
+  assets_set_image(gb_assets,"gb-color-test", image("gb/media/images/gb-color-test.png"));
 
   // the assets object understands that we're looking for image_t* pointers.
   // internally the pointer is automatically cast in the dictionary from void* to image_t*
-  assets_set_colormap(a,"gb-0",           colormap_from_image(assets_get_image(a,"gb-0")));
-  assets_set_colormap(a,"gb-1",           colormap_from_image(assets_get_image(a,"gb-1")));
-  assets_set_colormap(a,"editor-bg",      colormap_from_image(assets_get_image(a,"editor-bg")));
-  assets_set_colormap(a,"test",           colormap_from_image(assets_get_image(a,"test")));
-  assets_set_colormap(a,"gb-color-test",  colormap_from_image(assets_get_image(a,"gb-color-test")));
+  assets_set_colormap(gb_assets,"gb-0",           colormap_from_image(assets_get_image(gb_assets,"gb-0")));
+  assets_set_colormap(gb_assets,"gb-1",           colormap_from_image(assets_get_image(gb_assets,"gb-1")));
+  assets_set_colormap(gb_assets,"editor-bg",      colormap_from_image(assets_get_image(gb_assets,"editor-bg")));
+  assets_set_colormap(gb_assets,"test",           colormap_from_image(assets_get_image(gb_assets,"test")));
+  assets_set_colormap(gb_assets,"gb-color-test",  colormap_from_image(assets_get_image(gb_assets,"gb-color-test")));
 
-  assets_set_sound(a,"jake-1",sound("gb/media/sounds/jake-1.ogg"));
-  assets_set_sound(a,"jake-2",sound("gb/media/sounds/jake-2.ogg"));
-  assets_set_sound(a,"jake-3",sound("gb/media/sounds/jake-3.ogg"));
-  assets_set_sound(a,"jake-4",sound("gb/media/sounds/jake-4.ogg"));
+  assets_set_sound(gb_assets,"jake-1",sound("gb/media/sounds/jake-1.ogg"));
+  assets_set_sound(gb_assets,"jake-2",sound("gb/media/sounds/jake-2.ogg"));
+  assets_set_sound(gb_assets,"jake-3",sound("gb/media/sounds/jake-3.ogg"));
+  assets_set_sound(gb_assets,"jake-4",sound("gb/media/sounds/jake-4.ogg"));
 
   // load font 1
   font_t * f;
 
-  f = font( assets_get_colormap(a,"gb-0") );
+  f = font( assets_get_colormap(gb_assets,"gb-0") );
   font_set_pos         ( f, 0, 100  );
   font_set_tile_size   ( f, 5, 10   );
   font_set_tiles_size  ( f, 10, 10  );
