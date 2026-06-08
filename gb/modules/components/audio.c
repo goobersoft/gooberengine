@@ -11,6 +11,8 @@
 #define audio_channel_bfx2()  5 // background effect 2
 #define audio_channel_aux()   6 // auxillary / menu
 #define audio_channel_music() 7 // background music
+#define audio_channel_misc1() 8 // misc channel 1
+#define audio_channel_misc2() 9 // misc channel 2
 
 #define audio_playback_freq() 44100
 #define audio_num_channels()  10
