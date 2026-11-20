@@ -6,6 +6,9 @@ exports/
 *.gbcart
 screenshot-*.png
 
+# the Emscripten toolchain (about 1 GB, its own git checkout): make web uses it
+tools/emsdk/
+
 # what the editors leave beside a cart: work kept when the window closed unsaved,
 # and the old-format files a SAVE converted
 *.unsaved

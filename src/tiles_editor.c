@@ -3,19 +3,21 @@
  * A tileset is 400 x 240 pixels (960 tiles), more than fits beside the file
  * tree, so the editor works like a paint program:
  *
- *   - the whole tileset is the background. Middle-drag (or Space + drag) pans
- *     it, the wheel zooms it around the mouse, and a click picks a tile.
- *   - the selected tile (or a 2x2 / 4x4 block) is drawn big in its own window.
- *     Paint there. Drag the window by its title bar; drag its bottom-right
- *     corner to resize it.
+ *   - the whole tileset is the canvas. Middle-drag (or Space + drag) pans it,
+ *     and the wheel zooms it around the mouse.
+ *   - the selected tile (or a 2x2 / 4x4 block), boxed in yellow, is the only
+ *     part that can be painted: a stroke stops at its edge. Clicking outside
+ *     it selects the tile clicked instead.
+ *   - the preview window shows the selection by itself, at a size that fits.
+ *     Drag it by its title bar; drag its bottom-right corner to resize it.
  *   - the tools, actions and the 64 colours are in another window, which can
  *     also be dragged around.
  *
  * Transparent pixels show as a pink checkerboard (colours 50 and 34). The
  * left button draws with colour A, the right button with colour B
- * (transparent at first, so it erases), and the middle button picks a colour
- * up. Edits go straight into the open tileset, so Ctrl+R runs them without
- * saving; Ctrl+S writes tiles/NAME.g64. */
+ * (transparent at first, so it erases), and a middle click (without dragging)
+ * picks a colour up. Edits go straight into the open tileset, so Ctrl+R runs
+ * them without saving; Ctrl+S writes tiles/NAME.g64. */
 #include "engine.h"
 #include <SDL2/SDL_scancode.h>
 #include <stdarg.h>
@@ -39,8 +41,10 @@ static const char *const tool_names[NTOOLS] = {"pencil (P)", "fill (F)", "line (
 enum { A_SIZE, A_FLIPX, A_FLIPY, A_TURN, A_CLEAR, NACTS };
 static const char act_keys[NACTS] = {'Z', 'H', 'V', 'T', 'X'};
 static const char *const act_names[NACTS] = {"block size 1x1 / 2x2 / 4x4 (Z)", "flip across (H)", "flip up-down (V)", "turn clockwise (T)", "clear the block (Del)"};
-static const int zooms[] = {1, 2, 3, 4, 6, 8};
-#define NZOOM 6
+static const int zooms[] = {1, 2, 3, 4, 6, 8, 12, 16};
+#define NZOOM 8
+#define START_ZOOM 4                /* 6x: a tile is 60 screen pixels */
+#define PREVIEW 82                  /* the preview window's starting size */
 
 /* a floating window: (x, y) is its top-left, w x h its content below the title bar */
 typedef struct { int x, y, w, h; } Win;
@@ -60,6 +64,8 @@ static struct {
     int placed_w;            /* the editor's width then: the windows keep to its right edge */
     int drag;                /* 0 none, 1 window move, 2 window resize, 3 pan, 4 paint */
     int drag_win, drag_dx, drag_dy, pan_x, pan_y;
+    int pan_btn, pan_sx, pan_sy;   /* the button panning, where it went down */
+    bool pan_moved;          /* a middle click that didn't move picks a colour instead */
     int stroke_btn, x0, y0, lastx, lasty;
     Tileset *base;           /* the tileset when a line/rect drag started */
     Tileset *undo[MAX_UNDO], *redo[MAX_UNDO];
@@ -93,7 +99,7 @@ static void init(void) {
     T.col_a = COL_WHITE;
     T.col_b = CLEAR;
     T.grid = true;
-    T.zoom = 1;
+    T.zoom = START_ZOOM;
     T.ox = 0;
     T.oy = TOP;
     T.top = W_TOOLS;
@@ -102,7 +108,7 @@ static void init(void) {
 /* windows start at the right of the editor, the tools right-most */
 static void place_windows(void) {
     T.win[W_TOOLS] = (Win){UI_W - TOOLS_W - 2, TOP + 2, TOOLS_W, TOOLS_H};
-    T.win[W_TILE] = (Win){UI_W - TOOLS_W - 2 - 126, TOP + 2, 122, 122};
+    T.win[W_TILE] = (Win){UI_W - TOOLS_W - 2 - PREVIEW - 4, TOP + 2, PREVIEW, PREVIEW};
     T.placed = true;
     T.placed_w = UI_W;
 }
@@ -315,6 +321,18 @@ static void clamp_pan(void) {
     if (T.oy + h < TOP + 40) T.oy = TOP + 40 - h;
 }
 
+/* scroll the sheet the least that brings the whole selection into view */
+static void show_selection(void) {
+    int z = zooms[T.zoom], n = bpx() * z;
+    int x = T.ox + (T.sel % SHEET_COLS) * TILE * z, y = T.oy + (T.sel / SHEET_COLS) * TILE * z;
+    if (x + n > UI_W) T.ox -= x + n - UI_W;
+    if (y + n > BOT) T.oy -= y + n - BOT;
+    x = T.ox + (T.sel % SHEET_COLS) * TILE * z;
+    y = T.oy + (T.sel / SHEET_COLS) * TILE * z;
+    if (x < 0) T.ox -= x;
+    if (y < TOP) T.oy += TOP - y;
+}
+
 static void key(const KeyEvent *ev) {
     int sc = ev->sc;
     bool ctrl = ev->mod & MOD_CTRL, shift = ev->mod & MOD_SHIFT;
@@ -340,14 +358,14 @@ static void key(const KeyEvent *ev) {
         case SDL_SCANCODE_I: set_tool(T_PICK); return;
         case SDL_SCANCODE_G: T.grid = !T.grid; return;
         case SDL_SCANCODE_X: { int t = T.col_a; T.col_a = T.col_b; T.col_b = t; return; }
-        case SDL_SCANCODE_Z: act(A_SIZE); return;
+        case SDL_SCANCODE_Z: act(A_SIZE); show_selection(); return;
         case SDL_SCANCODE_H: act(A_FLIPX); return;
         case SDL_SCANCODE_V: act(A_FLIPY); return;
         case SDL_SCANCODE_T: act(A_TURN); return;
         case SDL_SCANCODE_DELETE: case SDL_SCANCODE_BACKSPACE: act(A_CLEAR); return;
         case SDL_SCANCODE_EQUALS: case SDL_SCANCODE_KP_PLUS: zoom_at(1, UI_W / 2, (TOP + BOT) / 2); return;
         case SDL_SCANCODE_MINUS: case SDL_SCANCODE_KP_MINUS: zoom_at(-1, UI_W / 2, (TOP + BOT) / 2); return;
-        case SDL_SCANCODE_HOME: T.zoom = 1; T.ox = 0; T.oy = TOP; place_windows(); return;
+        case SDL_SCANCODE_HOME: T.zoom = START_ZOOM; T.ox = 0; T.oy = TOP; place_windows(); show_selection(); return;
         case SDL_SCANCODE_LEFT: dx = -1; break;
         case SDL_SCANCODE_RIGHT: dx = 1; break;
         case SDL_SCANCODE_UP: dy = -1; break;
@@ -358,6 +376,7 @@ static void key(const KeyEvent *ev) {
     int col = T.sel % SHEET_COLS + dx, row = T.sel / SHEET_COLS + dy;
     if (col < 0 || row < 0 || col > SHEET_COLS - T.bsize || row > SHEET_ROWS - T.bsize) return;
     T.sel = row * SHEET_COLS + col;
+    show_selection();
 }
 
 /* ---------------------------------------------------------------- the windows' insides */
@@ -368,15 +387,15 @@ static bool inside(int x, int y, int w, int h) {
 
 static bool in_win(int i) { const Win *w = &T.win[i]; return inside(w->x, w->y, w->w, TITLE_H + w->h); }
 
-/* the tile window's canvas: pixels of `scale` screen pixels, centred */
-static int canvas_scale(void) {
+/* the preview window: the selection at the biggest whole scale that fits, centred */
+static int preview_scale(void) {
     const Win *w = &T.win[W_TILE];
     int s = (w->w < w->h ? w->w : w->h) / bpx();
     return s < 1 ? 1 : s;
 }
-static void canvas_origin(int *cx, int *cy) {
+static void preview_origin(int *cx, int *cy) {
     const Win *w = &T.win[W_TILE];
-    int size = canvas_scale() * bpx();
+    int size = preview_scale() * bpx();
     *cx = w->x + (w->w - size) / 2;
     *cy = w->y + TITLE_H + (w->h - size) / 2;
 }
@@ -387,18 +406,44 @@ static int act_btn(int i, int *x, int *y) { *x = T.win[W_TOOLS].x + 2 + i * 13; 
 static void pal_origin(int *x, int *y) { *x = T.win[W_TOOLS].x + 3; *y = T.win[W_TOOLS].y + TITLE_H + 28; }
 #define PAL_CELL 8
 
-static void canvas_press(int btn) {
-    int s = canvas_scale(), cx, cy;
-    canvas_origin(&cx, &cy);
-    int x = (in.mouse_x - cx) / s, y = (in.mouse_y - cy) / s;
-    if (in.mouse_x < cx || in.mouse_y < cy || x >= bpx() || y >= bpx()) return;
-    int c = btn == 1 ? T.col_a : T.col_b;
-    if (btn == 3 || T.tool == T_PICK) {          /* middle button always picks */
-        int got = bget(x, y);
-        if (btn == 2) T.col_b = got; else T.col_a = got;
-        if (T.tool == T_PICK) T.tool = T.prev_tool;
+static int floor_div(int a, int b) { return a >= 0 ? a / b : -((-a + b - 1) / b); }
+
+/* the sheet pixel at screen (mx, my), in the selected block's coordinates: true
+ * if it is inside the block (and so may be painted) */
+static bool block_px_at(int mx, int my, int *bx, int *by) {
+    int z = zooms[T.zoom];
+    *bx = floor_div(mx - T.ox, z) - (T.sel % SHEET_COLS) * TILE;
+    *by = floor_div(my - T.oy, z) - (T.sel / SHEET_COLS) * TILE;
+    return *bx >= 0 && *by >= 0 && *bx < bpx() && *by < bpx();
+}
+
+static int sheet_tile_at(int mx, int my) {     /* -1 if not on the sheet */
+    int z = zooms[T.zoom];
+    int px = mx - T.ox, py = my - T.oy;
+    if (px < 0 || py < 0 || px >= SHEET_W * z || py >= SHEET_H * z) return -1;
+    return (py / z / TILE) * SHEET_COLS + px / z / TILE;
+}
+
+/* pick up the colour under the mouse, from anywhere on the sheet: reading can't hurt */
+static void pick_colour(bool into_b) {
+    int z = zooms[T.zoom], px = in.mouse_x - T.ox, py = in.mouse_y - T.oy;
+    if (px < 0 || py < 0 || px >= SHEET_W * z || py >= SHEET_H * z) return;
+    px /= z;
+    py /= z;
+    int c = TS->t[(py / TILE) * SHEET_COLS + px / TILE][(py % TILE) * TILE + px % TILE];
+    if (into_b) T.col_b = c; else T.col_a = c;
+}
+
+/* a left or right press on the sheet: paint inside the selection, select outside it */
+static void sheet_press(int btn) {
+    if (T.tool == T_PICK) { pick_colour(btn == 2); T.tool = T.prev_tool; return; }
+    int x, y;
+    if (!block_px_at(in.mouse_x, in.mouse_y, &x, &y)) {
+        int t = sheet_tile_at(in.mouse_x, in.mouse_y);
+        if (t >= 0) { T.sel = t; clamp_sel(); }
         return;
     }
+    int c = btn == 1 ? T.col_a : T.col_b;
     before_change();
     if (T.tool == T_FILL) { bfill(x, y, c); return; }
     res_free(RES_TILES, T.base);
@@ -410,14 +455,14 @@ static void canvas_press(int btn) {
     if (T.tool == T_PENCIL) bset(x, y, c);
 }
 
-static void canvas_drag(void) {
-    int s = canvas_scale(), n = bpx(), cx, cy;
-    canvas_origin(&cx, &cy);
-    int x = (in.mouse_x - cx) / s, y = (in.mouse_y - cy) / s;
-    if (in.mouse_x < cx) x = -1;
-    if (in.mouse_y < cy) y = -1;
-    if (x >= n) x = n;
-    if (y >= n) y = n;
+/* a stroke goes on while the button is held; bset leaves out what falls outside the block */
+static void sheet_drag(void) {
+    int n = bpx(), x, y;
+    block_px_at(in.mouse_x, in.mouse_y, &x, &y);
+    if (x < -1) x = -1;               /* just past the edge is enough to reach it */
+    if (y < -1) y = -1;
+    if (x > n) x = n;
+    if (y > n) y = n;
     int c = T.stroke_btn == 1 ? T.col_a : T.col_b;
     if (T.tool == T_PENCIL) {
         bline(T.lastx, T.lasty, x, y, c);
@@ -445,17 +490,10 @@ static void tools_press(int btn) {
 
 /* ---------------------------------------------------------------- mouse */
 
-static int sheet_tile_at(int mx, int my) {     /* -1 if not on the sheet */
-    int z = zooms[T.zoom];
-    int px = mx - T.ox, py = my - T.oy;
-    if (px < 0 || py < 0 || px >= SHEET_W * z || py >= SHEET_H * z) return -1;
-    return (py / z / TILE) * SHEET_COLS + px / z / TILE;
-}
-
 static void mouse(void) {
     bool space = in.key[SDL_SCANCODE_SPACE];
     if (T.drag) {
-        int held = T.drag == 4 ? T.stroke_btn : T.drag == 3 ? (in.mouse[3] ? 3 : 1) : 1;
+        int held = T.drag == 4 ? T.stroke_btn : T.drag == 3 ? T.pan_btn : 1;
         /* a new press (even one with no frame of release before it) ends the drag */
         if (in.mouse[held] && !in.mouse_hit[held]) {
             Win *w = &T.win[T.drag_win];
@@ -469,10 +507,17 @@ static void mouse(void) {
                     if (w->h > BOT - w->y - TITLE_H) w->h = BOT - w->y - TITLE_H;
                     keep_windows_inside();
                     break;
-                case 3: T.ox = in.mouse_x - T.pan_x; T.oy = in.mouse_y - T.pan_y; clamp_pan(); break;
-                case 4: canvas_drag(); break;
+                case 3:
+                    T.ox = in.mouse_x - T.pan_x; T.oy = in.mouse_y - T.pan_y; clamp_pan();
+                    if (abs(in.mouse_x - T.pan_sx) > 2 || abs(in.mouse_y - T.pan_sy) > 2) T.pan_moved = true;
+                    break;
+                case 4: sheet_drag(); break;
             }
             return;
+        }
+        if (T.drag == 3 && T.pan_btn == 3 && !T.pan_moved) {     /* a middle click: pick the colour */
+            T.ox = in.mouse_x - T.pan_x; T.oy = in.mouse_y - T.pan_y;
+            pick_colour(false);
         }
         T.drag = 0;
     }
@@ -496,8 +541,7 @@ static void mouse(void) {
             T.drag_dx = w->x + w->w - in.mouse_x; T.drag_dy = w->y + TITLE_H + w->h - in.mouse_y;
             return;
         }
-        if (i == W_TILE) canvas_press(btn);
-        else tools_press(btn);
+        if (i == W_TOOLS) tools_press(btn);      /* the preview is only to look at */
         return;
     }
 
@@ -506,14 +550,15 @@ static void mouse(void) {
     if (in.wheel) { zoom_at(in.wheel > 0 ? 1 : -1, in.mouse_x, in.mouse_y); clamp_pan(); }
     if (btn == 3 || (btn == 1 && space)) {
         T.drag = 3;
+        T.pan_btn = btn;
         T.pan_x = in.mouse_x - T.ox;
         T.pan_y = in.mouse_y - T.oy;
+        T.pan_sx = in.mouse_x;
+        T.pan_sy = in.mouse_y;
+        T.pan_moved = false;
         return;
     }
-    if (btn == 1 || btn == 2) {
-        int t = sheet_tile_at(in.mouse_x, in.mouse_y);
-        if (t >= 0) { T.sel = t; clamp_sel(); }
-    }
+    if (btn == 1 || btn == 2) sheet_press(btn);
 }
 
 /* ---------------------------------------------------------------- drawing */
@@ -538,10 +583,14 @@ static void colour_name(int c, char *buf, size_t n) {
     else snprintf(buf, n, "%d (r%d g%d b%d)", c, c >> 4, (c >> 2) & 3, c & 3);
 }
 
-static void draw_background(void) {
+/* hx, hy: the selection's pixel under the mouse, or -1 */
+static void draw_background(int *hx, int *hy) {
     int z = zooms[T.zoom];
+    bool over_win = in_win(W_TILE) || in_win(W_TOOLS);
+    if (over_win || in.mouse_y < TOP || in.mouse_y >= BOT || T.tool == T_PICK || !block_px_at(in.mouse_x, in.mouse_y, hx, hy))
+        *hx = *hy = -1;
     draw_clip(0, TOP, UI_W, BOT - TOP);
-    draw_rect(0, TOP, UI_W, BOT - TOP, RGB6(0, 0, 1), true);
+    draw_rect(0, TOP, UI_W, BOT - TOP, UI_RGB(0, 0, 1), true);
     /* the sheet: only the part in view */
     int x0 = T.ox < 0 ? -T.ox / z : 0, y0 = T.oy < TOP ? (TOP - T.oy) / z : 0;
     int x1 = (UI_W - T.ox) / z + 1, y1 = (BOT - T.oy) / z + 1;
@@ -555,65 +604,73 @@ static void draw_background(void) {
             else if (z == 1) draw_pset(sx, sy, c);
             else draw_rect(sx, sy, z, z, c, true);
         }
-    if (T.grid && z >= 2) {
-        for (int c = 0; c <= SHEET_COLS; c++) draw_line(T.ox + c * TILE * z, T.oy, T.ox + c * TILE * z, T.oy + SHEET_H * z - 1, RGB6(1, 0, 1));
-        for (int r = 0; r <= SHEET_ROWS; r++) draw_line(T.ox, T.oy + r * TILE * z, T.ox + SHEET_W * z - 1, T.oy + r * TILE * z, RGB6(1, 0, 1));
+    int scol = T.sel % SHEET_COLS, srow = T.sel / SHEET_COLS, n = bpx(), bt = n * z;
+    int bx0 = T.ox + scol * TILE * z, by0 = T.oy + srow * TILE * z;
+    if (T.grid && z >= 2) {    /* lines between tiles, but not across the selection: a block reads as one picture */
+        int sheet_w = SHEET_W * z, sheet_h = SHEET_H * z;
+        for (int c = 0; c <= SHEET_COLS; c++) {
+            int x = T.ox + c * TILE * z;
+            if (c > scol && c < scol + T.bsize) {
+                draw_line(x, T.oy, x, by0 - 1, UI_RGB(1, 0, 1));
+                draw_line(x, by0 + bt, x, T.oy + sheet_h - 1, UI_RGB(1, 0, 1));
+            } else draw_line(x, T.oy, x, T.oy + sheet_h - 1, UI_RGB(1, 0, 1));
+        }
+        for (int r = 0; r <= SHEET_ROWS; r++) {
+            int y = T.oy + r * TILE * z;
+            if (r > srow && r < srow + T.bsize) {
+                draw_line(T.ox, y, bx0 - 1, y, UI_RGB(1, 0, 1));
+                draw_line(bx0 + bt, y, T.ox + sheet_w - 1, y, UI_RGB(1, 0, 1));
+            } else draw_line(T.ox, y, T.ox + sheet_w - 1, y, UI_RGB(1, 0, 1));
+        }
     }
-    draw_rect(T.ox - 1, T.oy - 1, SHEET_W * z + 2, SHEET_H * z + 2, RGB6(1, 2, 3), false);
-    int scol = T.sel % SHEET_COLS, srow = T.sel / SHEET_COLS, bt = T.bsize * TILE * z;
-    draw_rect(T.ox + scol * TILE * z - 1, T.oy + srow * TILE * z - 1, bt + 2, bt + 2, COL_YELLOW, false);
+    draw_rect(T.ox - 1, T.oy - 1, SHEET_W * z + 2, SHEET_H * z + 2, UI_RGB(1, 2, 3), false);
+    if (T.grid && z >= 6)               /* a faint pixel grid where painting happens, the same at tile edges */
+        for (int k = 1; k < n; k++) {
+            draw_line(bx0 + k * z, by0, bx0 + k * z, by0 + bt - 1, UI_RGB(1, 1, 1));
+            draw_line(bx0, by0 + k * z, bx0 + bt - 1, by0 + k * z, UI_RGB(1, 1, 1));
+        }
+    draw_rect(bx0 - 1, by0 - 1, bt + 2, bt + 2, COL_YELLOW, false);
+    if (z >= 2 && *hx >= 0)              /* the pixel the mouse would paint */
+        draw_rect(bx0 + *hx * z - 1, by0 + *hy * z - 1, z + 2, z + 2, COL_WHITE, false);
     draw_clip_reset();
 }
 
 static void window_frame(int i, const char *title) {
     const Win *w = &T.win[i];
     bool on = T.top == i;
-    draw_rect(w->x - 1, w->y - 1, w->w + 2, TITLE_H + w->h + 2, on ? RGB6(1, 2, 3) : RGB6(1, 1, 2), false);
-    draw_rect(w->x, w->y, w->w, TITLE_H, on ? RGB6(0, 1, 2) : RGB6(0, 1, 1), true);
-    draw_rect(w->x, w->y + TITLE_H, w->w, w->h, RGB6(0, 0, 0), true);
+    draw_rect(w->x - 1, w->y - 1, w->w + 2, TITLE_H + w->h + 2, on ? UI_RGB(1, 2, 3) : UI_RGB(1, 1, 2), false);
+    draw_rect(w->x, w->y, w->w, TITLE_H, on ? UI_RGB(0, 1, 2) : UI_RGB(0, 1, 1), true);
+    draw_rect(w->x, w->y + TITLE_H, w->w, w->h, UI_RGB(0, 0, 0), true);
     draw_clip(w->x, w->y, w->w, TITLE_H);
-    draw_text(title, w->x + 2, w->y - 1, on ? COL_WHITE : RGB6(2, 2, 3));
+    draw_text(title, w->x + 2, w->y - 1, on ? COL_WHITE : UI_RGB(2, 2, 3));
     draw_clip_reset();
 }
 
-static void draw_tile_window(int *hx, int *hy) {
+/* the selection by itself, as a cart would draw it */
+static void draw_preview(void) {
     const Win *w = &T.win[W_TILE];
     char title[48];
     if (T.bsize > 1) snprintf(title, sizeof title, "tiles %d %dx%d", T.sel, T.bsize, T.bsize);
     else snprintf(title, sizeof title, "tile %d", T.sel);
     window_frame(W_TILE, title);
-    int s = canvas_scale(), n = bpx(), cx, cy;
-    canvas_origin(&cx, &cy);
+    int s = preview_scale(), n = bpx(), cx, cy;
+    preview_origin(&cx, &cy);
     draw_clip(w->x, w->y + TITLE_H, w->w, w->h);
-    int gap = T.grid && s >= 8 ? 1 : 0;
     for (int y = 0; y < n; y++)
         for (int x = 0; x < n; x++) {
             int c = bget(x, y);
-            if (c == CLEAR) checker(cx + x * s, cy + y * s, s - gap, s - gap);
-            else draw_rect(cx + x * s, cy + y * s, s - gap, s - gap, c, true);
+            if (c == CLEAR) checker(cx + x * s, cy + y * s, s, s);
+            else draw_rect(cx + x * s, cy + y * s, s, s, c, true);
         }
-    if (T.bsize > 1)       /* tile edges inside a block */
-        for (int k = 1; k < T.bsize; k++) {
-            int o = k * TILE * s - (gap ? 1 : 0);
-            draw_line(cx + o, cy, cx + o, cy + n * s - 1, RGB6(1, 2, 3));
-            draw_line(cx, cy + o, cx + n * s - 1, cy + o, RGB6(1, 2, 3));
-        }
-    *hx = *hy = -1;
-    if (T.top == W_TILE || !in_win(W_TOOLS)) {
-        if (inside(cx, cy, n * s, n * s)) {
-            *hx = (in.mouse_x - cx) / s;
-            *hy = (in.mouse_y - cy) / s;
-            draw_rect(cx + *hx * s - 1, cy + *hy * s - 1, s + 1, s + 1, COL_WHITE, false);
-        }
-    }
+    if (T.top == W_TILE && in_win(W_TILE)) T.hint = "preview: paint on the tileset, in the yellow box";
     /* the resize grip */
-    for (int k = 0; k < GRIP; k += 2) draw_line(w->x + w->w - 1 - k, w->y + TITLE_H + w->h - 1, w->x + w->w - 1, w->y + TITLE_H + w->h - 1 - k, RGB6(2, 2, 3));
+    for (int k = 0; k < GRIP; k += 2) draw_line(w->x + w->w - 1 - k, w->y + TITLE_H + w->h - 1, w->x + w->w - 1, w->y + TITLE_H + w->h - 1 - k, UI_RGB(2, 2, 3));
     draw_clip_reset();
 }
 
 static void button(int x, int y, int w, char label, bool on, bool hover) {
-    draw_rect(x, y, w, 10, on ? RGB6(1, 2, 3) : hover ? RGB6(0, 1, 2) : RGB6(0, 0, 1), true);
-    draw_char(label, x + (w - 5) / 2, y, on ? COL_BLACK : RGB6(2, 3, 3));
+    draw_rect(x, y, w, 10, on ? UI_RGB(1, 2, 3) : hover ? UI_RGB(0, 1, 2) : UI_RGB(0, 0, 1), true);
+    draw_char(label, x + (w - FONT_INK_W) / 2, y, on ? COL_BLACK : UI_RGB(2, 3, 3));
 }
 
 static void draw_tools_window(void) {
@@ -638,7 +695,7 @@ static void draw_tools_window(void) {
     for (int i = 0; i < NCOLORS; i++) draw_rect(px + (i % 8) * PAL_CELL, py + (i / 8) * PAL_CELL, PAL_CELL - 1, PAL_CELL - 1, i, true);
     int cy = py + 8 * PAL_CELL + 2;
     swatch(px, cy, 21, 9, CLEAR);
-    draw_rect(px - 1, cy - 1, 23, 11, RGB6(1, 1, 2), false);
+    draw_rect(px - 1, cy - 1, 23, 11, UI_RGB(1, 1, 2), false);
     if (live && inside(px, cy, 22, 10)) T.hint = "transparent";
     /* A and B: outlines on the palette, and swatches */
     for (int k = 0; k < 2; k++) {
@@ -651,6 +708,14 @@ static void draw_tools_window(void) {
     swatch(px + 33, cy, 9, 9, T.col_a);
     draw_text("B", px + 46, cy, COL_GREY);
     swatch(px + 53, cy, 9, 9, T.col_b);
+    /* their palette indices, centred under each label+swatch pair; -1 is transparent */
+    for (int k = 0; k < 2; k++) {
+        int c = k ? T.col_b : T.col_a;
+        char num[8];
+        snprintf(num, sizeof num, "%d", c == CLEAR ? -1 : c);
+        int bx = px + (k ? 46 : 26);
+        draw_text(num, bx + (17 - text_width(num)) / 2, cy + 11, k ? COL_GREY : COL_WHITE);
+    }
     if (live && inside(px, py, 8 * PAL_CELL, 8 * PAL_CELL)) T.hint = "left: colour A  right: colour B";
 }
 
@@ -658,32 +723,33 @@ static void draw(void) {
     draw_reset();
     draw_cls(COL_BLACK);
     T.hint = NULL;
-    draw_background();
-    int hx = -1, hy = -1;
-    if (T.top == W_TOOLS) { draw_tile_window(&hx, &hy); draw_tools_window(); }
-    else { draw_tools_window(); draw_tile_window(&hx, &hy); }
+    int hx, hy;
+    draw_background(&hx, &hy);
+    if (T.top == W_TOOLS) { draw_preview(); draw_tools_window(); }
+    else { draw_tools_window(); draw_preview(); }
 
     /* bars */
     ui_draw_tabs();
     int by = BOT;
-    draw_rect(0, by, UI_W, FONT_H, RGB6(0, 1, 2), true);
+    draw_rect(0, by, UI_W, FONT_H, UI_RGB(0, 1, 2), true);
     Doc *d = doc_active(RES_TILES);
     char info[64], line[128];
     snprintf(info, sizeof info, "%s%s", d->name, d->dirty ? "*" : "");
-    int x = draw_text(info, 3, by, RGB6(2, 3, 3)) + 8;
+    int x = draw_text(info, 3, by, UI_RGB(2, 3, 3)) + 8;
     bool over_win = in_win(W_TILE) || in_win(W_TOOLS);
     int ht = over_win || in.mouse_y < TOP || in.mouse_y >= BOT ? -1 : sheet_tile_at(in.mouse_x, in.mouse_y);
     if (T.status[0] && frame_count < T.status_until) draw_text(T.status, x, by, T.status_color);
-    else if (hx >= 0 && hx < bpx() && hy >= 0 && hy < bpx()) {
+    else if (hx >= 0) {
         char c[32];
         colour_name(bget(hx, hy), c, sizeof c);
         snprintf(line, sizeof line, "tile %d x%d y%d %s", T.sel + (hy / TILE) * SHEET_COLS + hx / TILE, hx % TILE, hy % TILE, c);
-        draw_text(line, x, by, RGB6(2, 3, 3));
-    } else if (T.hint) draw_text(T.hint, x, by, RGB6(2, 3, 3));
+        draw_text(line, x, by, UI_RGB(2, 3, 3));
+    } else if (T.hint) draw_text(T.hint, x, by, UI_RGB(2, 3, 3));
     else if (ht >= 0) {
-        snprintf(line, sizeof line, "tile %d  (col %d row %d)  x%d", ht, ht % SHEET_COLS, ht / SHEET_COLS, zooms[T.zoom]);
-        draw_text(line, x, by, RGB6(2, 3, 3));
-    } else draw_text("middle drag: pan  wheel: zoom", x, by, RGB6(1, 2, 2));
+        snprintf(line, sizeof line, "tile %d (col %d row %d) x%d%s", ht, ht % SHEET_COLS, ht / SHEET_COLS, zooms[T.zoom],
+                 T.tool == T_PICK ? "" : "  click: select");
+        draw_text(line, x, by, UI_RGB(2, 3, 3));
+    } else draw_text("middle drag: pan  wheel: zoom", x, by, UI_RGB(1, 2, 2));
 }
 
 void tiles_frame(void) {

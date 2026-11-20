@@ -1,0 +1,89 @@
+' depth - the depth buffer sorting circles and rectangles for you.
+' A: depth on / off.  B: shuffle the draw order.  Up / Down: tilt the rings.
+'
+' Every pixel on screen remembers a depth, and lower numbers are nearer.
+' set_depth(z) sets the depth everything after it is drawn at, and a pixel
+' only lands where nothing nearer is there already. So the order things are
+' drawn in stops mattering: the planet is drawn LAST, yet the moons in front
+' of it still cover it, because their depth is lower.
+'
+' Turn depth off (A) and everything is drawn at depth 0: then only the draw
+' order counts, and the planet paints over every moon (the painter's way).
+strict
+
+const CX = 200, CY = 128
+const MOONS = 18
+const PLANET_R = 34
+
+global depth_on:int = true
+global tilt:float = 0.28
+global order:int[MOONS * 2]           ' the order the shapes are drawn in
+
+function shuffle()
+  for local i:int = 0 to len(order) - 1
+    order[i] = i
+  next
+  for local i:int = len(order) - 1 to 1 step -1
+    local j:int = rand(0, i)
+    local t:int = order[i] : order[i] = order[j] : order[j] = t
+  next
+endfunction
+
+' shape k: the first MOONS are circles on the inner ring, the rest squares on the outer one
+function draw_shape(k:int, t:float)
+  local outer:int = k >= MOONS
+  local i:int = k mod MOONS
+  local r:float = 70 : if outer then r = 150
+  local a:float = i * 360.0 / MOONS + t
+  if outer then a = -a * 0.6 + 10
+  local x:float = CX + cos(a) * r
+  local y:float = CY - sin(a) * r * tilt  ' far side higher up: we look down on the rings
+  local z:float = sin(a) * r            ' > 0 behind the planet, < 0 in front of it
+  local size:float = 1 + (-z / 400.0)   ' a little bigger when nearer
+
+  if depth_on then set_depth(int(z)) else set_depth(0)
+  if outer
+    local s:int = int(9 * size)
+    rect_fill(int(x) - s, int(y) - s, s * 2, s * 2, rgb(3, 1 + i mod 3, 0))
+    rect(int(x) - s, int(y) - s, s * 2, s * 2, COL_WHITE)
+  else
+    local s:int = int(7 * size)
+    circle_fill(x, y, s, rgb(i mod 4, 2, 3))
+    circle(x, y, s, COL_NAVY)
+  endif
+endfunction
+
+dot_limit(200000)                      ' a full cls alone is 96,000 of the usual 100,000
+shuffle()
+
+repeat
+  local t:float = frame_count() * 0.8
+
+  if btn_hit(BTN_A) then depth_on = not depth_on
+  if btn_hit(BTN_B) then shuffle()
+  if btn(BTN_UP) then tilt = min(0.9, tilt + 0.01)
+  if btn(BTN_DOWN) then tilt = max(-0.9, tilt - 0.01)
+
+  cls(COL_BLACK)                       ' cls also puts every pixel's depth back to the far plane
+
+  ' the moons and boxes, in a jumbled order
+  for local i:int = 0 to len(order) - 1
+    draw_shape(order[i], t)
+  next
+
+  ' the planet, drawn last, at depth 0
+  set_depth(0)
+  circle_fill(CX, CY, PLANET_R, COL_BLUE)
+  circle_fill(CX - 8, CY - 9, 16, COL_SKY)
+  circle(CX, CY, PLANET_R, COL_CYAN)
+
+  ' the HUD at the nearest depth there is, so nothing covers it
+  set_depth(-32768)
+  rect_fill(0, 0, SCREEN_W, 12, COL_NAVY)
+  local mode:string = "depth ON: lower z is nearer, draw order doesn't matter"
+  if not depth_on then mode = "depth OFF: last drawn wins (the planet covers all)"
+  text(mode, 4, 1, COL_YELLOW)
+  text("A depth  B shuffle order  Up/Down tilt", 4, SCREEN_H - 11, COL_GREY)
+
+  flip()
+forever

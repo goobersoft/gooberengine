@@ -27,12 +27,13 @@
 #define INDENT 2
 
 /* colours */
-#define C_BG RGB6(0, 0, 0)
-#define C_CURLINE RGB6(0, 0, 1)
-#define C_SEL RGB6(1, 1, 2)
+/* the editor's chrome follows the theme (UI_RGB); the syntax colours below don't */
+#define C_BG UI_RGB(0, 0, 0)
+#define C_CURLINE (ui_theme == THEME_GREY ? RGB6(1, 1, 1) : UI_RGB(0, 0, 1))   /* grey has no shade between black and dark grey */
+#define C_SEL UI_RGB(1, 1, 2)
 #define C_ERRLINE RGB6(1, 0, 0)
-#define C_BAR RGB6(0, 1, 2)
-#define C_GUTTER RGB6(1, 1, 2)
+#define C_BAR UI_RGB(0, 1, 2)
+#define C_GUTTER UI_RGB(1, 1, 2)
 #define C_TEXT RGB6(3, 3, 3)
 #define C_KEYWORD RGB6(3, 2, 0)
 #define C_TYPE RGB6(3, 1, 3)
@@ -70,6 +71,7 @@ typedef struct {
     char find_text[64];
     long blink_from;
     bool dragging;
+    bool fresh_newline;          /* the last thing done was Enter (auto indent: Backspace takes it back) */
 } EState;
 static EState E;
 static EState parked[MAX_FILES];     /* the other open files */
@@ -301,6 +303,17 @@ static const char *file_of(const EState *e) {
 
 const char *editor_file(void) { return E.path[0] ? file_of(&E) : ""; }
 
+/* a code file's name without its .gb (a few at a time can be in use, as in "renamed a to b") */
+const char *code_name(const char *file) {
+    static char buf[4][64];
+    static int k;
+    char *out = buf[k++ & 3];
+    size_t n = strlen(file);
+    if (n > 3 && !strcmp(file + n - 3, ".gb")) n -= 3;
+    snprintf(out, 64, "%.*s", (int)n, file);
+    return out;
+}
+
 /* loads a file of the cart into a fresh buffer (an empty one if it isn't on disk yet) */
 static void load_into_E(const char *name) {
     memset(&E, 0, sizeof E);
@@ -445,7 +458,7 @@ static bool write_all(bool keep) {
         saved++;
         one = file_of(e);
     }
-    if (!keep && saved == 1) status(COL_GREEN, "saved %s (%d lines)", one, E.n);
+    if (!keep && saved == 1) status(COL_GREEN, "saved %s (%d lines)", code_name(one), E.n);
     else if (!keep && saved > 1) status(COL_GREEN, "saved %d files", saved);
     return true;
 }
@@ -625,13 +638,17 @@ static bool opens_block(const Line *l) {
     return true;
 }
 
+/* Enter. The indentation of the new line follows settings.indent:
+ *   smart  keep this line's, and one more after a line that opens a block (if, for ...)
+ *   auto   keep this line's
+ *   none   none */
 static void newline(void) {
     before_edit(EDIT_OTHER);
     delete_selection();
     Line *l = &E.lines[E.cy];
-    int ind = indent_of(l);
+    int ind = settings.indent == INDENT_NONE ? 0 : indent_of(l);
     if (ind > E.cx) ind = E.cx;
-    bool more = E.cx == l->len && opens_block(l);
+    bool more = settings.indent == INDENT_SMART && E.cx == l->len && opens_block(l);
     insert_text("\n");
     char sp[128];
     int n = ind + (more ? INDENT : 0);
@@ -639,6 +656,7 @@ static void newline(void) {
     memset(sp, ' ', (size_t)n);
     sp[n] = 0;
     insert_text(sp);
+    E.fresh_newline = true;
 }
 
 static void backspace(void) {
@@ -646,6 +664,14 @@ static void backspace(void) {
     if (sel_range(&y0, &x0, &y1, &x1)) { before_edit(EDIT_OTHER); delete_selection(); return; }
     if (E.cx == 0 && E.cy == 0) return;
     before_edit(EDIT_DELETE);
+    /* auto indent: straight after Enter, Backspace takes the whole newline back, indentation and all */
+    if (settings.indent == INDENT_AUTO && E.fresh_newline && E.cy > 0 && E.cx == indent_of(&E.lines[E.cy])) {
+        int len = E.lines[E.cy - 1].len;
+        delete_range(E.cy - 1, len, E.cy, E.cx);
+        E.cy--;
+        E.cx = len;
+        return;
+    }
     if (E.cx == 0) {
         int len = E.lines[E.cy - 1].len;
         delete_range(E.cy - 1, len, E.cy, 0);
@@ -653,9 +679,9 @@ static void backspace(void) {
         E.cx = len;
         return;
     }
-    /* inside the indentation: back up to the previous indent stop */
+    /* smart indent, inside the indentation: back up to the previous indent stop */
     int n = 1;
-    if (E.cx <= indent_of(&E.lines[E.cy])) n = (E.cx - 1) % INDENT + 1;
+    if (settings.indent == INDENT_SMART && E.cx <= indent_of(&E.lines[E.cy])) n = (E.cx - 1) % INDENT + 1;
     delete_range(E.cy, E.cx - n, E.cy, E.cx);
     E.cx -= n;
 }
@@ -902,6 +928,8 @@ static void key(const KeyEvent *ev) {
     int sc = ev->sc, mod = ev->mod;
     bool ctrl = mod & MOD_CTRL, shift = mod & MOD_SHIFT;
     E.blink_from = frame_count;
+    bool fresh = E.fresh_newline;
+    E.fresh_newline = false;
 
     if (!E.prompt && ui_global_key(ev)) return;
     if (E.prompt) {
@@ -942,7 +970,7 @@ static void key(const KeyEvent *ev) {
             ui_mode = MODE_SHELL;
             return;
         case SDL_SCANCODE_RETURN: case SDL_SCANCODE_KP_ENTER: newline(); return;
-        case SDL_SCANCODE_BACKSPACE: backspace(); return;
+        case SDL_SCANCODE_BACKSPACE: E.fresh_newline = fresh; backspace(); E.fresh_newline = false; return;
         case SDL_SCANCODE_DELETE: delete_forward(); return;
         case SDL_SCANCODE_TAB: tab(shift); return;
         case SDL_SCANCODE_LEFT: case SDL_SCANCODE_RIGHT: case SDL_SCANCODE_UP: case SDL_SCANCODE_DOWN:
@@ -955,6 +983,7 @@ static void key(const KeyEvent *ev) {
 
 static void type_text(const char *t) {
     E.blink_from = frame_count;
+    E.fresh_newline = false;
     if (E.prompt) {
         size_t n = strlen(E.prompt_text);
         for (; *t && n < sizeof E.prompt_text - 1; t++)
@@ -996,6 +1025,7 @@ static void mouse(void) {
         if (!shift || !E.sel) { E.sel = true; E.ay = shift ? E.cy : y; E.ax = shift ? E.cx : x; }
         E.cy = y; E.cx = E.want_x = x;
         E.dragging = true;
+        E.fresh_newline = false;
         E.last_kind = -1;
         E.blink_from = frame_count;
         E.prompt = 0;
@@ -1067,12 +1097,12 @@ static void draw(void) {
         x = draw_text(E.prompt == 1 ? "find: " : "go to line: ", 3, by, COL_YELLOW);
         x = draw_text(E.prompt_text, x, by, COL_WHITE);
         if ((frame_count / 30) % 2 == 0) draw_rect(x - 1, by, 1, FONT_H, COL_YELLOW, true);
-        draw_text("Enter / Esc", UI_W - 3 - text_width("Enter / Esc"), by, RGB6(2, 3, 3));
+        draw_text("Enter / Esc", UI_W - 3 - text_width("Enter / Esc"), by, UI_RGB(2, 3, 3));
         return;
     }
     char pos[64];
-    snprintf(pos, sizeof pos, "%s%s  ln %d  col %d", file_of(&E), E.modified ? "*" : "", E.cy + 1, E.cx + 1);
-    draw_text(pos, 3, by, RGB6(2, 3, 3));
+    snprintf(pos, sizeof pos, "%s%s  ln %d  col %d", code_name(file_of(&E)), E.modified ? "*" : "", E.cy + 1, E.cx + 1);
+    draw_text(pos, 3, by, UI_RGB(2, 3, 3));
     if (E.status[0] && frame_count < E.status_until) {
         int w = text_width(E.status), sxp = UI_W - 3 - w;
         if (sxp < 150) sxp = 150;

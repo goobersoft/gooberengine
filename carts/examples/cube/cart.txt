@@ -1,0 +1,3 @@
+title = Spinning Cube
+author = GooberEngine examples
+version = 1

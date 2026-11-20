@@ -21,7 +21,7 @@ editor on a cart folder at any time.
 | Map | 1 to 10 screens each way (a screen is 40 × 24 cells), so up to 400 × 240 cells. A cell holds a tile number 0–959 or nothing; tile 0 is a tile like any other |
 | Slots | 10 slots each for tilesets, maps, sound banks and songs. A cart loads files into slots and swaps between them while it runs |
 | Dots | a cart may draw 100,000 pixels a frame (`dot_limit` changes it, up to 1,000,000). The screen alone is 96,000, so redrawing only what changed pays off |
-| Text | built-in 5×9 font in 6×10 cells: 66 × 24 characters |
+| Text | built-in 6×10 font, letters 5 wide: 66 × 24 characters. A cart can bring fonts of its own, 4×4 to 20×20. Capitals and lowercase letters, with descenders (see [The font](#the-font)) |
 | Input | a pad with a d-pad, three buttons **A B C** and **Start** (keyboard or game controller), plus raw keyboard and mouse |
 | Sound | 8 voices. Each plays one of 16 drawable waveforms (32 samples each) or noise, at 64 pitches (C-2 to D#7) and 8 volumes. There are 64 sound effects |
 
@@ -34,7 +34,7 @@ editor on a cart folder at any time.
 | **Start** (`BTN_START`) | **Enter** | **Start** |
 
 The controller's Y (top) button is not used.
-Esc always stops the cart and returns to the shell. F8 makes the current screen the cart's label (its picture in `BROWSE`), and F12 saves a screenshot.
+Esc always stops the cart and returns to the shell, and F12 saves a screenshot.
 
 ## Building
 
@@ -53,7 +53,7 @@ make test
 | `make runtimes` | the player runtimes that `EXPORT` packs games into, in `runtimes/` | `cmake`, `unzip`, `mingw-w64`, Emscripten |
 | `make web` | the whole engine for the browser, in `build/web`, then serves it at http://localhost:8000 (`make web-build` only builds) | Emscripten |
 
-Emscripten comes from [emsdk](https://emscripten.org/docs/getting_started/downloads.html). The Makefile looks for it in `~/github/emsdk`; pass `EMSDK=/path/to/emsdk` for another place. Windows builds use the `mingw-w64` cross compiler (`sudo apt install mingw-w64`). SDL2 for the runtimes is built from `third_party/SDL2-2.32.10.zip` the first time, which takes a minute or two.
+Emscripten comes from [emsdk](https://emscripten.org/docs/getting_started/downloads.html). The Makefile uses the copy in `tools/emsdk` (set it up once with `tools/emsdk/emsdk install latest && tools/emsdk/emsdk activate latest`); pass `EMSDK=/path/to/emsdk` for another place. Windows builds use the `mingw-w64` cross compiler (`sudo apt install mingw-w64`). SDL2 for the runtimes is built from `third_party/SDL2-2.32.10.zip` the first time, which takes a minute or two.
 
 `make vscode` regenerates GooberBASIC's VS Code grammar (in `../gooberbasic/editors/vscode`) with the console API added. Commands like `rect_fill` and `music`, and constants like `BTN_A` and `COL_NAVY`, are then highlighted in `.gb` files. This rewrites the shared extension's grammar, so engine names light up in plain GooberBASIC programs too. Running GooberBASIC's own `make vscode` puts the plain grammar back.
 
@@ -81,7 +81,8 @@ For the code editor, GooberBASIC also exports two read-only lookups: `lex_is_key
 
 | Command | What it does |
 |---|---|
-| `DIR` | list carts in the carts folder |
+| `DIR` | list the carts in the folder you're in, and the folders of carts under it (`examples/`) |
+| `CD folder` | go into a folder of carts inside the carts folder: `CD examples`. `CD ..` goes back up, `CD` alone (or `CD /`) to the top. `DIR`, `LOAD`, `RUN`, `NEW`, `SAVE` and `BROWSE` then work in that folder, and the prompt shows its name |
 | `LOAD name` | load a cart by name, or by path to its folder |
 | `RUN [name]` | save any code being edited, then run the loaded cart (or load + run) |
 | `EDIT` | open the code editor (F1, or Esc on an empty prompt) |
@@ -89,23 +90,44 @@ For the code editor, GooberBASIC also exports two read-only lookups: `lex_is_key
 | `MAP` | open the map editor (F3) |
 | `SOUND` | open the sound editor (F4) |
 | `MUSIC` | open the music editor (F5) |
+| `FONT` | open the font editor (F7) |
 | `NEW [name]` | make a cart folder with a starter `main.gb` and open it in the editor. Without a name: a fresh untitled cart |
 | `SAVE [name]` | save everything being edited: code, tiles, map, sound. On an untitled cart, `SAVE mygame` makes `carts/mygame`, and `SAVE` alone makes `carts/untitled` (asking first if that name is taken) |
-| `BROWSE` | pick a cart from a grid of their labels: arrows or the mouse, Enter (or a second click) runs, L loads |
+| `BROWSE` | pick a cart from a list: Up/Down, PgUp/PgDn, Home/End or the mouse (the wheel scrolls), Enter (or a second click) runs, L loads |
 | `EXPORT [file]` | write the loaded cart as one `.gbcart` file (default `carts/<name>.gbcart`). SAVE first |
 | `EXPORT target [folder]` | make a standalone game: `LINUX`, `WINDOWS`, `WEB` or `ALL` (several may be given). Written to `exports/<name>/` unless a folder is given. See [Exporting games](#exporting-games) |
 | `UPLOAD` / `DOWNLOAD` | web version only: open a `.gbcart` from your computer / save the cart to it |
 | `IMPORT file [name]` | unpack a `.gbcart` into a new cart folder and load it. `LOAD file.gbcart` does the same, named after the file |
 | `INFO` | title, author, tiles used, folder |
+| `THEME [name]` | the editors' colours: `blue` (the default), `green`, `orange` or `grey` (`white` works too). Remembered for next time. `THEME` alone shows the one in use |
+| `SETTINGS` | open the [settings](#settings) screen (F9): theme, volume, fullscreen, window size, indent |
 | `FOLDER` | where carts are read from |
 | `CLS` | clear the screen |
 | `QUIT` | leave |
 
 GooberEngine boots into a new **untitled cart**, so you can start typing code (F1) right away. Nothing is written to the carts folder until you save it with `SAVE name` (or `SAVE` alone, which names it `untitled`). Until then Ctrl+S in the editors only reminds you to, `RUN` works as usual, and `EXPORT` asks for a name first. Closing the window with unsaved untitled work keeps it in a scratch folder in `$TMPDIR` and prints where.
 
+**Themes** recolour the shell, the editors and the file tree: their bars, highlights and backgrounds. Carts, the tileset and map you're editing, and the code editor's syntax colours look the same in every theme. Pick one with `THEME` or on the [settings](#settings) screen.
+
 Up/Down recalls history. If anything being edited has unsaved changes, `LOAD`, `NEW`, `RUN name` and `QUIT` ask `discard them? (Y/N)` first. Press Y to discard the changes and go ahead, or N (or Esc) to keep them. If the window is closed with unsaved work, it is kept next to each file as `NAME.unsaved` (`main.gb.unsaved`, `tiles/tileset.g64.unsaved` …).
 
-F1–F5 switch between the code, tile, map, sound and music editors from anywhere, including the shell. You can also click the tabs at the top of any editor.
+F1–F5 and F7 switch between the code, tile, map, sound, music and font editors from anywhere, including the shell. You can also click the tabs at the top of any editor.
+
+## Settings
+
+F9, `SETTINGS` in the shell, or the **settings** button at the bottom left of the file tree opens the settings screen. It works with or without a cart loaded. Up / Down pick a line, and Left / Right (or the mouse) change it. Enter turns fullscreen on or off. Esc, or F9 again, goes back to where you were.
+
+| Setting | |
+|---|---|
+| theme | the shell's and editors' colours: blue, green, orange or grey (click one) |
+| volume | all sound, 0–10. Changing it plays a short note at the new level |
+| music | the music, 0–10, on top of the volume |
+| sound fx | sound effects and `note()`s, 0–10, on top of the volume |
+| fullscreen | on or off (F11, or Alt+Enter, does the same) |
+| window size | 1× to 8× (`--scale` on the command line wins for that run) |
+| indent | how Enter indents in the code editor: **smart** (keep the indent, and add one after `if`, `for` …), **auto** (just keep the indent; Backspace straight after Enter takes the whole newline back), **none** |
+
+Every change takes effect at once and is kept for next time in `settings.txt`, beside the save-data folder. That's `~/.local/share/gooberengine/settings.txt`, `%APPDATA%\GooberEngine\settings.txt` on Windows, the browser's storage on the web, or `$GOOBERENGINE_SETTINGS`. The file is `key = value` lines (`theme`, `volume`, `music_volume`, `sfx_volume`, `fullscreen`, `scale`), and other lines in it are left alone. Exported games don't read it: the settings belong to the console, not to the games it makes.
 
 ## The file tree
 
@@ -113,25 +135,31 @@ Every editor has the cart's files down its left side. The editor fills the rest 
 
 ```
 files     <        < hides the tree (so does F6, or the button left of the tabs); right-click a file: rename, delete
-code      +        + makes a new file: code-1.gb, tiles-1, map-1, sfx-1, music-1 ...
- main.gb
- enemies.gb
-tiles     +        click a file to open it in its editor
+v code    +        + makes a new file: code-1, tiles-1, map-1, sfx-1, music-1, font-1 ...
+ main
+ enemies
+v tiles   +        click a file to open it in its editor; click a section's name to fold it
  tileset
  tiles-2*          * = changed, not saved
-maps      +
- map
-sfx       +
+> maps 2  +         a folded section: how many files it holds (2* if one isn't saved)
+v sfx     +
  sfx
-music     +
+v music   +
  music
+v fonts   +
+ font
+settings           bottom left: the settings screen
 ```
+
+Code is always a `.gb` file, so the tree and the code editor leave the `.gb` off: `main` is `main.gb`, `enemies` is `enemies.gb`. On disk, in `include "enemies.gb"`, and in error messages the files keep their full names.
+
+Click a section's name (`code`, `tiles`, `maps` …) to fold its files away, and again to bring them back. A folded section shows how many files it holds, with a `*` if any of them has unsaved changes. Its **+** still makes a new file, and unfolds the section so you see it.
 
 Each editor has one file open, and the tree highlights it. Clicking a file opens it in its editor, which switches to that editor. `SAVE` saves every changed file. New files appear in the tree straight away and are written by the next save.
 
 **Right-click** a file for a small menu:
 
-- **rename:** type the new name in place (letters, digits, `-` and `_`; a `.gb` file keeps its `.gb`), then Enter. Esc, or a click elsewhere, cancels. The file on disk is renamed at once, and an open file keeps its unsaved changes. A cart that loads the file by name (`load_map(1, "cave")`) needs that name changed too.
+- **rename:** type the new name in place (letters, digits, `-` and `_`), then Enter. Esc, or a click elsewhere, cancels. The file on disk is renamed at once, and an open file keeps its unsaved changes. A cart that loads the file by name (`load_map(1, "cave")`) needs that name changed too.
 - **delete:** the row asks `delete? y/n`. Y deletes the file from disk and closes it in its editor, unsaved changes and all. It can't be undone. N or Esc keeps it.
 
 `main.gb` can't be renamed or deleted, because a cart starts there. Carts are read from `$GOOBERENGINE_CARTS`, then from `./carts`, and then from `carts/` next to the executable.
@@ -146,7 +174,7 @@ Command-line options, mostly for scripting and tests:
 | `--shot file.png` | with `--frames`: save the last frame |
 | `--headless` | no window, frames run unthrottled, and shell output is echoed to stdout |
 | `--wav file.wav` | with `--headless`: record everything the synth plays |
-| `--type keys` | scripted input, one key per frame: plain characters, or `{enter}`, `{esc}`, `{ctrl+s}`, `{shift+down}`… (SDL key names). Mouse: `{click:x,y}`, `{rclick:x,y}`, `{drag:x,y}` (button still held), `{mouse:x,y}`, `{wheel:n}` |
+| `--type keys` | scripted input, one key per frame: plain characters, or `{enter}`, `{esc}`, `{ctrl+s}`, `{shift+down}`… (SDL key names). Mouse: `{click:x,y}`, `{rclick:x,y}`, `{mclick:x,y}`, `{drag:x,y}` (button still held), `{mouse:x,y}`, `{wheel:n}` |
 | `--scale N` | window scale |
 | `--export targets cart [folder]` | export a game without opening a window: `linux`, `windows`, `web`, `all`, or a comma-separated list |
 
@@ -154,7 +182,7 @@ Dropping a `.gbcart` file or a cart folder on the window loads it, like `LOAD`.
 
 ## Code editor
 
-`EDIT` opens the loaded cart's `main.gb`, with line numbers and syntax colours. Other `.gb` files of the cart (the ones `main.gb` includes, for example) open from the file tree. Each keeps its own cursor and undo history, and the bottom bar shows which file you're in.
+`EDIT` opens the loaded cart's `main.gb`, with line numbers and syntax colours. Other `.gb` files of the cart (the ones `main.gb` includes, for example) open from the file tree. Each keeps its own cursor and undo history, and the bottom bar shows which file you're in. Each file keeps its top-level `local`s and its functions to itself: write `global function` (or `global` for a variable) to use it from another file. See GooberBASIC's README, under Files.
 The colours mark keywords, console and core commands, type names, constants, numbers, strings and comments.
 
 | Keys | |
@@ -173,7 +201,7 @@ The colours mark keywords, console and core commands, type names, constants, num
 | Ctrl+G | go to line |
 | mouse wheel | scroll |
 
-- **Indenting:** Enter keeps the indent of the line above. After a line that opens a block (`function`, `if … ` with nothing after `then`, `for`, `while`, `repeat`, `select`, `case`, `type`, `else`), the new line is indented 2 more spaces.
+- **Indenting** (with the *smart* indent setting, the default; see [settings](#settings) for *auto* and *none*): Enter keeps the indent of the line above. After a line that opens a block (`function`, `if … ` with nothing after `then`, `for`, `while`, `repeat`, `select`, `case`, `type`, `else`), the new line is indented 2 more spaces.
 - **Saving:** tabs become 2 spaces when a file is opened. Trailing spaces are dropped when saving.
 - **Other files:** an error in an included file opens that file at the error line, the same as for `main.gb`. Ctrl+S saves every changed `.gb` file.
 
@@ -181,11 +209,12 @@ The colours mark keywords, console and core commands, type names, constants, num
 
 `TILES` (or F2) edits a tileset: 400 × 240 pixels, 960 tiles. That's more than fits beside the file tree, so the editor works like a paint program:
 
-- **The tileset** is the background. Middle-drag (or Space + drag) pans it, and the wheel zooms it (1× to 8×) around the mouse. Click a tile to edit it; a yellow box marks it.
-- **The tile window** shows that tile big, or a 2×2 or 4×4 block of tiles with **Z**, for sprites bigger than one tile. Paint in it. Drag it by its title bar, and drag its bottom-right corner to make it bigger or smaller.
+- **The tileset** is where you paint. Middle-drag (or Space + drag) pans it, and the wheel zooms it (1× to 16×, starting at 6×) around the mouse.
+- **The selection:** a yellow box marks the tile being edited, or a 2×2 or 4×4 block of tiles with **Z**, for sprites bigger than one tile. Only the selection can be painted: a stroke, line, rectangle or fill stops at its edge, so the tiles around it are safe. Click outside it to select another tile. The lines between tiles aren't drawn across it, so a block reads as one picture; at 6× and above a faint pixel grid shows inside it instead.
+- **The preview window** shows the selection by itself, at the biggest size that fits. It's only for looking. Drag it by its title bar, and drag its bottom-right corner to make it bigger or smaller.
 - **The tools window** holds the tools (P F L R I), the block actions (Z H V T X), the 64 colours, transparent, and colours A and B. Drag it by its title bar too. The bottom bar names what's under the mouse.
 - **Transparent** pixels show as a pink checkerboard (colours 50 and 34).
-- **Mouse:** in the tile window the left button draws with colour **A** and the right button with colour **B**. B starts as transparent, so the right button erases. Clicking a colour sets A (left) or B (right). The middle button picks a colour up from the drawing.
+- **Mouse:** in the selection the left button draws with colour **A** and the right button with colour **B**. B starts as transparent, so the right button erases. Clicking a colour sets A (left) or B (right). A middle click (without dragging) picks a colour up into A, from anywhere on the tileset, and so does the pick tool (I): left into A, right into B.
 - **Running:** edits go straight into the open tileset, so Ctrl+R runs them without saving. A running cart's own `tile_pset` / `map_set` changes are undone when it stops, so every run starts from the edited files.
 
 | Keys | |
@@ -194,10 +223,10 @@ The colours mark keywords, console and core commands, type names, constants, num
 | Z | edit size: 1×1, 2×2 or 4×4 tiles |
 | H / V / T | flip across, flip up-down, turn a quarter clockwise (the whole block) |
 | Del | clear the block |
-| arrows | move to another tile |
+| arrows | move the selection to another tile (the view follows it) |
 | Shift+arrows | nudge the pixels one step (they wrap around) |
 | = / -, mouse wheel | zoom the tileset in / out |
-| Home | zoom and windows back to where they started |
+| Home | zoom, view and windows back to where they started |
 | X | swap colours A and B |
 | G | grid on/off |
 | Ctrl+C / X / V | copy, cut, paste the block |
@@ -264,7 +293,7 @@ Saving writes only as much of the sheet as is used, so a tileset with ten tiles 
 | PgUp / PgDn | previous / next effect |
 | Space, Esc | play / stop, stop or back to the shell |
 | Ctrl+C / Ctrl+V | copy / paste a whole effect |
-| Ctrl+Z / Ctrl+Y, Ctrl+S, Ctrl+R | undo / redo, save `sfx/NAME.txt`, run |
+| Ctrl+Z / Ctrl+Y, Ctrl+S, Ctrl+R | undo / redo, save `sfx/NAME.g64`, run |
 
 Beside the file tree there's no room for the list of effects. PgUp / PgDn switch effects, and the bottom bar shows which one is open. Hide the tree (F6) to get the list back.
 
@@ -293,7 +322,30 @@ Beside the file tree there's no room for the list of effects. PgUp / PgDn switch
 | Ctrl+I / Ctrl+Del | insert / delete an entry (jumps are renumbered to match) |
 | Space, Shift+Space, Esc | play the song / loop the pattern, stop or back to the shell |
 | Ctrl+C / X / V | copy / cut / paste the pattern |
-| Ctrl+Z / Ctrl+Y, Ctrl+S, Ctrl+R | undo / redo, save `music/NAME.txt`, run |
+| Ctrl+Z / Ctrl+Y, Ctrl+S, Ctrl+R | undo / redo, save `music/NAME.g64`, run |
+
+## Font editor
+
+`FONT` (or F7) edits a font: the 96 glyphs, for characters 32–127, that a cart's `text()` draws with. A cart that has no font yet starts with a copy of the built-in one, so you change only the glyphs you want. Saving writes `fonts/NAME.g64`.
+
+- **Size:** every character of a font is the same size, from 4 × 4 to 20 × 20 pixels (the built-in font is 6 × 10). Ctrl+→ / Ctrl+← make characters wider or narrower, Ctrl+↓ / Ctrl+↑ taller or shorter. Growing adds blank pixels on the right and at the bottom. Shrinking cuts off the pixels that no longer fit (Ctrl+Z brings them back).
+- **Spacing is yours:** a glyph fills its whole cell, and text steps one cell across for each character. The blank column and rows that keep characters apart are part of each glyph, like the built-in font's column on the right. Leave them blank, make them wider, or draw into them for joined-up lettering.
+- **Layout:** the glyphs sit at the top left, twice their size if they fit, else as they are; for big fonts the grid scrolls (the mouse wheel, or move off its edge). Beside them is the glyph being edited, big, with its size under it. Under them, sample text is drawn in the font being edited.
+- **Mouse:** click a glyph to edit it. On the big glyph, the left button sets pixels and the right button clears them; drag to draw.
+- **Keyboard:** typing a character picks its glyph. So `a` edits lowercase a, and Shift+A capital A. Everything else is on keys that don't type.
+- **Running:** edits go straight into the open font, so Ctrl+R runs them without saving.
+
+| Keys | |
+|---|---|
+| any character | edit that character's glyph |
+| arrows, PgUp / PgDn | move to another glyph |
+| Shift+arrows | nudge the glyph's pixels one step (they wrap around inside the cell) |
+| Ctrl+arrows | make every character wider / narrower / taller / shorter (4 × 4 to 20 × 20) |
+| Del / Backspace | clear the glyph |
+| Ctrl+D | put the glyph back as the built-in font has it (at the top left of the cell) |
+| Ctrl+C / X / V | copy, cut, paste a glyph |
+| Ctrl+Z / Ctrl+Y | undo / redo (64 steps) |
+| Ctrl+S, Ctrl+R, Esc | save `fonts/NAME.g64`, run, back to the shell |
 
 ## Cartridges
 
@@ -305,12 +357,12 @@ mycart/
   cart.txt         title = ..., author = ..., version = ...        optional
   tiles/NAME.g64   tilesets                                         optional
   maps/NAME.g64    maps                                             optional
-  sfx/NAME.txt     sound banks: waveforms and sound effects         optional
-  music/NAME.txt   songs: order list and patterns                   optional
-  label.txt        the cart's picture for BROWSE (F8 makes it)      optional
+  sfx/NAME.g64     sound banks: waveforms and sound effects         optional
+  music/NAME.g64   songs: order list and patterns                   optional
+  fonts/NAME.g64   fonts: the 96 glyphs text() draws with            optional
 ```
 
-A cart can have any number of each. The files named `tileset`, `map`, `sfx` and `music` are the defaults: each is in slot 0 when the cart starts (see [Slots](#slots)). Every file is text, so carts can be diffed and edited outside the console.
+A cart can have any number of each. The files named `tileset`, `map`, `sfx`, `music` and `font` are the defaults: each is in slot 0 when the cart starts (see [Slots](#slots)). Every file is text, so carts can be diffed and edited outside the console.
 
 **The .g64 files** are base-64 text. Each character of `0-9 a-z A-Z + *` stands for a number 0–63, in that order: `0` is 0, `a` is 10, `A` is 36, `*` is 63. A colour is its palette index, so `a` is colour 10 everywhere. Spaces and line breaks are ignored. GooberEngine writes one row per line.
 
@@ -331,28 +383,43 @@ A cart can have any number of each. The files named `tileset`, `map`, `sfx` and 
 03010101..0101...        .. = an empty cell
 ```
 
-**Old carts** have `tiles.txt`, `map.txt`, `sfx.txt` and `music.txt` at the top of the folder. Those still load, as the default tileset, map, sound bank and song. The first `SAVE` writes them in the new places and renames each old file to `*.old`. Tile numbers stay the same. In an old map, tile 0 meant "nothing here", so those cells become empty.
+**sfx/NAME.g64**: `WS`, then the waves, then the sound effects. `W` and `S` give the number of waves and of sound effects as digit + 1. GooberEngine writes all 16 waves (`f`), and sound effects up to the last one that isn't empty. Waves and sound effects that aren't in the file are the defaults.
 
-**sfx/NAME.txt**: a `wave N` line gives a waveform's 32 samples as hex digits, 0–f, with 7–8 the middle. A `sfx N speed S length L loop A B` line is followed by its steps. Each step is a note (`C-4`, `D#5`… or `---` for a rest), a wave (`0`–`f`, `n` for noise), a volume 0–7 and an effect character. Only waves and effects that differ from the defaults are written, and comments are kept.
-
-```
-# 0 picking up a seed
-sfx 0 speed 3 length 4 loop 0 0
-  C-5 3 6 .  E-5 3 6 .  G-5 3 5 .  C-6 3 4 >
-```
-
-**music/NAME.txt**:
+- **A wave** is 32 samples `0`–`f`, with 7–8 the middle. GooberEngine writes one wave per line.
+- **A sound effect** is one line: speed − 1, length − 1, loop start, loop end, then all 32 steps. A step is four characters: the pitch (0–63: `0` is C-2, `c` C-3, `o` C-4, `A` C-5, `M` C-6), the wave (`0`–`f`, or `g` for noise), the volume 0–7, and the effect (`0` none, `1` slide, `2` vibrato, `3` drop, `4` fade in, `5` fade out, `6` arpeggio). A rest is volume 0, so an empty step reads `o000`.
 
 ```
-song speed 9
-order 0 1 >0                  play pattern 0, then 1, then jump back to entry 0
-pattern 0 tracks 2            32 rows follow, one cell per track
-  C-5 1 4 .  C-3 3 6 >
-  ... . . .  ... . . .        nothing new: the notes carry on
-  === . . .  G-2 3 6 >        === turns a note off
+f2                                     16 waves, 3 sound effects
+ffffffffffffffff0000000000000000       wave 0, a square
+...
+2300A360E360H350M345o000o000...        sfx 0: speed 3, length 4, no loop; C-5 E-5 G-5 C-6 on wave 3, fading out
 ```
 
-Only patterns with notes are written, and each one only as wide as its last used track. Comments are kept, so saving an unchanged song gives the same file.
+**music/NAME.g64**: `SOPT`, then the order list, then the patterns. `S` is the song speed − 1 (ticks per row), and `O`, `P` and `T` give the number of order entries, patterns and tracks, each as digit + 1. GooberEngine writes the order list up to its last entry that isn't a stop, and the patterns up to the last one with notes, all as wide as the widest.
+
+- **An order entry** is two characters: `0N` plays pattern `N`, `1N` jumps to entry `N` (so a song can loop), and `..` stops.
+- **A pattern** is 32 rows, one per line, each with `T` cells of four characters: pitch, wave, volume and effect, as in a sound effect. `....` means nothing new (the note carries on), and `====` turns the note off. A blank line comes before each pattern.
+
+```
+8211                       speed 9, 3 order entries, 2 patterns, 2 tracks
+000110                     play pattern 0, then 1, then jump back to entry 0
+
+A140c365                   C-5 on wave 1 and C-3 on wave 3 fading out
+........                   nothing new: the notes carry on
+====7365                   track 1 stops, track 2 plays G-2
+```
+
+**fonts/NAME.g64**: `WH`, then 96 glyphs for characters 32–127 (space to the block, character 127), one per line. `W` and `H` give a character's size as digit + 1, from 4 × 4 (`33`) to 20 × 20 (`jj`); the built-in font is 6 × 10 (`59`). A glyph fills its whole cell, so the space between characters is part of the glyph. Each glyph is its `H` rows from the top. A row is one character per 6 pixels (two for 7–12 wide, and so on), and each character's top bit, 32, is the leftmost of its pixels. `w` (32) is a pixel on the left, `+` (62) the first five pixels.
+
+```
+59                       6 x 10 characters
+0000000000               space
+0888880800               ! : 8 is the third pixel of a row
+...
+000s2uyu00               a : s = .###.. 2 = ....#. u = .####. y = #...#.
+```
+
+**Old carts** have `tiles.txt`, `map.txt`, `sfx.txt` and `music.txt` at the top of the folder. Those still load, as the default tileset, map, sound bank and song. Sound and music saved before they became `.g64` are text files, `sfx/NAME.txt` and `music/NAME.txt`, and those load too. The first `SAVE` writes each one as `.g64` in its folder and renames the old file to `*.old`. Tile numbers stay the same. In an old map, tile 0 meant "nothing here", so those cells become empty. The comments of an old sound or music file are not carried over: `.g64` files hold only data.
 
 ## Console API
 
@@ -372,11 +439,32 @@ All drawing goes through `camera` and `clip`.
 | `rect(x, y, w, h [, c])` / `rect_fill(...)` | outline / filled rectangle |
 | `circle(x, y, r [, c])` / `circle_fill(...)` | outline / filled circle |
 | `text(s, x, y [, c])` | draw text (`\n` breaks lines). Returns the x after the text |
-| `text_width(s)` | width of a string in pixels |
+| `text_width(s)` | width of a string in pixels, in the font in use (6 per character in the built-in one) |
+| `font_w()` / `font_h()` | the size of a character of the font in use: `text` steps this far across, and down at a line break |
 | `rgb(r, g, b)` | colour index from channels 0–3 |
 | `camera([x, y])` | offset all drawing by (−x, −y). With no arguments, resets |
 | `pal([a, b])` | from now on, drawing in colour `a` puts colour `b`: recolour sprites, flash a hit enemy white. `pal()` puts every colour back |
 | `clip([x, y, w, h])` | limit drawing to a rectangle. With no arguments, resets |
+| `spray(x, y, w, h, n [, c])` | `n` dots at random places in a rectangle. It uses `rnd()`'s numbers, so `seed_rnd()` repeats a spray |
+| `tex_quad(x0, y0, x1, y1, x2, y2, x3, y3, spr, sw, sh)` | stretch the `sw` × `sh` block of tiles at tile `spr` over any four-cornered shape: top-left, top-right, bottom-right, bottom-left. The edges don't have to be parallel. Order the corners differently to flip or turn it |
+| `tex_quad_3d(x0, y0, z0, ..., x3, y3, z3, spr, sw, sh)` | the same, with a depth at each corner: x and y go straight to the screen (orthographic), and z, blended across the quad, goes into the depth buffer, so quads hide each other correctly whatever order they are drawn in |
+
+### Depth and blending
+
+Every pixel has a depth (−32768 to 32767). **Lower numbers are nearer.** A pixel is drawn only where the depth already there is the same or further away, and then the depth there becomes its own. All drawing uses the drawing depth, except `tex_quad_3d`, which uses its corners' depths.
+
+`cls()` pushes everything it clears to the far plane (32767), so anything drawn afterwards shows, whatever its depth. It also sets the drawing depth back to 0.
+
+| Command | |
+|---|---|
+| `set_depth([z])` | draw at depth `z` from now on. `set_depth()` is 0 |
+| `set_blend([b])` | how drawn colours mix with the screen, per red / green / blue channel (0–3): `BLEND_NORMAL` replaces, `BLEND_ADD` adds (up to 3), `BLEND_SUB` subtracts from the screen (down to 0), `BLEND_MAX` / `BLEND_MIN` keep the higher / lower, `BLEND_XOR` XORs. `set_blend()` is `BLEND_NORMAL`. `cls()` ignores it |
+
+### The font
+
+In the built-in font every character is 6 × 10 pixels: a letter 5 pixels wide, with a column of space to its right and a row above. Capitals are 7 pixels tall. Lowercase letters are 5, with ascenders (b d f h k l t) as tall as the capitals, and g j p q y hang two rows below the line, into the cell's bottom row.
+
+This is the **built-in font**. The shell and the editors always use it. A cart's `text()` uses it too, until the cart has a font of its own: `fonts/font.g64`, made in the [font editor](#font-editor) (F7), or others loaded with `load_font`.
 
 ### Tiles and map
 
@@ -402,10 +490,11 @@ Each kind of data has 10 slots (0–9). Load files into them, then swap between 
 | `load_tileset(slot)` | empty a slot, freeing its memory |
 | `swap_tileset(slot)` | use that slot from now on. Returns the slot. `swap_tileset()` alone returns the slot in use |
 | `load_map` / `swap_map` | the same for `maps/name.g64` |
-| `load_sfx` / `swap_sfx` | the same for sound banks, `sfx/name.txt` (`sfx()` and the waves music plays with) |
-| `load_music` / `swap_music` | the same for songs, `music/name.txt`. Swapping stops the song; `music()` starts the new one |
+| `load_sfx` / `swap_sfx` | the same for sound banks, `sfx/name.g64` (`sfx()` and the waves music plays with) |
+| `load_music` / `swap_music` | the same for songs, `music/name.g64`. Swapping stops the song; `music()` starts the new one |
+| `load_font` / `swap_font` | the same for fonts, `fonts/name.g64`: what `text()` and `text_width()` use. With the font slot in use empty, `text()` uses the built-in font |
 
-When a cart starts, slot 0 of each kind holds the file with the default name (`tileset`, `map`, `sfx`, `music`), or an empty one if the cart has none. Slot 0 is in use. A file open in an editor is loaded with its unsaved changes, so Ctrl+R runs what you see. Swapping to an empty slot is an error. Emptying the slot in use leaves nothing to draw: `map_get` reads −1, and `tile_pset` / `map_set` are errors.
+When a cart starts, slot 0 of each kind holds the file with the default name (`tileset`, `map`, `sfx`, `music`, `font`), or an empty one if the cart has none (for a font, the built-in one). Slot 0 is in use. A file open in an editor is loaded with its unsaved changes, so Ctrl+R runs what you see. Swapping to an empty slot is an error. Emptying the slot in use leaves nothing to draw: `map_get` reads −1, and `tile_pset` / `map_set` are errors.
 
 ```
 load_map(1, "cave") : load_tileset(1, "cave-tiles")
@@ -449,7 +538,7 @@ A full-screen `cls()` costs 96,000 of the 100,000 dots. Draw only what changes: 
 | `frame_count()` | frames since boot |
 | `cart_title()` | the cart's title |
 
-Constants: `SCREEN_W` `SCREEN_H` `TILE_SIZE` `SHEET_COLS` (40) `NTILES` (960) `SLOTS` (10) `MAP_SCREEN_W` (40) `MAP_SCREEN_H` (24) `FONT_W` `FONT_H`. (`MAP_W` and `MAP_H` are gone: maps vary in size, so use `map_w()` and `map_h()`.) Named colours:
+Constants: `SCREEN_W` `SCREEN_H` `TILE_SIZE` `SHEET_COLS` (40) `NTILES` (960) `SLOTS` (10) `MAP_SCREEN_W` (40) `MAP_SCREEN_H` (24) `FONT_W` (6) `FONT_H` (10). (`MAP_W` and `MAP_H` are gone: maps vary in size, so use `map_w()` and `map_h()`.) Named colours:
 
 | Constant | Index | Constant | Index |
 |---|---|---|---|
@@ -479,9 +568,14 @@ A cart that draws once and ends without calling `flip()` keeps its picture on sc
 
 ## Example carts
 
+The examples are in their own folder: `CD examples`, then `DIR`, `RUN depth` and so on (`CD ..` comes back).
+
 | Cart | Shows |
 |---|---|
 | [carts/hello](carts/hello/main.gb) | the palette, shapes, text, pad input |
+| [carts/examples/depth](carts/examples/depth/main.gb) | the depth buffer: circles and squares orbiting a planet, drawn in a shuffled order and still sorted by `set_depth`. A turns depth off to compare with plain draw order |
+| [carts/examples/rotate](carts/examples/rotate/main.gb) | sprites of 1×1, 2×2 and 4×4 tiles turning around their centres with `tex_quad`, big and at their real size |
+| [carts/examples/cube](carts/examples/cube/main.gb) | a dice cube (a 2×2-tile texture per face) spinning in perspective with `tex_quad_3d`: back-face culling, and a second cube cutting through the first |
 | [carts/seedling](carts/seedling/main.gb) | a small game with a tileset, map, sound bank and song. Collisions with `map_get`, `map_set`, sound effects over a looping tune, sprite flipping, a following camera, a HUD, and staying inside the dot limit |
 
 ## Sharing carts
@@ -497,7 +591,7 @@ file main.gb
 end
 ```
 
-- **What's bundled:** the cart's `.gb` and `.txt` files, and the files in `tiles/`, `maps/`, `sfx/` and `music/` (named `file tiles/tileset.g64` and so on). Not `*.unsaved` or `*.old` leftovers, or save data.
+- **What's bundled:** the cart's `.gb` and `.txt` files, and the `.g64` files in `tiles/`, `maps/`, `sfx/` and `music/` (named `file tiles/tileset.g64` and so on), plus any old `.txt` sound or music not yet converted. Not `*.unsaved` or `*.old` leftovers, or save data.
 - **Names:** import refuses names that would leave the folder, and won't overwrite a cart that exists.
 - **Bad bundles:** a cut-short bundle is rejected, with nothing left behind.
 
@@ -595,7 +689,7 @@ GooberEngine finds the runtimes in `$GOOBERENGINE_RUNTIMES`, then in `runtimes/`
 7. **Polish** ✅
    - Palette swap for drawing (`pal(a, b)`).
    - Per-cart save data (`save_data` / `load_data`), kept outside the cart.
-   - Cart labels made with F8 (`label.txt`), and a `BROWSE` grid to pick carts by their label.
+   - A `BROWSE` list to pick carts from.
    - One-file `.gbcart` `EXPORT` / `IMPORT`.
    - VS Code highlighting for the console API: `make vscode`, which uses a new `--with` option in GooberBASIC's grammar generator.
 
@@ -612,6 +706,10 @@ GooberEngine finds the runtimes in `$GOOBERENGINE_RUNTIMES`, then in `runtimes/`
    - A file tree beside every editor, several `.gb` files in the code editor, and a tile editor with a pannable, zoomable tileset and floating tile and tools windows.
    - Old carts' `tiles.txt` / `map.txt` / `sfx.txt` / `music.txt` are read and converted by the next `SAVE`.
    - Right-click in the tree to rename or delete a file.
+   - A settings screen (F9, or the button at the bottom of the file tree): theme, overall / music / sound-effect volume, fullscreen, window size and the code editor's indent mode, kept in `settings.txt`.
+   - Fonts are a resource like the rest (`fonts/NAME.g64`, `load_font` / `swap_font`), with a font editor on F7. A font's characters can be 4 × 4 to 20 × 20, spacing included; `font_w()` / `font_h()` tell a cart the size. The built-in font is every cart's default.
+   - The tile editor paints straight on the tileset, inside a selection box that keeps strokes off the tiles around it. The tile window became a preview of the selection.
+   - Sound banks and songs are `.g64` too (`sfx/NAME.g64`, `music/NAME.g64`). Their old text files are read and converted by the next `SAVE`.
    - Still to do: the web player runtime (`runtimes/web`) needs rebuilding with Emscripten to play carts in the new layout.
 
 ### What could come next
@@ -643,7 +741,7 @@ GooberEngine finds the runtimes in `$GOOBERENGINE_RUNTIMES`, then in `runtimes/`
 | `src/sound_editor.c` | the sound editor |
 | `src/music_editor.c` | the music tracker |
 | `src/save.c` | each cart's save data |
-| `src/bundle.c` | labels and `.gbcart` export / import |
+| `src/bundle.c` | `.gbcart` export / import |
 | `src/browser.c` | the `BROWSE` cart picker |
 | `src/export.c` | game export (packing carts into runtimes, the .zip writer) and the player's start-up |
 | `src/web.c` | the browser build's downloads, uploads and dropped files |

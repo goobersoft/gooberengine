@@ -218,7 +218,7 @@ static void key(const KeyEvent *ev) {
             case SDL_SCANCODE_S: {
                 char err[256];
                 Doc *d = doc_active(RES_MUSIC);
-                if (doc_save(d, err, sizeof err)) status(COL_GREEN, "saved music/%s.txt", d->name);
+                if (doc_save(d, err, sizeof err)) status(COL_GREEN, "saved music/%s.g64", d->name);
                 else status(COL_RED, "%s", err);
                 return;
             }
@@ -340,8 +340,8 @@ static void draw(void) {
 
     /* song: speed and the order list */
     snprintf(buf, sizeof buf, "speed - %-2d +", cur_song->song_speed);
-    draw_text(buf, 2, SONG_Y, RGB6(2, 3, 3));
-    draw_text("order", ORDER_X - 34, SONG_Y, RGB6(2, 2, 3));
+    draw_text(buf, 2, SONG_Y, UI_RGB(2, 3, 3));
+    draw_text("order", ORDER_X - 34, SONG_Y, UI_RGB(2, 2, 3));
     if (U.opos < U.oscroll) U.oscroll = U.opos;
     if (U.opos >= U.oscroll + ORDER_SHOWN) U.oscroll = U.opos - ORDER_SHOWN + 1;
     for (int k = 0; k < ORDER_SHOWN; k++) {
@@ -349,11 +349,11 @@ static void draw(void) {
         if (i >= ORDER_LEN) break;
         const OrderEntry *e = &cur_song->order[i];
         int x = ORDER_X + k * ORDER_W;
-        if (i == U.opos) draw_rect(x, SONG_Y, ORDER_W - 1, 10, RGB6(1, 2, 3), true);
+        if (i == U.opos) draw_rect(x, SONG_Y, ORDER_W - 1, 10, UI_RGB(1, 2, 3), true);
         if (e->kind == ORDER_PATTERN) snprintf(buf, sizeof buf, "%02d", e->value);
         else if (e->kind == ORDER_JUMP) snprintf(buf, sizeof buf, ">%d", e->value);
         else snprintf(buf, sizeof buf, " .");
-        int c = i == U.opos ? COL_BLACK : i == mpos ? COL_YELLOW : e->kind == ORDER_STOP ? RGB6(1, 1, 2) : e->kind == ORDER_JUMP ? COL_ORANGE : COL_WHITE;
+        int c = i == U.opos ? COL_BLACK : i == mpos ? COL_YELLOW : e->kind == ORDER_STOP ? UI_RGB(1, 1, 2) : e->kind == ORDER_JUMP ? COL_ORANGE : COL_WHITE;
         draw_text(buf, x + 3, SONG_Y, c);
     }
 
@@ -372,7 +372,7 @@ static void draw(void) {
     for (int k = 0; k < TSHOWN; k++) {
         int t = U.tleft + k;
         snprintf(buf, sizeof buf, "track %d", t + 1);
-        draw_text(buf, GX + k * TW, HEAD_Y, t == U.track ? COL_WHITE : RGB6(1, 2, 2));
+        draw_text(buf, GX + k * TW, HEAD_Y, t == U.track ? COL_WHITE : UI_RGB(1, 2, 2));
     }
     if (U.tleft > 0) draw_char('<', GX - 8, HEAD_Y, COL_YELLOW);
     if (U.tleft + TSHOWN < NTRACKS) draw_char('>', UI_W - 6, HEAD_Y, COL_YELLOW);
@@ -380,40 +380,40 @@ static void draw(void) {
         int row = U.top + r, y = GRID_Y + r * FONT_H;
         if (row >= PATTERN_ROWS) break;
         bool playing = mpat == U.pat && row == mrow;
-        if (playing) draw_rect(0, y, UI_W, FONT_H, RGB6(1, 1, 0), true);
-        else if (row == U.row) draw_rect(0, y, UI_W, FONT_H, RGB6(0, 0, 1), true);
+        if (playing) draw_rect(0, y, UI_W, FONT_H, UI_RGB(1, 1, 0), true);
+        else if (row == U.row) draw_rect(0, y, UI_W, FONT_H, UI_RGB(0, 0, 1), true);
         snprintf(buf, sizeof buf, "%02d", row);
-        draw_text(buf, 2, y, row % 8 == 0 ? COL_YELLOW : row % 4 == 0 ? RGB6(2, 2, 3) : RGB6(1, 1, 2));
+        draw_text(buf, 2, y, row % 8 == 0 ? COL_YELLOW : row % 4 == 0 ? UI_RGB(2, 2, 3) : UI_RGB(1, 1, 2));
         for (int k = 0; k < TSHOWN; k++) {
             int t = U.tleft + k;
             const Cell *c = &cur_song->patterns[U.pat].cells[row][t];
             int x = GX + k * TW;
             if (row == U.row && t == U.track) {
                 int fx0 = U.field == F_NOTE ? 0 : U.field + 3, fw = U.field == F_NOTE ? 3 : 1;
-                draw_rect(x + fx0 * FONT_W - 1, y, fw * FONT_W + 1, FONT_H, RGB6(1, 2, 3), true);
+                draw_rect(x + fx0 * FONT_W - 1, y, fw * FONT_W + 1, FONT_H, UI_RGB(1, 2, 3), true);
             }
-            if (c->kind == CELL_EMPTY) { draw_text("... ...", x, y, RGB6(0, 1, 2)); continue; }
-            if (c->kind == CELL_OFF) { draw_text("=== ...", x, y, COL_RED); draw_text("...", x + 4 * FONT_W, y, RGB6(0, 1, 2)); continue; }
+            if (c->kind == CELL_EMPTY) { draw_text("... ...", x, y, UI_RGB(0, 1, 2)); continue; }
+            if (c->kind == CELL_OFF) { draw_text("=== ...", x, y, COL_RED); draw_text("...", x + 4 * FONT_W, y, UI_RGB(0, 1, 2)); continue; }
             char name[4];
             pitch_name(c->pitch, name);
             draw_text(name, x, y, COL_WHITE);
             draw_char(c->wave >= NWAVES ? 'n' : "0123456789abcdef"[c->wave], x + 4 * FONT_W, y, COL_CYAN);
-            draw_char('0' + c->vol, x + 5 * FONT_W, y, RGB6(3, 1, 2));
+            draw_char('0' + c->vol, x + 5 * FONT_W, y, UI_RGB(3, 1, 2));
             draw_char(fx_chars[c->fx % NFX], x + 6 * FONT_W, y, COL_ORANGE);
         }
     }
-    for (int t = 1; t < TSHOWN; t++) draw_line(GX + t * TW - 3, HEAD_Y, GX + t * TW - 3, GRID_Y + ROWS_SHOWN * FONT_H - 1, RGB6(0, 1, 1));
+    for (int t = 1; t < TSHOWN; t++) draw_line(GX + t * TW - 3, HEAD_Y, GX + t * TW - 3, GRID_Y + ROWS_SHOWN * FONT_H - 1, UI_RGB(0, 1, 1));
 
     /* bars */
     ui_draw_tabs();
     int by = SCREEN_H - FONT_H;
-    draw_rect(0, by, UI_W, FONT_H, RGB6(0, 1, 2), true);
+    draw_rect(0, by, UI_W, FONT_H, UI_RGB(0, 1, 2), true);
     static const char *const field_names[4] = {"note", "wave", "volume", "effect"};
     snprintf(buf, sizeof buf, "pat %d row %d trk %d %s  oct %d", U.pat, U.row, U.track + 1, field_names[U.field], U.octave + 2);
-    int bx = draw_text(buf, 3, by, RGB6(2, 3, 3));
+    int bx = draw_text(buf, 3, by, UI_RGB(2, 3, 3));
     if (U.status[0] && frame_count < U.status_until) draw_text(U.status, bx + 10, by, U.status_color);
     snprintf(buf, sizeof buf, "%s%s", doc_active(RES_MUSIC)->name, doc_active(RES_MUSIC)->dirty ? "*" : "");
-    draw_text(buf, UI_W - 3 - text_width(buf), by, RGB6(2, 3, 3));
+    draw_text(buf, UI_W - 3 - text_width(buf), by, UI_RGB(2, 3, 3));
 }
 
 /* the tree opened another song: its undo history doesn't apply */

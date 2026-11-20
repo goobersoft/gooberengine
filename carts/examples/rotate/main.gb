@@ -1,0 +1,88 @@
+' rotate - spinning a texture around its centre with tex_quad.
+' Left / Right: spin speed.  Up / Down: zoom.  A: pause.  B: show the corners.
+'
+' tex_quad(x0,y0, x1,y1, x2,y2, x3,y3, tile, w, h) stretches a w x h block of
+' tiles over any four corners: top-left, top-right, bottom-right, bottom-left.
+' To rotate a sprite, take the four corners of its box around the centre,
+' turn each one by the angle, and hand them to tex_quad. Turning the box's
+' two half-edges (right and down) once gives all four corners:
+'
+'     right = ( cos(a), sin(a)) * half width
+'     down  = (-sin(a), cos(a)) * half height
+'     top-left = centre - right - down, top-right = centre + right - down ...
+'
+' The tileset (tiles/tileset.g64, open it with F2) holds three pictures:
+'   tile 0            a 1x1 arrow     (10 x 10 pixels)
+'   tiles 1-2, 41-42  a 2x2 badge     (20 x 20)
+'   tiles 3-6 ... 123-126  a 4x4 picture (40 x 40)
+strict
+
+global speed:float = 1.5
+global zoom:float = 1
+global angle:float
+global paused:int, corners:int
+
+' draws a w x h block of tiles starting at `tile`, centred on (cx, cy),
+' turned by `a` degrees and scaled by `scale`
+function spin_sprite(tile:int, w:int, h:int, cx:float, cy:float, a:float, scale:float)
+  local hx:float = w * TILE_SIZE * scale / 2
+  local hy:float = h * TILE_SIZE * scale / 2
+  ' the sprite's own "right" (ux, uy) and "down" (vx, vy) half-edges, turned by a
+  local ux:float = cos(a) * hx, uy:float = sin(a) * hx
+  local vx:float = -sin(a) * hy, vy:float = cos(a) * hy
+  ' the corners in tex_quad's order: centre -/+ right -/+ down
+  local px:int[4], py:int[4]
+  px[0] = int(cx - ux - vx) : py[0] = int(cy - uy - vy)     ' top-left
+  px[1] = int(cx + ux - vx) : py[1] = int(cy + uy - vy)     ' top-right
+  px[2] = int(cx + ux + vx) : py[2] = int(cy + uy + vy)     ' bottom-right
+  px[3] = int(cx - ux + vx) : py[3] = int(cy - uy + vy)     ' bottom-left
+  tex_quad(px[0], py[0], px[1], py[1], px[2], py[2], px[3], py[3], tile, w, h)
+  if corners
+    for local i:int = 0 to 3
+      line(px[i], py[i], px[(i + 1) mod 4], py[(i + 1) mod 4], COL_DARK_GREY)
+    next
+    circle_fill(px[0], py[0], 2, COL_RED)          ' the texture's top-left corner
+  endif
+endfunction
+
+dot_limit(200000)                      ' a full cls alone is 96,000 of the usual 100,000
+
+repeat
+  if btn(BTN_LEFT) then speed :- 0.05
+  if btn(BTN_RIGHT) then speed :+ 0.05
+  if btn(BTN_UP) then zoom = min(1.6, zoom + 0.02)
+  if btn(BTN_DOWN) then zoom = max(0.3, zoom - 0.02)
+  if btn_hit(BTN_A) then paused = not paused
+  if btn_hit(BTN_B) then corners = not corners
+  if not paused then angle :+ speed
+
+  cls(rgb(0, 0, 1))
+  ' a faint grid, so the transparent pixels show
+  for local x:int = 0 to SCREEN_W step 20
+    line(x, 14, x, SCREEN_H - 14, rgb(0, 1, 1))
+  next
+  for local y:int = 20 to SCREEN_H - 14 step 20
+    line(0, y, SCREEN_W, y, rgb(0, 1, 1))
+  next
+
+  ' big: each one 80 pixels across (x8, x4, x2)
+  spin_sprite(0, 1, 1, 70, 100, angle, 8 * zoom)
+  spin_sprite(1, 2, 2, 200, 100, -angle, 4 * zoom)
+  spin_sprite(3, 4, 4, 330, 100, angle * 0.5, 2 * zoom)
+
+  ' small: their real size
+  spin_sprite(0, 1, 1, 70, 196, angle, 1)
+  spin_sprite(1, 2, 2, 200, 196, -angle, 1)
+  spin_sprite(3, 4, 4, 330, 196, angle * 0.5, 1)
+
+  text("1x1 tile", 70 - text_width("1x1 tile") / 2, 160, COL_GREY)
+  text("2x2 tiles", 200 - text_width("2x2 tiles") / 2, 160, COL_GREY)
+  text("4x4 tiles", 330 - text_width("4x4 tiles") / 2, 160, COL_GREY)
+
+  rect_fill(0, 0, SCREEN_W, 12, COL_NAVY)
+  text("tex_quad rotation   speed " + str(int(speed * 10) / 10.0) + "   zoom " + str(int(zoom * 100)) + "%", 4, 1, COL_YELLOW)
+  rect_fill(0, SCREEN_H - 12, SCREEN_W, 12, COL_NAVY)
+  text("Left/Right speed  Up/Down zoom  A pause  B corners", 4, SCREEN_H - 11, COL_GREY)
+
+  flip()
+forever

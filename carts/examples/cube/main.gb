@@ -1,0 +1,123 @@
+' cube - a textured 3D cube spinning on its centre, with tex_quad_3d.
+' Arrows: push the spin.  A: pause.  B: back-face culling on / off.
+' C: a second, smaller cube passing through the first.
+'
+' How it works, each frame:
+'   1. turn the cube's 8 corners around its centre (round y, then round x)
+'   2. push them away from the camera and project them: screen = centre + p * F / z
+'   3. draw each of the 6 faces with tex_quad_3d: the 4 projected corners,
+'      each with its depth (z), and a 2x2 block of tiles as the texture
+'
+' tex_quad_3d writes z into the depth buffer, blended across the face, so
+' faces hide each other correctly whatever order they are drawn in. With
+' culling off (B) all six faces are drawn and the depth buffer alone sorts
+' them out; with it on, faces turned away are skipped, which saves dots.
+' Press C to see two cubes cut through each other: that's per-pixel depth.
+'
+' The faces are dice, at tiles 0, 2, 4, 6, 8 and 10 of tiles/tileset.g64 (F2).
+strict
+
+const F = 330                  ' focal length: bigger = flatter, more zoomed
+const CAM = 5                  ' how far the cube's centre is from the camera
+const ZSCALE = 2000            ' depth buffer units per unit of distance
+
+' the cube's corners: x, y, z each -1 or +1 (y points down, like the screen)
+global cx:float[8], cy:float[8], cz:float[8]
+' each face as 4 corner numbers, in tex_quad's order (top-left, top-right,
+' bottom-right, bottom-left) as seen from outside the cube
+global face:int[6, 4]
+' the corners after turning and projecting
+global sx:int[8], sy:int[8], sz:int[8]
+
+global ax:float = 20, ay:float = 30          ' angles, degrees
+global vx:float = 0.7, vy:float = 1.1        ' spin speed
+global paused:int, cull:int = true, two:int
+global faces_drawn:int
+
+function setup()
+  for local i:int = 0 to 7
+    cx[i] = -1 : if i = 1 or i = 2 or i = 5 or i = 6 then cx[i] = 1
+    cy[i] = -1 : if i = 2 or i = 3 or i = 6 or i = 7 then cy[i] = 1
+    cz[i] = -1 : if i >= 4 then cz[i] = 1
+  next
+  set_face(0, 0, 1, 2, 3)      ' front  (z = -1): 1 pip
+  set_face(1, 1, 5, 6, 2)      ' right  (x = +1): 2
+  set_face(2, 4, 5, 1, 0)      ' top    (y = -1): 3
+  set_face(3, 3, 2, 6, 7)      ' bottom (y = +1): 4
+  set_face(4, 4, 0, 3, 7)      ' left   (x = -1): 5
+  set_face(5, 5, 4, 7, 6)      ' back   (z = +1): 6
+endfunction
+
+function set_face(f:int, a:int, b:int, c:int, d:int)
+  face[f, 0] = a : face[f, 1] = b : face[f, 2] = c : face[f, 3] = d
+endfunction
+
+' turn, place and project the corners of a cube of half-size `size`
+' centred `ox` units to the side of the main one
+function project(rx:float, ry:float, size:float, ox:float)
+  local sa:float = sin(ry), ca:float = cos(ry)
+  local sb:float = sin(rx), cb:float = cos(rx)
+  for local i:int = 0 to 7
+    local x:float = cx[i] * size, y:float = cy[i] * size, z:float = cz[i] * size
+    ' round the y axis
+    local x1:float = x * ca + z * sa
+    local z1:float = -x * sa + z * ca
+    ' round the x axis
+    local y2:float = y * cb - z1 * sb
+    local z2:float = y * sb + z1 * cb
+    ' in front of the camera, then perspective
+    local zc:float = z2 + CAM
+    local px:float = x1 + ox
+    sx[i] = int(SCREEN_W / 2 + px * F / zc)
+    sy[i] = int(SCREEN_H / 2 + 6 + y2 * F / zc)
+    sz[i] = int(zc * ZSCALE)                   ' lower = nearer, as the depth buffer wants
+  next
+endfunction
+
+function draw_cube()
+  for local f:int = 0 to 5
+    local a:int = face[f, 0], b:int = face[f, 1], c:int = face[f, 2], d:int = face[f, 3]
+    ' facing us? the corners go clockwise on screen (the cross product is positive)
+    local cross:int = (sx[b] - sx[a]) * (sy[d] - sy[a]) - (sy[b] - sy[a]) * (sx[d] - sx[a])
+    if cull and cross <= 0 then continue
+    tex_quad_3d(sx[a], sy[a], sz[a], sx[b], sy[b], sz[b], sx[c], sy[c], sz[c], sx[d], sy[d], sz[d], f * 2, 2, 2)
+    faces_drawn :+ 1
+  next
+endfunction
+
+setup()
+dot_limit(300000)                     ' a full cls alone is 96,000 of the usual 100,000
+
+repeat
+  if btn(BTN_LEFT) then vy :- 0.05
+  if btn(BTN_RIGHT) then vy :+ 0.05
+  if btn(BTN_UP) then vx :- 0.05
+  if btn(BTN_DOWN) then vx :+ 0.05
+  if btn_hit(BTN_A) then paused = not paused
+  if btn_hit(BTN_B) then cull = not cull
+  if btn_hit(BTN_C) then two = not two
+  if not paused then ax :+ vx : ay :+ vy
+
+  cls(rgb(0, 0, 1))                   ' also resets the depth buffer to "far"
+  faces_drawn = 0
+
+  project(ax, ay, 1, 0)
+  draw_cube()
+  if two
+    ' a smaller cube sliding left and right straight through the big one
+    project(-ax * 1.7, ay * 0.6 + 45, 0.6, sin(frame_count() * 1.2) * 1.6)
+    draw_cube()
+  endif
+
+  set_depth(-32768)                   ' the HUD in front of everything
+  rect_fill(0, 0, SCREEN_W, 12, COL_NAVY)
+  local c:string = "on" : if not cull then c = "off"
+  text("tex_quad_3d cube   culling " + c + "   faces " + str(faces_drawn), 4, 1, COL_YELLOW)
+  rect_fill(0, SCREEN_H - 12, SCREEN_W, 12, COL_NAVY)
+  text("arrows spin  A pause  B culling  C second cube", 4, SCREEN_H - 11, COL_GREY)
+  set_depth()
+
+  text(dots_used(),0,20)
+
+  flip()
+forever

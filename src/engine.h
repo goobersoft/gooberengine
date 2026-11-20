@@ -7,7 +7,7 @@
  *   maps     1-10 screens (40 x 24 cells) each way, one tile number per cell
  *   slots    10 slots each for tilesets, maps, sound banks and songs (load_*, swap_*)
  *   dots     at most dot_limit() pixels drawn per frame (default 100,000)
- *   text     6 x 10 font cells (66 x 24 characters on screen)
+ *   text     6 x 10 font cells (66 x 24 characters on screen), 5-wide letters
  *   input    pad: d-pad + A B C + Start (keyboard or game controller), keyboard, mouse
  *   frame    60 frames per second
  */
@@ -39,8 +39,13 @@
 #define NSLOTS 10
 #define DOT_LIMIT_DEFAULT 100000
 #define DOT_LIMIT_MAX 1000000
-#define FONT_W 6
+#define FONT_W 6               /* a character of the built-in font: 6 x 10 */
 #define FONT_H 10
+#define FONT_INK_W 5           /* the built-in font's letters use 5 of its 6 columns (for centring) */
+#define FONT_FIRST 32          /* a font has glyphs for characters 32-127 */
+#define NGLYPHS 96
+#define FONT_MIN 4             /* a font's cell: 4 x 4 to 20 x 20 pixels */
+#define FONT_MAX 20
 #define TEXT_COLS (SCREEN_W / FONT_W)
 #define TEXT_ROWS (SCREEN_H / FONT_H)
 #define CLEAR 0xFF            /* transparent tile pixel */
@@ -59,7 +64,7 @@ enum { BTN_LEFT, BTN_RIGHT, BTN_UP, BTN_DOWN, BTN_A, BTN_B, BTN_C, BTN_START, NB
 #define NPITCH 64              /* pitch 0 = C2 (MIDI 36) ... 63 = D#7 */
 #define TICK_HZ 120            /* sfx steps last `speed` ticks */
 enum { FX_NONE, FX_SLIDE, FX_VIBRATO, FX_DROP, FX_FADE_IN, FX_FADE_OUT, FX_ARPEGGIO, NFX };
-extern const char fx_chars[NFX + 1];   /* ". s v d < > a" as used in sfx.txt */
+extern const char fx_chars[NFX + 1];   /* ". s v d < > a": how the editors (and the old .txt files) show effects */
 
 typedef struct { uint8_t pitch, wave, vol, fx; } SfxStep;   /* vol 0-7, 0 = rest */
 typedef struct {
@@ -81,50 +86,47 @@ typedef struct { Cell cells[PATTERN_ROWS][NTRACKS]; } Pattern;
 enum { ORDER_PATTERN, ORDER_JUMP, ORDER_STOP };
 typedef struct { uint8_t kind, value; } OrderEntry; /* play pattern `value` / jump to entry `value` / stop */
 
-#define LABEL_W (SCREEN_W / 4)
-#define LABEL_H (SCREEN_H / 4)
-
 /* ---- resources: the data a cart keeps in RAM ----
  * Each kind lives in its own folder of the cart and can be loaded into one
  * of NSLOTS slots while the cart runs:
  *   tiles/NAME.g64   a tileset      load_tileset(slot, "NAME"), swap_tileset(slot)
  *   maps/NAME.g64    a map          load_map / swap_map
- *   sfx/NAME.txt     waves + sfx    load_sfx / swap_sfx
- *   music/NAME.txt   a song         load_music / swap_music
+ *   sfx/NAME.g64     waves + sfx    load_sfx / swap_sfx
+ *   music/NAME.g64   a song         load_music / swap_music
+ *   fonts/NAME.g64   a font         load_font / swap_font
  * Slot 0 starts out holding the file with the default name (tileset, map,
- * sfx, music) when the cart has one, and an empty one when it doesn't. */
-enum { RES_TILES, RES_MAP, RES_SFX, RES_MUSIC, NRES };
+ * sfx, music, font) when the cart has one, and an empty one when it doesn't
+ * (for a font: the built-in one). */
+enum { RES_TILES, RES_MAP, RES_SFX, RES_MUSIC, RES_FONT, NRES };
 
 typedef struct { uint8_t t[NTILES][TILE * TILE]; } Tileset;   /* palette index, or CLEAR */
 typedef struct { int w, h; uint16_t *cells; } TileMap;        /* w, h in cells; MAP_EMPTY = no tile */
 typedef struct {
     uint8_t waves[NWAVES][WAVE_LEN];      /* samples 0-15 (7.5 is silence) */
     Sfx sfx[NSFX];
-    char *header;                         /* the file's comment lines */
-    char *note[NSFX];                     /* comment lines just above each sfx */
 } SoundBank;
 typedef struct {
     Pattern patterns[NPATTERNS];
     OrderEntry order[ORDER_LEN];
     uint8_t song_speed;                   /* ticks per row */
-    char *header;
-    char *note[NPATTERNS];
 } Song;
+/* a font: every glyph fills a w x h cell, its spacing included (text steps w across, h down) */
+typedef struct { uint8_t w, h; uint32_t g[NGLYPHS][FONT_MAX]; } Font;   /* a row of a glyph: bit x = pixel x */
 
 /* a resource file open in the editors (possibly changed and not saved) */
 typedef struct {
     int kind;
     char name[64];                        /* file name without folder or extension */
     bool dirty;
-    char legacy[32];                      /* read from an old top-level file (tiles.txt...): SAVE moves it */
-    void *data;                           /* Tileset / TileMap / SoundBank / Song */
+    char legacy[80];                      /* read from an old file (tiles.txt, sfx/NAME.txt ...): SAVE moves it */
+    void *data;                           /* Tileset / TileMap / SoundBank / Song / Font */
 } Doc;
 #define MAX_DOCS 64
 
-extern const char *const res_dir[NRES];      /* "tiles", "maps", "sfx", "music" */
-extern const char *const res_ext[NRES];      /* ".g64", ".g64", ".txt", ".txt" */
-extern const char *const res_default[NRES];  /* "tileset", "map", "sfx", "music" */
-extern const char *const res_word[NRES];     /* "tileset", "map", "sound", "music": for messages */
+extern const char *const res_dir[NRES];      /* "tiles", "maps", "sfx", "music", "fonts" */
+extern const char *const res_ext[NRES];      /* ".g64" for every kind */
+extern const char *const res_default[NRES];  /* "tileset", "map", "sfx", "music", "font" */
+extern const char *const res_word[NRES];     /* "tileset", "map", "sound", "music", "font": for messages */
 
 /* the current resource of each kind: what drawing, sprite(), map_get(), sfx()
  * and music() use. While a cart runs: its swapped-in slot (NULL if that slot
@@ -133,6 +135,7 @@ extern Tileset *cur_tiles;
 extern TileMap *cur_map;
 extern SoundBank *cur_snd;
 extern Song *cur_song;
+extern Font *cur_font;                       /* what a cart's text() draws with (the shell and editors use sys_font) */
 
 /* ---- the loaded cartridge ---- */
 typedef struct {
@@ -146,9 +149,6 @@ typedef struct {
     Doc *docs[MAX_DOCS];      /* resource files opened so far */
     int ndocs;
     Doc *active[NRES];        /* the file each editor works on */
-
-    uint8_t label[LABEL_H][LABEL_W];      /* label.txt: a small picture of the cart */
-    bool has_label;
 } Cart;
 
 extern Cart cart;
@@ -163,7 +163,16 @@ typedef struct {
     uint8_t pen;
     uint8_t pal[NCOLORS];        /* drawing colour c puts pal[c] on screen (pal(a, b)) */
     bool count_dots;             /* a cart is drawing: pixels count against the dot limit */
+    const Font *font;            /* what draw_char uses; NULL = sys_font */
+    int16_t depth;               /* set_depth(): lower is nearer; a pixel is drawn if depth <= zbuf there */
+    uint8_t blend;               /* set_blend(): BLEND_NORMAL ... */
 } DrawState;
+
+/* blend modes: how a drawn colour combines with the one already on screen,
+ * per 2-bit RGB channel (ADD / SUB saturate at 3 / 0) */
+enum { BLEND_NORMAL, BLEND_ADD, BLEND_SUB, BLEND_MAX, BLEND_MIN, BLEND_XOR, NBLENDS };
+#define DEPTH_FAR INT16_MAX
+extern int16_t zbuf[SCREEN_H][SCREEN_W];   /* the depth buffer: cls() puts it back to DEPTH_FAR */
 extern DrawState ds;
 extern int dot_limit, dots_used;  /* pixels a cart may draw per frame / drawn since the last flip() */
 /* the part of the screen the UI draws in: the editors sit to the right of the
@@ -180,14 +189,21 @@ void draw_rect(int x, int y, int w, int h, int c, bool fill);
 void draw_circle(int cx, int cy, int r, int c, bool fill);
 int draw_char(int ch, int x, int y, int c);
 int draw_text(const char *s, int x, int y, int c);   /* returns end x; handles \n */
-int text_width(const char *s);
+int text_width(const char *s);       /* with ds.font, like draw_text */
 void draw_sprite(int n, int x, int y, int w, int h, int flags);
 void draw_map(int mx, int my, int sx, int sy, int w, int h);
 void draw_clip(int x, int y, int w, int h);
 void draw_clip_reset(void);
+void draw_set_depth(int z);          /* clamped to int16 */
+void draw_spray(int x, int y, int w, int h, int n, int c, double (*unit_rng)(void));
+/* a w x h tile block from the sheet at tile n, mapped onto the quad
+ * p0 (top-left) p1 (top-right) p2 (bottom-right) p3 (bottom-left).
+ * z == NULL: drawn at the current depth; otherwise z[i] is p[i]'s depth,
+ * interpolated across the quad (orthographic 3D) */
+void draw_tex_quad(const int px[4], const int py[4], const int *z, int n, int w, int h);
 
 /* ---- font.c ---- */
-extern uint8_t font[128][FONT_H];        /* one byte per row, bit 4 = leftmost */
+extern Font sys_font;                    /* the built-in font: the shell's and editors', and a cart's default */
 void font_init(void);
 
 /* ---- platform.c: window, timing, input ---- */
@@ -230,6 +246,9 @@ void platform_frame(void);        /* present, wait for the next frame, read inpu
 void input_consume(void);         /* forget this frame's key presses (after a cart returns) */
 bool save_screenshot(const char *path);
 void platform_title(const char *title);
+void platform_set_fullscreen(bool on);
+bool platform_fullscreen(void);
+void platform_set_scale(int scale);   /* the window's size: scale x the screen (not in fullscreen) */
 bool platform_take_dropped(char *path, size_t n);   /* a file dropped on the window (or uploaded) */
 uint32_t ge_crc32(const void *p, size_t n);
 char *clipboard_get(void);            /* malloc'd, never NULL */
@@ -239,6 +258,8 @@ void clipboard_set(const char *text);
 bool cart_load(const char *nameOrPath, char *err, int errlen);
 const char *carts_root(void);
 void carts_root_set(const char *dir);     /* the player unpacks its cart into a folder of its own */
+bool carts_cd(const char *arg, char *err, size_t errn);   /* CD: move between folders inside the carts folder */
+const char *carts_subdir(void);           /* where CD is, below the carts folder: "" at the top */
 int cart_check(const char *nameOrPath);   /* compile only; prints errors; returns exit code */
 bool cart_valid_name(const char *s);      /* letters, digits, - and _ */
 
@@ -259,14 +280,12 @@ void cart_discard_scratch(void);                            /* remove the untitl
 const char *cart_scratch_dir(void);                         /* "" when there is none */
 
 /* ---- res.c: resource files, documents and the run-time slots ---- */
-bool res_parse_sound(const char *path, SoundBank *b, char *err, int errlen);   /* cart.c: sfx.txt format */
-bool res_write_sound(const char *path, const SoundBank *b, char *err, int errlen);
-bool res_parse_music(const char *path, Song *m, char *err, int errlen);        /* cart.c: music.txt format */
-bool res_write_music(const char *path, const Song *m, char *err, int errlen);
+bool res_parse_legacy_sound(const char *path, SoundBank *b, char *err, int errlen);   /* cart.c: the old sfx .txt */
+bool res_parse_legacy_music(const char *path, Song *m, char *err, int errlen);        /* cart.c: the old music .txt */
 bool res_parse_legacy_tiles(const char *path, Tileset *t, char *err, int errlen);
 bool res_parse_legacy_map(const char *path, TileMap *m, char *err, int errlen);
 void *res_new(int kind);                       /* an empty resource */
-void *res_copy(int kind, const void *p);       /* a deep copy (comments are not copied) */
+void *res_copy(int kind, const void *p);       /* a deep copy */
 void res_free(int kind, void *p);
 bool res_name_ok(const char *name);
 void res_path(int kind, const char *name, char *out, size_t n);   /* cart.dir/tiles/NAME.g64 ... */
@@ -312,6 +331,7 @@ int synth_voice_sfx(int voice);             /* the sfx a voice plays, -1 none, -
 int synth_voice_step(int voice);            /* the step a voice's sfx is on */
 void synth_music(int pos, int loop_pattern);  /* play from order entry pos; loop_pattern >= 0: just that pattern, forever */
 void synth_music_stop(void);
+void synth_set_volume(float all, float music, float sfx);   /* 0-1 each (callers hold audio_lock) */
 int synth_music_pos(void);                  /* order entry playing, -1 = stopped */
 int synth_music_pattern(void);              /* pattern playing, -1 = stopped */
 int synth_music_row(void);
@@ -321,14 +341,10 @@ void audio_lock(void);                      /* platform.c: hold off the audio th
 void audio_unlock(void);
 extern const char ge_pixel_chars[];
 
-/* ---- bundle.c: labels and one-file carts ---- */
-bool label_read(const char *dir, uint8_t out[LABEL_H][LABEL_W]);   /* a cart folder's label.txt */
-bool label_capture(char *err, int errlen);   /* the screen, shrunk, becomes the cart's label.txt */
+/* ---- bundle.c: one-file carts ---- */
 char *cart_pack(size_t *len, char *err, int errlen);   /* the loaded cart as .gbcart text, malloc'd */
 bool cart_export(const char *path, char *out_path, int outlen, char *err, int errlen);
 bool cart_import(const char *file, const char *name, char *out_dir, int outlen, char *err, int errlen);
-extern bool label_taken;                     /* set when F8 captured a label during the last run */
-
 /* ---- export.c: standalone games (a player runtime with the cart packed in) ---- */
 typedef void (*ExportLog)(const char *line, bool error);
 /* targets: "linux", "windows", "web" or "all" (several may be given, space separated);
@@ -349,7 +365,7 @@ char *save_load(const char *key);                          /* malloc'd, NULL if 
 const char *save_store(const char *key, const char *value);   /* "" removes; returns an error or NULL */
 
 /* ---- shell.c ---- */
-enum { MODE_SHELL, MODE_EDITOR, MODE_TILES, MODE_MAP, MODE_SOUND, MODE_MUSIC, MODE_BROWSE };
+enum { MODE_SHELL, MODE_EDITOR, MODE_TILES, MODE_MAP, MODE_SOUND, MODE_MUSIC, MODE_FONT, MODE_SETTINGS, MODE_BROWSE };
 extern int ui_mode;
 void shell_init(void);
 void shell_print(const char *s, int color);
@@ -358,7 +374,7 @@ void shell_exec_discarding(const char *line);  /* shell_exec, answering Y to "di
 void shell_frame(void);
 void ui_run_from_editor(void);   /* save, run, then come back to the editor (on the error line) */
 extern bool shell_quit;
-bool ui_global_key(const KeyEvent *ev);   /* F1 code ... F5 music: true if it switched */
+bool ui_global_key(const KeyEvent *ev);   /* F1 code ... F5 music, F7 font: true if it switched */
 int ui_draw_tabs(void);                   /* the editors' top bar; returns the x after the tabs */
 void ui_switch(int mode);
 bool ui_unsaved(void);                    /* code or any resource changed and not saved */
@@ -372,12 +388,14 @@ void tiles_doc_changed(void);             /* the tile editor's file was switched
 void map_doc_changed(void);
 void sound_doc_changed(void);
 void music_doc_changed(void);
+void font_doc_changed(void);
 
 /* ---- tiles_editor.c, map_editor.c ---- */
 void tiles_frame(void);
 void map_frame(void);
 void sound_frame(void);
 void music_frame(void);
+void font_frame(void);                    /* font_editor.c */
 void browse_frame(void);
 void browse_open(void);
 
@@ -385,6 +403,7 @@ void browse_open(void);
 bool editor_open(void);          /* the editor shows a file of the cart (main.gb at first) */
 bool editor_open_file(const char *name);  /* edit another .gb file of the cart (beside main.gb) */
 const char *editor_file(void);            /* the .gb file being edited, "" if none */
+const char *code_name(const char *file);  /* "main.gb" -> "main": code is always .gb, so the editors don't show it */
 bool editor_file_modified(const char *name);
 bool editor_rename_file(const char *name, const char *to);   /* a buffer follows its file's new name */
 void editor_close_file(const char *name);                    /* drop a buffer (its file was deleted) */
@@ -407,5 +426,44 @@ enum {
     COL_PINK = RGB6(3, 2, 2), COL_PURPLE = RGB6(2, 0, 3), COL_NAVY = RGB6(0, 0, 1),
     COL_DARK_GREEN = RGB6(0, 1, 0), COL_SKY = RGB6(1, 2, 3), COL_LIME = RGB6(2, 3, 0),
 };
+
+/* ---- settings.c: the console's settings (settings.txt) and the editors' colour theme ----
+ * The shell and editors are drawn in one family of blues: RGB6(0, 0, 1) for
+ * backgrounds, (0, 1, 2) for bars, (1, 2, 3) for highlights, (2, 3, 3) for text.
+ * UI_RGB is RGB6 for that chrome: a theme turns each of those blues into its
+ * own shade of another colour (swapping channels keeps every shade distinct).
+ * Colours outside the family (yellow, red, the code editor's syntax colours)
+ * and everything a cart draws are left alone. */
+enum { THEME_BLUE, THEME_GREEN, THEME_ORANGE, THEME_GREY, NTHEMES };
+extern int ui_theme;
+extern const char *const theme_names[NTHEMES];
+static inline int ui_rgb(int r, int g, int b) {
+    if (!(b >= g && g >= r && b > r)) return RGB6(r, g, b);
+    switch (ui_theme) {
+        case THEME_GREEN: return RGB6(r, b, g);
+        case THEME_ORANGE: return RGB6(b, g, r);
+        case THEME_GREY: return RGB6(g, g, g);
+        default: return RGB6(r, g, b);
+    }
+}
+#define UI_RGB(r, g, b) ui_rgb(r, g, b)
+static inline int ui_col(int c) { return ui_rgb(c >> 4, (c >> 2) & 3, c & 3); }   /* a palette index, themed */
+int theme_find(const char *name);         /* -1 if not a theme ("white" and "gray" mean grey) */
+bool theme_set(int theme, char *err, int errlen);   /* use it from now on, and keep it in settings.txt */
+#define VOLUME_MAX 10
+typedef struct {
+    int volume, music_volume, sfx_volume;   /* 0-10: all sound, then music and sound effects on top */
+    bool fullscreen;
+    int scale;                              /* the window: 1-8 screen pixels per console pixel */
+    int indent;                             /* the code editor's Enter: INDENT_SMART, _AUTO or _NONE */
+} Settings;
+enum { INDENT_SMART, INDENT_AUTO, INDENT_NONE, NINDENTS };
+extern const char *const indent_names[NINDENTS];
+extern Settings settings;
+void settings_load(void);                 /* read settings.txt (before the window opens), and use its sound levels */
+bool settings_save(char *err, int errlen);   /* write settings.txt, and use the sound levels from now on */
+void settings_frame(void);                /* settings_screen.c: the settings screen (F9) */
+void settings_open(void);                 /* from wherever you are; settings_frame_close() goes back there */
+void settings_frame_close(void);
 
 #endif

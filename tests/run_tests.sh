@@ -2,11 +2,13 @@
 # GooberEngine tests: every cart compiles, boots headless, and errors reach the shell.
 cd "$(dirname "$0")/.." || exit 1
 GE=${GE:-./gooberengine}
+mkdir -p build && export GOOBERENGINE_SETTINGS=$PWD/build/settings.txt && rm -f "$GOOBERENGINE_SETTINGS"   # never the user's own
 pass=0; fail=0
 ok()  { pass=$((pass + 1)); }
 bad() { fail=$((fail + 1)); echo "FAIL: $1"; [ -n "$2" ] && printf '%s\n' "$2" | head -20; }
 
-for c in carts/*/; do
+for c in carts/*/ carts/*/*/; do
+    [ -f "$c/main.gb" ] || continue      # carts/examples/ is a folder of carts, carts/x/tiles/ is not a cart
     out=$($GE --check "$c" 2>&1) && ok || bad "$c does not compile" "$out"
     out=$($GE --headless --frames 30 "$c" 2>&1) && ! printf '%s' "$out" | grep -q error && ok || bad "$c fails to run" "$out"
 done
@@ -24,6 +26,23 @@ expect "tile pixels"    tests/carts/draw_once "tile 48 -1"
 expect "pixel read"     tests/carts/draw_once "pixel 1"
 expect "missing cart"   "--exec \"load nope\"" "no cart 'nope'"
 expect "dir"            "--exec dir" "seedling"
+expect "dir folders"    "--exec dir" "examples/"
+expect "cd"             "--exec \"cd examples\" --exec dir" "rotate"
+expect "cd load"        "--exec \"cd examples\" --exec \"load cube\"" "loaded Spinning Cube"
+expect "cd .."          "--exec \"cd examples\" --exec \"cd ..\"" "in carts/"
+expect "cd top"         "--exec \"cd ..\"" "already at the top"
+expect "cd into a cart" "--exec \"cd examples/depth\"" "'depth' is a cart"
+expect "cd nowhere"     "--exec \"cd nope\"" "no folder 'nope'"
+
+# ---- THEME: the editors' colours, kept in settings.txt ----
+expect "theme list"     "--exec theme" "theme: blue  (blue green orange grey)"
+expect "theme set"      "--exec \"theme green\"" "theme: green"
+grep -qxF 'theme = green' "$GOOBERENGINE_SETTINGS" && ok || bad "theme kept in settings.txt" "$(cat "$GOOBERENGINE_SETTINGS" 2>&1)"
+expect "theme remembered" "--exec theme" "theme: green  ("
+expect "theme white = grey" "--exec \"theme white\"" "theme: grey"
+expect "theme unknown"  "--exec \"theme pink\"" "no theme 'pink'"
+rm -f "$GOOBERENGINE_SETTINGS"
+
 
 # ---- slots, the dot limit, the old file formats ----
 expect "slot 0"         tests/carts/slots "a 10 7 40x24"
@@ -45,10 +64,18 @@ LC=$PWD/build/lcarts; rm -rf "$LC" && mkdir -p "$LC" && cp -r tests/carts/legacy
 out=$(GOOBERENGINE_CARTS=$LC $GE --headless --frames 10 legacy 2>&1); said() { printf '%s' "$out" | grep -qF -- "$2" && ok || bad "$1: wanted '$2'" "$out"; }
 said "old formats read" 't 48 m -1 5 160x96'
 out=$(GOOBERENGINE_CARTS=$LC $GE --headless --frames 10 --exec "load legacy" --exec save --exec run 2>&1)
-said "old formats saved" 'saved tiles/tileset.g64, maps/map.g64, sfx/sfx.txt, music/music.txt'
+said "old formats saved" 'saved tiles/tileset.g64, maps/map.g64, sfx/sfx.g64, music/music.g64'
 said "converted cart runs the same" 't 48 m -1 5 160x96'
 [ -f "$LC/legacy/tiles.txt.old" ] && [ ! -f "$LC/legacy/tiles.txt" ] && [ -f "$LC/legacy/maps/map.g64" ] && ok || bad "old files become *.old" "$(ls -R "$LC/legacy")"
 [ "$(head -1 "$LC/legacy/maps/map.g64")" = 33 ] && ok || bad "an old map is 4 x 4 screens" "$(head -1 "$LC/legacy/maps/map.g64")"
+# sound and music that are still text in their folders (sfx/sfx.txt ...): oldsound has seedling's, as they were
+cp -r tests/carts/oldsound "$LC/"
+out=$(GOOBERENGINE_CARTS=$LC $GE --headless --frames 10 oldsound 2>&1);  said "old sound text read" 'oldsound 1'
+out=$(GOOBERENGINE_CARTS=$LC $GE --headless --frames 10 --exec "load oldsound" --exec save 2>&1)
+said "old sound text saved" 'saved sfx/sfx.g64, music/music.g64'
+cmp -s carts/seedling/sfx/sfx.g64 "$LC/oldsound/sfx/sfx.g64" && ok || bad "old sfx.txt converts exactly" "$(diff carts/seedling/sfx/sfx.g64 "$LC/oldsound/sfx/sfx.g64" | head)"
+cmp -s carts/seedling/music/music.g64 "$LC/oldsound/music/music.g64" && ok || bad "old music.txt converts exactly" "$(diff carts/seedling/music/music.g64 "$LC/oldsound/music/music.g64" | head)"
+[ -f "$LC/oldsound/sfx/sfx.txt.old" ] && [ ! -f "$LC/oldsound/sfx/sfx.txt" ] && ok || bad "old sfx.txt becomes sfx.txt.old" "$(ls -R "$LC/oldsound")"
 
 # ---- the code editor, driven by scripted keys in a scratch carts folder ----
 TC=$PWD/build/tcarts
@@ -77,29 +104,80 @@ edit "discard"      '{ctrl+end}{enter}q{esc}new t2{enter}y';            said "di
 edit "keep"         '{ctrl+end}{enter}q{esc}new t2{enter}n';            said "keep" 'kept your changes'
 edit "keep (esc)"   '{ctrl+end}{enter}q{esc}new t2{enter}{esc}';        said "keep (esc)" 'kept your changes'
 
+# ---- the settings screen (F9, SETTINGS, or the tree's bottom-left button): lines are theme,
+# volume, music, sound fx, fullscreen, window size; Left / Right change the one picked ----
+ST=$GOOBERENGINE_SETTINGS
+sethas() { grep -qxF -- "$2" "$ST" 2>/dev/null && ok || bad "$1: settings.txt has no line '$2'" "$(cat "$ST" 2>&1)"; }
+out=$($GE --headless --frames 30 --exec settings --type '{down}{left}{left}' 2>&1); said "settings: volume" '[settings] volume: 8'
+sethas "settings kept" 'volume = 8'; sethas "settings: the rest written too" 'music_volume = 10'
+out=$($GE --headless --frames 30 --exec settings --type '{right}' 2>&1); sethas "settings: theme" 'theme = green'
+sethas "settings: the volume stays" 'volume = 8'
+out=$($GE --headless --frames 30 --exec settings --type '{down}{down}{down}{down}{down}{right}' 2>&1); sethas "settings: window size" 'scale = 4'
+out=$($GE --headless --frames 30 --exec settings --type '{down}{down}{down}{down}{enter}' 2>&1); sethas "settings: fullscreen" 'fullscreen = yes'
+# the volume bar: step i is at x 72 + 86 + 8i (beside the file tree), y 50
+out=$($GE --headless --frames 30 --exec settings --type '{click:186,50}' 2>&1); sethas "settings: click the volume bar" 'volume = 4'
+out=$($GE --headless --frames 30 --exec "theme orange" 2>&1); sethas "THEME keeps the other settings" 'volume = 4'
+printf 'mine = kept\n' >> "$ST"; $GE --headless --frames 30 --exec settings --type '{right}' > /dev/null 2>&1
+sethas "settings.txt keeps lines it doesn't know" 'mine = kept'
+out=$($GE --headless --frames 60 --type '{f9}{esc}help{enter}' 2>&1); said "F9, Esc: back to the shell" 'RUN [name]'
+rm -f "$ST"
+out=$($GE --headless --frames 40 --exec "load seedling" --type '{f1}{click:30,235}{down}{left}' 2>&1); said "the tree's settings button" '[settings] volume: 9'
+edit "settings: Esc goes back" '{f1}{f9}{esc}{ctrl+end}{enter}zzz{ctrl+s}'; has "settings: Esc goes back" 'zzz'
+# the indent line (the 7th): smart, auto, none
+out=$($GE --headless --frames 30 --exec settings --type '{up}{right}' 2>&1); said "settings: indent" '[settings] indent: auto'
+sethas "settings: indent kept" 'indent = auto'
+edit "auto indent: no block indent" '{ctrl+end}{enter}  if 1{enter}x = 1{ctrl+s}'; has "auto indent: no block indent" '  x = 1'
+edit "auto indent: backspace undoes Enter" '{ctrl+end}{enter}  abc{enter}{backspace}d{ctrl+s}'; has "auto indent: backspace undoes Enter" '  abcd'
+edit "auto indent: then backspace is one space" '{ctrl+end}{enter}    abc{enter}x{backspace}{backspace}y{ctrl+s}'; has "auto indent: then backspace is one space" '   y'
+printf 'indent = none\n' > "$ST"
+edit "no indent" '{ctrl+end}{enter}  if 1{enter}x = 1{ctrl+s}'; has "no indent" 'x = 1'
+rm -f "$ST"
+if command -v python3 > /dev/null; then      # the levels reach the sound
+    printf 'volume = 0\n' > "$ST"; $GE --headless --frames 70 --wav build/quiet.wav tests/carts/tone > /dev/null 2>&1
+    got=$(python3 -I tests/wav_check.py build/quiet.wav 0.1 0.45); case "$got" in "peak 0 "*) ok ;; *) bad "volume 0 is silent" "$got" ;; esac
+    printf 'sfx_volume = 5\n' > "$ST"; $GE --headless --frames 70 --wav build/half.wav tests/carts/tone > /dev/null 2>&1
+    rm -f "$ST"; $GE --headless --frames 70 --wav build/full.wav tests/carts/tone > /dev/null 2>&1
+    half=$(python3 -I tests/wav_check.py build/half.wav 0.1 0.45 | cut -d' ' -f2); full=$(python3 -I tests/wav_check.py build/full.wav 0.1 0.45 | cut -d' ' -f2)
+    [ $(( half * 2 )) -ge $(( full - 200 )) ] && [ $(( half * 2 )) -le $(( full + 200 )) ] && ok || bad "sfx_volume 5 is half as loud" "half $half full $full"
+    printf 'music_volume = 0\n' > "$ST"; $GE --headless --frames 70 --wav build/nomusic.wav tests/carts/tone > /dev/null 2>&1
+    got=$(python3 -I tests/wav_check.py build/nomusic.wav 0.1 0.45); case "$got" in *"freq 440"*) ok ;; *) bad "music_volume 0 leaves notes alone" "$got" ;; esac
+    $GE --headless --frames 130 --wav build/nomusic2.wav tests/carts/music > /dev/null 2>&1
+    got=$(python3 -I tests/wav_check.py build/nomusic2.wav 0.1 0.7); case "$got" in "peak 0 "*) ok ;; *) bad "music_volume 0 silences the music" "$got" ;; esac
+    rm -f "$ST"
+fi
+
 # ---- the tile editor. {f6} hides the file tree, so the editor has the whole width.
-# The tile window's canvas is at (203,22), 12 px per pixel for one tile: pixel (x, y)
-# is clicked at (209 + 12x, 28 + 12y). In the tools window, palette colour i is at
-# (335 + (i mod 8) * 8, 53 + (i / 8) * 8) ----
+# The tileset is the canvas, at 6x from (0,10), and tile 1 is selected: its pixel (x, y)
+# is clicked at (63 + 6x, 13 + 6y). In the tools window, palette colour i is at
+# (335 + (i mod 8) * 8, 53 + (i / 8) * 8); the preview window is at (242,12) ----
 TT=$TC/t/tiles/tileset.g64
 row() {     # row <name> <tile> <row> <expected 10 characters>: from the tileset's rows (one per line)
     got=$(awk -v l=$(( ($2 / 40) * 10 + $3 + 2 )) -v c=$(( ($2 % 40) * 10 + 1 )) 'NR == l { s = substr($0, c, 10); while (length(s) < 10) s = s "."; print s }' "$TT" 2>/dev/null)
     [ "$got" = "$4" ] && ok || bad "$1: tile $2 row $3 is '$got', wanted '$4'" "$(cat "$TT" 2>/dev/null)"
 }
-edit "draw"      '{f2}{f6}{click:209,28}{ctrl+s}';                     row "draw" 1 0 '*.........'
-edit "flip"      '{f2}{f6}{click:209,28}{h}{ctrl+s}';                  row "flip" 1 0 '.........*'
-edit "turn"      '{f2}{f6}{click:209,28}{t}{ctrl+s}';                  row "turn" 1 0 '.........*'
-edit "fill"      '{f2}{f6}{f}{click:209,28}{ctrl+s}';                  row "fill" 1 9 '**********'
-edit "line"      '{f2}{f6}{l}{click:209,40}{drag:317,40}{mouse:317,40}{ctrl+s}'; row "line" 1 1 '**********'
+edit "draw"      '{f2}{f6}{click:63,13}{ctrl+s}';                      row "draw" 1 0 '*.........'
+edit "flip"      '{f2}{f6}{click:63,13}{h}{ctrl+s}';                   row "flip" 1 0 '.........*'
+edit "turn"      '{f2}{f6}{click:63,13}{t}{ctrl+s}';                   row "turn" 1 0 '.........*'
+edit "fill"      '{f2}{f6}{f}{click:63,13}{ctrl+s}';                   row "fill" 1 9 '**********'
+row "fill stays in the tile" 0 0 '..........'; row "fill stays in the tile" 2 0 '..........'
+edit "line"      '{f2}{f6}{l}{click:63,19}{drag:117,19}{mouse:117,19}{ctrl+s}'; row "line" 1 1 '**********'
 row "line" 1 0 '..........'
-edit "tile undo" '{f2}{f6}{click:209,28}{click:221,28}{ctrl+z}{ctrl+s}'; row "tile undo" 1 0 '*.........'
-edit "paste"     '{f2}{f6}{click:209,28}{ctrl+c}{right}{ctrl+v}{ctrl+s}'; row "paste" 2 0 '*.........'
-edit "colour"    '{f2}{f6}{click:335,69}{click:209,28}{ctrl+s}';        row "colour" 1 0 'g.........'
-edit "far tile"  '{f2}{f6}{down}{down}{down}{right}{click:209,28}{ctrl+s}'; row "far tile" 122 0 '*.........'
+edit "stroke stops at the edge" '{f2}{f6}{click:63,19}{drag:177,19}{mouse:177,19}{ctrl+s}'
+row "stroke stops at the edge" 1 1 '**********'; row "stroke stops at the edge" 2 1 '..........'
+edit "tile undo" '{f2}{f6}{click:63,13}{click:75,13}{ctrl+z}{ctrl+s}';  row "tile undo" 1 0 '*.........'
+edit "paste"     '{f2}{f6}{click:63,13}{ctrl+c}{right}{ctrl+v}{ctrl+s}'; row "paste" 2 0 '*.........'
+edit "colour"    '{f2}{f6}{click:335,69}{click:63,13}{ctrl+s}';         row "colour" 1 0 'g.........'
+edit "middle click picks" '{f2}{f6}{click:63,13}{click:335,69}{mclick:63,13}{mouse:63,13}{click:69,13}{ctrl+s}'
+row "middle click picks" 1 0 '**........'
+edit "far tile"  '{f2}{f6}{down}{down}{down}{right}{click:123,173}{ctrl+s}'; row "far tile" 122 0 '*.........'
 [ "$(head -1 "$TT")" = 23 ] && ok || bad "a tileset is saved only as big as it's used" "$(head -1 "$TT")"
-edit "pick on sheet" '{f2}{f6}{click:65,15}{click:209,28}{ctrl+s}';    row "pick on sheet" 3 0 '*.........'
-edit "move window" '{f2}{f6}{click:220,16}{drag:120,16}{mouse:120,16}{click:109,28}{ctrl+s}'; row "move window" 1 0 '*.........'
-edit "tiles unsaved" '{f2}{f6}{click:209,28}{esc}new t2{enter}';       said "tiles unsaved" 'unsaved changes in the tiles'
+edit "select on sheet" '{f2}{f6}{click:185,15}{click:183,13}{ctrl+s}';  row "select on sheet" 3 0 '*.........'
+row "selecting doesn't paint" 3 1 '..........'
+edit "preview is only shown" '{f2}{f6}{click:63,13}{click:280,50}{ctrl+s}'; row "preview is only shown" 1 0 '*.........'
+row "preview is only shown" 1 4 '..........'
+edit "move window" '{f2}{f6}{click:260,16}{drag:100,120}{mouse:100,120}{click:263,13}{click:261,13}{ctrl+s}'
+row "move window: the sheet under it" 4 0 '...*......'
+edit "tiles unsaved" '{f2}{f6}{click:63,13}{esc}new t2{enter}';       said "tiles unsaved" 'unsaved changes in the tiles'
 
 # a running cart's map_set / tile_pset last only for that run
 rm -rf "$TC" && mkdir -p "$TC/r"
@@ -152,12 +230,20 @@ out=$(GOOBERENGINE_CARTS=$TC $GE --headless --frames 200 --exec "new t" --type '
 [ -f "$TC/t/maps/map-1.g64" ] && [ ! -f "$TC/t/maps/map.g64" ] && ok || bad "tree +: a new map" "$out$(ls -R "$TC/t")"
 out=$(GOOBERENGINE_CARTS=$TC $GE --headless --frames 200 --exec "load t" --type '{f1}{click:66,15}x = 2{ctrl+s}{click:20,25}' 2>&1)
 grep -qxF 'x = 2' "$TC/t/code-1.gb" 2>/dev/null && ok || bad "tree +: a new .gb file" "$out"
-said "tree: switch file" '[editor] saved code-1.gb'
-printf 'include "lib.gb"\nboom()\n' > "$TC/t/main.gb"; printf 'function boom()\n  local a:int[2]\n  a[5] = 1\nendfunction\n' > "$TC/t/lib.gb"
+said "tree: switch file" '[editor] saved code-1 ('
+printf 'include "lib.gb"\nboom()\n' > "$TC/t/main.gb"; printf 'global function boom()\n  local a:int[2]\n  a[5] = 1\nendfunction\n' > "$TC/t/lib.gb"
 out=$(GOOBERENGINE_CARTS=$TC $GE --headless --frames 60 --exec "load t" --type '{f1}{ctrl+r}' 2>&1)
 said "error in an include opens it" '[editor] line 3: Array index 5'
+printf 'function boom()\nendfunction\n' > "$TC/t/lib.gb"     # a plain function belongs to its file
+out=$(GOOBERENGINE_CARTS=$TC $GE --headless --frames 60 --exec "load t" --type '{f1}{ctrl+r}' 2>&1)
+said "another file's function is private" "[editor] line 2: 'boom' is a function of lib.gb, and only that file can call it"
 out=$(GOOBERENGINE_CARTS=$TC $GE --headless --frames 60 --exec "load t" --type '{f2}{click:30,85}{ctrl+s}' 2>&1)
 said "tree: open a map from the tile editor" '[map] saved maps/map-1.g64'
+# folding: a click on a section's name folds its files away (rows move up), again brings them back
+edit "tree fold"     '{click:20,15}{click:30,35}{ctrl+s}';               said "tree fold: the rows move up" '[tiles] saved tiles/tileset.g64'
+edit "tree unfold"   '{click:20,15}{click:20,15}{click:30,25}{ctrl+end}{enter}zzz{ctrl+s}'; has "tree unfold" 'zzz'
+edit "tree + unfolds" '{f3}{click:20,55}{click:66,55}{ctrl+s}'
+[ -f "$TC/t/maps/map-1.g64" ] && ok || bad "tree + on a folded section: a new map" "$out$(ls -R "$TC/t")"
 # right-click a file: rename (type, Enter) or delete (y). Rows here: code, extra.gb, main.gb,
 # tiles, tiles-1, tileset, maps, map, map-1 (from y 11, 10 px each); the menu's two lines follow the row
 rm -rf "$TC" && mkdir -p "$TC" && cp -r tests/carts/slots "$TC/s" && printf 'x = 1\n' > "$TC/s/extra.gb"
@@ -165,11 +251,11 @@ out=$(GOOBERENGINE_CARTS=$TC $GE --headless --frames 200 --exec "load s" \
       --type '{f2}{rclick:30,65}{click:30,75}{backspace}{backspace}{backspace}cave{enter}{f1}{rclick:30,25}{click:30,35}{backspace}{backspace}{backspace}{backspace}{backspace}lib{enter}{rclick:30,95}{click:30,115}y{rclick:30,35}' 2>&1)
 said "tree rename" 'renamed tileset to tilecave'
 [ -f "$TC/s/tiles/tilecave.g64" ] && [ ! -f "$TC/s/tiles/tileset.g64" ] && ok || bad "tree rename: the file moves" "$(ls -R "$TC/s")"
-said "tree rename code" 'renamed extra.gb to lib.gb'
+said "tree rename code" 'renamed extra to lib'
 [ -f "$TC/s/lib.gb" ] && [ ! -f "$TC/s/extra.gb" ] && ok || bad "tree rename code: the file moves" "$(ls "$TC/s")"
 said "tree delete" 'deleted map-1'
 [ ! -f "$TC/s/maps/map-1.g64" ] && [ -f "$TC/s/maps/map.g64" ] && ok || bad "tree delete: only map-1 goes" "$(ls -R "$TC/s")"
-said "main.gb stays" 'main.gb stays'
+said "main stays" 'main stays'
 out=$(GOOBERENGINE_CARTS=$TC $GE --headless --frames 100 --exec "load s" --type '{f3}{rclick:30,85}{click:30,105}n' 2>&1)
 [ -f "$TC/s/maps/map.g64" ] && ok || bad "tree delete: n keeps the file" "$out"
 out=$(GOOBERENGINE_CARTS=$TC $GE --headless --frames 100 --exec "load s" --type '{f2}{rclick:30,65}{click:30,75}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}tilecave{enter}' 2>&1)
@@ -194,25 +280,27 @@ printf 'sfx(64)\n' > build/bad_sfx.gb && mkdir -p build/bad_sfx && mv build/bad_
 out=$($GE --headless --frames 10 build/bad_sfx 2>&1); said "sfx range" 'sfx: 64 out of range'
 
 # ---- the sound editor: Z row = notes, 1-7 = volume, Tab = effect ----
-ST=$TC/t/sfx/sfx.txt
-sfxhas() { grep -qF -- "$2" "$ST" 2>/dev/null && ok || bad "$1: sfx/sfx.txt has no '$2'" "$(cat "$ST" 2>/dev/null)"; }
-edit "notes"       '{f4}{f6}zx{ctrl+s}';                                 sfxhas "notes" 'C-4 0 5 .  D-4 0 5 .  --- 0 0 .'
-edit "volume"      '{f4}{f6}z{left}7{ctrl+s}';                           sfxhas "volume" 'C-4 0 7 .'
-edit "effect"      '{f4}{f6}z{left}{tab}{ctrl+s}';                       sfxhas "effect" 'C-4 0 5 s'
-edit "octave"      '{f4}{f6}{]}z{ctrl+s}';                               sfxhas "octave" 'C-5 0 5 .'
-edit "wave pen"    '{f4}{f6}.z{ctrl+s}';                                 sfxhas "wave pen" 'C-4 1 5 .'
-edit "length"      '{f4}{f6}zxc{left}{ctrl+l}{ctrl+s}';                  sfxhas "length" 'sfx 0 speed 8 length 3 loop 0 0'
-edit "loop"        '{f4}{f6}z{ctrl+b}{right}{right}{ctrl+e}{ctrl+s}';    sfxhas "loop" 'length 32 loop 1 4'
-edit "speed"       '{f4}{f6}z{-}{-}{ctrl+s}';                            sfxhas "speed" 'sfx 0 speed 6'
-edit "next sfx"    '{f4}{f6}{pgdn}z{ctrl+s}';                            sfxhas "next sfx" 'sfx 1 speed 8'
-edit "draw pitch"  '{f4}{f6}{click:71,57}{ctrl+s}';                      sfxhas "draw pitch" 'F#4 0 5 .'
-edit "draw wave"   '{f4}{f6}{click:67,223}{ctrl+s}';                     sfxhas "draw wave" 'wave 0 0fffffffffffffff0000000000000000'
+# sfx/sfx.g64 is "f" + (sound effects - 1), 16 wave lines, then one line per sfx:
+# speed-1 length-1 loop loop, then 32 steps of pitch wave volume effect (C-4 = o, so a rest is o000)
+ST=$TC/t/sfx/sfx.g64
+sfxhas() { grep -q -- "$2" "$ST" 2>/dev/null && ok || bad "$1: sfx/sfx.g64 has no '$2'" "$(cat "$ST" 2>/dev/null)"; }
+edit "notes"       '{f4}{f6}zx{ctrl+s}';                                 sfxhas "notes" '^7v00o050q050o000'
+edit "volume"      '{f4}{f6}z{left}7{ctrl+s}';                           sfxhas "volume" '^7v00o070'
+edit "effect"      '{f4}{f6}z{left}{tab}{ctrl+s}';                       sfxhas "effect" '^7v00o051'
+edit "octave"      '{f4}{f6}{]}z{ctrl+s}';                               sfxhas "octave" '^7v00A050'
+edit "wave pen"    '{f4}{f6}.z{ctrl+s}';                                 sfxhas "wave pen" '^7v00o150'
+edit "length"      '{f4}{f6}zxc{left}{ctrl+l}{ctrl+s}';                  sfxhas "length" '^7200o050q050s050'
+edit "loop"        '{f4}{f6}z{ctrl+b}{right}{right}{ctrl+e}{ctrl+s}';    sfxhas "loop" '^7v14o050'
+edit "speed"       '{f4}{f6}z{-}{-}{ctrl+s}';                            sfxhas "speed" '^5v00o050'
+edit "next sfx"    '{f4}{f6}{pgdn}z{ctrl+s}';                            sfxhas "next sfx" '^f1$'; sfxhas "next sfx 2" '^7v00o050'
+edit "draw pitch"  '{f4}{f6}{click:71,57}{ctrl+s}';                      sfxhas "draw pitch" '^7v00u050'
+edit "draw wave"   '{f4}{f6}{click:67,223}{ctrl+s}';                     sfxhas "draw wave" '^0fffffffffffffff0000000000000000$'
 edit "sound undo"  '{f4}{f6}z{ctrl+z}{ctrl+s}'
-grep -q '^sfx' "$ST" && bad "sound undo: sfx.txt still has an sfx" "$(cat "$ST")" || ok
+[ "$(sed -n 1p "$ST") $(sed -n 18p "$ST")" = "f0 7v00$(printf 'o000%.0s' $(seq 32))" ] && ok || bad "sound undo: sfx.g64 still has an sfx" "$(cat "$ST")"
 edit "sound unsaved" '{f4}{f6}z{esc}new t2{enter}';                      said "sound unsaved" 'unsaved changes in the sound'
 rm -rf "$TC" && mkdir -p "$TC" && cp -r carts/seedling "$TC/s"
 GOOBERENGINE_CARTS=$TC $GE --headless --frames 20 --exec "load s" --type '{f4}{ctrl+s}' > /dev/null 2>&1
-cmp -s carts/seedling/sfx/sfx.txt "$TC/s/sfx/sfx.txt" && ok || bad "sfx round trip" "$(diff carts/seedling/sfx/sfx.txt "$TC/s/sfx/sfx.txt" | head)"
+cmp -s carts/seedling/sfx/sfx.g64 "$TC/s/sfx/sfx.g64" && ok || bad "sfx round trip" "$(diff carts/seedling/sfx/sfx.g64 "$TC/s/sfx/sfx.g64" | head)"
 
 # ---- music: timing, pitch and the end of the song ----
 out=$($GE --headless --frames 130 --wav build/music.wav tests/carts/music 2>&1)
@@ -225,28 +313,76 @@ if command -v python3 > /dev/null; then
 fi
 
 # ---- the music editor: the cursor starts on track 1's note field ----
-MU=$TC/t/music/music.txt
-mushas() { grep -qxF -- "$2" "$MU" 2>/dev/null && ok || bad "$1: music.txt has no line '$2'" "$(head -12 "$MU" 2>/dev/null)"; }
-edit "mus note"    '{f5}{f6}z{ctrl+s}';                               mushas "mus note" '  C-4 0 5 .'
-mushas "mus tracks" 'pattern 0 tracks 1'
-edit "mus wave"    '{f5}{f6}z{up}{right}n{ctrl+s}';                   mushas "mus wave" '  C-4 n 5 .'
-edit "mus vol"     '{f5}{f6}z{up}{right}{right}7{ctrl+s}';            mushas "mus vol" '  C-4 0 7 .'
-edit "mus fx"      '{f5}{f6}z{up}{right}{right}{right}v{ctrl+s}';     mushas "mus fx" '  C-4 0 5 v'
-edit "mus off"     '{f5}{f6}1{ctrl+s}';                               mushas "mus off" '  === . . .'
-edit "mus track"   '{f5}{f6}{tab}q{ctrl+s}';                          mushas "mus track" '  ... . . .  C-5 0 5 .'
-edit "mus order"   '{f5}{f6}{ctrl+right}{ctrl+up}{ctrl+up}z{ctrl+s}'; mushas "mus order" 'order 0 1'
-mushas "mus order pattern" 'pattern 1 tracks 1'
-edit "mus jump"    '{f5}{f6}{ctrl+right}{ctrl+j}{ctrl+s}';            mushas "mus jump" 'order 0 >0'
-edit "mus speed"   '{f5}{f6}-{ctrl+s}';                               mushas "mus speed" 'song speed 7'
+# music/music.g64 is speed-1, order entries-1, patterns-1, tracks-1, then the order (00 = pattern 0,
+# 10 = jump to entry 0, .. = stop), then 32 rows a pattern: pitch wave volume effect, .... empty, ==== off
+MU=$TC/t/music/music.g64
+mushas() { grep -qxF -- "$2" "$MU" 2>/dev/null && ok || bad "$1: music.g64 has no line '$2'" "$(head -12 "$MU" 2>/dev/null)"; }
+muhead() { [ "$(head -2 "$MU" 2>/dev/null | tr '\n' ' ')" = "$2" ] && ok || bad "$1: music.g64 starts '$(head -2 "$MU" 2>/dev/null | tr '\n' ' ')', wanted '$2'"; }
+edit "mus note"    '{f5}{f6}z{ctrl+s}';                               mushas "mus note" 'o050'
+muhead "mus tracks" '7000 00 '
+edit "mus wave"    '{f5}{f6}z{up}{right}n{ctrl+s}';                   mushas "mus wave" 'og50'
+edit "mus vol"     '{f5}{f6}z{up}{right}{right}7{ctrl+s}';            mushas "mus vol" 'o070'
+edit "mus fx"      '{f5}{f6}z{up}{right}{right}{right}v{ctrl+s}';     mushas "mus fx" 'o052'
+edit "mus off"     '{f5}{f6}1{ctrl+s}';                               mushas "mus off" '===='
+edit "mus track"   '{f5}{f6}{tab}q{ctrl+s}';                          mushas "mus track" '....A050'
+edit "mus order"   '{f5}{f6}{ctrl+right}{ctrl+up}{ctrl+up}z{ctrl+s}'; muhead "mus order" '7110 0001 '
+[ "$(sed -n 37p "$MU")" = o050 ] && ok || bad "mus order pattern: pattern 1 row 0 is '$(sed -n 37p "$MU")'"
+edit "mus jump"    '{f5}{f6}{ctrl+right}{ctrl+j}{ctrl+s}';            muhead "mus jump" '7100 0010 '
+edit "mus speed"   '{f5}{f6}-{ctrl+s}';                               muhead "mus speed" '6000 00 '
 edit "mus undo"    '{f5}{f6}z{ctrl+z}{ctrl+s}'
-grep -q '^pattern' "$MU" && bad "mus undo: music.txt still has a pattern" "$(cat "$MU")" || ok
+[ "$(sed 1,2d "$MU" | grep -vc '^\.*$')" = 0 ] && ok || bad "mus undo: music.g64 still has notes" "$(cat "$MU")"
 edit "mus unsaved" '{f5}{f6}z{esc}new t2{enter}';                     said "mus unsaved" 'unsaved changes in the music'
 rm -rf "$TC" && mkdir -p "$TC" && cp -r carts/seedling "$TC/s"
 GOOBERENGINE_CARTS=$TC $GE --headless --frames 20 --exec "load s" --type '{f5}{ctrl+s}' > /dev/null 2>&1
-cmp -s carts/seedling/music/music.txt "$TC/s/music/music.txt" && ok || bad "music round trip" "$(diff carts/seedling/music/music.txt "$TC/s/music/music.txt" | head)"
+cmp -s carts/seedling/music/music.g64 "$TC/s/music/music.g64" && ok || bad "music round trip" "$(diff carts/seedling/music/music.g64 "$TC/s/music/music.g64" | head)"
 
-# ---- polish: pal, save data, labels, BROWSE, .gbcart ----
+# ---- fonts: a cart's text() uses its font slot; fonts/font.g64 is slot 0 ----
+out=$($GE --headless --frames 8 tests/carts/font 2>&1)
+said "own font" 'own 63 63 0 5x10'; said "swap_font: a 6 x 12 font" 'alt 63 0 63 1 6x12 18'
+said "empty font slot: the built-in font" 'empty 0 63 6'; said "swap_font: empty slot" 'swap_font: slot 2 is empty'
+rm -rf build/badfont && cp -r tests/carts/font build/badfont && sed -i 1s/49/kk/ build/badfont/fonts/font.g64
+out=$($GE --headless --frames 5 build/badfont 2>&1); said "font too big" 'font.g64: is 21 x 21; a font is 4 x 4 to 20 x 20'
+$GE --headless --frames 5 --exec "load tests/carts/font" --exec "export $PWD/build/fontcart.gbcart" > /dev/null 2>&1
+grep -qxF 'file fonts/alt.g64' build/fontcart.gbcart && ok || bad "a .gbcart carries the cart's fonts" "$(grep '^file' build/fontcart.gbcart 2>&1)"
+
+# ---- the font editor (F7). With the tree hidden, a 6 x 10 font's canvas is 12 px a pixel from (325,13):
+# pixel (x, y) of the cell is clicked at (331 + 12x, 19 + 12y). Character c is line c - 30 of the file,
+# one character a row: its top bit (32, "w") is the leftmost pixel ----
+FT=$TC/t/fonts/font.g64
+glyph() { got=$(sed -n "$(( $2 - 30 ))p" "$FT" 2>/dev/null); [ "$got" = "$3" ] && ok || bad "$1: character $2 is '$got', wanted '$3'" "$(head -3 "$FT" 2>/dev/null)"; }
+edit "font default"   '{f7}{ctrl+s}';                                    glyph "font default" 97 000s2uyu00
+[ "$(head -1 "$FT")" = 59 ] && [ "$(wc -l < "$FT")" = 97 ] && ok || bad "the built-in font is 59 then 96 lines" "$(head -2 "$FT")"
+edit "font draw"      '{f7}{f6}a{del}{click:331,19}{ctrl+s}';            glyph "font draw" 97 w000000000
+edit "font erase"     '{f7}{f6}a{rclick:343,55}{ctrl+s}';                glyph "font erase" 97 000c2uyu00
+edit "font padding is drawable" '{f7}{f6}a{del}{click:391,127}{ctrl+s}'; glyph "font padding is drawable" 97 0000000001
+edit "font stroke"    '{f7}{f6}z{del}{click:331,19}{drag:331,127}{mouse:331,127}{ctrl+s}'; glyph "font stroke" 122 wwwwwwwwww
+edit "font type picks" '{f7}{f6}!{del}{ctrl+s}';                         glyph "font type picks" 33 0000000000
+edit "font grid"      '{f7}{f6}{click:19,23}{del}{ctrl+s}';               glyph "font grid" 33 0000000000
+edit "font built-in"  '{f7}{f6}a{del}{ctrl+d}{ctrl+s}';                  glyph "font built-in" 97 000s2uyu00
+edit "font copy"      '{f7}{f6}b{ctrl+c}a{ctrl+v}{ctrl+s}';               glyph "font copy" 97 0wwYyyyY00
+edit "font nudge"     '{f7}{f6}a{shift+right}{ctrl+s}';                  glyph "font nudge" 97 000e1fhf00
+edit "font undo"      '{f7}{f6}a{del}{ctrl+z}{ctrl+s}';                  glyph "font undo" 97 000s2uyu00
+edit "font size"      '{f7}{f6}{ctrl+right}{ctrl+right}{ctrl+down}{ctrl+s}'
+[ "$(head -1 "$FT")" = 7a ] && ok || bad "font size: 8 x 11 is '7a'" "$(head -1 "$FT")"
+glyph "font size keeps the glyphs (8 wide: two characters a row)" 97 000000s020u0y0u0000000
+edit "font smaller"   '{f7}{f6}{ctrl+left}{ctrl+left}{ctrl+left}{ctrl+up}{ctrl+up}{ctrl+up}{ctrl+up}{ctrl+up}{ctrl+up}{ctrl+up}{ctrl+s}'
+[ "$(head -1 "$FT")" = 33 ] && ok || bad "font size stops at 4 x 4" "$(head -1 "$FT")"
+said "font size limit" 'a font is 4 x 4 to 20 x 20'
+glyph "font smaller cuts the glyphs" 97 000s
+edit "font size undo" '{f7}{f6}{ctrl+right}{ctrl+z}{ctrl+s}'
+[ "$(head -1 "$FT")" = 59 ] && ok || bad "font size undo" "$(head -1 "$FT")"
+edit "font unsaved"   '{f7}{f6}a{del}{esc}new t2{enter}';                said "font unsaved" 'unsaved changes in the font'
+edit "font run"       '{f7}{f6}a{del}{ctrl+r}';                          said "font run" 't stopped'
+
+# ---- polish: pal, save data, BROWSE, .gbcart ----
 out=$($GE --headless --frames 5 tests/carts/pal 2>&1);           said "pal" 'pal 3 3 48'
+# ---- depth, blending, spray, textured quads ----
+out=$($GE --headless --frames 5 tests/carts/depth 2>&1)
+said "blend modes"      'blend 56 32 45 37 26 5'
+said "depth buffer"     'depth 1 1 1 1 1 1'
+said "spray"            'spray 1 0 1'
+said "tex_quad"         'quad 256 9 0'
+said "tex_quad_3d"      'quad3d 5 5 9 5'
 SV=$PWD/build/saves; rm -rf "$SV"
 out=$(GOOBERENGINE_SAVES=$SV $GE --headless --frames 5 tests/carts/savedata 2>&1)
 out=$(GOOBERENGINE_SAVES=$SV $GE --headless --frames 5 tests/carts/savedata 2>&1)
@@ -254,13 +390,12 @@ said "save data" 'runs 2 note two|lines ~ tilde missing []'
 printf 'save_data("bad key", "x")\n' > build/bad_sfx/main.gb
 out=$(GOOBERENGINE_SAVES=$SV $GE --headless --frames 5 build/bad_sfx 2>&1); said "save key" "save_data: key 'bad key' must be"
 
-rm -rf "$TC" && mkdir -p "$TC" && cp -r carts/hello "$TC/" && rm -f "$TC/hello/label.txt"
+rm -rf "$TC" && mkdir -p "$TC" && cp -r carts/hello "$TC/"
 WAIT=$(printf '{mouse:0,0}%.0s' 1 2 3 4 5)
 out=$(GOOBERENGINE_CARTS=$TC $GE --headless --frames 30 --type "${WAIT}{f8}" hello 2>&1)
-said "label" "saved the cart's label"
-[ "$(grep -vc '^#' "$TC/hello/label.txt" 2>/dev/null)" = 60 ] && ok || bad "label.txt has 60 rows"
+[ ! -e "$TC/hello/label.txt" ] && ok || bad "F8 makes no label (there are no labels)"
 cp -r carts/seedling "$TC/"
-out=$(GOOBERENGINE_CARTS=$TC $GE --headless --frames 40 --exec browse --type '{right}{enter}{esc}' 2>&1)
+out=$(GOOBERENGINE_CARTS=$TC $GE --headless --frames 40 --exec browse --type '{down}{enter}{esc}' 2>&1)
 said "browse runs" 'Seedling stopped'
 
 # export, then import under another name: every file comes back the same

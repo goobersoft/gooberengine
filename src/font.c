@@ -1,7 +1,17 @@
-/* The GooberEngine system font: 5 x 9 glyphs in 6 x 10 cells.
- * Each glyph is up to 9 rows of 5 pixels, separated by spaces; missing rows
- * are blank. Rows 1-7 are the body (capital height 7), rows 8-9 hold
- * descenders. Character 127 is a solid block (the shell's cursor). */
+/* The GooberEngine system font: a 6 x 10 font whose letters are 5 wide, with
+ * a column of space to the right and a row above.
+ *
+ * Capitals are 7 pixels tall; lowercase letters are 5, with ascenders as tall
+ * as the capitals, all on one baseline. g j p q y hang two rows below it, into
+ * the cell's bottom row.
+ *
+ * Each glyph is up to 9 rows of 5 pixels, separated by spaces, from the cell's
+ * second row; missing rows are blank. Rows 1-7 are the body, rows 8-9 hold
+ * what hangs below the line (g j p q y , ; _). Character 127 is a solid block
+ * (the shell's cursor).
+ *
+ * This is the built-in font, sys_font: the shell and editors always draw with
+ * it, and it's a cart's font until the cart has fonts/font.g64 of its own. */
 #include "engine.h"
 #include <string.h>
 
@@ -104,16 +114,18 @@ static const char *glyphs[96] = {
     /* 127 */ "##### ##### ##### ##### ##### ##### ##### ##### #####",
 };
 
-uint8_t font[128][FONT_H];
+Font sys_font;
 
 void font_init(void) {
-    memset(font, 0, sizeof font);
-    for (int c = 32; c < 128; c++) {
-        const char *p = glyphs[c - 32];
-        int row = 1, col = 0;
+    memset(&sys_font, 0, sizeof sys_font);
+    sys_font.w = FONT_W;
+    sys_font.h = FONT_H;
+    for (int c = 0; c < NGLYPHS; c++) {
+        const char *p = glyphs[c];
+        int row = 1, col = 0;            /* the cell's row 0 is the space above */
         for (; *p && row < FONT_H; p++) {
             if (*p == ' ') { row++; col = 0; continue; }
-            if (*p == '#') font[c][row] |= (uint8_t)(0x10 >> col);
+            if (*p == '#') sys_font.g[c][row] |= 1u << col;
             col++;
         }
     }

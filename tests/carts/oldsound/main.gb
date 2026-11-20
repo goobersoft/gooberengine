@@ -1,0 +1,2 @@
+' an old cart whose sound and music are still text (sfx/sfx.txt, music/music.txt)
+print("oldsound " + str(voice_sfx(sfx(1))))

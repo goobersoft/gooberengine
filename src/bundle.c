@@ -1,8 +1,4 @@
-/* Cart labels and one-file carts.
- *
- * label.txt is the cart's picture for the BROWSE screen: the screen at a
- * quarter size (100 x 60), one character per pixel in the default tiles.txt
- * alphabet. Press F8 while a cart runs to make one.
+/* One-file carts.
  *
  * A .gbcart file is a whole cart folder in one text file, for sharing:
  *
@@ -14,7 +10,7 @@
  *   end
  *
  * Only the cart's own text files are bundled: .gb and .txt at the top, and
- * the files in tiles/, maps/ (.g64), sfx/ and music/ (.txt), named with their
+ * the files in tiles/, maps/, sfx/ and music/ (.g64, or an old .txt sound or song), named with their
  * folder ("file tiles/tileset.g64"). Not *.unsaved or *.old. Save data is
  * not bundled either: it belongs to the player, not the cart. */
 #include "engine.h"
@@ -26,54 +22,6 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
-
-bool label_taken;
-
-static int pixel_index(char c) {
-    const char *p = c ? strchr(ge_pixel_chars, c) : NULL;
-    return p ? (int)(p - ge_pixel_chars) : -1;
-}
-
-bool label_read(const char *dir, uint8_t out[LABEL_H][LABEL_W]) {
-    char path[PATH_MAX + 16];
-    snprintf(path, sizeof path, "%s/label.txt", dir);
-    FILE *f = fopen(path, "r");
-    if (!f) return false;
-    char line[256];
-    int y = 0;
-    memset(out, 0, LABEL_H * LABEL_W);
-    while (y < LABEL_H && fgets(line, sizeof line, f)) {
-        if (line[0] == '#') continue;
-        for (int x = 0; x < LABEL_W; x++) {
-            int c = x < (int)strlen(line) ? pixel_index(line[x]) : -1;
-            out[y][x] = (uint8_t)(c < 0 ? 0 : c);
-        }
-        y++;
-    }
-    fclose(f);
-    return y > 0;
-}
-
-bool label_capture(char *err, int errlen) {
-    char path[PATH_MAX + 16];
-    snprintf(path, sizeof path, "%s/label.txt", cart.dir);
-    FILE *f = fopen(path, "w");
-    if (!f) { snprintf(err, (size_t)errlen, "could not write %s", path); return false; }
-    fprintf(f, "# %s label: the screen at a quarter size, one character per pixel (made with F8)\n", cart.title);
-    for (int y = 0; y < LABEL_H; y++) {
-        for (int x = 0; x < LABEL_W; x++) {
-            uint8_t c = fb[y * 4 + 1][x * 4 + 1];
-            cart.label[y][x] = c;
-            fputc(ge_pixel_chars[c & 63], f);
-        }
-        fputc('\n', f);
-    }
-    cart.has_label = true;
-    if (fclose(f) != 0) { snprintf(err, (size_t)errlen, "could not write %s", path); return false; }
-    return true;
-}
-
-/* ---- .gbcart ---- */
 
 static bool plain_name(const char *n, size_t len) {
     if (!len || len > 64 || n[0] == '.') return false;
@@ -87,14 +35,14 @@ static bool has_ext(const char *n, const char *ext) {
     return a > b && !strcmp(n + a - b, ext);
 }
 
-/* "main.gb", "cart.txt", "tiles/tileset.g64", "sfx/sfx.txt" ... */
+/* "main.gb", "cart.txt", "tiles/tileset.g64", "sfx/sfx.g64" ... */
 static bool bundled_name(const char *n) {
     const char *slash = strchr(n, '/');
     if (!slash) return plain_name(n, strlen(n)) && (has_ext(n, ".gb") || has_ext(n, ".txt"));
     if (strchr(slash + 1, '/') || !plain_name(slash + 1, strlen(slash + 1))) return false;
     for (int k = 0; k < NRES; k++)
         if ((size_t)(slash - n) == strlen(res_dir[k]) && !strncmp(n, res_dir[k], (size_t)(slash - n)))
-            return has_ext(slash + 1, res_ext[k]);
+            return has_ext(slash + 1, res_ext[k]) || ((k == RES_SFX || k == RES_MUSIC) && has_ext(slash + 1, ".txt"));
     return false;
 }
 

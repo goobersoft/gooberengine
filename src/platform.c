@@ -61,6 +61,20 @@ static void write_wav(void) {
 }
 static bool fullscreen;
 
+void platform_set_fullscreen(bool on) {
+    fullscreen = on;
+    if (win) SDL_SetWindowFullscreen(win, on ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
+}
+bool platform_fullscreen(void) { return fullscreen; }
+
+void platform_set_scale(int scale) {
+    opt.scale = scale;
+    if (win && !fullscreen) {
+        SDL_SetWindowSize(win, SCREEN_W * scale, SCREEN_H * scale);
+        SDL_SetWindowPosition(win, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+    }
+}
+
 bool platform_init(void) {
     font_init();
     draw_reset();
@@ -302,11 +316,12 @@ static void script_step(void) {
         script_release = 0;
     }
     if (!*script_pos) return;
-    /* mouse tokens: {click:x,y} {rclick:x,y} press there; {drag:x,y} moves with the
+    /* mouse tokens: {click:x,y} {rclick:x,y} {mclick:x,y} press there; {drag:x,y} moves with the
      * button still held; {mouse:x,y} just moves; {wheel:n} scrolls */
     int mx, my, b = 0;
     if (sscanf(script_pos, "{click:%d,%d}", &mx, &my) == 2) b = 1;
     else if (sscanf(script_pos, "{rclick:%d,%d}", &mx, &my) == 2) b = 2;
+    else if (sscanf(script_pos, "{mclick:%d,%d}", &mx, &my) == 2) b = 3;
     else if (sscanf(script_pos, "{drag:%d,%d}", &mx, &my) == 2 || sscanf(script_pos, "{mouse:%d,%d}", &mx, &my) == 2) b = -1;
     else if (sscanf(script_pos, "{wheel:%d}", &mx) == 1) { in.wheel = mx; b = -2; }
     if (b) {
@@ -385,8 +400,12 @@ static void pump(void) {
                 if (sc != SDL_SCANCODE_ESCAPE || !e.key.repeat) pressed(sc, mod);   /* repeats count: editors want them */
                 bool alt = e.key.keysym.mod & KMOD_ALT;
                 if (sc == SDL_SCANCODE_F11 || (alt && sc == SDL_SCANCODE_RETURN)) {
-                    fullscreen = !fullscreen;
-                    SDL_SetWindowFullscreen(win, fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
+                    platform_set_fullscreen(!fullscreen);
+                    if (!opt.player) {          /* the engine remembers it; an exported game doesn't keep settings */
+                        char err[256];
+                        settings.fullscreen = fullscreen;
+                        settings_save(err, sizeof err);
+                    }
                 }
                 if (sc == SDL_SCANCODE_F12 && !e.key.repeat) {
                     char path[64];

@@ -2,7 +2,7 @@
 ' Arrows / d-pad: move.  Z: restart after the round.  Esc: back to the shell.
 '
 ' Shows off the cart's tileset, map, sound and music (tiles/tileset.g64, maps/map.g64,
-' sfx/sfx.txt, music/music.txt): map_draw, map_get / map_set, sfx, music,
+' sfx/sfx.g64, music/music.g64): map_draw, map_get / map_set, sfx, music,
 ' sprites with flipping, and a camera that follows the player around a
 ' world two screens wide and two screens tall.
 '

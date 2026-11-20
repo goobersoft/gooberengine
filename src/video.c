@@ -6,12 +6,19 @@
  * dot_limit pixels per frame (flip() starts a new frame). Pixels clipped away
  * don't count, nor do a tile's transparent ones. Past the limit, pixels are
  * dropped until the next flip(), so a cart is rewarded for redrawing only
- * what changed. */
+ * what changed.
+ *
+ * Depth and blending: every pixel goes through plot(), which skips it if the
+ * depth buffer holds something nearer (lower) than the depth it is drawn at,
+ * then blends it with what is on screen and records its depth. cls() puts
+ * the depth of what it clears at DEPTH_FAR, so anything can be drawn on it. */
 #include "engine.h"
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
 uint8_t fb[SCREEN_H][SCREEN_W];
+int16_t zbuf[SCREEN_H][SCREEN_W];
 DrawState ds;
 int dot_limit = DOT_LIMIT_DEFAULT, dots_used;
 int view_x = 0, view_w = SCREEN_W;
@@ -22,6 +29,11 @@ int view_x = 0, view_w = SCREEN_W;
 #define P4(i) P(i), P(i + 1), P(i + 2), P(i + 3)
 #define P16(i) P4(i), P4(i + 4), P4(i + 8), P4(i + 12)
 const uint32_t palette[NCOLORS] = {P16(0), P16(16), P16(32), P16(48)};
+
+/* row y of the depth buffer, x0 .. x1 - 1, back to the far plane */
+static void zfill(int y, int x0, int x1) {
+    for (int x = x0; x < x1; x++) zbuf[y][x] = DEPTH_FAR;
+}
 
 static inline int pen_or(int c) { return c < 0 ? ds.pen : (c & 63); }
 
@@ -34,6 +46,13 @@ void draw_reset(void) {
     ds.clip_y1 = SCREEN_H;
     ds.pen = COL_WHITE;
     for (int i = 0; i < NCOLORS; i++) ds.pal[i] = (uint8_t)i;
+    ds.blend = BLEND_NORMAL;
+    ds.depth = 0;
+    for (int y = 0; y < SCREEN_H; y++) zfill(y, 0, SCREEN_W);
+}
+
+void draw_set_depth(int z) {
+    ds.depth = (int16_t)(z < INT16_MIN ? INT16_MIN : z > INT16_MAX ? INT16_MAX : z);
 }
 
 /* the clip rectangle, in view coordinates (the whole screen for a cart) */
@@ -56,17 +75,52 @@ static inline int dots(int n) {
     return n;
 }
 
-static void hspan(int x0, int x1, int y, uint8_t c);
-
-/* clears the clip rectangle (the whole screen unless clip() was used) */
+/* clears the clip rectangle (the whole screen unless clip() was used), and its
+ * depth to DEPTH_FAR. Neither the blend mode nor the depth applies to it, and
+ * the drawing depth goes back to 0. */
 void draw_cls(int c) {
     uint8_t col = (uint8_t)(c < 0 ? 0 : (c & 63));
-    for (int y = ds.clip_y0; y < ds.clip_y1; y++) hspan(ds.clip_x0, ds.clip_x1 - 1, y, col);
+    int x0 = ds.clip_x0, x1 = ds.clip_x1;
+    for (int y = ds.clip_y0; y < ds.clip_y1 && x0 < x1; y++) {
+        memset(&fb[y][x0], ds.pal[col], (size_t)dots(x1 - x0));
+        zfill(y, x0, x1);
+    }
+    ds.depth = 0;
+}
+
+/* src drawn over dst, per 2-bit channel */
+static inline uint8_t blend(uint8_t s, uint8_t d) {
+    if (ds.blend == BLEND_NORMAL) return s;
+    if (ds.blend == BLEND_XOR) return s ^ d;      /* the channels are bit fields */
+    uint8_t out = 0;
+    for (int sh = 0; sh <= 4; sh += 2) {
+        int a = (s >> sh) & 3, b = (d >> sh) & 3, r;
+        switch (ds.blend) {
+        case BLEND_ADD: r = a + b > 3 ? 3 : a + b; break;
+        case BLEND_SUB: r = b - a < 0 ? 0 : b - a; break;
+        case BLEND_MAX: r = a > b ? a : b; break;
+        default:        r = a < b ? a : b; break;    /* BLEND_MIN */
+        }
+        out |= (uint8_t)(r << sh);
+    }
+    return out;
+}
+
+/* one screen-space pixel of final colour c at depth z, already clipped */
+static inline void plot(int x, int y, uint8_t c, int16_t z) {
+    if (z > zbuf[y][x]) return;       /* something nearer is there */
+    if (!dots(1)) return;
+    fb[y][x] = blend(c, fb[y][x]);
+    zbuf[y][x] = z;
+}
+
+static inline bool in_clip(int x, int y) {
+    return x >= ds.clip_x0 && x < ds.clip_x1 && y >= ds.clip_y0 && y < ds.clip_y1;
 }
 
 /* screen-space pixel, clipped */
 static inline void put(int x, int y, uint8_t c) {
-    if (x >= ds.clip_x0 && x < ds.clip_x1 && y >= ds.clip_y0 && y < ds.clip_y1 && dots(1)) fb[y][x] = ds.pal[c & 63];
+    if (in_clip(x, y)) plot(x, y, ds.pal[c & 63], ds.depth);
 }
 
 static void hspan(int x0, int x1, int y, uint8_t c) {
@@ -74,7 +128,9 @@ static void hspan(int x0, int x1, int y, uint8_t c) {
     if (x0 > x1) { int t = x0; x0 = x1; x1 = t; }
     if (x0 < ds.clip_x0) x0 = ds.clip_x0;
     if (x1 >= ds.clip_x1) x1 = ds.clip_x1 - 1;
-    if (x0 <= x1) memset(&fb[y][x0], ds.pal[c & 63], (size_t)dots(x1 - x0 + 1));
+    if (x0 > x1) return;
+    uint8_t col = ds.pal[c & 63];
+    for (int x = x0; x <= x1; x++) plot(x, y, col, ds.depth);
 }
 
 void draw_pset(int x, int y, int c) { put(x - ds.cam_x, y - ds.cam_y, (uint8_t)pen_or(c)); }
@@ -137,21 +193,21 @@ void draw_circle(int cx, int cy, int r, int c, bool fill) {
 
 int draw_char(int ch, int x, int y, int c) {
     uint8_t col = (uint8_t)pen_or(c);
-    if (ch < 0 || ch > 127) ch = '?';
+    if (ch < FONT_FIRST || ch >= FONT_FIRST + NGLYPHS) ch = '?';
+    const Font *f = ds.font ? ds.font : &sys_font;
     int sx = x - ds.cam_x, sy = y - ds.cam_y;
-    for (int r = 0; r < FONT_H; r++) {
-        uint8_t bits = font[ch][r];
-        if (!bits) continue;
-        for (int i = 0; i < 5; i++)
-            if (bits & (0x10 >> i)) put(sx + i, sy + r, col);
+    for (int r = 0; r < f->h; r++) {
+        uint32_t bits = f->g[ch - FONT_FIRST][r];
+        for (int i = 0; bits && i < f->w; i++, bits >>= 1)
+            if (bits & 1) put(sx + i, sy + r, col);
     }
-    return x + FONT_W;
+    return x + f->w;
 }
 
 int draw_text(const char *s, int x, int y, int c) {
     int x0 = x;
     for (; *s; s++) {
-        if (*s == '\n') { x = x0; y += FONT_H; continue; }
+        if (*s == '\n') { x = x0; y += (ds.font ? ds.font : &sys_font)->h; continue; }
         x = draw_char((unsigned char)*s, x, y, c);
     }
     return x;
@@ -161,7 +217,7 @@ int text_width(const char *s) {
     int w = 0, best = 0;
     for (; *s; s++) {
         if (*s == '\n') { w = 0; continue; }
-        w += FONT_W;
+        w += (ds.font ? ds.font : &sys_font)->w;
         if (w > best) best = w;
     }
     return best;
@@ -215,6 +271,126 @@ void draw_map(int mx, int my, int sx, int sy, int w, int h) {
             if (cx < 0 || cx >= m->w) continue;
             uint16_t t = m->cells[cy * m->w + cx];
             if (t != MAP_EMPTY) blit_tile(t, sx + i * TILE, py, 0);
+        }
+    }
+}
+
+/* n dots of colour c at random places in the rectangle (x, y, w, h).
+ * unit_rng gives [0, 1): the cart's rnd() stream, so seed_rnd() repeats a spray */
+void draw_spray(int x, int y, int w, int h, int n, int c, double (*unit_rng)(void)) {
+    if (w <= 0 || h <= 0 || n <= 0) return;
+    uint8_t col = (uint8_t)pen_or(c);
+    x -= ds.cam_x;
+    y -= ds.cam_y;
+    if (x >= ds.clip_x1 || y >= ds.clip_y1 || x + w <= ds.clip_x0 || y + h <= ds.clip_y0) return;
+    for (int i = 0; i < n; i++) {
+        int px = x + (int)(unit_rng() * w), py = y + (int)(unit_rng() * h);
+        put(px, py, col);
+    }
+}
+
+/* ---- textured quads ----
+ * Each pixel inside the quad's bounding box is mapped back to (u, v) in the
+ * unit square by inverting the bilinear patch
+ *     P(u, v) = p0 + (p1 - p0) u + (p3 - p0) v + (p0 - p1 + p2 - p3) u v
+ * which is exact for any quad, parallel edges or not: no seam down a diagonal
+ * as with two affine triangles. It is a quadratic in v; a quad that folds
+ * over itself has two roots and the nearer (or, in 2D, the first) one wins. */
+
+static inline double cross2(double ax, double ay, double bx, double by) { return ax * by - ay * bx; }
+
+/* up to two (u, v) in [0, 1) for point h (relative to p0); returns how many */
+static int inv_bilinear(double hx, double hy, double ex, double ey, double fx, double fy,
+                        double gx, double gy, double u[2], double v[2]) {
+    double k2 = cross2(gx, gy, fx, fy);
+    double k1 = cross2(ex, ey, fx, fy) + cross2(hx, hy, gx, gy);
+    double k0 = cross2(hx, hy, ex, ey);
+    double vs[2];
+    int nv = 0;
+    if (fabs(k2) < 1e-9) {                      /* opposite edges parallel: linear */
+        if (fabs(k1) < 1e-12) return 0;         /* the quad has no area */
+        vs[nv++] = -k0 / k1;
+    } else {
+        double w = k1 * k1 - 4.0 * k0 * k2;
+        if (w < 0) return 0;
+        w = sqrt(w);
+        vs[nv++] = (-k1 - w) / (2.0 * k2);
+        vs[nv++] = (-k1 + w) / (2.0 * k2);
+    }
+    int got = 0;
+    for (int i = 0; i < nv; i++) {
+        double vv = vs[i];
+        if (vv < 0 || vv >= 1) continue;
+        /* u from whichever axis is better conditioned */
+        double dx = ex + gx * vv, dy = ey + gy * vv, uu;
+        if (fabs(dx) >= fabs(dy)) { if (fabs(dx) < 1e-12) continue; uu = (hx - fx * vv) / dx; }
+        else uu = (hy - fy * vv) / dy;
+        if (uu < 0 || uu >= 1) continue;
+        u[got] = uu;
+        v[got] = vv;
+        got++;
+    }
+    return got;
+}
+
+/* texel (tx, ty) of the w x h tile block at tile n; CLEAR off the sheet */
+static inline uint8_t block_texel(int n, int tx, int ty) {
+    int tile = n + (ty / TILE) * SHEET_COLS + tx / TILE;
+    if (tile < 0 || tile >= NTILES) return CLEAR;
+    return cur_tiles->t[tile][(ty % TILE) * TILE + tx % TILE];
+}
+
+void draw_tex_quad(const int px[4], const int py[4], const int *z, int n, int w, int h) {
+    if (!cur_tiles || w < 1 || h < 1) return;
+    int tw = w * TILE, th = h * TILE;
+    double ax = px[0] - ds.cam_x, ay = py[0] - ds.cam_y;
+    double ex = px[1] - px[0], ey = py[1] - py[0];                         /* p1 - p0 */
+    double fx = px[3] - px[0], fy = py[3] - py[0];                         /* p3 - p0 */
+    double gx = px[0] - px[1] + px[2] - px[3], gy = py[0] - py[1] + py[2] - py[3];
+    int bx0 = px[0], bx1 = px[0], by0 = py[0], by1 = py[0];
+    for (int i = 1; i < 4; i++) {
+        if (px[i] < bx0) bx0 = px[i];
+        if (px[i] > bx1) bx1 = px[i];
+        if (py[i] < by0) by0 = py[i];
+        if (py[i] > by1) by1 = py[i];
+    }
+    bx0 -= ds.cam_x; bx1 -= ds.cam_x; by0 -= ds.cam_y; by1 -= ds.cam_y;
+    if (bx0 < ds.clip_x0) bx0 = ds.clip_x0;
+    if (by0 < ds.clip_y0) by0 = ds.clip_y0;
+    if (bx1 > ds.clip_x1 - 1) bx1 = ds.clip_x1 - 1;
+    if (by1 > ds.clip_y1 - 1) by1 = ds.clip_y1 - 1;
+    if (bx0 > bx1 || by0 > by1) return;
+    /* depth, bilinear like the position: z0 + dz1 u + dz3 v + dz2 u v */
+    double z0 = 0, zu = 0, zv = 0, zuv = 0;
+    if (z) {
+        z0 = z[0]; zu = z[1] - z[0]; zv = z[3] - z[0]; zuv = z[0] - z[1] + z[2] - z[3];
+    }
+    for (int y = by0; y <= by1; y++) {
+        double hy = y + 0.5 - ay;
+        for (int x = bx0; x <= bx1; x++) {
+            double u[2], v[2];
+            int k = inv_bilinear(x + 0.5 - ax, hy, ex, ey, fx, fy, gx, gy, u, v);
+            if (!k) continue;
+            int pick = 0;
+            double depth = 0;
+            if (z) {
+                depth = z0 + zu * u[0] + zv * v[0] + zuv * u[0] * v[0];
+                if (k == 2) {
+                    double d2 = z0 + zu * u[1] + zv * v[1] + zuv * u[1] * v[1];
+                    if (d2 < depth) { depth = d2; pick = 1; }
+                }
+            }
+            int tx = (int)(u[pick] * tw), ty = (int)(v[pick] * th);
+            if (tx >= tw) tx = tw - 1;
+            if (ty >= th) ty = th - 1;
+            uint8_t c = block_texel(n, tx, ty);
+            if (c == CLEAR) continue;
+            int16_t dz = ds.depth;
+            if (z) {
+                double r = floor(depth + 0.5);
+                dz = (int16_t)(r < INT16_MIN ? INT16_MIN : r > INT16_MAX ? INT16_MAX : r);
+            }
+            plot(x, y, ds.pal[c], dz);
         }
     }
 }

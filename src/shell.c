@@ -76,7 +76,8 @@ void shell_init(void) {
 
 static void cmd_help(void) {
     static const char *rows[][2] = {
-        {"DIR", "list the carts in the carts folder"},
+        {"DIR", "list the carts (and folders) here"},
+        {"CD folder", "go into a folder of carts (CD .. goes back)"},
         {"LOAD name", "load a cart (a folder with main.gb)"},
         {"RUN [name]", "save, then run the loaded cart (or load one)"},
         {"EDIT", "edit the cart's code (F1, or Esc on an empty line)"},
@@ -85,9 +86,10 @@ static void cmd_help(void) {
         {"MAP", "edit the cart's map (F3 anywhere)"},
         {"SOUND", "edit the cart's sound effects (F4 anywhere)"},
         {"MUSIC", "edit the cart's music (F5 anywhere)"},
+        {"FONT", "edit the cart's font (F7 anywhere)"},
         {"F6", "in an editor: show or hide the cart's files"},
         {"SAVE [name]", "save everything (an untitled cart is saved as untitled)"},
-        {"BROWSE", "pick a cart by its picture"},
+        {"BROWSE", "pick a cart from a list"},
         {"EXPORT [file]", "write the cart as one .gbcart file"},
         {"EXPORT target", "make a standalone game: LINUX WINDOWS WEB ALL"},
         {"IMPORT file", "unpack a .gbcart into the carts folder"},
@@ -96,13 +98,15 @@ static void cmd_help(void) {
         {"DOWNLOAD", "save the cart to your computer as a .gbcart"},
 #endif
         {"INFO", "show the loaded cart's details"},
+        {"THEME [name]", "editor colours: blue green orange grey"},
+        {"SETTINGS", "theme, volume, fullscreen, window size (F9)"},
         {"FOLDER", "show where carts are read from"},
         {"CLS", "clear the screen"},
         {"QUIT", "leave GooberEngine"},
     };
     for (size_t i = 0; i < sizeof rows / sizeof rows[0]; i++)
         printf_line(COL_WHITE, "  %-13s %s", rows[i][0], rows[i][1]);
-    shell_print("in a cart: Esc returns, F8 label, F11 fullscreen, F12 shot", COL_GREY);
+    shell_print("in a cart: Esc returns, F11 fullscreen, F12 shot", COL_GREY);
 }
 
 int ui_mode = MODE_SHELL;
@@ -131,13 +135,14 @@ static bool confirm_discard(const char *cmd) {
     if (!ui_unsaved() || discarding) { pending[0] = 0; return true; }
     snprintf(pending, sizeof pending, "%s", cmd);
     pending_no = "kept your changes";
-    const char *parts[5];
+    const char *parts[6];
     int n = 0;
     if (editor_modified()) parts[n++] = "code";
     if (docs_dirty(RES_TILES)) parts[n++] = "tiles";
     if (docs_dirty(RES_MAP)) parts[n++] = "map";
     if (docs_dirty(RES_SFX)) parts[n++] = "sound";
     if (docs_dirty(RES_MUSIC)) parts[n++] = "music";
+    if (docs_dirty(RES_FONT)) parts[n++] = "font";
     char list[64] = "";
     for (int i = 0; i < n; i++) {     /* "code", "code and map", "code, tiles and map" */
         if (i) strcat(list, i == n - 1 ? " and " : ", ");
@@ -172,21 +177,29 @@ static void cmd_dir(void) {
     const char *root = carts_root();
     DIR *d = opendir(root);
     if (!d) { printf_line(COL_RED, "cannot read %s", root); return; }
-    char *names[256];
-    int n = 0;
+    char *names[256], *folders[256];
+    int n = 0, nf = 0;
     struct dirent *e;
     while ((e = readdir(d)) && n < 256) {
         if (e->d_name[0] == '.') continue;
         char p[4096];
         struct stat st;
         snprintf(p, sizeof p, "%s/%s/main.gb", root, e->d_name);
-        if (stat(p, &st) == 0) names[n++] = strdup(e->d_name);
+        if (stat(p, &st) == 0) { names[n++] = strdup(e->d_name); continue; }
+        snprintf(p, sizeof p, "%s/%s", root, e->d_name);       /* a folder of carts: CD into it */
+        if (nf < 256 && stat(p, &st) == 0 && S_ISDIR(st.st_mode)) folders[nf++] = strdup(e->d_name);
     }
     closedir(d);
     qsort(names, (size_t)n, sizeof names[0], cmp_str);
-    if (!n) shell_print("no carts here (try FOLDER)", COL_GREY);
+    qsort(folders, (size_t)nf, sizeof folders[0], cmp_str);
+    if (carts_subdir()[0]) shell_print("  ../", ui_col(COL_GREY));
+    for (int i = 0; i < nf; i++) {
+        printf_line(COL_YELLOW, "  %s/", folders[i]);
+        free(folders[i]);
+    }
+    if (!n && !nf) shell_print("no carts here (try FOLDER)", COL_GREY);
     for (int i = 0; i < n; i++) {
-        printf_line(COL_SKY, "  %s", names[i]);
+        printf_line(ui_col(COL_SKY), "  %s", names[i]);
         free(names[i]);
     }
 }
@@ -218,7 +231,6 @@ static int do_run(void) {
     draw_reset();
     if (r == 0) printf_line(COL_GREY, "%s ended", cart.title);
     else if (r == 2) printf_line(COL_GREY, "%s stopped", cart.title);
-    if (label_taken) shell_print("saved the cart's label (label.txt)", COL_GREEN);
     return r;
 }
 
@@ -254,6 +266,12 @@ bool ui_global_key(const KeyEvent *ev) {
     if (ev->sc == SDL_SCANCODE_F3) { ui_switch(MODE_MAP); return true; }
     if (ev->sc == SDL_SCANCODE_F4) { ui_switch(MODE_SOUND); return true; }
     if (ev->sc == SDL_SCANCODE_F5) { ui_switch(MODE_MUSIC); return true; }
+    if (ev->sc == SDL_SCANCODE_F7) { ui_switch(MODE_FONT); return true; }
+    if (ev->sc == SDL_SCANCODE_F9) {            /* the settings screen: F9 again goes back */
+        if (ui_mode == MODE_SETTINGS) settings_frame_close();
+        else settings_open();
+        return true;
+    }
     if (ev->sc == SDL_SCANCODE_F6) { tree_open = !tree_open; return true; }
     return false;
 }
@@ -263,12 +281,13 @@ bool ui_global_key(const KeyEvent *ev) {
 int ui_draw_tabs(void) {
     static const struct { const char *label, *word; int mode, kind; } tabs[] = {
         {"F1 code", "code", MODE_EDITOR, -1}, {"F2 tiles", "tiles", MODE_TILES, RES_TILES}, {"F3 map", "map", MODE_MAP, RES_MAP},
-        {"F4 sound", "sound", MODE_SOUND, RES_SFX}, {"F5 music", "music", MODE_MUSIC, RES_MUSIC}};
-    draw_rect(0, 0, UI_W, FONT_H, RGB6(0, 1, 2), true);
+        {"F4 sound", "sound", MODE_SOUND, RES_SFX}, {"F5 music", "music", MODE_MUSIC, RES_MUSIC},
+        {"F7 font", "font", MODE_FONT, RES_FONT}};
+    draw_rect(0, 0, UI_W, FONT_H, UI_RGB(0, 1, 2), true);
     /* the tree button: F6 */
     bool over = in.mouse_y >= 0 && in.mouse_y < FONT_H && in.mouse_x >= 0 && in.mouse_x < 9;
-    draw_rect(0, 0, 9, FONT_H, over ? RGB6(1, 2, 3) : RGB6(0, 0, 1), true);
-    for (int k = 0; k < 3; k++) draw_line(2, 2 + k * 3, 6, 2 + k * 3, tree_open ? COL_YELLOW : RGB6(2, 3, 3));
+    draw_rect(0, 0, 9, FONT_H, over ? UI_RGB(1, 2, 3) : UI_RGB(0, 0, 1), true);
+    for (int k = 0; k < 3; k++) draw_line(2, 2 + k * 3, 6, 2 + k * 3, tree_open ? COL_YELLOW : UI_RGB(2, 3, 3));
     if (in.mouse_hit[1] && over) tree_open = !tree_open;
     bool full = UI_W >= SCREEN_W;      /* beside the tree there's no room for the F keys */
     int x = 10;
@@ -278,14 +297,31 @@ int ui_draw_tabs(void) {
         snprintf(label, sizeof label, "%s%s", full ? tabs[i].label : tabs[i].word, dirty ? "*" : "");
         int w = text_width(label) + 5;
         bool on = ui_mode == tabs[i].mode;
-        if (on) draw_rect(x, 0, w, FONT_H, RGB6(1, 2, 3), true);
-        draw_text(label, x + 3, 0, on ? COL_BLACK : RGB6(2, 3, 3));
+        if (on) draw_rect(x, 0, w, FONT_H, UI_RGB(1, 2, 3), true);
+        draw_text(label, x + 3, 0, on ? COL_BLACK : UI_RGB(2, 3, 3));
         if (in.mouse_hit[1] && in.mouse_y >= 0 && in.mouse_y < FONT_H && in.mouse_x >= x && in.mouse_x < x + w) ui_switch(tabs[i].mode);
         x += w + 1;
     }
     const char *keys = "^S save ^R run";
-    if (x + text_width(keys) + 6 <= UI_W) draw_text(keys, UI_W - 3 - text_width(keys), 0, RGB6(2, 3, 3));
+    if (x + text_width(keys) + 6 <= UI_W) draw_text(keys, UI_W - 3 - text_width(keys), 0, UI_RGB(2, 3, 3));
     return x;
+}
+
+/* THEME: show the themes, THEME name: switch the editors' colours (and remember it) */
+static void cmd_theme(const char *arg) {
+    if (!*arg) {
+        char line[128];
+        int n = snprintf(line, sizeof line, "theme: %s  (", theme_names[ui_theme]);
+        for (int i = 0; i < NTHEMES; i++) n += snprintf(line + n, sizeof line - (size_t)n, "%s%s", i ? " " : "", theme_names[i]);
+        snprintf(line + n, sizeof line - (size_t)n, ")");
+        shell_print(line, ui_col(COL_SKY));
+        return;
+    }
+    int t = theme_find(arg);
+    if (t < 0) { printf_line(COL_RED, "no theme '%s': try blue, green, orange or grey", arg); return; }
+    char err[512];
+    if (!theme_set(t, err, sizeof err)) shell_print(err, COL_RED);
+    printf_line(ui_col(COL_SKY), "theme: %s", theme_names[t]);
 }
 
 void shell_exec(const char *raw) {
@@ -314,7 +350,13 @@ void shell_exec(const char *raw) {
     if (!strcasecmp(cmd, "help") || !strcmp(cmd, "?")) cmd_help();
     else if (!strcasecmp(cmd, "dir") || !strcasecmp(cmd, "ls")) cmd_dir();
     else if (!strcasecmp(cmd, "cls") || !strcasecmp(cmd, "clear")) nlines = 0;
-    else if (!strcasecmp(cmd, "folder")) shell_print(carts_root(), COL_SKY);
+    else if (!strcasecmp(cmd, "folder")) shell_print(carts_root(), ui_col(COL_SKY));
+    else if (!strcasecmp(cmd, "cd")) {
+        char err[512];
+        if (!carts_cd(arg, err, sizeof err)) shell_print(err, COL_RED);
+        else printf_line(ui_col(COL_SKY), "in %s/", carts_subdir()[0] ? carts_subdir() : "carts");
+    }
+    else if (!strcasecmp(cmd, "theme")) cmd_theme(arg);
     else if (!strcasecmp(cmd, "load")) {
         if (!*arg) shell_print("usage: LOAD name", COL_RED);
         else if (confirm_discard(again)) do_load(arg);
@@ -429,6 +471,10 @@ void shell_exec(const char *raw) {
         ui_switch(MODE_SOUND);
     } else if (!strcasecmp(cmd, "music")) {
         ui_switch(MODE_MUSIC);
+    } else if (!strcasecmp(cmd, "font")) {
+        ui_switch(MODE_FONT);
+    } else if (!strcasecmp(cmd, "settings")) {
+        settings_open();
     } else {
         printf_line(COL_RED, "unknown command '%s' (try HELP)", cmd);
     }
@@ -463,6 +509,8 @@ void shell_frame(void) {
     if (in.key_hit[SDL_SCANCODE_F3] && cart.loaded) { ui_switch(MODE_MAP); return; }
     if (in.key_hit[SDL_SCANCODE_F4] && cart.loaded) { ui_switch(MODE_SOUND); return; }
     if (in.key_hit[SDL_SCANCODE_F5] && cart.loaded) { ui_switch(MODE_MUSIC); return; }
+    if (in.key_hit[SDL_SCANCODE_F7] && cart.loaded) { ui_switch(MODE_FONT); return; }
+    if (in.key_hit[SDL_SCANCODE_F9]) { settings_open(); return; }
     if (in.escape) {
         if (inlen == 0 && cart.loaded) { open_editor(); return; }
         inlen = 0;
@@ -500,7 +548,10 @@ void shell_frame(void) {
     int first = total > VIEW_ROWS ? total - VIEW_ROWS : 0;
     int y = 0;
     for (int i = first; i < nlines; i++, y += FONT_H) draw_text(lines[i].text, 0, y, lines[i].color);
-    int x = draw_text(pending[0] && !inlen ? "(Y/N) > " : "> ", 0, y, pending[0] ? COL_ORANGE : COL_GREEN);
+    char prompt[64] = "> ";
+    const char *sd = carts_subdir(), *last = strrchr(sd, '/');
+    if (*sd) snprintf(prompt, sizeof prompt, "%.40s> ", last ? last + 1 : sd);
+    int x = draw_text(pending[0] && !inlen ? "(Y/N) > " : prompt, 0, y, pending[0] ? COL_ORANGE : COL_GREEN);
     x = draw_text(input, x, y, COL_WHITE);
     if ((frame_count / 30) % 2 == 0) draw_char(127, x, y, COL_GREEN);
 }

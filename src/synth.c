@@ -43,6 +43,9 @@ static struct {
     const Song *song;           /* the song playing */
 } mus;
 static double tick_acc;
+static float vol_all = 1, vol_music = 1, vol_sfx = 1;   /* the settings' sound levels */
+
+void synth_set_volume(float all, float music, float sfx) { vol_all = all; vol_music = music; vol_sfx = sfx; }
 static long start_counter;
 static uint32_t lfsr = 0xACE1u;
 
@@ -315,11 +318,11 @@ void synth_mix(int16_t *out, int n) {
                 s = v->noise_val;
             } else if (v->bank) s = (v->bank->waves[v->wave][idx] - 7.5f) / 7.5f;
             else s = 0;
-            acc += s * v->vol;
+            acc += s * v->vol * (v->sfx == MUSIC ? vol_music : vol_sfx);
             v->phase += v->freq / SYNTH_RATE;
             v->phase -= floor(v->phase);
         }
-        acc *= 0.35f;                                        /* room for a few voices at once */
+        acc *= 0.35f * vol_all;                              /* room for a few voices at once */
         if (acc > 1) acc = 1;
         if (acc < -1) acc = -1;
         out[k] = (int16_t)(acc * 32000);

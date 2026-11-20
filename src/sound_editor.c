@@ -167,7 +167,7 @@ static void key(const KeyEvent *ev) {
             case SDL_SCANCODE_S: {
                 char err[256];
                 Doc *d = doc_active(RES_SFX);
-                if (doc_save(d, err, sizeof err)) status(COL_GREEN, "saved sfx/%s.txt", d->name);
+                if (doc_save(d, err, sizeof err)) status(COL_GREEN, "saved sfx/%s.g64", d->name);
                 else status(COL_RED, "%s", err);
                 return;
             }
@@ -358,7 +358,7 @@ static void mouse(void) {
 /* ---------------------------------------------------------------- drawing */
 
 static void thumb(int w, int x, int y, bool on) {
-    draw_rect(x, y, 23, 17, on ? RGB6(1, 2, 3) : RGB6(0, 0, 1), true);
+    draw_rect(x, y, 23, 17, on ? UI_RGB(1, 2, 3) : UI_RGB(0, 0, 1), true);
     for (int i = 0; i < WAVE_LEN; i += 2) {
         int v = cur_snd->waves[w][i];
         draw_pset(x + 3 + i / 2 + i / 4, y + 15 - v, on ? COL_BLACK : COL_YELLOW);
@@ -376,27 +376,27 @@ static void draw(void) {
         int lx = LIST_X + (n % 4) * 14, ly = LIST_Y + (n / 4) * LIST_ROW;
         bool used = false;
         for (int k = 0; k < SFX_STEPS && !used; k++) used = cur_snd->sfx[n].steps[k].vol > 0;
-        if (n == S.cur) draw_rect(lx - 1, ly, 14, LIST_ROW + 1, RGB6(1, 2, 3), true);
+        if (n == S.cur) draw_rect(lx - 1, ly, 14, LIST_ROW + 1, UI_RGB(1, 2, 3), true);
         char num[4];
         snprintf(num, sizeof num, "%02d", n);
-        int c = n == S.cur ? COL_BLACK : synth_voice_sfx(0) == n ? COL_YELLOW : used ? COL_WHITE : RGB6(1, 1, 2);
+        int c = n == S.cur ? COL_BLACK : synth_voice_sfx(0) == n ? COL_YELLOW : used ? COL_WHITE : UI_RGB(1, 1, 2);
         draw_text(num, lx, ly, c);
     }
 
     /* header */
     char buf[96];
     snprintf(buf, sizeof buf, "speed - %-2d +  len - %-2d +   loop %d-%d", x->speed, x->length, x->loop_start, x->loop_end);
-    draw_text(buf, EX, HEAD_Y, RGB6(2, 3, 3));
+    draw_text(buf, EX, HEAD_Y, UI_RGB(2, 3, 3));
     snprintf(buf, sizeof buf, "oct %d", S.octave + 2);
-    draw_text(buf, EX + 248, HEAD_Y, RGB6(2, 2, 3));
-    draw_rect(EX + 286, HEAD_Y, 34, 10, playing_cur() ? COL_YELLOW : RGB6(1, 2, 3), true);
+    draw_text(buf, EX + 248, HEAD_Y, UI_RGB(2, 2, 3));
+    draw_rect(EX + 286, HEAD_Y, 34, 10, playing_cur() ? COL_YELLOW : UI_RGB(1, 2, 3), true);
     draw_text(playing_cur() ? "stop" : "play", EX + 291, HEAD_Y, COL_BLACK);
 
     /* backgrounds: cursor column, steps past the end */
-    draw_rect(EX, PITCH_Y, SFX_STEPS * SW, PITCH_H, RGB6(0, 0, 1), true);
-    draw_rect(EX, VOL_Y, SFX_STEPS * SW, VOL_H, RGB6(0, 0, 1), true);
-    for (int oct = 12; oct < NPITCH; oct += 12) draw_line(EX, PITCH_Y + PITCH_H - 1 - oct, EX + SFX_STEPS * SW - 1, PITCH_Y + PITCH_H - 1 - oct, RGB6(0, 1, 1));
-    draw_rect(EX + S.cursor * SW, PITCH_Y, SW, FX_ROW_Y + 10 - PITCH_Y, RGB6(0, 1, 2), true);
+    draw_rect(EX, PITCH_Y, SFX_STEPS * SW, PITCH_H, UI_RGB(0, 0, 1), true);
+    draw_rect(EX, VOL_Y, SFX_STEPS * SW, VOL_H, UI_RGB(0, 0, 1), true);
+    for (int oct = 12; oct < NPITCH; oct += 12) draw_line(EX, PITCH_Y + PITCH_H - 1 - oct, EX + SFX_STEPS * SW - 1, PITCH_Y + PITCH_H - 1 - oct, UI_RGB(0, 1, 1));
+    draw_rect(EX + S.cursor * SW, PITCH_Y, SW, FX_ROW_Y + 10 - PITCH_Y, UI_RGB(0, 1, 2), true);
 
     for (int k = 0; k < SFX_STEPS; k++) {
         const SfxStep *st = &x->steps[k];
@@ -404,15 +404,15 @@ static void draw(void) {
         bool live = k < x->length;
         int py = PITCH_Y + PITCH_H - 1 - st->pitch;
         if (st->vol) {
-            int c = !live ? RGB6(1, 1, 1) : k == play_step ? COL_YELLOW : RGB6(1 + st->vol / 3, 2 + st->vol / 4, 3);
+            int c = !live ? UI_RGB(1, 1, 1) : k == play_step ? COL_YELLOW : UI_RGB(1 + st->vol / 3, 2 + st->vol / 4, 3);
             draw_rect(sx + 1, py, SW - 2, PITCH_Y + PITCH_H - py, c, true);
             draw_rect(sx + 1, py, SW - 2, 2, live ? COL_WHITE : COL_GREY, true);
             int vh = st->vol * 4;
-            draw_rect(sx + 1, VOL_Y + VOL_H - vh, SW - 2, vh, live ? RGB6(3, 1, 2) : RGB6(1, 1, 1), true);
-        } else draw_pset(sx + SW / 2, py, RGB6(1, 1, 2));
+            draw_rect(sx + 1, VOL_Y + VOL_H - vh, SW - 2, vh, live ? UI_RGB(3, 1, 2) : UI_RGB(1, 1, 1), true);
+        } else draw_pset(sx + SW / 2, py, UI_RGB(1, 1, 2));
         char wc = st->wave >= NWAVES ? 'n' : "0123456789abcdef"[st->wave];
-        draw_char(wc, sx + 2, WAVE_ROW_Y, live ? COL_CYAN : RGB6(0, 1, 1));
-        draw_char(fx_chars[st->fx % NFX], sx + 2, FX_ROW_Y, live ? COL_ORANGE : RGB6(1, 1, 0));
+        draw_char(wc, sx + 2, WAVE_ROW_Y, live ? COL_CYAN : UI_RGB(0, 1, 1));
+        draw_char(fx_chars[st->fx % NFX], sx + 2, FX_ROW_Y, live ? COL_ORANGE : UI_RGB(1, 1, 0));
     }
     if (x->length < SFX_STEPS) draw_line(EX + x->length * SW, PITCH_Y, EX + x->length * SW, FX_ROW_Y + 9, COL_RED);
     if (x->loop_end > x->loop_start) {
@@ -421,40 +421,40 @@ static void draw(void) {
         draw_line(lx0, LOOP_Y - 3, lx0, LOOP_Y, COL_GREEN);
         draw_line(lx1, LOOP_Y - 3, lx1, LOOP_Y, COL_GREEN);
     }
-    draw_text("w", EX - 8, WAVE_ROW_Y, RGB6(1, 2, 2));
-    draw_text("e", EX - 8, FX_ROW_Y, RGB6(2, 2, 1));
+    draw_text("w", EX - 8, WAVE_ROW_Y, UI_RGB(1, 2, 2));
+    draw_text("e", EX - 8, FX_ROW_Y, UI_RGB(2, 2, 1));
 
     /* wave editor */
-    if (!narrow) draw_text("wave", 2, WE_Y + 4, RGB6(2, 3, 3));
+    if (!narrow) draw_text("wave", 2, WE_Y + 4, UI_RGB(2, 3, 3));
     if (S.pen_wave < NWAVES) {
         snprintf(buf, sizeof buf, "%x", S.pen_wave);
         if (!narrow) draw_text(buf, 2, WE_Y + 16, COL_WHITE);
-        if (!narrow) draw_text("draw it", 2, WE_Y + 28, RGB6(1, 1, 2));
-        draw_rect(WE_X, WE_Y, WAVE_LEN * 4, 64, RGB6(0, 0, 1), true);
-        draw_line(WE_X, WE_Y + 32, WE_X + WAVE_LEN * 4 - 1, WE_Y + 32, RGB6(0, 1, 1));
+        if (!narrow) draw_text("draw it", 2, WE_Y + 28, UI_RGB(1, 1, 2));
+        draw_rect(WE_X, WE_Y, WAVE_LEN * 4, 64, UI_RGB(0, 0, 1), true);
+        draw_line(WE_X, WE_Y + 32, WE_X + WAVE_LEN * 4 - 1, WE_Y + 32, UI_RGB(0, 1, 1));
         for (int i = 0; i < WAVE_LEN; i++) {
             int v = cur_snd->waves[S.pen_wave][i];
             draw_rect(WE_X + i * 4, WE_Y + (15 - v) * 4, 3, 3, COL_YELLOW, true);
         }
     } else {
         if (!narrow) draw_text("noise", 2, WE_Y + 16, COL_WHITE);
-        for (int i = 0; i < 400; i++) draw_pset(WE_X + rand() % (WAVE_LEN * 4), WE_Y + rand() % 64, RGB6(1, 1, 1));
+        for (int i = 0; i < 400; i++) draw_pset(WE_X + rand() % (WAVE_LEN * 4), WE_Y + rand() % 64, UI_RGB(1, 1, 1));
     }
     for (int w = 0; w < NWAVES; w++) thumb(w, THUMB_X + (w % 8) * 24, THUMB_Y + (w / 8) * 18, w == S.pen_wave);
-    draw_rect(THUMB_X, THUMB_Y + 36, 46, 17, S.pen_wave == WAVE_NOISE ? RGB6(1, 2, 3) : RGB6(0, 0, 1), true);
+    draw_rect(THUMB_X, THUMB_Y + 36, 46, 17, S.pen_wave == WAVE_NOISE ? UI_RGB(1, 2, 3) : UI_RGB(0, 0, 1), true);
     draw_text("noise", THUMB_X + 8, THUMB_Y + 40, S.pen_wave == WAVE_NOISE ? COL_BLACK : COL_YELLOW);
     for (int f = 0; f < NFX; f++) {
         int bx = THUMB_X + f * 27;
-        draw_rect(bx, FXPEN_Y, 26, 11, f == S.pen_fx ? COL_ORANGE : RGB6(0, 0, 1), true);
+        draw_rect(bx, FXPEN_Y, 26, 11, f == S.pen_fx ? COL_ORANGE : UI_RGB(0, 0, 1), true);
         draw_char(fx_chars[f], bx + 10, FXPEN_Y + 1, f == S.pen_fx ? COL_BLACK : COL_ORANGE);
     }
     snprintf(buf, sizeof buf, "pen: %s, vol %d", fx_names[S.pen_fx], S.pen_vol);
-    draw_text(buf, THUMB_X + 52, THUMB_Y + 40, RGB6(2, 2, 1));
+    draw_text(buf, THUMB_X + 52, THUMB_Y + 40, UI_RGB(2, 2, 1));
 
     /* bars */
     ui_draw_tabs();
     int by = SCREEN_H - FONT_H;
-    draw_rect(0, by, UI_W, FONT_H, RGB6(0, 1, 2), true);
+    draw_rect(0, by, UI_W, FONT_H, UI_RGB(0, 1, 2), true);
     int hk = inside(EX, PITCH_Y, SFX_STEPS * SW, FX_ROW_Y + 10 - PITCH_Y) ? mouse_step() : S.cursor;
     const SfxStep *hs = &x->steps[hk];
     char name[4];
@@ -462,10 +462,10 @@ static void draw(void) {
     if (hs->vol) snprintf(buf, sizeof buf, "sfx %d step %d: %s wave %c vol %d %s", S.cur, hk, name,
                           hs->wave >= NWAVES ? 'n' : "0123456789abcdef"[hs->wave], hs->vol, fx_names[hs->fx % NFX]);
     else snprintf(buf, sizeof buf, "sfx %d step %d: rest", S.cur, hk);
-    int bx = draw_text(buf, 3, by, RGB6(2, 3, 3));
+    int bx = draw_text(buf, 3, by, UI_RGB(2, 3, 3));
     if (S.status[0] && frame_count < S.status_until) draw_text(S.status, bx + 12, by, S.status_color);
     snprintf(buf, sizeof buf, "%s%s", doc_active(RES_SFX)->name, doc_active(RES_SFX)->dirty ? "*" : "");
-    draw_text(buf, UI_W - 3 - text_width(buf), by, RGB6(2, 3, 3));
+    draw_text(buf, UI_W - 3 - text_width(buf), by, UI_RGB(2, 3, 3));
 }
 
 /* the tree opened another sound bank: its undo history doesn't apply */

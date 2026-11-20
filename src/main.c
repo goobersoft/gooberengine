@@ -46,6 +46,7 @@ int main(int argc, char **argv) {
     const char *cartArg = NULL;
     const char *execs[16];
     int nexec = 0;
+    bool scale_given = false;       /* --scale wins over the settings */
     for (int i = 1; i < argc; i++) {
         const char *a = argv[i];
         bool more = i + 1 < argc;
@@ -53,7 +54,7 @@ int main(int argc, char **argv) {
         else if (!strcmp(a, "--export") && i + 2 < argc)
             return cli_export(argv[i + 1], argv[i + 2], i + 3 < argc && argv[i + 3][0] != '-' ? argv[i + 3] : NULL);
         else if (!strcmp(a, "--exec") && more && nexec < 16) execs[nexec++] = argv[++i];
-        else if (!strcmp(a, "--scale") && more) opt.scale = atoi(argv[++i]);
+        else if (!strcmp(a, "--scale") && more) { opt.scale = atoi(argv[++i]); scale_given = true; }
         else if (!strcmp(a, "--frames") && more) opt.max_frames = atoi(argv[++i]);
         else if (!strcmp(a, "--shot") && more) opt.shot = argv[++i];
         else if (!strcmp(a, "--headless")) opt.headless = true;
@@ -69,7 +70,10 @@ int main(int argc, char **argv) {
     if (opt.scale > 8) opt.scale = 8;
     if (opt.headless && opt.max_frames <= 0) opt.max_frames = 60;
 
+    settings_load();
+    if (!scale_given) opt.scale = settings.scale;
     if (!platform_init()) return 1;
+    platform_set_fullscreen(settings.fullscreen);
     shell_init();
     {   /* boot into a fresh cart with no name: nothing is written to the carts folder until SAVE name */
         char err[512];
@@ -88,7 +92,7 @@ int main(int argc, char **argv) {
         shell_exec(cmd);
     }
     while (!in.quit && !shell_quit) {
-        if (ui_mode == MODE_EDITOR || ui_mode == MODE_TILES || ui_mode == MODE_MAP || ui_mode == MODE_SOUND || ui_mode == MODE_MUSIC)
+        if (ui_mode == MODE_EDITOR || ui_mode == MODE_TILES || ui_mode == MODE_MAP || ui_mode == MODE_SOUND || ui_mode == MODE_MUSIC || ui_mode == MODE_FONT || ui_mode == MODE_SETTINGS)
             ui_editor_frame();
         else if (ui_mode == MODE_BROWSE) browse_frame();
         else shell_frame();

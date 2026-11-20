@@ -1,7 +1,7 @@
 /* The file tree: the cart's files down the left side of every editor.
  *
  *   code      +        click a file to edit it; + makes a new one
- *    main.gb
+ *    main
  *   tiles     +        the file each editor has open is highlighted;
  *    tileset*          * = changed, not saved
  *   maps      +
@@ -28,15 +28,17 @@ bool tree_open = true;
 #define ROW FONT_H
 #define TOP (FONT_H + 1)
 #define MAX_ROWS 200
+#define SETTINGS_Y (SCREEN_H - ROW)     /* the settings button: the tree's bottom row */
 
-enum { SEC_CODE = NRES };          /* sections: the four resource kinds, then code */
-static const int sec_order[] = {SEC_CODE, RES_TILES, RES_MAP, RES_SFX, RES_MUSIC};
-static const char *const sec_title[] = {"tiles", "maps", "sfx", "music", "code"};
-static const int sec_mode[] = {MODE_TILES, MODE_MAP, MODE_SOUND, MODE_MUSIC, MODE_EDITOR};
+enum { SEC_CODE = NRES };          /* sections: the resource kinds, then code */
+static const int sec_order[] = {SEC_CODE, RES_TILES, RES_MAP, RES_SFX, RES_MUSIC, RES_FONT};
+static const char *const sec_title[] = {"tiles", "maps", "sfx", "music", "fonts", "code"};
+static const int sec_mode[] = {MODE_TILES, MODE_MAP, MODE_SOUND, MODE_MUSIC, MODE_FONT, MODE_EDITOR};
 
-typedef struct { int sec; char name[64]; bool header; } Row;
+typedef struct { int sec; char name[64]; bool header; int nfiles; bool dirty; } Row;   /* nfiles, dirty: a header's section */
 static Row rows[MAX_ROWS];
 static int nrows, scroll;
+static bool folded[SEC_CODE + 1];  /* a click on a section's name folds its files away, and back */
 
 /* the right-click menu, and what it's doing */
 enum { ACT_NONE, ACT_MENU, ACT_RENAME, ACT_CONFIRM };
@@ -82,29 +84,6 @@ static int code_files(char names[][64], int max) {
     return n;
 }
 
-static void build(void) {
-    nrows = 0;
-    for (size_t s = 0; s < sizeof sec_order / sizeof sec_order[0]; s++) {
-        int sec = sec_order[s];
-        if (nrows < MAX_ROWS) rows[nrows++] = (Row){sec, "", true};
-        if (sec == SEC_CODE) {
-            static char names[64][64];
-            int n = code_files(names, 64);
-            for (int i = 0; i < n && nrows < MAX_ROWS; i++) {
-                rows[nrows] = (Row){sec, "", false};
-                snprintf(rows[nrows++].name, 64, "%s", names[i]);
-            }
-        } else {
-            const char *names[MAX_DOCS * 2];
-            int n = docs_list(sec, names, MAX_DOCS * 2);
-            for (int i = 0; i < n && nrows < MAX_ROWS; i++) {
-                rows[nrows] = (Row){sec, "", false};
-                snprintf(rows[nrows++].name, 64, "%s", names[i]);
-            }
-        }
-    }
-}
-
 static bool row_active(const Row *r) {
     if (r->sec == SEC_CODE) return !strcmp(editor_file(), r->name);
     return cart.active[r->sec] && !strcmp(cart.active[r->sec]->name, r->name);
@@ -114,6 +93,29 @@ static bool row_dirty(const Row *r) {
     if (r->sec == SEC_CODE) return editor_file_modified(r->name);
     Doc *d = doc_find(r->sec, r->name);
     return d && d->dirty;
+}
+
+/* a section's header, then its files (none when it's folded) */
+static void build(void) {
+    nrows = 0;
+    for (size_t s = 0; s < sizeof sec_order / sizeof sec_order[0] && nrows < MAX_ROWS; s++) {
+        int sec = sec_order[s];
+        static char code[64][64];
+        const char *names[MAX_DOCS * 2];
+        int n;
+        if (sec == SEC_CODE) {
+            n = code_files(code, 64);
+            for (int i = 0; i < n; i++) names[i] = code[i];
+        } else n = docs_list(sec, names, MAX_DOCS * 2);
+        Row *h = &rows[nrows++];
+        *h = (Row){sec, "", true, n, false};
+        for (int i = 0; i < n; i++) {
+            Row r = {sec, "", false, 0, false};
+            snprintf(r.name, sizeof r.name, "%s", names[i]);
+            if (row_dirty(&r)) h->dirty = true;
+            if (!folded[sec] && nrows < MAX_ROWS) rows[nrows++] = r;
+        }
+    }
 }
 
 /* switch the editor of the row's kind to its file */
@@ -131,6 +133,7 @@ static void open_row(const Row *r) {
         if (r->sec == RES_TILES) tiles_doc_changed();
         else if (r->sec == RES_MAP) map_doc_changed();
         else if (r->sec == RES_SFX) sound_doc_changed();
+        else if (r->sec == RES_FONT) font_doc_changed();
         else music_doc_changed();
     }
     ui_switch(sec_mode[r->sec]);
@@ -138,7 +141,7 @@ static void open_row(const Row *r) {
 
 /* + on a section: a new file with the next free name (tiles-1, map-2 ...) */
 static void new_file(int sec) {
-    static const char *const stem[] = {"tiles", "map", "sfx", "music", "code"};
+    static const char *const stem[] = {"tiles", "map", "sfx", "music", "font", "code"};
     for (int i = 1; i < 100; i++) {
         char name[64], path[PATH_MAX + 80];
         if (sec == SEC_CODE) {
@@ -147,7 +150,7 @@ static void new_file(int sec) {
             FILE *f = fopen(path, "r");
             if (f) { fclose(f); continue; }
             if (editor_file_modified(name) || !strcmp(editor_file(), name)) continue;
-            Row r = {sec, "", false};
+            Row r = {sec, "", false, 0, false};
             snprintf(r.name, sizeof r.name, "%s", name);
             open_row(&r);
             return;
@@ -156,7 +159,7 @@ static void new_file(int sec) {
         char err[256];
         Doc *d = doc_find(sec, name) ? NULL : doc_create(sec, name, err, sizeof err);
         if (!d) continue;
-        Row r = {sec, "", false};
+        Row r = {sec, "", false, 0, false};
         snprintf(r.name, sizeof r.name, "%s", name);
         open_row(&r);
         return;
@@ -177,7 +180,7 @@ static void do_rename(void) {
         if (!strcmp(to, r->name)) return;
         if (!cart_valid_name(act.text) || act.len > 40) { say(COL_RED, "use letters, digits, - and _"); return; }
         if (!strcmp(to, "main.gb") || file_there(to_p) || editor_file_modified(to) || !strcmp(editor_file(), to)) {
-            snprintf(err, sizeof err, "%s already exists", to);
+            snprintf(err, sizeof err, "%s already exists", act.text);
             say(COL_RED, err);
             return;
         }
@@ -187,7 +190,7 @@ static void do_rename(void) {
         snprintf(to, sizeof to, "%s", act.text);
         if (!doc_rename(r->sec, r->name, to, err, sizeof err)) { say(COL_RED, err); return; }
     }
-    snprintf(err, sizeof err, "renamed %s to %s", r->name, to);
+    snprintf(err, sizeof err, "renamed %s to %s", r->sec == SEC_CODE ? code_name(r->name) : r->name, r->sec == SEC_CODE ? code_name(to) : to);
     say(COL_GREEN, err);
 }
 
@@ -200,7 +203,7 @@ static void do_delete(void) {
         if (file_there(path) && remove(path) != 0) { say(COL_RED, "could not delete it"); return; }
         editor_close_file(r->name);
     } else if (!doc_delete(r->sec, r->name, err, sizeof err)) { say(COL_RED, err); return; }
-    snprintf(err, sizeof err, "deleted %s", r->name);
+    snprintf(err, sizeof err, "deleted %s", r->sec == SEC_CODE ? code_name(r->name) : r->name);
     say(COL_GREEN, err);
 }
 
@@ -227,7 +230,7 @@ static void act_keys(void) {
 
 /* right-click on a file */
 static void open_menu(const Row *r) {
-    if (r->sec == SEC_CODE && !strcmp(r->name, "main.gb")) { say(COL_ORANGE, "main.gb stays: a cart starts there"); return; }
+    if (r->sec == SEC_CODE && !strcmp(r->name, "main.gb")) { say(COL_ORANGE, "main stays: a cart starts there"); return; }
     act.mode = ACT_MENU;
     act.row = *r;
 }
@@ -240,7 +243,7 @@ static int row_index(const Row *r) {
 
 static void tree_frame(void) {
     build();
-    int shown = (SCREEN_H - TOP) / ROW;
+    int shown = (SETTINGS_Y - TOP) / ROW;
     bool over = in.mouse_x >= 0 && in.mouse_x < TREE_W;
     if (over && in.wheel) scroll -= in.wheel * 2;
     if (scroll > nrows - shown) scroll = nrows - shown;
@@ -274,10 +277,16 @@ static void tree_frame(void) {
     }
     if (over && in.mouse_hit[1]) {
         if (in.mouse_y < FONT_H) { if (in.mouse_x >= TREE_W - 10) tree_open = false; }
-        else {
+        else if (in.mouse_y >= SETTINGS_Y) {
+            if (ui_mode == MODE_SETTINGS) settings_frame_close();
+            else settings_open();
+        } else {
             int i = scroll + (in.mouse_y - TOP) / ROW;
             if (in.mouse_y >= TOP && i < nrows) {
-                if (rows[i].header) { if (in.mouse_x >= TREE_W - 10) new_file(rows[i].sec); }
+                if (rows[i].header) {
+                    if (in.mouse_x >= TREE_W - 10) { folded[rows[i].sec] = false; new_file(rows[i].sec); }   /* the new file shows */
+                    else folded[rows[i].sec] = !folded[rows[i].sec];
+                }
                 else open_row(&rows[i]);
                 build();
             }
@@ -286,10 +295,10 @@ static void tree_frame(void) {
 
     /* drawing */
     draw_reset();
-    draw_cls(RGB6(0, 0, 1));
-    draw_rect(0, 0, TREE_W, FONT_H, RGB6(0, 1, 2), true);
-    draw_text("files", 3, 0, RGB6(2, 3, 3));
-    draw_text("<", TREE_W - 8, 0, over && in.mouse_y < FONT_H && in.mouse_x >= TREE_W - 10 ? COL_YELLOW : RGB6(2, 3, 3));
+    draw_cls(UI_RGB(0, 0, 1));
+    draw_rect(0, 0, TREE_W, FONT_H, UI_RGB(0, 1, 2), true);
+    draw_text("files", 3, 0, UI_RGB(2, 3, 3));
+    draw_text("<", TREE_W - 8, 0, over && in.mouse_y < FONT_H && in.mouse_x >= TREE_W - 10 ? COL_YELLOW : UI_RGB(2, 3, 3));
     int mode_sec = -1;
     for (int k = 0; k <= SEC_CODE; k++) if (sec_mode[k] == ui_mode) mode_sec = k;
     for (int k = 0; k < shown; k++) {
@@ -299,13 +308,25 @@ static void tree_frame(void) {
         int y = TOP + k * ROW;
         bool hover = over && in.mouse_y >= y && in.mouse_y < y + ROW;
         if (r->header) {
-            draw_text(sec_title[r->sec], 2, y, r->sec == mode_sec ? COL_YELLOW : RGB6(2, 2, 3));
-            draw_text("+", TREE_W - 8, y, hover && in.mouse_x >= TREE_W - 10 ? COL_YELLOW : RGB6(1, 2, 2));
+            bool f = folded[r->sec], name_hover = hover && in.mouse_x < TREE_W - 10;
+            int c = r->sec == mode_sec ? COL_YELLOW : name_hover ? COL_WHITE : UI_RGB(2, 2, 3);
+            int tc = name_hover ? COL_YELLOW : UI_RGB(1, 2, 2);
+            for (int k = 0; k < 3; k++) {      /* a small triangle: pointing right when folded, down when open */
+                if (f) draw_line(2 + k, y + 3 + k, 2 + k, y + 7 - k, tc);
+                else draw_line(2 + k, y + 4 + k, 6 - k, y + 4 + k, tc);
+            }
+            int x = draw_text(sec_title[r->sec], 9, y, c);
+            if (f) {              /* folded: how many files it holds, and * if one isn't saved */
+                char n[16];
+                snprintf(n, sizeof n, "%d%s", r->nfiles, r->dirty ? "*" : "");
+                draw_text(n, x + 3, y, UI_RGB(1, 2, 2));
+            }
+            draw_text("+", TREE_W - 8, y, hover && in.mouse_x >= TREE_W - 10 ? COL_YELLOW : UI_RGB(1, 2, 2));
             continue;
         }
         if (act.mode >= ACT_RENAME && i == arow) {
             if (act.mode == ACT_CONFIRM) {
-                draw_rect(0, y, TREE_W, ROW, RGB6(2, 0, 0), true);
+                draw_rect(0, y, TREE_W, ROW, UI_RGB(2, 0, 0), true);
                 draw_text("delete? y/n", 2, y, COL_WHITE);
             } else {
                 draw_rect(0, y, TREE_W, ROW, COL_BLACK, true);
@@ -321,23 +342,29 @@ static void tree_frame(void) {
             continue;
         }
         bool active = row_active(r);
-        if (active) draw_rect(0, y, TREE_W, ROW, r->sec == mode_sec ? RGB6(1, 2, 3) : RGB6(0, 1, 2), true);
-        else if (hover) draw_rect(0, y, TREE_W, ROW, RGB6(0, 1, 1), true);
+        if (active) draw_rect(0, y, TREE_W, ROW, r->sec == mode_sec ? UI_RGB(1, 2, 3) : UI_RGB(0, 1, 2), true);
+        else if (hover) draw_rect(0, y, TREE_W, ROW, UI_RGB(0, 1, 1), true);
         char label[16];
-        snprintf(label, sizeof label, "%.10s%s", r->name, row_dirty(r) ? "*" : "");
+        snprintf(label, sizeof label, "%.10s%s", r->sec == SEC_CODE ? code_name(r->name) : r->name, row_dirty(r) ? "*" : "");
         draw_text(label, 8, y, active && r->sec == mode_sec ? COL_BLACK : COL_WHITE);
     }
     if (scroll > 0) draw_char('^', TREE_W - 8, TOP, COL_YELLOW);
-    if (scroll + shown < nrows) draw_char('v', TREE_W - 8, SCREEN_H - ROW, COL_YELLOW);
-    draw_line(TREE_W - 1, 0, TREE_W - 1, SCREEN_H - 1, RGB6(0, 1, 2));
+    if (scroll + shown < nrows) draw_char('v', TREE_W - 8, SETTINGS_Y - ROW, COL_YELLOW);
+    {   /* the settings button, bottom left */
+        bool on = ui_mode == MODE_SETTINGS, hover = over && in.mouse_y >= SETTINGS_Y;
+        draw_rect(0, SETTINGS_Y, TREE_W - 1, ROW, on ? UI_RGB(1, 2, 3) : hover ? UI_RGB(0, 1, 2) : UI_RGB(0, 0, 1), true);
+        draw_line(0, SETTINGS_Y - 1, TREE_W - 2, SETTINGS_Y - 1, UI_RGB(0, 1, 2));
+        draw_text("settings", 3, SETTINGS_Y, on ? COL_BLACK : hover ? COL_YELLOW : UI_RGB(2, 3, 3));
+    }
+    draw_line(TREE_W - 1, 0, TREE_W - 1, SCREEN_H - 1, UI_RGB(0, 1, 2));
     if (act.mode == ACT_MENU) {
         static const char *const items[2] = {"rename", "delete"};
         draw_rect(2, my - 1, TREE_W - 5, 2 * ROW + 2, COL_WHITE, false);
         for (int k = 0; k < 2; k++) {
             int iy = my + k * ROW;
             bool hover = over && in.mouse_y >= iy && in.mouse_y < iy + ROW;
-            draw_rect(3, iy, TREE_W - 7, ROW, hover ? RGB6(1, 2, 3) : RGB6(0, 1, 2), true);
-            draw_text(items[k], 6, iy, hover ? COL_BLACK : k ? RGB6(3, 2, 2) : COL_WHITE);
+            draw_rect(3, iy, TREE_W - 7, ROW, hover ? UI_RGB(1, 2, 3) : UI_RGB(0, 1, 2), true);
+            draw_text(items[k], 6, iy, hover ? COL_BLACK : k ? UI_RGB(3, 2, 2) : COL_WHITE);
         }
     }
     if (act.msg[0] && frame_count < act.msg_until) {      /* the last word on a rename / delete */
@@ -345,7 +372,7 @@ static void tree_frame(void) {
         if (lines < 1) lines = 1;
         if (lines > 4) lines = 4;
         int y0 = SCREEN_H - lines * ROW;
-        draw_rect(0, y0, TREE_W - 1, lines * ROW, RGB6(0, 0, 0), true);
+        draw_rect(0, y0, TREE_W - 1, lines * ROW, UI_RGB(0, 0, 0), true);
         int per = (TREE_W - 4) / FONT_W;
         for (int k = 0; k < lines; k++) {
             char part[16];
@@ -365,15 +392,18 @@ static void run_editor(void) {
         case MODE_MAP: map_frame(); break;
         case MODE_SOUND: sound_frame(); break;
         case MODE_MUSIC: music_frame(); break;
+        case MODE_FONT: font_frame(); break;
+        case MODE_SETTINGS: settings_frame(); break;
         default: break;
     }
 }
 
 void ui_editor_frame(void) {
     docs_bind();
-    int tw = tree_open ? TREE_W : 0;
-    bool in_tree = tree_open && in.mouse_x < TREE_W;
-    if (tree_open) {
+    bool tree = tree_open && cart.loaded;          /* the settings screen can open with no cart */
+    int tw = tree ? TREE_W : 0;
+    bool in_tree = tree && in.mouse_x < TREE_W;
+    if (tree) {
         view_x = 0;
         view_w = TREE_W;
         tree_frame();

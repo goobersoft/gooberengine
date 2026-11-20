@@ -99,10 +99,11 @@ runtimes/player-windows-x86_64.exe: $(ALL_SRC) $(HDRS) $(SDL_WIN)/lib/libSDL2.a
 	      -lshell32 -lsetupapi -lversion -luuid -lcfgmgr32 -lpthread -s
 
 # ---------------------------------------------------------------------------
-# The browser. Emscripten comes from emsdk (https://emscripten.org); point
-# EMSDK at its folder. ASYNCIFY lets the engine's frame loop hand control back
-# to the browser every frame without restructuring it.
-EMSDK  ?= $(HOME)/github/emsdk
+# The browser. Emscripten comes from the emsdk in tools/emsdk
+# (https://emscripten.org); pass EMSDK=/path/to/emsdk to use another one.
+# ASYNCIFY lets the engine's frame loop hand control back to the browser every
+# frame without restructuring it.
+EMSDK  ?= $(abspath tools/emsdk)
 EMCC   ?= EM_CONFIG=$(EMSDK)/.emscripten $(EMSDK)/upstream/emscripten/emcc
 WEB_FLAGS := -O2 $(WARN) $(CPPFLAGS) -sUSE_SDL=2 -sASYNCIFY -sASYNCIFY_STACK_SIZE=131072 \
              -sSTACK_SIZE=4MB -sINITIAL_MEMORY=128MB -lidbfs.js \

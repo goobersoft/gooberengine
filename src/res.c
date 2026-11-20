@@ -3,7 +3,8 @@
  *
  * Files (in the cart folder):
  *   tiles/NAME.g64   tileset    maps/NAME.g64   map
- *   sfx/NAME.txt     sound bank music/NAME.txt  song
+ *   sfx/NAME.g64     sound bank music/NAME.g64  song
+ *   fonts/NAME.g64   font
  *
  * The .g64 files are base-64 text. Each character of the alphabet
  *   0-9 a-z A-Z + *
@@ -19,10 +20,27 @@
  *             X, Y: width and height in screens as digit + 1, at most 10
  *             (a screen is 40 x 24 cells). A cell is a tile number hi*64 + lo,
  *             or ".." for no tile. Tile 0 is a tile like any other.
+ *   sound     W S: the number of waves and of sound effects, each as digit + 1.
+ *             Then W waves of 32 samples 0-f (7-8 is the middle), then S sound
+ *             effects: speed - 1, length - 1, loop start, loop end, then 32
+ *             steps of pitch (0-63, 24 = C-4), wave (0-f, g = noise),
+ *             volume (0-7), effect (0-6: none slide vibrato drop fade-in
+ *             fade-out arpeggio). Waves and effects left out are the defaults.
+ *   music     S O P T: speed - 1, order entries - 1, patterns - 1, tracks - 1.
+ *             Then O order entries of two characters: 0N plays pattern N,
+ *             1N jumps to entry N, .. stops. Then P patterns of 32 rows, each
+ *             row T cells of four characters: pitch wave volume effect (as in
+ *             a sound effect), .... for nothing new, ==== for note off.
+ *   font      W H: a character's size, each as digit + 1 (4 to 20; the built-in
+ *             font is 5 x 10, "49"). Then 96 glyphs, for characters 32-127, one
+ *             per line: H rows top to bottom, each row (W + 5) / 6 characters of
+ *             six pixels, the character's top bit (32) the leftmost pixel. A
+ *             glyph fills its cell: the space between characters is its own.
  *
  * Old carts kept one of each at the top level (tiles.txt, map.txt, sfx.txt,
- * music.txt). Those are read as the default-named file and written to the new
- * place by the next SAVE, which renames the old file to *.old. */
+ * music.txt), and sound and music were text in sfx/NAME.txt, music/NAME.txt.
+ * Those are read as before and written as .g64 by the next SAVE, which renames
+ * the old file to *.old. */
 #include "engine.h"
 #include <ctype.h>
 #include <dirent.h>
@@ -32,16 +50,17 @@
 #include <string.h>
 #include <sys/stat.h>
 
-const char *const res_dir[NRES] = {"tiles", "maps", "sfx", "music"};
-const char *const res_ext[NRES] = {".g64", ".g64", ".txt", ".txt"};
-const char *const res_default[NRES] = {"tileset", "map", "sfx", "music"};
-const char *const res_word[NRES] = {"tileset", "map", "sound", "music"};
-static const char *const legacy_file[NRES] = {"tiles.txt", "map.txt", "sfx.txt", "music.txt"};
+const char *const res_dir[NRES] = {"tiles", "maps", "sfx", "music", "fonts"};
+const char *const res_ext[NRES] = {".g64", ".g64", ".g64", ".g64", ".g64"};
+const char *const res_default[NRES] = {"tileset", "map", "sfx", "music", "font"};
+const char *const res_word[NRES] = {"tileset", "map", "sound", "music", "font"};
+static const char *const legacy_file[NRES] = {"tiles.txt", "map.txt", "sfx.txt", "music.txt", NULL};   /* fonts are new */
 
 Tileset *cur_tiles;
 TileMap *cur_map;
 SoundBank *cur_snd;
 Song *cur_song;
+Font *cur_font;
 
 /* ---------------------------------------------------------------- base 64 */
 
@@ -178,6 +197,276 @@ static bool write_map(const char *path, const TileMap *m, char *err, int errlen)
     return ok;
 }
 
+/* writing goes to NAME.saving first, so a failed save leaves the old file whole */
+static FILE *save_begin(const char *path, char *tmp, size_t n, char *err, int errlen) {
+    snprintf(tmp, n, "%s.saving", path);
+    FILE *f = fopen(tmp, "w");
+    if (!f) snprintf(err, (size_t)errlen, "could not write %s", tmp);
+    return f;
+}
+
+static bool save_end(FILE *f, const char *tmp, const char *path, char *err, int errlen) {
+    bool ok = fclose(f) == 0 && rename(tmp, path) == 0;
+    if (!ok) snprintf(err, (size_t)errlen, "could not write %s", path);
+    return ok;
+}
+
+#define SFX_CHARS (4 + SFX_STEPS * 4)            /* one sound effect: its settings, then its steps */
+#define CELL_CHARS 4
+
+static bool parse_sound(const char *path, SoundBank *b, char *err, int errlen) {
+    size_t n;
+    char *s = read_packed(path, &n);
+    if (!s) { snprintf(err, (size_t)errlen, "cannot read %s", path); return false; }
+    const char *fn = file_part(path);
+    bool ok = false;
+    int nw = n >= 2 ? b64(s[0]) + 1 : 0, ns = n >= 2 ? b64(s[1]) + 1 : 0;
+    size_t want = 2 + (size_t)nw * WAVE_LEN + (size_t)ns * SFX_CHARS;
+    if (nw < 1 || ns < 1) snprintf(err, (size_t)errlen, "%s: starts with its number of waves and sound effects (two characters 0-9 a-z A-Z + *)", fn);
+    else if (nw > NWAVES) snprintf(err, (size_t)errlen, "%s: has %d waves; a sound bank has at most %d", fn, nw, NWAVES);
+    else if (n != want) snprintf(err, (size_t)errlen, "%s: %d waves and %d sound effects are %zu characters, this one has %zu", fn, nw, ns, want, n);
+    else {
+        ok = true;
+        const char *p = s + 2;
+        for (int w = 0; w < nw && ok; w++)
+            for (int i = 0; i < WAVE_LEN; i++, p++) {
+                int v = b64(*p);
+                if (v < 0 || v > 15) {
+                    snprintf(err, (size_t)errlen, "%s: wave %d sample %d is '%c', not 0-f", fn, w, i, *p);
+                    ok = false;
+                    break;
+                }
+                b->waves[w][i] = (uint8_t)v;
+            }
+        for (int k = 0; k < ns && ok; k++, p += SFX_CHARS) {
+            Sfx *x = &b->sfx[k];
+            int sp = b64(p[0]), len = b64(p[1]), ls = b64(p[2]), le = b64(p[3]);
+            if (sp < 0 || len < 0 || len >= SFX_STEPS || ls < 0 || ls > SFX_STEPS || le < 0 || le > SFX_STEPS) {
+                snprintf(err, (size_t)errlen, "%s: sfx %d starts '%.4s': speed 1-64, length 1-%d and loop 0-%d, less one for speed and length", fn, k, p, SFX_STEPS, SFX_STEPS);
+                ok = false;
+                break;
+            }
+            x->speed = (uint8_t)(sp + 1);
+            x->length = (uint8_t)(len + 1);
+            x->loop_start = (uint8_t)ls;
+            x->loop_end = (uint8_t)le;
+            for (int i = 0; i < SFX_STEPS; i++) {
+                const char *q = p + 4 + i * 4;
+                int pi = b64(q[0]), wv = b64(q[1]), vol = b64(q[2]), fx = b64(q[3]);
+                if (pi < 0 || wv < 0 || wv > WAVE_NOISE || vol < 0 || vol > 7 || fx < 0 || fx >= NFX) {
+                    snprintf(err, (size_t)errlen, "%s: sfx %d step %d is '%.4s': pitch, wave 0-g, volume 0-7, effect 0-%d", fn, k, i, q, NFX - 1);
+                    ok = false;
+                    break;
+                }
+                x->steps[i] = (SfxStep){(uint8_t)pi, (uint8_t)wv, (uint8_t)vol, (uint8_t)fx};
+            }
+        }
+    }
+    free(s);
+    return ok;
+}
+
+static bool sfx_is_default(const Sfx *s) {
+    Sfx d;
+    synth_default_sfx(&d);
+    return !memcmp(&d, s, sizeof d);
+}
+
+static bool write_sound(const char *path, const SoundBank *b, char *err, int errlen) {
+    int ns = 1;                      /* up to the last sound effect that isn't empty */
+    for (int k = 0; k < NSFX; k++) if (!sfx_is_default(&b->sfx[k])) ns = k + 1;
+    char tmp[PATH_MAX + 16];
+    FILE *f = save_begin(path, tmp, sizeof tmp, err, errlen);
+    if (!f) return false;
+    fprintf(f, "%c%c\n", ge_pixel_chars[NWAVES - 1], ge_pixel_chars[ns - 1]);
+    for (int w = 0; w < NWAVES; w++) {
+        for (int i = 0; i < WAVE_LEN; i++) fputc(ge_pixel_chars[b->waves[w][i] & 15], f);
+        fputc('\n', f);
+    }
+    for (int k = 0; k < ns; k++) {
+        const Sfx *x = &b->sfx[k];
+        fprintf(f, "%c%c%c%c", ge_pixel_chars[(x->speed - 1) & 63], ge_pixel_chars[(x->length - 1) & 63],
+                ge_pixel_chars[x->loop_start & 63], ge_pixel_chars[x->loop_end & 63]);
+        for (int i = 0; i < SFX_STEPS; i++) {
+            const SfxStep *st = &x->steps[i];
+            fputc(ge_pixel_chars[st->pitch & 63], f);
+            fputc(ge_pixel_chars[st->wave > WAVE_NOISE ? WAVE_NOISE : st->wave], f);
+            fputc(ge_pixel_chars[st->vol & 7], f);
+            fputc(ge_pixel_chars[st->fx % NFX], f);
+        }
+        fputc('\n', f);
+    }
+    return save_end(f, tmp, path, err, errlen);
+}
+
+static bool parse_music(const char *path, Song *song, char *err, int errlen) {
+    size_t n;
+    char *s = read_packed(path, &n);
+    if (!s) { snprintf(err, (size_t)errlen, "cannot read %s", path); return false; }
+    const char *fn = file_part(path);
+    bool ok = false;
+    int sp = n >= 4 ? b64(s[0]) : -1, no = n >= 4 ? b64(s[1]) + 1 : 0;
+    int np = n >= 4 ? b64(s[2]) + 1 : 0, nt = n >= 4 ? b64(s[3]) + 1 : 0;
+    size_t want = 4 + (size_t)no * 2 + (size_t)np * PATTERN_ROWS * (size_t)nt * CELL_CHARS;
+    if (sp < 0 || no < 1 || np < 1 || nt < 1)
+        snprintf(err, (size_t)errlen, "%s: starts with its speed and its numbers of order entries, patterns and tracks (four characters 0-9 a-z A-Z + *)", fn);
+    else if (np > NPATTERNS || nt > NTRACKS)
+        snprintf(err, (size_t)errlen, "%s: has %d patterns of %d tracks; a song has at most %d of %d", fn, np, nt, NPATTERNS, NTRACKS);
+    else if (n != want)
+        snprintf(err, (size_t)errlen, "%s: %d order entries and %d patterns of %d tracks are %zu characters, this one has %zu", fn, no, np, nt, want, n);
+    else {
+        ok = true;
+        song->song_speed = (uint8_t)(sp + 1);
+        const char *p = s + 4;
+        for (int i = 0; i < no; i++, p += 2) {
+            OrderEntry *e = &song->order[i];
+            int kind = b64(p[0]), v = b64(p[1]);
+            if (p[0] == '.' && p[1] == '.') { e->kind = ORDER_STOP; e->value = 0; continue; }
+            if ((kind == 0 && v >= 0 && v < NPATTERNS) || (kind == 1 && v >= 0 && v < ORDER_LEN)) {
+                e->kind = kind == 0 ? ORDER_PATTERN : ORDER_JUMP;
+                e->value = (uint8_t)v;
+                continue;
+            }
+            snprintf(err, (size_t)errlen, "%s: order entry %d is '%.2s', not 0N (pattern 0-%d), 1N (jump to entry N) or ..", fn, i, p, NPATTERNS - 1);
+            ok = false;
+            break;
+        }
+        for (int pt = 0; pt < np && ok; pt++)
+            for (int r = 0; r < PATTERN_ROWS && ok; r++)
+                for (int t = 0; t < nt; t++, p += CELL_CHARS) {
+                    Cell *c = &song->patterns[pt].cells[r][t];
+                    memset(c, 0, sizeof *c);
+                    c->pitch = 24;
+                    if (!strncmp(p, "....", 4)) { c->kind = CELL_EMPTY; continue; }
+                    if (!strncmp(p, "====", 4)) { c->kind = CELL_OFF; continue; }
+                    int pi = b64(p[0]), wv = b64(p[1]), vol = b64(p[2]), fx = b64(p[3]);
+                    if (pi < 0 || wv < 0 || wv > WAVE_NOISE || vol < 0 || vol > 7 || fx < 0 || fx >= NFX) {
+                        snprintf(err, (size_t)errlen, "%s: pattern %d row %d track %d is '%.4s': pitch, wave 0-g, volume 0-7, effect 0-%d, or .... or ====",
+                                 fn, pt, r, t + 1, p, NFX - 1);
+                        ok = false;
+                        break;
+                    }
+                    *c = (Cell){CELL_NOTE, (uint8_t)pi, (uint8_t)wv, (uint8_t)vol, (uint8_t)fx};
+                }
+    }
+    free(s);
+    return ok;
+}
+
+static int pattern_tracks(const Song *song, int p) {      /* tracks in use: up to the last one with anything in it */
+    int used = 0;
+    for (int r = 0; r < PATTERN_ROWS; r++)
+        for (int t = 0; t < NTRACKS; t++)
+            if (song->patterns[p].cells[r][t].kind != CELL_EMPTY && t + 1 > used) used = t + 1;
+    return used;
+}
+
+static bool write_music(const char *path, const Song *song, char *err, int errlen) {
+    int no = ORDER_LEN;                          /* order entries up to the last one that isn't a stop */
+    while (no > 1 && song->order[no - 1].kind == ORDER_STOP) no--;
+    int np = 1, nt = 1;                          /* patterns up to the last used one, as wide as the widest */
+    for (int p = 0; p < NPATTERNS; p++) {
+        int t = pattern_tracks(song, p);
+        if (t) np = p + 1;
+        if (t > nt) nt = t;
+    }
+    char tmp[PATH_MAX + 16];
+    FILE *f = save_begin(path, tmp, sizeof tmp, err, errlen);
+    if (!f) return false;
+    fprintf(f, "%c%c%c%c\n", ge_pixel_chars[(song->song_speed - 1) & 63], ge_pixel_chars[no - 1],
+            ge_pixel_chars[np - 1], ge_pixel_chars[nt - 1]);
+    for (int i = 0; i < no; i++) {
+        const OrderEntry *e = &song->order[i];
+        if (e->kind == ORDER_STOP) fputs("..", f);
+        else { fputc(e->kind == ORDER_JUMP ? '1' : '0', f); fputc(ge_pixel_chars[e->value & 63], f); }
+    }
+    fputc('\n', f);
+    for (int p = 0; p < np; p++) {
+        fputc('\n', f);                          /* a blank line before each pattern */
+        for (int r = 0; r < PATTERN_ROWS; r++) {
+            for (int t = 0; t < nt; t++) {
+                const Cell *c = &song->patterns[p].cells[r][t];
+                if (c->kind == CELL_EMPTY) fputs("....", f);
+                else if (c->kind == CELL_OFF) fputs("====", f);
+                else {
+                    fputc(ge_pixel_chars[c->pitch & 63], f);
+                    fputc(ge_pixel_chars[c->wave > WAVE_NOISE ? WAVE_NOISE : c->wave], f);
+                    fputc(ge_pixel_chars[c->vol & 7], f);
+                    fputc(ge_pixel_chars[c->fx % NFX], f);
+                }
+            }
+            fputc('\n', f);
+        }
+    }
+    return save_end(f, tmp, path, err, errlen);
+}
+
+static int row_chars(int w) { return (w + 5) / 6; }   /* a glyph row: 6 pixels to a character */
+
+static bool parse_font(const char *path, Font *f, char *err, int errlen) {
+    size_t n;
+    char *s = read_packed(path, &n);
+    if (!s) { snprintf(err, (size_t)errlen, "cannot read %s", path); return false; }
+    const char *fn = file_part(path);
+    bool ok = false;
+    int w = n >= 2 ? b64(s[0]) + 1 : 0, h = n >= 2 ? b64(s[1]) + 1 : 0;
+    size_t want = 2 + (size_t)NGLYPHS * (size_t)h * (size_t)row_chars(w);
+    if (w < 1 || h < 1) snprintf(err, (size_t)errlen, "%s: starts with its character size (two characters 0-9 a-z A-Z + *)", fn);
+    else if (w < FONT_MIN || h < FONT_MIN || w > FONT_MAX || h > FONT_MAX)
+        snprintf(err, (size_t)errlen, "%s: is %d x %d; a font is %d x %d to %d x %d", fn, w, h, FONT_MIN, FONT_MIN, FONT_MAX, FONT_MAX);
+    else if (n != want) snprintf(err, (size_t)errlen, "%s: %d glyphs of %d x %d are %zu characters, this one has %zu", fn, NGLYPHS, w, h, want, n);
+    else {
+        ok = true;
+        memset(f, 0, sizeof *f);
+        f->w = (uint8_t)w;
+        f->h = (uint8_t)h;
+        const char *p = s + 2;
+        for (int g = 0; g < NGLYPHS && ok; g++)
+            for (int r = 0; r < h && ok; r++)
+                for (int k = 0; k < row_chars(w); k++, p++) {
+                    int v = b64(*p);
+                    if (v < 0) {
+                        snprintf(err, (size_t)errlen, "%s: character %d row %d has '%c'", fn, g + FONT_FIRST, r, *p);
+                        ok = false;
+                        break;
+                    }
+                    for (int b = 0; b < 6; b++)              /* the character's top bit is its leftmost pixel */
+                        if ((v & (32 >> b)) && k * 6 + b < w) f->g[g][r] |= 1u << (k * 6 + b);
+                }
+    }
+    free(s);
+    return ok;
+}
+
+static bool write_font(const char *path, const Font *f, char *err, int errlen) {
+    char tmp[PATH_MAX + 16];
+    FILE *out = save_begin(path, tmp, sizeof tmp, err, errlen);
+    if (!out) return false;
+    fprintf(out, "%c%c\n", ge_pixel_chars[f->w - 1], ge_pixel_chars[f->h - 1]);
+    for (int g = 0; g < NGLYPHS; g++) {
+        for (int r = 0; r < f->h; r++)
+            for (int k = 0; k < row_chars(f->w); k++) {
+                int v = 0;
+                for (int b = 0; b < 6; b++)
+                    if (k * 6 + b < f->w && (f->g[g][r] >> (k * 6 + b) & 1)) v |= 32 >> b;
+                fputc(ge_pixel_chars[v], out);
+            }
+        fputc('\n', out);
+    }
+    return save_end(out, tmp, path, err, errlen);
+}
+
+/* write a resource in its .g64 form */
+static bool write_file(int kind, const char *path, const void *data, char *err, int errlen) {
+    switch (kind) {
+        case RES_TILES: return write_tileset(path, data, err, errlen);
+        case RES_MAP: return write_map(path, data, err, errlen);
+        case RES_SFX: return write_sound(path, data, err, errlen);
+        case RES_FONT: return write_font(path, data, err, errlen);
+        default: return write_music(path, data, err, errlen);
+    }
+}
+
 /* ---------------------------------------------------------------- resources in memory */
 
 bool map_resize(TileMap *m, int w, int h) {
@@ -202,6 +491,7 @@ void *res_new(int kind) {
             return m;
         }
         case RES_SFX: { SoundBank *b = calloc(1, sizeof *b); synth_defaults(b); return b; }
+        case RES_FONT: { Font *f = malloc(sizeof *f); memcpy(f, &sys_font, sizeof *f); return f; }   /* a new font starts as the built-in one */
         default: { Song *s = calloc(1, sizeof *s); music_defaults(s); return s; }
     }
 }
@@ -218,36 +508,15 @@ void *res_copy(int kind, const void *p) {
             memcpy(m->cells, from->cells, sizeof *m->cells * (size_t)m->w * (size_t)m->h);
             return m;
         }
-        case RES_SFX: {
-            SoundBank *b = malloc(sizeof *b);
-            memcpy(b, p, sizeof *b);
-            b->header = NULL;
-            memset(b->note, 0, sizeof b->note);
-            return b;
-        }
-        default: {
-            Song *s = malloc(sizeof *s);
-            memcpy(s, p, sizeof *s);
-            s->header = NULL;
-            memset(s->note, 0, sizeof s->note);
-            return s;
-        }
+        case RES_SFX: { SoundBank *b = malloc(sizeof *b); memcpy(b, p, sizeof *b); return b; }
+        case RES_FONT: { Font *f = malloc(sizeof *f); memcpy(f, p, sizeof *f); return f; }
+        default: { Song *s = malloc(sizeof *s); memcpy(s, p, sizeof *s); return s; }
     }
 }
 
 void res_free(int kind, void *p) {
     if (!p) return;
     if (kind == RES_MAP) free(((TileMap *)p)->cells);
-    if (kind == RES_SFX) {
-        SoundBank *b = p;
-        free(b->header);
-        for (int i = 0; i < NSFX; i++) free(b->note[i]);
-    }
-    if (kind == RES_MUSIC) {
-        Song *s = p;
-        free(s->header);
-        for (int i = 0; i < NPATTERNS; i++) free(s->note[i]);
-    }
     if (kind == RES_SFX || kind == RES_MUSIC) {
         audio_lock();
         synth_forget(p);
@@ -268,10 +537,21 @@ static bool parse_file(int kind, const char *path, void *data, char *err, int er
     switch (kind) {
         case RES_TILES: return parse_tileset(path, data, err, errlen);
         case RES_MAP: return parse_map(path, data, err, errlen);
-        case RES_SFX: return res_parse_sound(path, data, err, errlen);
-        default: return res_parse_music(path, data, err, errlen);
+        case RES_SFX: return parse_sound(path, data, err, errlen);
+        case RES_FONT: return parse_font(path, data, err, errlen);
+        default: return parse_music(path, data, err, errlen);
     }
 }
+
+/* the old text form of a sound bank or song: sfx/NAME.txt, music/NAME.txt (from the
+ * cart folder). False for tilesets and maps, which never had one in their folder. */
+static bool legacy_txt(int kind, const char *name, char *rel, size_t n) {
+    if (kind != RES_SFX && kind != RES_MUSIC) return false;
+    snprintf(rel, n, "%s/%s.txt", res_dir[kind], name);
+    return true;
+}
+
+static void cart_file(const char *rel, char *out, size_t n) { snprintf(out, n, "%s/%s", cart.dir, rel); }
 
 /* ---------------------------------------------------------------- documents */
 
@@ -280,6 +560,7 @@ void docs_reset(void) {
     cur_map = NULL;
     cur_snd = NULL;
     cur_song = NULL;
+    cur_font = NULL;
     for (int i = 0; i < cart.ndocs; i++) {
         res_free(cart.docs[i]->kind, cart.docs[i]->data);
         free(cart.docs[i]);
@@ -290,6 +571,7 @@ void docs_reset(void) {
     map_doc_changed();
     sound_doc_changed();
     music_doc_changed();
+    font_doc_changed();
 }
 
 Doc *doc_find(int kind, const char *name) {
@@ -318,16 +600,24 @@ Doc *doc_open(int kind, const char *name, char *err, int errlen) {
     if (!res_name_ok(name)) { snprintf(err, (size_t)errlen, "'%s' is not a file name (letters, digits, - and _)", name); return NULL; }
     char path[PATH_MAX + 128];
     res_path(kind, name, path, sizeof path);
+    char rel[80];
     const char *legacy = NULL;
-    if (!is_file(path) && !strcmp(name, res_default[kind])) {   /* an old cart: tiles.txt ... */
+    if (!is_file(path) && legacy_txt(kind, name, rel, sizeof rel)) {   /* sound or music still in text: sfx/NAME.txt */
+        cart_file(rel, path, sizeof path);
+        if (is_file(path)) legacy = rel;
+    }
+    if (!legacy && !is_file(path) && legacy_file[kind] && !strcmp(name, res_default[kind])) {   /* an old cart: tiles.txt ... */
         snprintf(path, sizeof path, "%s/%s", cart.dir, legacy_file[kind]);
         if (is_file(path)) legacy = legacy_file[kind];
     }
+    if (!legacy) res_path(kind, name, path, sizeof path);
     if (!is_file(path)) { snprintf(err, (size_t)errlen, "no %s/%s%s", res_dir[kind], name, res_ext[kind]); return NULL; }
     void *data = res_new(kind);
-    bool ok = legacy && kind == RES_TILES ? res_parse_legacy_tiles(path, data, err, errlen)
-            : legacy && kind == RES_MAP ? res_parse_legacy_map(path, data, err, errlen)
-            : parse_file(kind, path, data, err, errlen);
+    bool ok = !legacy ? parse_file(kind, path, data, err, errlen)
+            : kind == RES_TILES ? res_parse_legacy_tiles(path, data, err, errlen)
+            : kind == RES_MAP ? res_parse_legacy_map(path, data, err, errlen)
+            : kind == RES_SFX ? res_parse_legacy_sound(path, data, err, errlen)
+            : res_parse_legacy_music(path, data, err, errlen);
     if (!ok) { res_free(kind, data); return NULL; }
     d = add_doc(kind, name, data, err, errlen);
     if (d && legacy) {
@@ -387,16 +677,12 @@ bool doc_save(Doc *d, char *err, int errlen) {
     snprintf(dir, sizeof dir, "%s/%s", cart.dir, res_dir[d->kind]);
     mkdir(dir, 0755);
     res_path(d->kind, d->name, path, sizeof path);
-    bool ok = d->kind == RES_TILES ? write_tileset(path, d->data, err, errlen)
-            : d->kind == RES_MAP ? write_map(path, d->data, err, errlen)
-            : d->kind == RES_SFX ? res_write_sound(path, d->data, err, errlen)
-            : res_write_music(path, d->data, err, errlen);
-    if (!ok) return false;
+    if (!write_file(d->kind, path, d->data, err, errlen)) return false;
     d->dirty = false;
     if (d->legacy[0]) {          /* the old file is replaced: keep it as *.old, out of the way */
-        char from[PATH_MAX + 64], to[PATH_MAX + 80];
-        snprintf(from, sizeof from, "%s/%s", cart.dir, d->legacy);
-        snprintf(to, sizeof to, "%s/%s.old", cart.dir, d->legacy);
+        char from[PATH_MAX + 128], to[PATH_MAX + 144];
+        cart_file(d->legacy, from, sizeof from);
+        snprintf(to, sizeof to, "%s.old", from);
         rename(from, to);
         d->legacy[0] = 0;
     }
@@ -409,13 +695,23 @@ static bool file_exists(const char *p) { struct stat st; return stat(p, &st) == 
 bool doc_rename(int kind, const char *name, const char *to, char *err, int errlen) {
     if (!res_name_ok(to)) { snprintf(err, (size_t)errlen, "'%s' is not a file name (letters, digits, - and _)", to); return false; }
     if (!strcmp(name, to)) return true;
-    char from_p[PATH_MAX + 128], to_p[PATH_MAX + 128];
+    char from_p[PATH_MAX + 128], to_p[PATH_MAX + 128], from_t[PATH_MAX + 128], to_t[PATH_MAX + 128];
+    char from_rel[80], to_rel[80];
     res_path(kind, name, from_p, sizeof from_p);
     res_path(kind, to, to_p, sizeof to_p);
-    if (doc_find(kind, to) || file_exists(to_p)) { snprintf(err, (size_t)errlen, "%s/%s%s already exists", res_dir[kind], to, res_ext[kind]); return false; }
+    bool txt = legacy_txt(kind, name, from_rel, sizeof from_rel) && legacy_txt(kind, to, to_rel, sizeof to_rel);
+    if (txt) { cart_file(from_rel, from_t, sizeof from_t); cart_file(to_rel, to_t, sizeof to_t); }
+    if (doc_find(kind, to) || file_exists(to_p) || (txt && file_exists(to_t))) {
+        snprintf(err, (size_t)errlen, "%s/%s%s already exists", res_dir[kind], to, res_ext[kind]);
+        return false;
+    }
     Doc *d = doc_find(kind, name);
     if (file_exists(from_p) && rename(from_p, to_p) != 0) { snprintf(err, (size_t)errlen, "could not rename %s", from_p); return false; }
-    if (d) snprintf(d->name, sizeof d->name, "%s", to);
+    if (txt && file_exists(from_t) && rename(from_t, to_t) != 0) { snprintf(err, (size_t)errlen, "could not rename %s", from_t); return false; }
+    if (d) {
+        snprintf(d->name, sizeof d->name, "%s", to);
+        if (txt && !strcmp(d->legacy, from_rel)) snprintf(d->legacy, sizeof d->legacy, "%s", to_rel);
+    }
     return true;
 }
 
@@ -424,12 +720,17 @@ bool doc_delete(int kind, const char *name, char *err, int errlen) {
     char path[PATH_MAX + 128];
     res_path(kind, name, path, sizeof path);
     if (file_exists(path) && remove(path) != 0) { snprintf(err, (size_t)errlen, "could not delete %s", path); return false; }
+    char rel[80], txt[PATH_MAX + 128];
+    if (legacy_txt(kind, name, rel, sizeof rel)) {     /* the old text form goes too, or it would come back */
+        cart_file(rel, txt, sizeof txt);
+        if (file_exists(txt)) remove(txt);
+    }
     for (int i = 0; i < cart.ndocs; i++) {
         Doc *d = cart.docs[i];
         if (d->kind != kind || strcmp(d->name, name)) continue;
         if (d->legacy[0]) {          /* an old cart's file: it goes too, or it would come back */
-            char old[PATH_MAX + 64];
-            snprintf(old, sizeof old, "%s/%s", cart.dir, d->legacy);
+            char old[PATH_MAX + 128];
+            cart_file(d->legacy, old, sizeof old);
             remove(old);
         }
         bool was_active = cart.active[kind] == d;
@@ -441,6 +742,7 @@ bool doc_delete(int kind, const char *name, char *err, int errlen) {
                 case RES_TILES: cur_tiles = NULL; tiles_doc_changed(); break;
                 case RES_MAP: cur_map = NULL; map_doc_changed(); break;
                 case RES_SFX: audio_lock(); cur_snd = NULL; audio_unlock(); sound_doc_changed(); break;
+                case RES_FONT: cur_font = NULL; font_doc_changed(); break;
                 default: audio_lock(); cur_song = NULL; audio_unlock(); music_doc_changed(); break;
             }
         }
@@ -487,11 +789,7 @@ void docs_emergency_save(void) {
         snprintf(dir, sizeof dir, "%s/%s", cart.dir, res_dir[d->kind]);
         mkdir(dir, 0755);
         snprintf(path, sizeof path, "%s/%s%s.unsaved", dir, d->name, res_ext[d->kind]);
-        bool ok = d->kind == RES_TILES ? write_tileset(path, d->data, err, sizeof err)
-                : d->kind == RES_MAP ? write_map(path, d->data, err, sizeof err)
-                : d->kind == RES_SFX ? res_write_sound(path, d->data, err, sizeof err)
-                : res_write_music(path, d->data, err, sizeof err);
-        if (ok) fprintf(stderr, "gooberengine: unsaved %s kept in %s\n", res_word[d->kind], path);
+        if (write_file(d->kind, path, d->data, err, sizeof err)) fprintf(stderr, "gooberengine: unsaved %s kept in %s\n", res_word[d->kind], path);
     }
 }
 
@@ -503,6 +801,7 @@ void docs_bind(void) {
     cur_snd = doc_active(RES_SFX)->data;
     cur_song = doc_active(RES_MUSIC)->data;
     audio_unlock();
+    cur_font = doc_active(RES_FONT)->data;
 }
 
 static int cmp_str(const void *a, const void *b) { return strcmp(*(const char *const *)a, *(const char *const *)b); }
@@ -517,13 +816,19 @@ int docs_list(int kind, const char **names, int max) {
     snprintf(dir, sizeof dir, "%s/%s", cart.dir, res_dir[kind]);
     DIR *dp = opendir(dir);
     struct dirent *e;
-    size_t el = strlen(res_ext[kind]);
+    bool txt_too = kind == RES_SFX || kind == RES_MUSIC;    /* not converted yet: sfx/NAME.txt */
     while (dp && (e = readdir(dp)) && n < max && n < MAX_DOCS * 2) {
         size_t len = strlen(e->d_name);
-        if (len <= el || strcmp(e->d_name + len - el, res_ext[kind]) || len - el >= 48) continue;
+        const char *ext = len > 4 && !strcmp(e->d_name + len - 4, res_ext[kind]) ? res_ext[kind]
+                        : txt_too && len > 4 && !strcmp(e->d_name + len - 4, ".txt") ? ".txt" : NULL;
+        size_t el = ext ? strlen(ext) : 0;
+        if (!ext || len - el >= 48) continue;
         char stem[48];
         snprintf(stem, sizeof stem, "%.*s", (int)(len - el), e->d_name);
         if (!res_name_ok(stem) || doc_find(kind, stem)) continue;
+        bool dup = false;                                    /* NAME.g64 and NAME.txt: one file */
+        for (int i = 0; i < n && !dup; i++) dup = !strcmp(names[i], stem);
+        if (dup) continue;
         snprintf(store[kind][n], 48, "%s", stem);
         names[n] = store[kind][n];
         n++;
@@ -543,6 +848,7 @@ static void rt_point(int kind) {
         case RES_TILES: cur_tiles = p; break;
         case RES_MAP: cur_map = p; break;
         case RES_SFX: audio_lock(); cur_snd = p; audio_unlock(); break;
+        case RES_FONT: cur_font = p; break;
         default: audio_lock(); cur_song = p; audio_unlock(); break;
     }
 }

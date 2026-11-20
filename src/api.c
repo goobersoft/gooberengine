@@ -64,11 +64,24 @@ static Value a_circle_fill(VM *vm, int argc, Value *args) {
     draw_circle(ARG_I(0), ARG_I(1), ARG_I(2), OPT_I(3, -1), true);
     RET_VOID;
 }
+/* text is drawn with the cart's font in use (the built-in one if its slot is empty) */
 static Value a_text(VM *vm, int argc, Value *args) {
     UNUSED;
-    return v_int(draw_text(ARG_S(0), ARG_I(1), ARG_I(2), OPT_I(3, -1)));
+    ds.font = cur_font;
+    int x = draw_text(ARG_S(0), ARG_I(1), ARG_I(2), OPT_I(3, -1));
+    ds.font = NULL;
+    return v_int(x);
 }
-static Value a_text_width(VM *vm, int argc, Value *args) { UNUSED; return v_int(text_width(ARG_S(0))); }
+static Value a_text_width(VM *vm, int argc, Value *args) {
+    UNUSED;
+    ds.font = cur_font;
+    int w = text_width(ARG_S(0));
+    ds.font = NULL;
+    return v_int(w);
+}
+/* the size of a character of the font in use: text steps this far across and down */
+static Value a_font_w(VM *vm, int argc, Value *args) { UNUSED; return v_int(cur_font ? cur_font->w : sys_font.w); }
+static Value a_font_h(VM *vm, int argc, Value *args) { UNUSED; return v_int(cur_font ? cur_font->h : sys_font.h); }
 
 static Value a_rgb(VM *vm, int argc, Value *args) {
     UNUSED;
@@ -93,6 +106,69 @@ static Value a_clip(VM *vm, int argc, Value *args) {
     UNUSED;
     if (argc < 4) draw_clip_reset();
     else draw_clip(ARG_I(0), ARG_I(1), ARG_I(2), ARG_I(3));
+    RET_VOID;
+}
+
+/* ---- depth, blending and the extra drawing commands ---- */
+
+/* set_depth([z]): draw at depth z from now on (-32768..32767, lower is nearer).
+ * A pixel is only drawn where the depth buffer is z or further. cls() clears the
+ * buffer to the far plane (32767) and the drawing depth to 0 */
+static Value a_set_depth(VM *vm, int argc, Value *args) {
+    UNUSED;
+    int z = OPT_I(0, 0);
+    if (z < INT16_MIN || z > INT16_MAX) vm_error(vm, "set_depth: %d out of range %d to %d", z, INT16_MIN, INT16_MAX);
+    draw_set_depth(z);
+    RET_VOID;
+}
+
+static Value a_set_blend(VM *vm, int argc, Value *args) {
+    UNUSED;
+    int b = OPT_I(0, BLEND_NORMAL);
+    if (b < 0 || b >= NBLENDS) vm_error(vm, "set_blend: %d is not a blend mode (use the BLEND_ constants)", b);
+    ds.blend = (uint8_t)b;
+    RET_VOID;
+}
+
+/* spray draws from the same random numbers as rnd(), so seed_rnd() repeats it */
+static NativeFn rnd_fn;
+static double spray_rng(void) { return rnd_fn(gb_vm, 0, NULL).as.f; }
+
+static Value a_spray(VM *vm, int argc, Value *args) {
+    UNUSED;
+    int n = ARG_I(4);
+    if (n < 0) vm_error(vm, "spray: %d dots", n);
+    if (n > DOT_LIMIT_MAX) n = DOT_LIMIT_MAX;      /* more could never be drawn in one frame */
+    if (!rnd_fn) rnd_fn = native_get(native_find("rnd"))->fn;
+    draw_spray(ARG_I(0), ARG_I(1), ARG_I(2), ARG_I(3), n, OPT_I(5, -1), spray_rng);
+    RET_VOID;
+}
+
+static void need_block(VM *vm, const char *what, int n, int w, int h) {
+    if (n < 0 || n >= NTILES) vm_error(vm, "%s: tile %d out of range 0-%d", what, n, NTILES - 1);
+    if (w < 1 || h < 1) vm_error(vm, "%s: a %d x %d tile block", what, w, h);
+}
+
+/* tex_quad(x0,y0, x1,y1, x2,y2, x3,y3, spr, sw, sh): corners top-left,
+ * top-right, bottom-right, bottom-left; spr's sw x sh block of tiles is
+ * stretched across them */
+static Value a_tex_quad(VM *vm, int argc, Value *args) {
+    UNUSED;
+    need_block(vm, "tex_quad", ARG_I(8), ARG_I(9), ARG_I(10));
+    int px[4], py[4];
+    for (int i = 0; i < 4; i++) { px[i] = ARG_I(2 * i); py[i] = ARG_I(2 * i + 1); }
+    draw_tex_quad(px, py, NULL, ARG_I(8), ARG_I(9), ARG_I(10));
+    RET_VOID;
+}
+
+/* tex_quad_3d(x0,y0,z0, ... x3,y3,z3, spr, sw, sh): the same, with each
+ * corner's depth: x, y go straight to the screen and z into the depth buffer */
+static Value a_tex_quad_3d(VM *vm, int argc, Value *args) {
+    UNUSED;
+    need_block(vm, "tex_quad_3d", ARG_I(12), ARG_I(13), ARG_I(14));
+    int px[4], py[4], pz[4];
+    for (int i = 0; i < 4; i++) { px[i] = ARG_I(3 * i); py[i] = ARG_I(3 * i + 1); pz[i] = ARG_I(3 * i + 2); }
+    draw_tex_quad(px, py, pz, ARG_I(12), ARG_I(13), ARG_I(14));
     RET_VOID;
 }
 
@@ -161,7 +237,7 @@ static Value a_map_h(VM *vm, int argc, Value *args) { UNUSED; return v_int(cur_m
 
 /* ---- slots: load_tileset(slot, "name") loads tiles/name.g64 into a slot,
  * load_tileset(slot) empties it, swap_tileset(slot) makes it the one in use.
- * The same for maps, sfx and music. swap_*() alone returns the slot in use. ---- */
+ * The same for maps, sfx, music and fonts. swap_*() alone returns the slot in use. ---- */
 
 static void slot_load(VM *vm, int kind, const char *what, int argc, Value *args) {
     char err[512];
@@ -178,6 +254,8 @@ static Value a_load_tileset(VM *vm, int argc, Value *args) { slot_load(vm, RES_T
 static Value a_load_map(VM *vm, int argc, Value *args) { slot_load(vm, RES_MAP, "load_map", argc, args); RET_VOID; }
 static Value a_load_sfx(VM *vm, int argc, Value *args) { slot_load(vm, RES_SFX, "load_sfx", argc, args); RET_VOID; }
 static Value a_load_music(VM *vm, int argc, Value *args) { slot_load(vm, RES_MUSIC, "load_music", argc, args); RET_VOID; }
+static Value a_load_font(VM *vm, int argc, Value *args) { slot_load(vm, RES_FONT, "load_font", argc, args); RET_VOID; }
+static Value a_swap_font(VM *vm, int argc, Value *args) { return slot_swap(vm, RES_FONT, "swap_font", argc, args); }
 static Value a_swap_tileset(VM *vm, int argc, Value *args) { return slot_swap(vm, RES_TILES, "swap_tileset", argc, args); }
 static Value a_swap_map(VM *vm, int argc, Value *args) { return slot_swap(vm, RES_MAP, "swap_map", argc, args); }
 static Value a_swap_sfx(VM *vm, int argc, Value *args) { return slot_swap(vm, RES_SFX, "swap_sfx", argc, args); }
@@ -330,18 +408,9 @@ static Value a_load_data(VM *vm, int argc, Value *args) {
 
 /* ---- system ---- */
 
-/* F8 while a cart runs: this frame becomes the cart's label */
-static void check_label_key(void) {
-    if (opt.player || !in.key_hit[SDL_SCANCODE_F8]) return;
-    char err[256];
-    if (label_capture(err, sizeof err)) label_taken = true;
-    else fprintf(stderr, "gooberengine: %s\n", err);
-}
-
 static Value a_flip(VM *vm, int argc, Value *args) {
     UNUSED;
     cart_flipped = true;
-    check_label_key();          /* the frame being shown is complete */
     platform_frame();
     dots_used = 0;              /* a new frame, a new dot budget */
     if (in.quit || in.escape) { cart_stopped = true; vm_exit(vm, 0); }
@@ -362,10 +431,17 @@ NativeDef gb_gfx_natives[] = {
     {"circle_fill", 'v', "iii|i", a_circle_fill},
     {"text", 'i', "sii|i", a_text},
     {"text_width", 'i', "s", a_text_width},
+    {"font_w", 'i', "", a_font_w},
+    {"font_h", 'i', "", a_font_h},
     {"rgb", 'i', "iii", a_rgb},
     {"camera", 'v', "|ii", a_camera},
     {"pal", 'v', "|ii", a_pal},
     {"clip", 'v', "|iiii", a_clip},
+    {"set_depth", 'v', "|i", a_set_depth},
+    {"set_blend", 'v', "|i", a_set_blend},
+    {"spray", 'v', "iiiii|i", a_spray},
+    {"tex_quad", 'v', "iiiiiiiiiii", a_tex_quad},
+    {"tex_quad_3d", 'v', "iiiiiiiiiiiiiii", a_tex_quad_3d},
 
     {"sprite", 'v', "iii|iii", a_sprite},
     {"tile_pget", 'i', "iii", a_tile_pget},
@@ -383,6 +459,8 @@ NativeDef gb_gfx_natives[] = {
     {"swap_sfx", 'i', "|i", a_swap_sfx},
     {"load_music", 'v', "i|s", a_load_music},
     {"swap_music", 'i', "|i", a_swap_music},
+    {"load_font", 'v', "i|s", a_load_font},
+    {"swap_font", 'i', "|i", a_swap_font},
     {"dot_limit", 'i', "|i", a_dot_limit},
     {"dots_used", 'i', "", a_dots_used},
 
@@ -419,6 +497,8 @@ ConstDef gb_gfx_consts[] = {
     {"SHEET_COLS", SHEET_COLS}, {"NTILES", NTILES}, {"SLOTS", NSLOTS},
     {"MAP_SCREEN_W", SCREEN_CELLS_W}, {"MAP_SCREEN_H", SCREEN_CELLS_H}, {"FONT_W", FONT_W}, {"FONT_H", FONT_H},
     {"FLIP_X", 1}, {"FLIP_Y", 2},
+    {"BLEND_NORMAL", BLEND_NORMAL}, {"BLEND_ADD", BLEND_ADD}, {"BLEND_SUB", BLEND_SUB},
+    {"BLEND_MAX", BLEND_MAX}, {"BLEND_MIN", BLEND_MIN}, {"BLEND_XOR", BLEND_XOR},
     {"NOISE", WAVE_NOISE}, {"VOICES", NVOICES},
 
     {"BTN_LEFT", BTN_LEFT}, {"BTN_RIGHT", BTN_RIGHT}, {"BTN_UP", BTN_UP}, {"BTN_DOWN", BTN_DOWN},

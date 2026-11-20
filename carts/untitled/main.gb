@@ -1,6 +1,8 @@
 ' untitled - a new GooberEngine cart
 strict
 
+include "stuff.gb"
+
 local x:float = SCREEN_W / 2, y:float = SCREEN_H / 2
 
 repeat
@@ -12,5 +14,6 @@ repeat
   cls(COL_NAVY)
   text("hello from untitled", 8, 8, COL_WHITE)
   circle_fill(x, y, 8, COL_YELLOW)
+  text(xxx,0,0)
   flip()
 forever

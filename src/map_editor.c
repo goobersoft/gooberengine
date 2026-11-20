@@ -533,16 +533,16 @@ static void draw_brush_at(int cx, int cy) {
 }
 
 static void draw_picker(void) {
-    draw_rect(0, VIEW_Y, UI_W, VIEW_H, RGB6(0, 0, 1), true);
+    draw_rect(0, VIEW_Y, UI_W, VIEW_H, UI_RGB(0, 0, 1), true);
     char title[96];
     snprintf(title, sizeof title, "pick tiles from %s: drag for a block", doc_active(RES_TILES)->name);
-    draw_text(title, 2, VIEW_Y, RGB6(2, 3, 3));
+    draw_text(title, 2, VIEW_Y, UI_RGB(2, 3, 3));
     draw_clip(0, PK_Y, UI_W, PK_H);
     int ox = 2 - M.pk_ox, oy = PK_Y - M.pk_oy;
     for (int t = 0; t < NTILES; t++) {
         int x = ox + (t % SHEET_COLS) * TILE, y = oy + (t / SHEET_COLS) * TILE;
         if (x >= UI_W || y >= PK_Y + PK_H || x + TILE <= 0 || y + TILE <= PK_Y) continue;
-        if (((t % SHEET_COLS) + (t / SHEET_COLS)) & 1) draw_rect(x, y, TILE, TILE, RGB6(0, 0, 0), true);
+        if (((t % SHEET_COLS) + (t / SHEET_COLS)) & 1) draw_rect(x, y, TILE, TILE, UI_RGB(0, 0, 0), true);
         draw_sprite(t, x, y, 1, 1, 0);
     }
     int t1 = picker_tile();
@@ -569,7 +569,7 @@ static void draw(void) {
     for (int y = 0; y < VIEW_H; y++)
         for (int x = (y % 4); x < UI_W; x += 4) {
             int cx = cell_x(x), cy = cell_y(VIEW_Y + y);
-            if (!on_map(cx, cy)) draw_pset(x, VIEW_Y + y, RGB6(0, 0, 1));
+            if (!on_map(cx, cy)) draw_pset(x, VIEW_Y + y, UI_RGB(0, 0, 1));
         }
     for (int j = 0; j < rows; j++)
         for (int i = 0; i < cols; i++) {
@@ -578,15 +578,15 @@ static void draw(void) {
             int t = *cellp(cx, cy);
             int sx = screen_x(cx), sy = screen_y(cy);
             if (t != MAP_EMPTY) draw_cell_tile(t, sx, sy, s);
-            else if (s >= 10 && M.grid) draw_pset(sx, sy, RGB6(0, 0, 1));
+            else if (s >= 10 && M.grid) draw_pset(sx, sy, UI_RGB(0, 0, 1));
         }
 
     /* screen-sized guides (40 x 24 cells) and the map's edge */
     if (M.grid)
-        for (int k = 0; k <= MAP->w; k += SCREEN_CELLS_W) draw_line(screen_x(k), screen_y(0), screen_x(k), screen_y(MAP->h), RGB6(0, 1, 2));
+        for (int k = 0; k <= MAP->w; k += SCREEN_CELLS_W) draw_line(screen_x(k), screen_y(0), screen_x(k), screen_y(MAP->h), UI_RGB(0, 1, 2));
     if (M.grid)
-        for (int k = 0; k <= MAP->h; k += SCREEN_CELLS_H) draw_line(screen_x(0), screen_y(k), screen_x(MAP->w), screen_y(k), RGB6(0, 1, 2));
-    draw_rect(screen_x(0) - 1, screen_y(0) - 1, MAP->w * s + 2, MAP->h * s + 2, RGB6(1, 2, 3), false);
+        for (int k = 0; k <= MAP->h; k += SCREEN_CELLS_H) draw_line(screen_x(0), screen_y(k), screen_x(MAP->w), screen_y(k), UI_RGB(0, 1, 2));
+    draw_rect(screen_x(0) - 1, screen_y(0) - 1, MAP->w * s + 2, MAP->h * s + 2, UI_RGB(1, 2, 3), false);
 
     /* selection, brush preview */
     if (M.sel) {
@@ -606,7 +606,7 @@ static void draw(void) {
     /* bars */
     ui_draw_tabs();
     int by = SCREEN_H - FONT_H;
-    draw_rect(0, by, UI_W, FONT_H, RGB6(0, 1, 2), true);
+    draw_rect(0, by, UI_W, FONT_H, UI_RGB(0, 1, 2), true);
     draw_rect(2, by, 10, 10, COL_BLACK, true);
     draw_cell_tile(M.brush[0][0], 2, by, 10);
     char info[96];
@@ -620,11 +620,11 @@ static void draw(void) {
         uint16_t t = *cellp(mx, my);
         if (t == MAP_EMPTY) snprintf(info, sizeof info, "x%d y%d empty", mx, my);
         else snprintf(info, sizeof info, "x%d y%d = %d", mx, my, t);
-        draw_text(info, x + 8, by, RGB6(2, 3, 3));
+        draw_text(info, x + 8, by, UI_RGB(2, 3, 3));
     }
     Doc *d = doc_active(RES_MAP);
     snprintf(info, sizeof info, "%s%s %dx%d", d->name, d->dirty ? "*" : "", MAP->w / SCREEN_CELLS_W, MAP->h / SCREEN_CELLS_H);
-    draw_text(info, UI_W - 3 - text_width(info), by, RGB6(2, 3, 3));
+    draw_text(info, UI_W - 3 - text_width(info), by, UI_RGB(2, 3, 3));
 }
 
 void map_frame(void) {

@@ -1,5 +1,6 @@
-/* BROWSE: the carts in the carts folder as a grid of labels. Arrows or the
- * mouse choose, Enter (or a second click) runs, L just loads, Esc goes back. */
+/* BROWSE: the carts in the carts folder as a list, one row each. Up/Down,
+ * PgUp/PgDn, Home/End or the mouse choose, Enter (or a second click) runs,
+ * L just loads, Esc goes back. */
 #include "engine.h"
 #include <SDL2/SDL_scancode.h>
 #include <dirent.h>
@@ -10,22 +11,18 @@
 #include <strings.h>
 #include <sys/stat.h>
 
-#define COLS 3
-#define ROWS 2
-#define CELL_W 130
-#define CELL_H 104
-#define GRID_X ((SCREEN_W - COLS * CELL_W) / 2)
-#define GRID_Y 22
 #define MAX_CARTS 128
+#define LIST_X 6
+#define LIST_Y (FONT_H + 4)
+#define ROW_H FONT_H
+#define NROWS ((SCREEN_H - FONT_H - 4 - LIST_Y) / ROW_H)   /* rows that fit between the bars */
 
 typedef struct {
     char name[128], title[128];
-    bool has_label;
-    uint8_t label[LABEL_H][LABEL_W];
 } Entry;
 
 static Entry *carts;
-static int ncarts, sel, page;
+static int ncarts, sel, top;    /* top: the first cart on screen */
 static bool confirm;            /* Enter pressed once with unsaved work */
 
 static int cmp_entry(const void *a, const void *b) { return strcasecmp(((const Entry *)a)->name, ((const Entry *)b)->name); }
@@ -62,12 +59,12 @@ void browse_open(void) {
         snprintf(c->name, sizeof c->name, "%s", e->d_name);
         snprintf(c->title, sizeof c->title, "%s", e->d_name);
         read_title(dir, c->title, sizeof c->title);
-        c->has_label = label_read(dir, c->label);
     }
     if (d) closedir(d);
     qsort(carts, (size_t)ncarts, sizeof *carts, cmp_entry);
-    sel = page = 0;
+    sel = top = 0;
     for (int i = 0; i < ncarts; i++) if (cart.loaded && !strcmp(carts[i].name, cart.name)) sel = i;
+    if (sel >= NROWS) top = sel - NROWS + 1;   /* the loaded cart starts on screen */
     confirm = false;
     if (!ncarts) { shell_print("no carts here (try FOLDER)", COL_GREY); return; }
     ui_mode = MODE_BROWSE;
@@ -86,73 +83,72 @@ static void choose(bool run) {
 
 static void draw(void) {
     draw_reset();
-    draw_cls(RGB6(0, 0, 1));
-    draw_rect(0, 0, SCREEN_W, FONT_H, RGB6(0, 1, 2), true);
+    draw_cls(UI_RGB(0, 0, 1));
+    draw_rect(0, 0, SCREEN_W, FONT_H, UI_RGB(0, 1, 2), true);
     draw_text("CARTS", 3, 0, COL_YELLOW);
-    char buf[128];
-    int pages = (ncarts + COLS * ROWS - 1) / (COLS * ROWS);
-    snprintf(buf, sizeof buf, "page %d/%d  Enter run  L load  Esc back", page + 1, pages);
-    draw_text(buf, SCREEN_W - 3 - text_width(buf), 0, RGB6(2, 3, 3));
-    for (int k = 0; k < COLS * ROWS; k++) {
-        int i = page * COLS * ROWS + k;
-        if (i >= ncarts) break;
-        Entry *c = &carts[i];
-        int x = GRID_X + (k % COLS) * CELL_W + (CELL_W - LABEL_W) / 2, y = GRID_Y + (k / COLS) * CELL_H;
-        if (i == sel) draw_rect(x - 3, y - 3, LABEL_W + 6, LABEL_H + 6, COL_YELLOW, true);
-        if (c->has_label) {
-            for (int ly = 0; ly < LABEL_H; ly++)
-                for (int lx = 0; lx < LABEL_W; lx++) draw_pset(x + lx, y + ly, c->label[ly][lx]);
-        } else {                      /* no label yet: a plain card with the cart's initial */
-            draw_rect(x, y, LABEL_W, LABEL_H, RGB6(0, 1, 2), true);
-            char ch[2] = {(char)(c->title[0] ? c->title[0] : '?'), 0};
-            draw_text(ch, x + LABEL_W / 2 - 3, y + LABEL_H / 2 - 5, RGB6(1, 2, 3));
-            draw_text("F8 makes a label", x + 2, y + LABEL_H - 11, RGB6(1, 1, 2));
+    char buf[160];
+    snprintf(buf, sizeof buf, "%d/%d  Enter run  L load  Esc back", sel + 1, ncarts);
+    draw_text(buf, SCREEN_W - 3 - text_width(buf), 0, UI_RGB(2, 3, 3));
+    for (int r = 0; r < NROWS && top + r < ncarts; r++) {
+        int i = top + r, y = LIST_Y + r * ROW_H;
+        const Entry *c = &carts[i];
+        bool on = i == sel;
+        if (on) draw_rect(0, y, SCREEN_W, ROW_H, COL_YELLOW, true);
+        snprintf(buf, sizeof buf, "%.30s", c->title);
+        draw_text(buf, LIST_X, y, on ? COL_BLACK : COL_WHITE);
+        if (strcmp(c->title, c->name)) {          /* the folder, when the title differs */
+            snprintf(buf, sizeof buf, "%.30s", c->name);
+            draw_text(buf, SCREEN_W / 2 + 10, y, on ? UI_RGB(1, 1, 0) : UI_RGB(1, 2, 2));
         }
-        snprintf(buf, sizeof buf, "%.21s", c->title);
-        draw_text(buf, x + (LABEL_W - text_width(buf)) / 2, y + LABEL_H + 5, i == sel ? COL_WHITE : RGB6(2, 2, 3));
     }
+    if (top > 0) draw_text("^", SCREEN_W - 9, LIST_Y, UI_RGB(2, 3, 3));                       /* more above */
+    if (top + NROWS < ncarts) draw_text("v", SCREEN_W - 9, LIST_Y + (NROWS - 1) * ROW_H, UI_RGB(2, 3, 3));
     int by = SCREEN_H - FONT_H;
-    draw_rect(0, by, SCREEN_W, FONT_H, RGB6(0, 1, 2), true);
+    draw_rect(0, by, SCREEN_W, FONT_H, UI_RGB(0, 1, 2), true);
     if (confirm) draw_text("unsaved changes: Enter again to discard them, Esc to keep", 3, by, COL_ORANGE);
     else {
         snprintf(buf, sizeof buf, "%s  (%s)", carts[sel].title, carts[sel].name);
-        draw_text(buf, 3, by, RGB6(2, 3, 3));
+        draw_text(buf, 3, by, UI_RGB(2, 3, 3));
     }
 }
 
+static int clampi(int v, int lo, int hi) { return v < lo ? lo : v > hi ? hi : v; }
+
 void browse_frame(void) {
     if (!ncarts) { ui_mode = MODE_SHELL; return; }
-    int per = COLS * ROWS;
+    int old = sel;
     for (int i = 0; i < in.nevents && ui_mode == MODE_BROWSE; i++) {
         const KeyEvent *ev = &in.events[i];
         if (ev->type != EV_KEY) continue;
-        int old = sel;
+        int before = sel;
         switch (ev->sc) {
             case SDL_SCANCODE_ESCAPE: if (confirm) confirm = false; else ui_mode = MODE_SHELL; break;
-            case SDL_SCANCODE_LEFT: if (sel > 0) sel--; break;
-            case SDL_SCANCODE_RIGHT: if (sel < ncarts - 1) sel++; break;
-            case SDL_SCANCODE_UP: if (sel >= COLS) sel -= COLS; break;
-            case SDL_SCANCODE_DOWN: if (sel + COLS < ncarts) sel += COLS; break;
-            case SDL_SCANCODE_PAGEUP: sel = sel >= per ? sel - per : 0; break;
-            case SDL_SCANCODE_PAGEDOWN: sel = sel + per < ncarts ? sel + per : ncarts - 1; break;
+            case SDL_SCANCODE_UP: sel--; break;
+            case SDL_SCANCODE_DOWN: sel++; break;
+            case SDL_SCANCODE_PAGEUP: sel -= NROWS; break;
+            case SDL_SCANCODE_PAGEDOWN: sel += NROWS; break;
+            case SDL_SCANCODE_HOME: sel = 0; break;
+            case SDL_SCANCODE_END: sel = ncarts - 1; break;
             case SDL_SCANCODE_RETURN: case SDL_SCANCODE_KP_ENTER: case SDL_SCANCODE_SPACE: choose(true); break;
             case SDL_SCANCODE_L: choose(false); break;
             default: break;
         }
-        if (sel != old) confirm = false;
+        sel = clampi(sel, 0, ncarts - 1);
+        if (sel != before) confirm = false;
     }
     if (ui_mode != MODE_BROWSE) return;
-    if (in.mouse_hit[1])
-        for (int k = 0; k < per; k++) {
-            int i = page * per + k;
-            int x = GRID_X + (k % COLS) * CELL_W, y = GRID_Y + (k / COLS) * CELL_H;
-            if (i < ncarts && in.mouse_x >= x && in.mouse_x < x + CELL_W && in.mouse_y >= y && in.mouse_y < y + CELL_H) {
-                if (sel == i) choose(true);   /* a second click runs it */
-                else { sel = i; confirm = false; }
-                break;
-            }
+    if (sel != old) {                      /* the keys moved it: keep it on screen */
+        if (sel < top) top = sel;
+        if (sel >= top + NROWS) top = sel - NROWS + 1;
+    }
+    top = clampi(top - in.wheel * 3, 0, ncarts > NROWS ? ncarts - NROWS : 0);   /* the wheel scrolls */
+    if (in.mouse_hit[1] && in.mouse_y >= LIST_Y) {
+        int i = top + (in.mouse_y - LIST_Y) / ROW_H;
+        if (i < ncarts && i < top + NROWS) {
+            if (sel == i) choose(true);    /* a second click runs it */
+            else { sel = i; confirm = false; }
         }
+    }
     if (ui_mode != MODE_BROWSE) return;
-    page = sel / per;
     draw();
 }
