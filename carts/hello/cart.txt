@@ -1,0 +1,3 @@
+title = Hello, Goober
+author = GooberEngine examples
+version = 1

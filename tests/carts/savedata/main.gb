@@ -1,0 +1,6 @@
+' counts its runs in save data, and keeps a note with a line break and a ~ in it
+local runs:int = load_data("runs", "0")
+runs :+ 1
+save_data("runs", runs)
+save_data("note", "two~nlines ~~ tilde")
+print("runs " + str(runs) + " note " + replace(load_data("note"), chr(10), "|") + " missing [" + load_data("nope") + "]")

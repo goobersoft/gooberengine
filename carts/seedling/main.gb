@@ -1,0 +1,163 @@
+' Seedling - gather every golden seed in the garden before the beetles get you.
+' Arrows / d-pad: move.  Z: restart after the round.  Esc: back to the shell.
+'
+' Shows off the cart's tileset, map, sound and music (tiles/tileset.g64, maps/map.g64,
+' sfx/sfx.txt, music/music.txt): map_draw, map_get / map_set, sfx, music,
+' sprites with flipping, and a camera that follows the player around a
+' world two screens wide and two screens tall.
+'
+' The dot budget: a cart may draw dot_limit() pixels a frame (100,000 to start
+' with), and the screen alone is 96,000. So the game never clears the screen
+' (the map covers all of it), and the map is clipped to below the HUD bar,
+' which covers the top 12 rows anyway: pixels outside the clip don't count.
+' That comes to about 96,500 dots; the "you won" box needs 8,000 more, so the
+' cart raises its limit a little with dot_limit().
+strict
+
+const WORLD_W = 80, WORLD_H = 48          ' cells in use (the map holds up to 160 x 96)
+const T_WALL = 3, T_WATER = 4, T_SEED = 5, T_GRASS = 1
+const SPR_PLAYER = 16, SPR_BEETLE = 18
+const START_X = 50, START_Y = 50
+
+type t_beetle
+  field x:float, y:float, dx:float, dy:float
+endtype
+
+global px:float, py:float, facing:int
+global seeds_left:int, seeds_total:int
+global frames:int, hurt:int, won:int
+global beetles:t_beetle list = new t_beetle list
+global seed_x:int[64], seed_y:int[64]
+
+function solid:int(x:float, y:float)
+  local t:int = map_get(int(x) / TILE_SIZE, int(y) / TILE_SIZE)
+  return t = T_WALL or t = T_WATER
+endfunction
+
+' an 8x8 box at (x, y) hits a wall or water?
+function blocked:int(x:float, y:float)
+  return solid(x, y) or solid(x + 7, y) or solid(x, y + 7) or solid(x + 7, y + 7)
+endfunction
+
+function remember_seeds()
+  seeds_total = 0
+  for local y:int = 0 to WORLD_H - 1
+    for local x:int = 0 to WORLD_W - 1
+      if map_get(x, y) = T_SEED and seeds_total < len(seed_x)
+        seed_x[seeds_total] = x : seed_y[seeds_total] = y
+        seeds_total :+ 1
+      endif
+    next
+  next
+endfunction
+
+function new_round()
+  for local i:int = 0 to seeds_total - 1
+    map_set(seed_x[i], seed_y[i], T_SEED)
+  next
+  seeds_left = seeds_total
+  px = START_X : py = START_Y
+  frames = 0 : hurt = 0 : won = false
+  clear_list(beetles)
+  while count_list(beetles) < 6
+    local b:t_beetle = new t_beetle
+    b.x = rand(10, WORLD_W - 10) * TILE_SIZE
+    b.y = rand(10, WORLD_H - 10) * TILE_SIZE
+    if not blocked(b.x, b.y)
+      local a:float = rnd(0, 360)
+      b.dx = cos(a) * 0.8 : b.dy = sin(a) * 0.8
+      list_add_last(beetles, b)
+    endif
+  wend
+endfunction
+
+function update_player()
+  local dx:float, dy:float
+  if btn(BTN_LEFT) then dx = -1.5 : facing = FLIP_X
+  if btn(BTN_RIGHT) then dx = 1.5 : facing = 0
+  if btn(BTN_UP) then dy = -1.5
+  if btn(BTN_DOWN) then dy = 1.5
+  if not blocked(px + dx, py) then px :+ dx
+  if not blocked(px, py + dy) then py :+ dy
+
+  local cx:int = int(px + 4) / TILE_SIZE, cy:int = int(py + 4) / TILE_SIZE
+  if map_get(cx, cy) = T_SEED
+    map_set(cx, cy, T_GRASS)
+    seeds_left :- 1
+    sfx(0)
+    if seeds_left = 0 then won = true : music_stop() : sfx(2)
+  endif
+endfunction
+
+function update_beetles()
+  for local b:t_beetle = eachin beetles
+    if blocked(b.x + b.dx, b.y) then b.dx = -b.dx
+    if blocked(b.x, b.y + b.dy) then b.dy = -b.dy
+    b.x :+ b.dx : b.y :+ b.dy
+    if hurt = 0 and abs(b.x - px) < 7 and abs(b.y - py) < 7
+      hurt = 60                    ' a second of flashing, then back to the start
+      sfx(1)
+    endif
+  next
+endfunction
+
+function draw_world()
+  ' keep the camera on the player, inside the garden
+  local cam_x:int = max(0, min(int(px) - SCREEN_W / 2, WORLD_W * TILE_SIZE - SCREEN_W))
+  local cam_y:int = max(0, min(int(py) - SCREEN_H / 2, WORLD_H * TILE_SIZE - SCREEN_H))
+  camera(cam_x, cam_y)
+  clip(0, 12, SCREEN_W, SCREEN_H - 12)
+  map_draw(cam_x / TILE_SIZE, cam_y / TILE_SIZE, (cam_x / TILE_SIZE) * TILE_SIZE, (cam_y / TILE_SIZE) * TILE_SIZE, 41, 25)
+
+  local anim:int = (frame_count() / 12) mod 2
+  for local b:t_beetle = eachin beetles
+    local f:int = 0
+    if b.dx < 0 then f = FLIP_X
+    sprite(SPR_BEETLE + anim, b.x - 1, b.y - 1, 1, 1, f)
+  next
+  if hurt = 0 or (hurt / 4) mod 2 = 0
+    local frame:int = 0
+    if btn(BTN_LEFT) or btn(BTN_RIGHT) or btn(BTN_UP) or btn(BTN_DOWN) then frame = anim
+    sprite(SPR_PLAYER + frame, px - 1, py - 1, 1, 1, facing)
+  endif
+  camera()
+  clip()
+endfunction
+
+function draw_hud()
+  rect_fill(0, 0, SCREEN_W, 12, COL_BLACK)
+  sprite(T_SEED, 2, 1)
+  text("seeds " + str(seeds_total - seeds_left) + " / " + str(seeds_total), 15, 1, COL_YELLOW)
+  local secs$ = str(frames / 60)
+  text("time " + secs$, SCREEN_W - 4 - text_width("time " + secs$), 1, COL_WHITE)
+  if won
+    local msg$ = "the garden is full of seedlings!  Z to play again"
+    rect_fill(0, SCREEN_H / 2 - 10, SCREEN_W, 20, COL_NAVY)
+    text(msg$, (SCREEN_W - text_width(msg$)) / 2, SCREEN_H / 2 - 5, COL_LIME)
+  endif
+endfunction
+
+remember_seeds()
+new_round()
+music()                                  ' the garden tune, from the start of the song
+
+dot_limit(110000)
+
+repeat
+  if won
+    if btn_hit(BTN_A) then new_round() : music()
+  elseif hurt > 0
+    hurt :- 1
+    if hurt = 0 then px = START_X : py = START_Y
+    update_beetles()
+    frames :+ 1
+  else
+    update_player()
+    update_beetles()
+    frames :+ 1
+  endif
+
+  draw_world()
+  draw_hud()
+  flip()
+forever

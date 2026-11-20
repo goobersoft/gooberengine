@@ -1,0 +1,3 @@
+strict
+cls(COL_BLUE)
+local x:int = "a" +

@@ -1,0 +1,11 @@
+' plays the one-pattern song (32 rows x 6 ticks = 1.6 s) and reports where it is
+music()
+print("pos " + str(music_pos()) + " voice " + str(voice_sfx(0)))
+for local i:int = 1 to 30
+    flip()
+next
+print("row " + str(music_row()) + " voice " + str(voice_sfx(0)))
+for local i:int = 1 to 90
+    flip()
+next
+print("end " + str(music_pos()) + " " + str(music_row()))

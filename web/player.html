@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__GE_TITLE__</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #000; color: #888; font: 14px monospace; overflow: hidden; }
+  body { display: flex; align-items: center; justify-content: center; }
+  canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edges; outline: none;
+           width: min(100vw, calc(100vh * 400 / 240)); height: auto; aspect-ratio: 400 / 240; }
+  #hint { position: fixed; bottom: 6px; left: 0; right: 0; text-align: center; pointer-events: none; }
+</style>
+</head>
+<body>
+<canvas id="canvas" tabindex="-1" oncontextmenu="event.preventDefault()"></canvas>
+<div id="hint">loading...</div>
+<!-- the game: a GooberEngine .gbcart (its code and data), base64 -->
+<script type="application/octet-stream" id="ge-cart" data-name="__GE_CART_NAME__">__GE_CART__</script>
+<script>
+  var hint = document.getElementById("hint");
+  var cartEl = document.getElementById("ge-cart");
+  var cartName = cartEl.dataset.name, cartPath = "/" + cartName + ".gbcart";
+  var syncing = false;
+  function persist() {
+    if (syncing || !Module.FS) return;
+    syncing = true;
+    Module.FS.syncfs(false, function () { syncing = false; });
+  }
+  var Module = {
+    canvas: document.getElementById("canvas"),
+    arguments: ["--cart", cartPath],
+    preRun: [function () {
+      var FS = Module.FS;
+      var b64 = cartEl.textContent.trim(), bin = atob(b64), bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      FS.writeFile(cartPath, bytes);
+      FS.mkdir("/persist");                       // the game's save data (high scores...) stays in the browser
+      FS.mount(FS.filesystems.IDBFS, {}, "/persist");
+      Module.addRunDependency("persist");
+      FS.syncfs(true, function () {
+        FS.mkdirTree("/persist/saves");
+        Module.removeRunDependency("persist");
+      });
+    }],
+    onRuntimeInitialized: function () { hint.textContent = "click or press a key to start"; },
+    onExit: persist,
+  };
+  setInterval(persist, 2000);
+  document.addEventListener("visibilitychange", function () { if (document.hidden) persist(); });
+  window.addEventListener("pagehide", persist);
+  function wake() {
+    var ctx = Module.SDL2 && Module.SDL2.audioContext;
+    if (ctx && ctx.state === "suspended") ctx.resume();
+    document.getElementById("canvas").focus();
+    hint.textContent = "";
+  }
+  ["pointerdown", "keydown", "touchstart"].forEach(function (e) { window.addEventListener(e, wake, true); });
+</script>
+<script src="player.js"></script>
+</body>
+</html>

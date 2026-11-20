@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GooberEngine</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #000; color: #aaa; font: 14px monospace; }
+  body { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  #screen { position: relative; }
+  canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edges; outline: none;
+           width: min(100vw, calc((100vh - 40px) * 400 / 240)); height: auto; aspect-ratio: 400 / 240; }
+  #bar { display: flex; gap: 12px; align-items: center; height: 32px; }
+  button { background: #111; color: #ddd; border: 1px solid #555; font: inherit; padding: 2px 10px; cursor: pointer; }
+  button:hover { border-color: #ff0; color: #ff0; }
+  #status { color: #777; }
+  #drop { position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+          background: rgba(0, 0, 85, .8); color: #ff0; font-size: 20px; pointer-events: none; }
+  body.dragging #drop { display: flex; }
+</style>
+</head>
+<body>
+<div id="screen">
+  <canvas id="canvas" tabindex="-1" oncontextmenu="event.preventDefault()"></canvas>
+  <div id="drop">drop a .gbcart to load it</div>
+</div>
+<div id="bar">
+  <button id="upload" title="UPLOAD in the shell does the same">open .gbcart</button>
+  <button id="full">fullscreen</button>
+  <span id="status">loading...</span>
+</div>
+<input type="file" id="file" accept=".gbcart" style="display:none">
+<script>
+  // Carts and save data live in the browser (IndexedDB), under /persist.
+  // The example carts are copied there the first time; after that they're yours to edit.
+  var statusEl = document.getElementById("status");
+  function status(t) { statusEl.textContent = t; }
+
+  function copyTree(FS, from, to) {
+    FS.mkdirTree(to);
+    FS.readdir(from).forEach(function (n) {
+      if (n === "." || n === "..") return;
+      var a = from + "/" + n, b = to + "/" + n;
+      if (FS.isDir(FS.stat(a).mode)) copyTree(FS, a, b);
+      else FS.writeFile(b, FS.readFile(a));
+    });
+  }
+  function exists(FS, p) { try { FS.stat(p); return true; } catch (e) { return false; } }
+
+  var syncing = false;
+  function persist() {
+    if (syncing || !Module.FS) return;
+    syncing = true;
+    Module.FS.syncfs(false, function () { syncing = false; });
+  }
+
+  // a dropped or picked file goes to /tmp/upload; the engine LOADs it next frame
+  function takeFile(file) {
+    if (!/\.gbcart$/i.test(file.name)) { status("only .gbcart files can be opened"); return; }
+    var name = file.name.replace(/\s*\(\d+\)(?=\.gbcart$)/i, "").replace(/[^A-Za-z0-9_.-]/g, "_");
+    file.arrayBuffer().then(function (buf) {
+      Module.FS.mkdirTree("/tmp/upload");
+      var path = "/tmp/upload/" + name;
+      Module.FS.writeFile(path, new Uint8Array(buf));
+      (Module.geDropped = Module.geDropped || []).push(path);
+      document.getElementById("canvas").focus();
+    });
+  }
+
+  var Module = {
+    canvas: document.getElementById("canvas"),
+    arguments: ["--scale", "3"],
+    print: function (t) { console.log(t); },
+    printErr: function (t) { console.warn(t); },
+    preRun: [function () {
+      var FS = Module.FS;
+      FS.mkdir("/persist");
+      FS.mount(FS.filesystems.IDBFS, {}, "/persist");
+      Module.addRunDependency("persist");
+      FS.syncfs(true, function (err) {
+        if (err) console.warn("could not read saved carts:", err);
+        Module.removeRunDependency("persist");
+      });
+    }],
+    onRuntimeInitialized: function () {
+      var FS = Module.FS;
+      FS.mkdirTree("/persist/carts");
+      FS.mkdirTree("/persist/saves");
+      FS.readdir("/bundled-carts").forEach(function (n) {     // new example carts appear, yours are kept
+        if (n === "." || n === ".." || exists(FS, "/persist/carts/" + n)) return;
+        copyTree(FS, "/bundled-carts/" + n, "/persist/carts/" + n);
+      });
+      persist();
+      status("click the screen (or press a key) to start the sound");
+    },
+    onExit: function () { persist(); status("GooberEngine has stopped - reload the page to start again"); },
+    gePickFile: function () { document.getElementById("file").click(); },
+  };
+
+  // save to IndexedDB every couple of seconds (only changed files are written) and when leaving
+  setInterval(persist, 2000);
+  document.addEventListener("visibilitychange", function () { if (document.hidden) persist(); });
+  window.addEventListener("pagehide", persist);
+
+  // browsers keep sound off until the page is used; SDL resumes it on the first gesture too
+  function wake() {
+    var ctx = Module.SDL2 && Module.SDL2.audioContext;
+    if (ctx && ctx.state === "suspended") ctx.resume();
+    document.getElementById("canvas").focus();
+    if (/sound/.test(statusEl.textContent)) status("F1-F5 editors, Esc to leave a cart, HELP in the shell");
+  }
+  ["pointerdown", "keydown", "touchstart"].forEach(function (e) { window.addEventListener(e, wake, true); });
+
+  document.getElementById("upload").onclick = function () { Module.gePickFile(); };
+  document.getElementById("file").onchange = function (e) {
+    if (e.target.files[0]) takeFile(e.target.files[0]);
+    e.target.value = "";
+  };
+  document.getElementById("full").onclick = function () { document.getElementById("canvas").requestFullscreen(); };
+  window.addEventListener("dragover", function (e) { e.preventDefault(); document.body.classList.add("dragging"); });
+  window.addEventListener("dragleave", function (e) { if (!e.relatedTarget) document.body.classList.remove("dragging"); });
+  window.addEventListener("drop", function (e) {
+    e.preventDefault();
+    document.body.classList.remove("dragging");
+    if (e.dataTransfer.files[0]) takeFile(e.dataTransfer.files[0]);
+  });
+</script>
+{{{ SCRIPT }}}
+</body>
+</html>

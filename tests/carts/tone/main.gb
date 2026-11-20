@@ -1,0 +1,9 @@
+' plays A-4 (pitch 33 = 440 Hz) on a square wave for half a second, then stops
+note(0, 33, 0, 7)
+for local i:int = 1 to 30
+    flip()
+next
+voice_stop()
+for local i:int = 1 to 30
+    flip()
+next

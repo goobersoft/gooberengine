@@ -1,0 +1,3 @@
+title = Seedling
+author = GooberEngine examples
+version = 1

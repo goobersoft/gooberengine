@@ -1,0 +1,16 @@
+# build output (make, make web, make runtimes)
+build/
+gooberengine
+runtimes/
+exports/
+*.gbcart
+screenshot-*.png
+
+# what the editors leave beside a cart: work kept when the window closed unsaved,
+# and the old-format files a SAVE converted
+*.unsaved
+*.old
+
+# Claude Code: personal settings and its own bookkeeping
+.claude/settings.local.json
+.claude/.cc-writes/

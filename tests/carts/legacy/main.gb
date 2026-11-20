@@ -1,0 +1,2 @@
+' an old cart: tiles.txt, map.txt, sfx.txt and music.txt at the top
+print("t " + str(tile_pget(1, 0, 0)) + " m " + str(map_get(0, 0)) + " " + str(map_get(1, 0)) + " " + str(map_w()) + "x" + str(map_h()))

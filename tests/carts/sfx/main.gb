@@ -1,0 +1,7 @@
+' plays sfx 2 (the 72-tick fanfare, 0.6 s) on voice 3 and reports what the voice is doing
+local v:int = sfx(2, 3)
+print("voice " + str(v) + " plays " + str(voice_sfx(3)))
+for local i:int = 1 to 60
+    flip()
+next
+print("after " + str(voice_sfx(3)))

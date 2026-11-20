@@ -1,0 +1,9 @@
+' a runtime error in a function, after a few frames
+function boom(n:int)
+    local a:int[3]
+    a[n] = 1
+endfunction
+for local i:int = 1 to 5
+    flip()
+next
+boom(7)

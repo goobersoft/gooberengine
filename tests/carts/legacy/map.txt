@@ -1,0 +1,2 @@
+# old style map: tile 0 meant empty
+row 0 00 05

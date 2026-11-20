@@ -1,0 +1,12 @@
+' reports which pad buttons are held, frame by frame, and that BTN_C exists
+strict
+print("buttons " + str(BTN_START + 1) + " c " + str(BTN_C))
+for local i:int = 1 to 12
+    local s$ = ""
+    if btn(BTN_A) then s$ = s$ + "A"
+    if btn(BTN_B) then s$ = s$ + "B"
+    if btn(BTN_C) then s$ = s$ + "C"
+    if btn_hit(BTN_START) then s$ = s$ + "S"
+    if s$ <> "" then print("pad " + s$)
+    flip()
+next
