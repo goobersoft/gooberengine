@@ -40,7 +40,7 @@
 
 enum { T_PENCIL, T_FILL, T_LINE, T_RECT, T_OVAL, T_PICK, NTOOLS };
 static const char tool_keys[NTOOLS] = {'P', 'F', 'L', 'R', 'O', 'I'};
-static bool fillable(int t) { return t == T_RECT || t == T_OVAL; }
+static bool has_alt(int t) { return t == T_FILL || t == T_RECT || t == T_OVAL; }
 static const char *const tool_names[NTOOLS] = {"pencil (P)", "fill (F)", "line (L), Shift: snap to 45", "rect (R)", "oval (O)", "pick a color (I)"};
 enum { A_SIZE, A_FLIPX, A_FLIPY, A_TURN, A_CLEAR, NACTS };
 static const char act_keys[NACTS] = {'Z', 'H', 'V', 'T', 'X'};
@@ -59,7 +59,8 @@ static struct {
     int sel;                 /* top-left tile of the block being edited */
     int bsize;               /* block size in tiles: 1, 2 or 4 */
     int tool, prev_tool;
-    bool filled[NTOOLS];     /* rect / oval: filled unless Ctrl is held (a right click on the button swaps) */
+    bool alt[NTOOLS];        /* a right click on the button swaps: rect / oval filled, fill every pixel of the
+                              * color rather than just the touching ones. Ctrl does the other for one use */
     int col_a, col_b;        /* 0..63 or CLEAR */
     bool grid;
     int zoom, ox, oy;        /* the background: zoom index, where the sheet's top-left is */
@@ -228,9 +229,16 @@ static void boval(int x0, int y0, int x1, int y1, int c, bool fill) {
     }
 }
 
-static void bfill(int x, int y, int c) {
+/* paint over the color at (x, y): the pixels of it that touch, or with all, every one in the block */
+static void bfill(int x, int y, int c, bool all) {
     int from = bget(x, y);
     if (from < 0 || from == c) return;
+    if (all) {
+        for (int py = 0; py < bpx(); py++)
+            for (int px = 0; px < bpx(); px++)
+                if (bget(px, py) == from) bset(px, py, c);
+        return;
+    }
     static int stack[4 * TILE * 4 * TILE * 4][2];
     int n = 0;
     stack[n][0] = x; stack[n][1] = y; n++;
@@ -541,6 +549,8 @@ static void pick_color(bool into_b) {
     if (into_b) T.col_b = c; else T.col_a = c;
 }
 
+static bool ctrl_held(void) { return in.key[SDL_SCANCODE_LCTRL] || in.key[SDL_SCANCODE_RCTRL]; }
+
 /* a left or right press on the sheet: paint inside the selection, select outside it.
  * With the eyedrop setting the right button picks a color up into A instead. */
 static void sheet_press(int btn) {
@@ -554,7 +564,7 @@ static void sheet_press(int btn) {
     }
     int c = btn == 1 ? T.col_a : T.col_b;
     before_change();
-    if (T.tool == T_FILL) { bfill(x, y, c); return; }
+    if (T.tool == T_FILL) { bfill(x, y, c, T.alt[T_FILL] != ctrl_held()); return; }
     res_free(RES_TILES, T.base);
     T.base = res_copy(RES_TILES, TS);
     T.drag = 4;
@@ -591,7 +601,7 @@ static void sheet_drag(void) {
         bline(T.lastx, T.lasty, x, y, c);
     } else {
         memcpy(TS, T.base, sizeof *TS);
-        bool fill = T.filled[T.tool] != (in.key[SDL_SCANCODE_LCTRL] || in.key[SDL_SCANCODE_RCTRL]);
+        bool fill = T.alt[T.tool] != ctrl_held();
         if (in.key[SDL_SCANCODE_LSHIFT] || in.key[SDL_SCANCODE_RSHIFT]) snap(&x, &y);
         if (T.tool == T_LINE) bline(T.x0, T.y0, x, y, c);
         else if (T.tool == T_OVAL) boval(T.x0, T.y0, x, y, c, fill);
@@ -606,7 +616,7 @@ static void tools_press(int btn) {
     for (int i = 0; i < NTOOLS; i++) {
         w = tool_btn(i, &x, &y);
         if (!inside(x, y, w, 10)) continue;
-        if (btn == 2 && fillable(i)) T.filled[i] = !T.filled[i];   /* a right click: filled <-> outline */
+        if (btn == 2 && has_alt(i)) T.alt[i] = !T.alt[i];   /* a right click: filled <-> outline, all <-> touching */
         set_tool(i);
         return;
     }
@@ -805,10 +815,12 @@ static void draw_tools_window(void) {
         w = tool_btn(i, &x, &y);
         bool hover = live && inside(x, y, w, 10);
         button(x, y, w, tool_keys[i], T.tool == i, hover);
-        if (T.filled[i]) draw_rect(x + w - 2, y + 8, 2, 2, T.tool == i ? COL_BLACK : UI_RGB(2, 3, 3), true);
-        if (hover && fillable(i)) {
+        if (T.alt[i]) draw_rect(x + w - 2, y + 8, 2, 2, T.tool == i ? COL_BLACK : UI_RGB(2, 3, 3), true);
+        if (hover && i == T_FILL) {
+            T.hint = T.alt[i] ? "fill all of a color  Ctrl: just touching  right: swap" : "fill (F)  Ctrl: all of the color  right: swap";
+        } else if (hover && has_alt(i)) {
             static char hint[80];
-            bool f = T.filled[i];
+            bool f = T.alt[i];
             snprintf(hint, sizeof hint, "%s%s  Ctrl: %s  Shift: %s  right: swap", f ? "filled " : "", i == T_RECT ? "rect" : "oval",
                      f ? "outline" : "filled", i == T_RECT ? "square" : "circle");
             T.hint = hint;

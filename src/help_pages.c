@@ -205,6 +205,7 @@ const HelpPage help_pages[] = {
     "- Middle click: pick up a color. Middle drag, or Space + drag: pan. Wheel: zoom.\n"
     "- P F L R O I: pencil, fill, line, rectangle, oval, pick a color\n"
     "- While dragging a line, rectangle or oval: Shift keeps it 1:1 (a line snaps to across, up-down or 45 degrees; a rectangle becomes a square, an oval a circle). Ctrl fills a rectangle or oval, or, if it is set to filled, draws just its outline. A right click on the rectangle or oval button sets it to filled (marked with a dot) or back.\n"
+    "- Fill paints over the pixels of the clicked color that touch it. A right click on its button (marked with a dot) makes it paint over every pixel of that color in the yellow box instead; Ctrl+click does the other one, once.\n"
     "- Z: edit 1x1, 2x2 or 4x4 tiles. H / V / T: flip across, flip up-down, turn.\n"
     "- arrows: move to another tile. Shift+arrows: nudge the pixels.\n"
     "- Del: clear. X: swap colors A and B. G: grid. Home: reset the view.\n"
