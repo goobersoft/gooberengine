@@ -211,6 +211,12 @@ sethas "settings: right click kept" 'tile_right = color_b'
 edit "auto indent: no block indent" '{ctrl+end}{enter}  if 1{enter}x = 1{ctrl+s}'; has "auto indent: no block indent" '  x = 1'
 edit "auto indent: backspace undoes Enter" '{ctrl+end}{enter}  abc{enter}{backspace}d{ctrl+s}'; has "auto indent: backspace undoes Enter" '  abcd'
 edit "auto indent: then backspace is one space" '{ctrl+end}{enter}    abc{enter}x{backspace}{backspace}y{ctrl+s}'; has "auto indent: then backspace is one space" '   y'
+printf 'indent = smart\n' > "$ST"
+# a click leaves an empty selection; Backspace from there (2 spaces at a time) must not turn it
+# into a selection past the end of the line, which deleted past the text and broke the lines nearby
+edit "backspace after a click" '{ctrl+g}3{enter}        {click:300,35}{backspace}{backspace}{backspace}{backspace}Q{ctrl+s}'
+has "backspace after a click" 'strict'; has "backspace after a click: the line" 'Q'
+has "backspace after a click: the next line" 'local x:float = SCREEN_W / 2, y:float = SCREEN_H / 2'
 printf 'indent = none\n' > "$ST"
 edit "no indent" '{ctrl+end}{enter}  if 1{enter}x = 1{ctrl+s}'; has "no indent" 'x = 1'
 rm -f "$ST"

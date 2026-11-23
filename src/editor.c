@@ -236,6 +236,10 @@ enum { EDIT_OTHER = 0, EDIT_TYPE = 1, EDIT_DELETE = 2 };
 static void before_edit(int kind) {
     E.err_line = 0;
     E.status_open = false;
+    /* a click leaves an empty selection as the anchor for shift + click; an
+     * edit drops it, or the anchor stays put while the cursor moves away and
+     * it turns into a real selection, possibly past the end of the line */
+    if (E.sel && E.ay == E.cy && E.ax == E.cx) E.sel = false;
     if (kind == EDIT_OTHER || kind != E.last_kind || E.cy != E.last_kind_line) push_snap(E.undo, &E.nundo);
     free_snaps(E.redo, &E.nredo);
     E.last_kind = kind;
@@ -911,6 +915,11 @@ static void clamp_cursor(void) {
     if (E.cy >= E.n) E.cy = E.n - 1;
     if (E.cx < 0) E.cx = 0;
     if (E.cx > E.lines[E.cy].len) E.cx = E.lines[E.cy].len;
+    /* the selection anchor too, so a selection never reaches past the text */
+    if (E.ay < 0) E.ay = 0;
+    if (E.ay >= E.n) E.ay = E.n - 1;
+    if (E.ax < 0) E.ax = 0;
+    if (E.ax > E.lines[E.ay].len) E.ax = E.lines[E.ay].len;
 }
 
 static void move_word(int dir) {
