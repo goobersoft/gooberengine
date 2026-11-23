@@ -38,9 +38,9 @@
 #define TOOLS_H 208
 #define GRIP 6
 
-enum { T_PENCIL, T_FILL, T_LINE, T_RECT, T_PICK, NTOOLS };
-static const char tool_keys[NTOOLS] = {'P', 'F', 'L', 'R', 'I'};
-static const char *const tool_names[NTOOLS] = {"pencil (P)", "fill (F)", "line (L)", "rect (R), Shift: filled", "pick a color (I)"};
+enum { T_PENCIL, T_FILL, T_LINE, T_RECT, T_OVAL, T_PICK, NTOOLS };
+static const char tool_keys[NTOOLS] = {'P', 'F', 'L', 'R', 'O', 'I'};
+static const char *const tool_names[NTOOLS] = {"pencil (P)", "fill (F)", "line (L)", "rect (R), Shift: filled", "oval (O), Shift: filled", "pick a color (I)"};
 enum { A_SIZE, A_FLIPX, A_FLIPY, A_TURN, A_CLEAR, NACTS };
 static const char act_keys[NACTS] = {'Z', 'H', 'V', 'T', 'X'};
 static const char *const act_names[NACTS] = {"block size 1x1 / 2x2 / 4x4 (Z)", "flip across (H)", "flip up-down (V)", "turn clockwise (T)", "clear the block (Del)"};
@@ -194,6 +194,36 @@ static void brect(int x0, int y0, int x1, int y1, int c, bool fill) {
     for (int y = y0; y <= y1; y++)
         for (int x = x0; x <= x1; x++)
             if (fill || y == y0 || y == y1 || x == x0 || x == x1) bset(x, y, c);
+}
+
+/* a row of pixels from x0 to x1 */
+static void bspan(int x0, int x1, int y, int c) {
+    for (int x = x0; x <= x1; x++) bset(x, y, c);
+}
+
+/* the oval that fits the box with corners (x0, y0) and (x1, y1), so an even
+ * width or height comes out symmetric too (A. Zingl's midpoint ellipse) */
+static void boval(int x0, int y0, int x1, int y1, int c, bool fill) {
+    long a = labs((long)x1 - x0), b = labs((long)y1 - y0), b1 = b & 1;
+    long dx = 4 * (1 - a) * b * b, dy = 4 * (b1 + 1) * a * a;   /* the error's steps */
+    long err = dx + dy + b1 * a * a, e2;
+    if (x0 > x1) { x0 = x1; x1 += (int)a; }
+    if (y0 > y1) y0 = y1;
+    y0 += (int)((b + 1) / 2);         /* start at the middle row(s), at the left and right ends */
+    y1 = y0 - (int)b1;
+    a *= 8 * a;
+    b1 = 8 * b * b;
+    do {
+        if (fill) { bspan(x0, x1, y0, c); bspan(x0, x1, y1, c); }
+        else { bset(x1, y0, c); bset(x0, y0, c); bset(x0, y1, c); bset(x1, y1, c); }
+        e2 = 2 * err;
+        if (e2 <= dy) { y0++; y1--; err += dy += a; }
+        if (e2 >= dx || 2 * err > dy) { x0++; x1--; err += dx += b1; }
+    } while (x0 <= x1);
+    while (y0 - y1 <= b) {            /* a very thin oval stops early: finish its tips */
+        if (fill) { bspan(x0 - 1, x1 + 1, y0++, c); bspan(x0 - 1, x1 + 1, y1--, c); }
+        else { bset(x0 - 1, y0, c); bset(x1 + 1, y0++, c); bset(x0 - 1, y1, c); bset(x1 + 1, y1--, c); }
+    }
 }
 
 static void bfill(int x, int y, int c) {
@@ -416,6 +446,7 @@ static void key(const KeyEvent *ev) {
         case SDL_SCANCODE_F: set_tool(T_FILL); return;
         case SDL_SCANCODE_L: set_tool(T_LINE); return;
         case SDL_SCANCODE_R: set_tool(T_RECT); return;
+        case SDL_SCANCODE_O: set_tool(T_OVAL); return;
         case SDL_SCANCODE_I: set_tool(T_PICK); return;
         case SDL_SCANCODE_G: T.grid = !T.grid; return;
         case SDL_SCANCODE_X: { int t = T.col_a; T.col_a = T.col_b; T.col_b = t; return; }
@@ -544,8 +575,10 @@ static void sheet_drag(void) {
         bline(T.lastx, T.lasty, x, y, c);
     } else {
         memcpy(TS, T.base, sizeof *TS);
+        bool shift = in.key[SDL_SCANCODE_LSHIFT] || in.key[SDL_SCANCODE_RSHIFT];
         if (T.tool == T_LINE) bline(T.x0, T.y0, x, y, c);
-        else brect(T.x0, T.y0, x, y, c, in.key[SDL_SCANCODE_LSHIFT] || in.key[SDL_SCANCODE_RSHIFT]);
+        else if (T.tool == T_OVAL) boval(T.x0, T.y0, x, y, c, shift);
+        else brect(T.x0, T.y0, x, y, c, shift);
     }
     T.lastx = x;
     T.lasty = y;
