@@ -46,6 +46,18 @@
     });
   }
   function exists(FS, p) { try { FS.stat(p); return true; } catch (e) { return false; } }
+  // copy each bundled cart that isn't saved yet; a folder of carts (examples/) that is
+  // already there is looked into, so carts added to it later still appear. A cart that
+  // is there is never touched, so changes made to it are kept.
+  function addMissing(FS, from, to) {
+    FS.readdir(from).forEach(function (n) {
+      if (n === "." || n === "..") return;
+      var a = from + "/" + n, b = to + "/" + n;
+      if (!FS.isDir(FS.stat(a).mode)) return;
+      if (!exists(FS, b)) copyTree(FS, a, b);
+      else if (!exists(FS, a + "/main.gb") && FS.isDir(FS.stat(b).mode)) addMissing(FS, a, b);
+    });
+  }
 
   var syncing = false;
   function persist() {
@@ -87,10 +99,7 @@
       var FS = Module.FS;
       FS.mkdirTree("/persist/carts");
       FS.mkdirTree("/persist/saves");
-      FS.readdir("/bundled-carts").forEach(function (n) {     // new example carts appear, yours are kept
-        if (n === "." || n === ".." || exists(FS, "/persist/carts/" + n)) return;
-        copyTree(FS, "/bundled-carts/" + n, "/persist/carts/" + n);
-      });
+      addMissing(FS, "/bundled-carts", "/persist/carts");     // new example carts appear, yours are kept
       persist();
       status("click the screen (or press a key) to start the sound");
     },

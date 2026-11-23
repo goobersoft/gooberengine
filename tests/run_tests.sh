@@ -49,7 +49,7 @@ for want in "net host 1: slot1 777.0 'hi from 1' from 1" "net host 2: slot1 777.
     printf '%s' "$net_out" | grep -qF -- "$want" && ok || bad "network: wanted '$want'" "$net_out"
 done
 expect "missing cart"   "--exec \"load nope\"" "no cart 'nope'"
-expect "dir"            "--exec dir" "seedling"
+expect "dir"            "--exec dir" "hello"
 expect "dir folders"    "--exec dir" "examples/"
 expect "cd"             "--exec \"cd examples\" --exec dir" "rotate"
 expect "cd load"        "--exec \"cd examples\" --exec \"load cube\"" "loaded Spinning Cube"
@@ -153,7 +153,7 @@ printf 'mine = kept\n' >> "$ST"; $GE --headless --frames 30 --exec settings --ty
 sethas "settings.txt keeps lines it doesn't know" 'mine = kept'
 out=$($GE --headless --frames 60 --type '{f10}{esc}help{enter}' 2>&1); said "F10, Esc: back to the shell" 'RUN [name]'
 rm -f "$ST"
-out=$($GE --headless --frames 40 --exec "load seedling" --type 'edit{enter}{click:30,235}{down}{left}' 2>&1); said "the tree's settings button" '[settings] volume: 9'
+out=$($GE --headless --frames 40 --exec "load examples/seedling" --type 'edit{enter}{click:30,235}{down}{left}' 2>&1); said "the tree's settings button" '[settings] volume: 9'
 edit "settings: Esc goes back" '{click:95,5}{f10}{esc}{ctrl+end}{enter}zzz{ctrl+s}'; has "settings: Esc goes back" 'zzz'
 # ---- help (F1): every keyword, type, command and constant has a page; F1 opens the one under the cursor
 out=$($GE --help-check 2>&1) && ok || bad "help: a page for everything" "$out"
@@ -199,7 +199,7 @@ out=$($GE --headless --frames 30 --type '{f1}{f1}help{enter}' 2>&1);    said "he
 out=$($GE --headless --frames 30 --type 'zzqqx{f1}' 2>&1); said "help: F1 in the shell, unknown" "no page names with 'zzqqx'"
 out=$($GE --headless --frames 30 --exec "help music" 2>&1); said "help: HELP word" '[help] music'
 out=$($GE --headless --frames 30 --exec "help zzqqx" 2>&1); said "help: HELP unknown" "no help for 'zzqqx'"
-out=$($GE --headless --frames 40 --exec "load seedling" --type 'tiles{enter}{f1}' 2>&1); said "help: F1 in the tile editor" '[help] Tile editor'
+out=$($GE --headless --frames 40 --exec "load examples/seedling" --type 'tiles{enter}{f1}' 2>&1); said "help: F1 in the tile editor" '[help] Tile editor'
 
 # the indent line (the 7th, third from the bottom): smart, auto, none
 out=$($GE --headless --frames 30 --exec settings --type '{up}{up}{up}{right}' 2>&1); said "settings: indent" '[settings] indent: auto'
@@ -312,10 +312,10 @@ edit "map picks for tiles" '{click:161,5}{f9}{tab}{click:15,35}{mouse:15,35}{cli
 
 # with Seedling's map: an unchanged save is byte-for-byte the same; right-click picks;
 # select + copy makes a brush; a run sees unsaved edits
-rm -rf "$TC" && mkdir -p "$TC" && cp -r carts/seedling "$TC/s"
+rm -rf "$TC" && mkdir -p "$TC" && cp -r carts/examples/seedling "$TC/s"
 echo 'print("c " + str(map_get(0, 0)))' > "$TC/s/main.gb"
 GOOBERENGINE_CARTS=$TC $GE --headless --frames 30 --exec "load s" --type 'map{enter}{ctrl+s}' > /dev/null 2>&1
-cmp -s carts/seedling/maps/map.g64 "$TC/s/maps/map.g64" && ok || bad "map round trip" "$(diff carts/seedling/maps/map.g64 "$TC/s/maps/map.g64" | head)"
+cmp -s carts/examples/seedling/maps/map.g64 "$TC/s/maps/map.g64" && ok || bad "map round trip" "$(diff carts/examples/seedling/maps/map.g64 "$TC/s/maps/map.g64" | head)"
 MT=$TC/s/maps/map.g64
 cell() { awk -v l=$(( $2 + 2 )) -v c=$(( $1 * 2 + 1 )) 'NR == l { print substr($0, c, 2) }' "$MT"; }
 out=$(GOOBERENGINE_CARTS=$TC $GE --headless --frames 60 --exec "load s" \
@@ -438,9 +438,9 @@ edit "draw wave"   '{click:185,5}{f9}{click:67,223}{ctrl+s}';                   
 edit "sound undo"  '{click:185,5}{f9}z{ctrl+z}{ctrl+s}'
 [ "$(sed -n 1p "$ST") $(sed -n 10p "$ST")" = "70 7v00$(printf 'o000%.0s' $(seq 32))" ] && ok || bad "sound undo: sfx.g64 still has an sfx" "$(cat "$ST")"
 edit "sound unsaved" '{click:185,5}{f9}z{esc}new t2{enter}';                      said "sound unsaved" 'unsaved changes in the sound'
-rm -rf "$TC" && mkdir -p "$TC" && cp -r carts/seedling "$TC/s"
+rm -rf "$TC" && mkdir -p "$TC" && cp -r carts/examples/seedling "$TC/s"
 GOOBERENGINE_CARTS=$TC $GE --headless --frames 20 --exec "load s" --type 'sound{enter}{ctrl+s}' > /dev/null 2>&1
-cmp -s carts/seedling/sfx/sfx.g64 "$TC/s/sfx/sfx.g64" && ok || bad "sfx round trip" "$(diff carts/seedling/sfx/sfx.g64 "$TC/s/sfx/sfx.g64" | head)"
+cmp -s carts/examples/seedling/sfx/sfx.g64 "$TC/s/sfx/sfx.g64" && ok || bad "sfx round trip" "$(diff carts/examples/seedling/sfx/sfx.g64 "$TC/s/sfx/sfx.g64" | head)"
 
 # ---- music: timing, pitch and the end of the song ----
 out=$($GE --headless --frames 130 --wav build/music.wav tests/carts/music 2>&1)
@@ -488,9 +488,9 @@ edit "roll undo"   '{click:221,5}{f9}{ctrl+p}{click:71,155}{drag:101,155}{ctrl+z
 [ "$(sed 1,2d "$MU" | grep -vc '^\.*$')" = 0 ] && ok || bad "roll undo: one stroke, one undo" "$(head -10 "$MU")"
 edit "roll keys"   '{click:221,5}{f9}{ctrl+p}{right}{right}c{ctrl+s}';         [ "$(sed -n 6p "$MU")" = s050 ] && ok || bad "roll keys: row 2 is '$(sed -n 6p "$MU")'"
 edit "mus unsaved" '{click:221,5}{f9}z{esc}new t2{enter}';                     said "mus unsaved" 'unsaved changes in the music'
-rm -rf "$TC" && mkdir -p "$TC" && cp -r carts/seedling "$TC/s"
+rm -rf "$TC" && mkdir -p "$TC" && cp -r carts/examples/seedling "$TC/s"
 GOOBERENGINE_CARTS=$TC $GE --headless --frames 20 --exec "load s" --type 'music{enter}{ctrl+s}' > /dev/null 2>&1
-cmp -s carts/seedling/music/music.g64 "$TC/s/music/music.g64" && ok || bad "music round trip" "$(diff carts/seedling/music/music.g64 "$TC/s/music/music.g64" | head)"
+cmp -s carts/examples/seedling/music/music.g64 "$TC/s/music/music.g64" && ok || bad "music round trip" "$(diff carts/examples/seedling/music/music.g64 "$TC/s/music/music.g64" | head)"
 rm -rf "$TC" && mkdir -p "$TC" && cp -r tests/carts/music_short "$TC/s"
 GOOBERENGINE_CARTS=$TC $GE --headless --frames 20 --exec "load s" --type 'music{enter}{ctrl+s}' > /dev/null 2>&1
 cmp -s tests/carts/music_short/music/music.g64 "$TC/s/music/music.g64" && ok || bad "short pattern round trip" "$(diff tests/carts/music_short/music/music.g64 "$TC/s/music/music.g64" | head)"
@@ -553,7 +553,7 @@ rm -rf "$TC" && mkdir -p "$TC" && cp -r carts/hello "$TC/"
 WAIT=$(printf '{mouse:0,0}%.0s' 1 2 3 4 5)
 out=$(GOOBERENGINE_CARTS=$TC $GE --headless --frames 30 --type "${WAIT}{f8}" hello 2>&1)
 [ ! -e "$TC/hello/label.txt" ] && ok || bad "F8 makes no label (there are no labels)"
-cp -r carts/seedling "$TC/"
+cp -r carts/examples/seedling "$TC/"
 out=$(GOOBERENGINE_CARTS=$TC $GE --headless --frames 40 --exec browse --type '{down}{enter}{esc}' 2>&1)
 said "browse runs" 'Seedling stopped'
 
@@ -563,7 +563,7 @@ said "export" "wrote $TC/seedling.zip"
 unzip -l "$TC/seedling.zip" | grep -q ' seedling/main.gb$' && ok || bad "EXPORT zips the cart folder (seedling/main.gb ...)" "$(unzip -l "$TC/seedling.zip" 2>&1)"
 out=$(GOOBERENGINE_CARTS=$TC $GE --headless --frames 5 --exec "import $TC/seedling.zip copy" 2>&1)
 said "import" "loaded Seedling"
-diff -r -x '.*' -x '*.unsaved' carts/seedling "$TC/copy" > /dev/null && ok || bad "import gives back every file unchanged" "$(diff -r -x '.*' -x '*.unsaved' carts/seedling "$TC/copy" | head)"
+diff -r -x '.*' -x '*.unsaved' carts/examples/seedling "$TC/copy" > /dev/null && ok || bad "import gives back every file unchanged" "$(diff -r -x '.*' -x '*.unsaved' carts/examples/seedling "$TC/copy" | head)"
 out=$(GOOBERENGINE_CARTS=$TC $GE --headless --frames 5 --exec "import $TC/seedling.zip copy" 2>&1)
 said "import refuses a taken name" "cart 'copy' already exists"
 out=$(GOOBERENGINE_CARTS=$TC $GE --headless --frames 5 --exec "load seedling" --exec "export $TC/named" --exec "export $TC/x.gbcart" 2>&1)
@@ -575,15 +575,15 @@ out=$(GOOBERENGINE_CARTS=$TC $GE --headless --frames 5 --exec "import $TC/cut.zi
 said "cut-short zip" 'not a zip file'; [ ! -e "$TC/cut" ] && ok || bad "a bad zip leaves no folder behind"
 
 # ---- zipped carts: .zip / .tar.gz / .tar, unpacked into a folder on LOAD ----
-ZC=$PWD/build/zcarts; rm -rf "$ZC" && mkdir -p "$ZC" && cp -r carts/seedling "$ZC/"
+ZC=$PWD/build/zcarts; rm -rf "$ZC" && mkdir -p "$ZC" && cp -r carts/examples/seedling "$ZC/"
 out=$(GOOBERENGINE_CARTS=$ZC $GE --headless --frames 5 --exec "load seedling" --exec export --exec "export $ZC/seed2.tar.gz" 2>&1)
 said "export .zip by default" "wrote $ZC/seedling.zip"
 said "export .tar.gz" "wrote $ZC/seed2.tar.gz"
 unzip -tq "$ZC/seedling.zip" > /dev/null 2>&1 && ok || bad "unzip reads the exported .zip" "$(unzip -t "$ZC/seedling.zip" 2>&1 | tail -3)"
-[ "$(wc -c < "$ZC/seedling.zip")" -lt "$(cat carts/seedling/*.gb carts/seedling/*/*.g64 | wc -c)" ] && ok || bad "the .zip is compressed"
-rm -rf "$ZC/x" && mkdir "$ZC/x" && tar xzf "$ZC/seed2.tar.gz" -C "$ZC/x" && diff -r -x '.*' -x '*.unsaved' carts/seedling "$ZC/x/seedling" > /dev/null && ok || bad "tar reads the exported .tar.gz"
+[ "$(wc -c < "$ZC/seedling.zip")" -lt "$(cat carts/examples/seedling/*.gb carts/examples/seedling/*/*.g64 | wc -c)" ] && ok || bad "the .zip is compressed"
+rm -rf "$ZC/x" && mkdir "$ZC/x" && tar xzf "$ZC/seed2.tar.gz" -C "$ZC/x" && diff -r -x '.*' -x '*.unsaved' carts/examples/seedling "$ZC/x/seedling" > /dev/null && ok || bad "tar reads the exported .tar.gz"
 rm -rf "$ZC/x" "$ZC/seedling"
-(cd carts && zip -qr9 "$ZC/rocket.zip" seedling && tar cf "$ZC/plain.tar" seedling)   # made by other tools, cart in a folder
+(cd carts/examples && zip -qr9 "$ZC/rocket.zip" seedling && tar cf "$ZC/plain.tar" seedling)   # made by other tools, cart in a folder
 python3 -I -c '
 import zipfile, sys
 with zipfile.ZipFile(sys.argv[1], "w", zipfile.ZIP_DEFLATED) as z:
@@ -600,7 +600,7 @@ touch -d 2020-01-01 "$ZC/rocket.zip"
 out=$(GOOBERENGINE_CARTS=$ZC $GE --headless --frames 5 --exec dir 2>&1); said "a changed zip is read again" "rocket.zip  Seedling 1"
 out=$(GOOBERENGINE_CARTS=$ZC $GE --headless --frames 5 --exec "load rocket" 2>&1)
 said "load a name finds its .zip" "unpacked $ZC/rocket"; said "load a .zip" "loaded Seedling"
-diff -r -x '.*' -x '*.unsaved' carts/seedling "$ZC/rocket" > /dev/null && ok || bad "a .zip unpacks every file unchanged" "$(diff -r -x '.*' -x '*.unsaved' carts/seedling "$ZC/rocket" | head)"
+diff -r -x '.*' -x '*.unsaved' carts/examples/seedling "$ZC/rocket" > /dev/null && ok || bad "a .zip unpacks every file unchanged" "$(diff -r -x '.*' -x '*.unsaved' carts/examples/seedling "$ZC/rocket" | head)"
 out=$(GOOBERENGINE_CARTS=$ZC $GE --headless --frames 5 --exec "load rocket.zip" 2>&1); said "load an unpacked .zip" "rocket.zip is unpacked already: loading rocket/"
 out=$(GOOBERENGINE_CARTS=$ZC $GE --headless --frames 5 --exec dir 2>&1)
 printf '%s' "$out" | grep -q "rocket.zip" && bad "dir hides an unpacked .zip" "$out" || ok
@@ -622,14 +622,14 @@ out=$($GE --check build/old_btn 2>&1); said "BTN_Y is gone" 'BTN_Y'
 # ---- export: standalone games. Most checks need the player runtimes (make runtimes) ----
 EX=$PWD/build/texport
 rm -rf "$EX"
-out=$(GOOBERENGINE_RUNTIMES=/nonexistent $GE --export linux seedling "$EX" 2>&1); said "export without runtimes" 'make runtimes'
-out=$($GE --export nowhere,else seedling "$EX" 2>&1); said "export: bad target" 'EXPORT takes'
+out=$(GOOBERENGINE_RUNTIMES=/nonexistent $GE --export linux examples/seedling "$EX" 2>&1); said "export without runtimes" 'make runtimes'
+out=$($GE --export nowhere,else examples/seedling "$EX" 2>&1); said "export: bad target" 'EXPORT takes'
 if [ -x runtimes/player-linux-x86_64 ] && [ -f runtimes/player-windows-x86_64.exe ] && [ -f runtimes/web/player.wasm ]; then
-    out=$($GE --export all seedling "$EX" 2>&1); said "export all" 'seedling-web.zip'
+    out=$($GE --export all examples/seedling "$EX" 2>&1); said "export all" 'seedling-web.zip'
     [ "$(tail -c 8 "$EX/seedling-linux-x86_64")" = GOOBERZP ] && ok || bad "linux game ends in the packed-cart trailer"
     [ "$(tail -c 8 "$EX/seedling-windows.exe")" = GOOBERZP ] && ok || bad "windows game ends in the packed-cart trailer"
     out=$("$EX/seedling-linux-x86_64" --headless --frames 60 --shot "$EX/game.png" 2>&1) && [ -s "$EX/game.png" ] && ok || bad "exported game runs" "$out"
-    $GE --headless --frames 60 --shot "$EX/engine.png" seedling >/dev/null 2>&1
+    $GE --headless --frames 60 --shot "$EX/engine.png" examples/seedling >/dev/null 2>&1
     cmp -s "$EX/game.png" "$EX/engine.png" && ok || bad "exported game draws what the engine draws"
     grep -q 'data-name="seedling"' "$EX/seedling-web/index.html" && ! grep -q '__GE_' "$EX/seedling-web/index.html" && ok || bad "web index.html has the cart in it"
     [ -s "$EX/seedling-web/player.wasm" ] && [ -s "$EX/seedling-web.zip" ] && ok || bad "web export has player.wasm and a .zip"

@@ -7,8 +7,8 @@ maps and sound are built into the console. You can still use your own text
 editor on a cart folder at any time.
 
 ```
-./gooberengine              boot into the shell
-./gooberengine seedling     boot straight into a cart (Esc returns to the shell)
+./gooberengine                   boot into the shell
+./gooberengine examples/seedling boot straight into a cart (Esc returns to the shell)
 ```
 
 ## The machine
@@ -571,7 +571,7 @@ GooberEngine draws in software, so each frame has a budget of pixels ("dots"). E
 | `dot_limit([n])` | set the limit (0 to 1,000,000; 100,000 to start with). Returns the limit; `dot_limit()` alone reads it |
 | `dots_used()` | pixels drawn since the last `flip()` |
 
-The screen is 96,000 pixels, so filling it with a map or a full-screen `rect_fill` uses almost the whole budget. Draw only what changes: clear with `cls()` instead of drawing a background, use `rect_fill_fast()` for solid boxes like panels and bars, and use `clip()` to keep drawing to the part that needs it. [Seedling](carts/seedling/main.gb) does both.
+The screen is 96,000 pixels, so filling it with a map or a full-screen `rect_fill` uses almost the whole budget. Draw only what changes: clear with `cls()` instead of drawing a background, use `rect_fill_fast()` for solid boxes like panels and bars, and use `clip()` to keep drawing to the part that needs it. [Seedling](carts/examples/seedling/main.gb) does both.
 
 ### Sound
 
@@ -673,7 +673,7 @@ The examples are in their own folder: `CD examples`, then `DIR`, `RUN depth` and
 | [carts/examples/mouse](carts/examples/mouse/main.gb) | grab a bouncing ball and throw it: `mouse_dx` / `mouse_dy` become its speed, the right button pulls it to the pointer, the middle one changes its color and the wheel its size |
 | [carts/examples/cube](carts/examples/cube/main.gb) | a dice cube (a 2×2-tile texture per face) spinning in perspective with `tex_quad_3d`: back-face culling, and a second cube cutting through the first |
 | [carts/examples/net](carts/examples/net/main.gb) | a network game for up to 8: host or join (TCP or UDP), move a square around while the host bounces a ball everyone sees, B waves. Two GooberEngines on one machine can play with `127.0.0.1` |
-| [carts/seedling](carts/seedling/main.gb) | a small game with a tileset, map, sound bank and song. Collisions with `map_get`, `map_set`, sound effects over a looping tune, sprite flipping, a following camera, a HUD, and staying inside the dot limit |
+| [carts/examples/seedling](carts/examples/seedling/main.gb) | a small game with a tileset, map, sound bank and song. Collisions with `map_get`, `map_set`, sound effects over a looping tune, sprite flipping, a following camera, a HUD, and staying inside the dot limit |
 
 ## Sharing carts
 
