@@ -1,0 +1,5 @@
+' prints the mouse each frame for the tests: buttons, wheel, movement
+for i = 1 to 12
+    print("m " + str(mouse_btn(0)) + str(mouse_btn(1)) + str(mouse_btn(2)) + " w " + str(mouse_wheel()) + " d " + str(mouse_dx()) + "," + str(mouse_dy()))
+    flip()
+next

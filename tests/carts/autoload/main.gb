@@ -1,0 +1,6 @@
+' autoload: cart.txt puts tiles-1 in tileset slot 3, map-1 in map slot 0 and lib.gb in code slot 2.
+' tileset slot 0 has nothing in cart.txt, so it starts empty (tileset.g64 isn't loaded)
+order = order + ",main"
+local empty:int = tile_pget(1, 0, 0)
+swap_tileset(3)
+print("auto " + str(empty) + " " + str(map_get(79, 23)) + " " + str(map_w()) + "x" + str(map_h()) + " " + str(tile_pget(1, 0, 0)) + " " + str(lib_value()) + " " + order)

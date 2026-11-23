@@ -1,4 +1,4 @@
-/* The built-in tile editor (F2).
+/* The built-in tile editor.
  *
  * A tileset is 400 x 240 pixels (960 tiles), more than fits beside the file
  * tree, so the editor works like a paint program:
@@ -7,16 +7,19 @@
  *     and the wheel zooms it around the mouse.
  *   - the selected tile (or a 2x2 / 4x4 block), boxed in yellow, is the only
  *     part that can be painted: a stroke stops at its edge. Clicking outside
- *     it selects the tile clicked instead.
+ *     it selects the tile clicked instead. Tile 0 is selected at first.
+ *   - the selection is also the map editor's pen: switch to the map and it
+ *     paints with that tile, or stamps the whole 2x2 / 4x4 block.
  *   - the preview window shows the selection by itself, at a size that fits.
  *     Drag it by its title bar; drag its bottom-right corner to resize it.
- *   - the tools, actions and the 64 colours are in another window, which can
- *     also be dragged around.
+ *   - the tools, actions and the 64 colours (4 to a row) are in another,
+ *     narrow window, which can also be dragged around.
  *
  * Transparent pixels show as a pink checkerboard (colours 50 and 34). The
- * left button draws with colour A, the right button with colour B
- * (transparent at first, so it erases), and a middle click (without dragging)
- * picks a colour up. Edits go straight into the open tileset, so Ctrl+R runs
+ * left button draws with colour A. The right button picks the colour under
+ * the mouse up into A (an eyedropper), or, with the "right click" setting on
+ * "colour B", draws with colour B (transparent at first, so it erases). A
+ * middle click (without dragging) picks a colour up too. Edits go straight into the open tileset, so Ctrl+R runs
  * them without saving; Ctrl+S writes tiles/NAME.g64. */
 #include "engine.h"
 #include <SDL2/SDL_scancode.h>
@@ -29,10 +32,8 @@
 #define BOT (SCREEN_H - FONT_H)
 #define TITLE_H 9
 #define MAX_UNDO 64
-#define CHECK_A 50                  /* the transparent checkerboard */
-#define CHECK_B 34
-#define TOOLS_W 70
-#define TOOLS_H 116
+#define TOOLS_W 36
+#define TOOLS_H 208
 #define GRIP 6
 
 enum { T_PENCIL, T_FILL, T_LINE, T_RECT, T_PICK, NTOOLS };
@@ -94,7 +95,7 @@ static void status(int color, const char *fmt, ...) {
 static void init(void) {
     if (T.ready) return;
     T.ready = true;
-    T.sel = 1;
+    T.sel = 0;
     T.bsize = 1;
     T.col_a = COL_WHITE;
     T.col_b = CLEAR;
@@ -140,6 +141,23 @@ static void clamp_sel(void) {
     if (col < 0) col = 0;
     if (row < 0) row = 0;
     T.sel = row * SHEET_COLS + col;
+}
+
+/* the selection, for the map editor's pen: its top-left tile and size (1, 2 or 4) */
+void tiles_selection(int *tile, int *size) {
+    init();
+    *tile = T.sel;
+    *size = T.bsize;
+}
+
+/* the map editor picked w x h tiles from `tile`: select them here too. A 2x2 or
+ * 4x4 block keeps its size; any other shape selects its top-left tile. */
+void tiles_select(int tile, int w, int h) {
+    init();
+    if (tile < 0 || tile >= NTILES) return;
+    T.bsize = w == h && (w == 2 || w == 4) ? w : 1;
+    T.sel = tile;
+    clamp_sel();
 }
 
 static uint8_t *bpix(int x, int y) {
@@ -247,6 +265,8 @@ static void undo_redo(bool redo) {
 
 /* the tree opened another tileset: its undo history doesn't apply */
 void tiles_doc_changed(void) {
+    init();
+    T.sel = 0;                /* a new tileset starts at tile 0 (the block size stays) */
     clear_stack(T.undo, &T.nundo);
     clear_stack(T.redo, &T.nredo);
     if (T.drag == 4) T.drag = 0;
@@ -400,11 +420,24 @@ static void preview_origin(int *cx, int *cy) {
     *cy = w->y + TITLE_H + (w->h - size) / 2;
 }
 
-/* the tools window's parts */
-static int tool_btn(int i, int *x, int *y) { *x = T.win[W_TOOLS].x + 2 + i * 13; *y = T.win[W_TOOLS].y + TITLE_H + 2; return 12; }
-static int act_btn(int i, int *x, int *y) { *x = T.win[W_TOOLS].x + 2 + i * 13; *y = T.win[W_TOOLS].y + TITLE_H + 14; return 12; }
-static void pal_origin(int *x, int *y) { *x = T.win[W_TOOLS].x + 3; *y = T.win[W_TOOLS].y + TITLE_H + 28; }
+/* the tools window's parts, top to bottom: tool buttons and action buttons
+ * (3 to a row, 2 rows each), the palette (4 colours to a row), the transparent
+ * swatch, then A and B with their indices */
+#define BTN_COLS 3
+#define BTN_STEP 11
+static int btn_at(int i, int row0, int *x, int *y) {
+    *x = T.win[W_TOOLS].x + 2 + (i % BTN_COLS) * BTN_STEP;
+    *y = T.win[W_TOOLS].y + TITLE_H + 1 + (row0 + i / BTN_COLS) * BTN_STEP;
+    return BTN_STEP - 1;
+}
+static int tool_btn(int i, int *x, int *y) { return btn_at(i, 0, x, y); }
+static int act_btn(int i, int *x, int *y) { return btn_at(i, 2, x, y); }
 #define PAL_CELL 8
+#define PAL_COLS 4
+#define PAL_ROWS (NCOLORS / PAL_COLS)
+#define PAL_W (PAL_COLS * PAL_CELL)
+#define PAL_H (PAL_ROWS * PAL_CELL)
+static void pal_origin(int *x, int *y) { *x = T.win[W_TOOLS].x + 2; *y = T.win[W_TOOLS].y + TITLE_H + 3 + 4 * BTN_STEP; }
 
 static int floor_div(int a, int b) { return a >= 0 ? a / b : -((-a + b - 1) / b); }
 
@@ -434,9 +467,11 @@ static void pick_colour(bool into_b) {
     if (into_b) T.col_b = c; else T.col_a = c;
 }
 
-/* a left or right press on the sheet: paint inside the selection, select outside it */
+/* a left or right press on the sheet: paint inside the selection, select outside it.
+ * With the eyedrop setting the right button picks a colour up into A instead. */
 static void sheet_press(int btn) {
     if (T.tool == T_PICK) { pick_colour(btn == 2); T.tool = T.prev_tool; return; }
+    if (btn == 2 && settings.tile_right == RIGHT_EYEDROP) { pick_colour(false); return; }
     int x, y;
     if (!block_px_at(in.mouse_x, in.mouse_y, &x, &y)) {
         int t = sheet_tile_at(in.mouse_x, in.mouse_y);
@@ -480,12 +515,12 @@ static void tools_press(int btn) {
     for (int i = 0; i < NTOOLS; i++) { w = tool_btn(i, &x, &y); if (inside(x, y, w, 10)) { set_tool(i); return; } }
     for (int i = 0; i < NACTS; i++) { w = act_btn(i, &x, &y); if (inside(x, y, w, 10)) { act(i); return; } }
     pal_origin(&x, &y);
-    if (inside(x, y, 8 * PAL_CELL, 8 * PAL_CELL)) {
-        int c = ((in.mouse_y - y) / PAL_CELL) * 8 + (in.mouse_x - x) / PAL_CELL;
+    if (inside(x, y, PAL_W, PAL_H)) {
+        int c = ((in.mouse_y - y) / PAL_CELL) * PAL_COLS + (in.mouse_x - x) / PAL_CELL;
         if (btn == 2) T.col_b = c; else T.col_a = c;
         return;
     }
-    if (inside(x, y + 8 * PAL_CELL + 2, 22, 10)) { if (btn == 2) T.col_b = CLEAR; else T.col_a = CLEAR; }
+    if (inside(x, y + PAL_H + 2, PAL_W, 10)) { if (btn == 2) T.col_b = CLEAR; else T.col_a = CLEAR; }
 }
 
 /* ---------------------------------------------------------------- mouse */
@@ -563,15 +598,7 @@ static void mouse(void) {
 
 /* ---------------------------------------------------------------- drawing */
 
-static void checker(int x, int y, int w, int h) {   /* transparent: pink checks, 4 screen pixels */
-    for (int j = 0; j < h; j++) {
-        int sy = y + j;
-        for (int i = 0; i < w; i++) {
-            int sx = x + i;
-            draw_pset(sx, sy, ((sx >> 2) + (sy >> 2)) & 1 ? CHECK_A : CHECK_B);
-        }
-    }
-}
+#define checker draw_checker        /* transparent: pink checks, 5 screen pixels */
 
 static void swatch(int x, int y, int w, int h, int c) {
     if (c == CLEAR) checker(x, y, w, h);
@@ -692,31 +719,33 @@ static void draw_tools_window(void) {
     }
     int px, py;
     pal_origin(&px, &py);
-    for (int i = 0; i < NCOLORS; i++) draw_rect(px + (i % 8) * PAL_CELL, py + (i / 8) * PAL_CELL, PAL_CELL - 1, PAL_CELL - 1, i, true);
-    int cy = py + 8 * PAL_CELL + 2;
-    swatch(px, cy, 21, 9, CLEAR);
-    draw_rect(px - 1, cy - 1, 23, 11, UI_RGB(1, 1, 2), false);
-    if (live && inside(px, cy, 22, 10)) T.hint = "transparent";
+    for (int i = 0; i < NCOLORS; i++)
+        draw_rect(px + (i % PAL_COLS) * PAL_CELL, py + (i / PAL_COLS) * PAL_CELL, PAL_CELL - 1, PAL_CELL - 1, i, true);
+    int cy = py + PAL_H + 2;
+    swatch(px, cy, PAL_W - 1, 9, CLEAR);
+    draw_rect(px - 1, cy - 1, PAL_W + 1, 11, UI_RGB(1, 1, 2), false);
+    if (live && inside(px, cy, PAL_W, 10)) T.hint = "transparent";
     /* A and B: outlines on the palette, and swatches */
     for (int k = 0; k < 2; k++) {
         int c = k ? T.col_b : T.col_a;
-        int ox = c == CLEAR ? px - 1 : px + (c % 8) * PAL_CELL - 1;
-        int oy = c == CLEAR ? cy - 1 : py + (c / 8) * PAL_CELL - 1;
-        draw_rect(ox, oy, c == CLEAR ? 23 : PAL_CELL + 1, c == CLEAR ? 11 : PAL_CELL + 1, k ? COL_GREY : COL_WHITE, false);
+        int ox = c == CLEAR ? px - 1 : px + (c % PAL_COLS) * PAL_CELL - 1;
+        int oy = c == CLEAR ? cy - 1 : py + (c / PAL_COLS) * PAL_CELL - 1;
+        draw_rect(ox, oy, c == CLEAR ? PAL_W + 1 : PAL_CELL + 1, c == CLEAR ? 11 : PAL_CELL + 1, k ? COL_GREY : COL_WHITE, false);
     }
-    draw_text("A", px + 26, cy, COL_WHITE);
-    swatch(px + 33, cy, 9, 9, T.col_a);
-    draw_text("B", px + 46, cy, COL_GREY);
-    swatch(px + 53, cy, 9, 9, T.col_b);
+    int ay = cy + 11;
+    draw_text("A", px, ay, COL_WHITE);
+    swatch(px + 6, ay, 9, 9, T.col_a);
+    draw_text("B", px + 18, ay, COL_GREY);
+    swatch(px + 24, ay, 9, 9, T.col_b);
     /* their palette indices, centred under each label+swatch pair; -1 is transparent */
     for (int k = 0; k < 2; k++) {
         int c = k ? T.col_b : T.col_a;
         char num[8];
         snprintf(num, sizeof num, "%d", c == CLEAR ? -1 : c);
-        int bx = px + (k ? 46 : 26);
-        draw_text(num, bx + (17 - text_width(num)) / 2, cy + 11, k ? COL_GREY : COL_WHITE);
+        int bx = px + (k ? 18 : 0);
+        draw_text(num, bx + (15 - text_width(num)) / 2, ay + 10, k ? COL_GREY : COL_WHITE);
     }
-    if (live && inside(px, py, 8 * PAL_CELL, 8 * PAL_CELL)) T.hint = "left: colour A  right: colour B";
+    if (live && inside(px, py, PAL_W, PAL_H)) T.hint = "left: colour A  right: colour B";
 }
 
 static void draw(void) {
@@ -738,8 +767,10 @@ static void draw(void) {
     int x = draw_text(info, 3, by, UI_RGB(2, 3, 3)) + 8;
     bool over_win = in_win(W_TILE) || in_win(W_TOOLS);
     int ht = over_win || in.mouse_y < TOP || in.mouse_y >= BOT ? -1 : sheet_tile_at(in.mouse_x, in.mouse_y);
-    if (T.status[0] && frame_count < T.status_until) draw_text(T.status, x, by, T.status_color);
-    else if (hx >= 0) {
+    if (T.status[0] && frame_count < T.status_until) {
+        draw_text(T.status, x, by, T.status_color);
+        if (ui_status_close(by)) T.status[0] = 0;
+    } else if (hx >= 0) {
         char c[32];
         colour_name(bget(hx, hy), c, sizeof c);
         snprintf(line, sizeof line, "tile %d x%d y%d %s", T.sel + (hy / TILE) * SHEET_COLS + hx / TILE, hx % TILE, hy % TILE, c);

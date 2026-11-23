@@ -1,4 +1,4 @@
-/* The built-in sound editor (F4).
+/* The built-in sound editor.
  *
  *   +------+----------------------------------------------+
  *   | sfx  | speed / length / loop          [play]        |
@@ -429,7 +429,6 @@ static void draw(void) {
     if (S.pen_wave < NWAVES) {
         snprintf(buf, sizeof buf, "%x", S.pen_wave);
         if (!narrow) draw_text(buf, 2, WE_Y + 16, COL_WHITE);
-        if (!narrow) draw_text("draw it", 2, WE_Y + 28, UI_RGB(1, 1, 2));
         draw_rect(WE_X, WE_Y, WAVE_LEN * 4, 64, UI_RGB(0, 0, 1), true);
         draw_line(WE_X, WE_Y + 32, WE_X + WAVE_LEN * 4 - 1, WE_Y + 32, UI_RGB(0, 1, 1));
         for (int i = 0; i < WAVE_LEN; i++) {
@@ -463,9 +462,12 @@ static void draw(void) {
                           hs->wave >= NWAVES ? 'n' : "0123456789abcdef"[hs->wave], hs->vol, fx_names[hs->fx % NFX]);
     else snprintf(buf, sizeof buf, "sfx %d step %d: rest", S.cur, hk);
     int bx = draw_text(buf, 3, by, UI_RGB(2, 3, 3));
-    if (S.status[0] && frame_count < S.status_until) draw_text(S.status, bx + 12, by, S.status_color);
+    if (S.status[0] && frame_count < S.status_until) {
+        draw_text(S.status, bx + 12, by, S.status_color);
+        if (ui_status_close(by)) S.status[0] = 0;
+    }
     snprintf(buf, sizeof buf, "%s%s", doc_active(RES_SFX)->name, doc_active(RES_SFX)->dirty ? "*" : "");
-    draw_text(buf, UI_W - 3 - text_width(buf), by, UI_RGB(2, 3, 3));
+    draw_text(buf, UI_W - STATUS_CLOSE_W - 2 - text_width(buf), by, UI_RGB(2, 3, 3));
 }
 
 /* the tree opened another sound bank: its undo history doesn't apply */

@@ -1,4 +1,4 @@
-/* The built-in font editor (F7).
+/* The built-in font editor.
  *
  *   +---------------------------+----------------+
  *   | the 96 glyphs             | the glyph      |
@@ -401,8 +401,10 @@ static void draw(void) {
     snprintf(info, sizeof info, "%s%s", d->name, d->dirty ? "*" : "");
     int x = draw_text(info, 3, by, UI_RGB(2, 3, 3)) + 8;
     int g = grid_glyph_at();
-    if (E.status[0] && frame_count < E.status_until) draw_text(E.status, x, by, E.status_color);
-    else if (hx >= 0) {
+    if (E.status[0] && frame_count < E.status_until) {
+        draw_text(E.status, x, by, E.status_color);
+        if (ui_status_close(by)) E.status[0] = 0;
+    } else if (hx >= 0) {
         snprintf(line, sizeof line, "%s  x%d y%d", char_name(E.sel + FONT_FIRST, cn, sizeof cn), hx, hy);
         draw_text(line, x, by, UI_RGB(2, 3, 3));
     } else if (g >= 0 && g < NGLYPHS) draw_text(char_name(g + FONT_FIRST, cn, sizeof cn), x, by, UI_RGB(2, 3, 3));

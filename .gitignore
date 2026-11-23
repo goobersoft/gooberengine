@@ -3,6 +3,7 @@ build/
 gooberengine
 runtimes/
 exports/
+dist/
 *.gbcart
 screenshot-*.png
 

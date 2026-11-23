@@ -20,6 +20,7 @@ static void usage(void) {
             "  --export targets cart [folder]\n"
             "                  make a standalone game, no window: targets are linux, windows,\n"
             "                  web or all (comma separated); folder defaults to exports/<cart>\n"
+            "  --help-check    check the manual (F1): every keyword and command has a page\n"
             "  --version\n",
             GE_VERSION);
 }
@@ -60,6 +61,7 @@ int main(int argc, char **argv) {
         else if (!strcmp(a, "--headless")) opt.headless = true;
         else if (!strcmp(a, "--type") && more) opt.script = argv[++i];
         else if (!strcmp(a, "--wav") && more) opt.wav = argv[++i];
+        else if (!strcmp(a, "--help-check")) return help_check() ? 1 : 0;
         else if (!strcmp(a, "--version")) { printf("GooberEngine %s\n", GE_VERSION); return 0; }
         else if (!strcmp(a, "-h") || !strcmp(a, "--help")) { usage(); return 0; }
         else if (a[0] == '-') { usage(); return 2; }
@@ -77,7 +79,7 @@ int main(int argc, char **argv) {
     shell_init();
     {   /* boot into a fresh cart with no name: nothing is written to the carts folder until SAVE name */
         char err[512];
-        if (cart_new_untitled(err, sizeof err)) shell_print("untitled cart: F1 to edit, SAVE name to keep it", COL_GREY);
+        if (cart_new_untitled(err, sizeof err)) shell_print("untitled cart: EDIT to edit, F1 for help, SAVE name to keep it", COL_GREY);
         else shell_print(err, COL_RED);
     }
     for (int i = 0; i < nexec && !in.quit; i++) {
@@ -95,10 +97,11 @@ int main(int argc, char **argv) {
         if (ui_mode == MODE_EDITOR || ui_mode == MODE_TILES || ui_mode == MODE_MAP || ui_mode == MODE_SOUND || ui_mode == MODE_MUSIC || ui_mode == MODE_FONT || ui_mode == MODE_SETTINGS)
             ui_editor_frame();
         else if (ui_mode == MODE_BROWSE) browse_frame();
+        else if (ui_mode == MODE_HELP) help_frame();
         else shell_frame();
         platform_frame();
         char dropped[1024];
-        if (platform_take_dropped(dropped, sizeof dropped)) {   /* a .gbcart or cart folder: load it */
+        if (platform_take_dropped(dropped, sizeof dropped)) {   /* a zipped cart or cart folder: load it */
             char cmd[1100];
             snprintf(cmd, sizeof cmd, "load %s", dropped);
             ui_mode = MODE_SHELL;

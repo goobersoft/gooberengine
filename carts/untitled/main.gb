@@ -1,19 +1,11 @@
-' untitled - a new GooberEngine cart
 strict
 
-include "stuff.gb"
+global running:int = true
 
-local x:float = SCREEN_W / 2, y:float = SCREEN_H / 2
-
-repeat
-  if btn(BTN_LEFT) then x :- 2
-  if btn(BTN_RIGHT) then x :+ 2
-  if btn(BTN_UP) then y :- 2
-  if btn(BTN_DOWN) then y :+ 2
-
-  cls(COL_NAVY)
-  text("hello from untitled", 8, 8, COL_WHITE)
-  circle_fill(x, y, 8, COL_YELLOW)
-  text(xxx,0,0)
+while running
+  cls()
+  if btn(BTN_A)
+    running = false
+  endif
   flip()
-forever
+wend

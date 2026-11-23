@@ -1,8 +1,10 @@
-/* The built-in map editor (F3).
+/* The built-in map editor.
  *
  * The map fills the editor. The brush is one tile, or a block of tiles
  * taken from the tileset (Tab opens the tile picker; drag across it for a
- * block) or copied from the map with the select tool. Left button paints,
+ * block) or copied from the map with the select tool. It follows the tile
+ * editor: whatever is selected there (a tile, or a 2x2 / 4x4 block) becomes
+ * the brush, and a tile picked here is selected there too. Left button paints,
  * right button picks up the tile under the mouse. E makes the brush the
  * eraser: an empty cell. Tile 0 is a tile like any other.
  *
@@ -56,6 +58,7 @@ static struct {
     int pk_mx, pk_my, pk_px, pk_py;
     bool panning;
     int pan_mx, pan_my, pan_vx, pan_vy;
+    int tsel, tsize;             /* the tile editor's selection when the brush last followed it */
     char status[128];
     int status_color;
     long status_until;
@@ -72,9 +75,31 @@ static void status(int color, const char *fmt, ...) {
     if (opt.headless) printf("[map] %s\n", M.status);
 }
 
+/* the brush is now tiles from the sheet: select them in the tile editor too,
+ * and remember that selection so following it doesn't undo this brush */
+static void tell_tiles(void) {
+    if (M.brush[0][0] == MAP_EMPTY) return;
+    tiles_select(M.brush[0][0], M.bw, M.bh);
+    tiles_selection(&M.tsel, &M.tsize);
+}
+
 static void set_brush_tile(int t) {
     M.bw = M.bh = 1;
     M.brush[0][0] = (uint16_t)t;
+    tell_tiles();
+}
+
+/* a new selection in the tile editor becomes the brush: its tile, or its whole
+ * block as it is laid out on the sheet */
+static void follow_tiles(void) {
+    int t, n;
+    tiles_selection(&t, &n);
+    if (t == M.tsel && n == M.tsize) return;
+    M.tsel = t;
+    M.tsize = n;
+    M.bw = M.bh = n;
+    for (int j = 0; j < n; j++)
+        for (int i = 0; i < n; i++) M.brush[j][i] = (uint16_t)(t + j * SHEET_COLS + i);
 }
 
 static void init(void) {
@@ -82,7 +107,7 @@ static void init(void) {
     M.ready = true;
     M.zoom = 1;
     M.grid = true;
-    set_brush_tile(1);
+    M.tsel = M.tsize = -1;       /* the first frame takes the tile editor's selection: tile 0 */
 }
 
 /* ---------------------------------------------------------------- coordinates */
@@ -427,6 +452,7 @@ static bool picker_mouse(void) {
     M.picker = false;
     M.sel = false;
     if (M.tool == T_SELECT) M.tool = T_PEN;
+    tell_tiles();
     return true;
 }
 
@@ -526,8 +552,8 @@ static void draw_brush_at(int cx, int cy) {
         for (int i = 0; i < M.bw; i++) {
             int t = M.brush[j][i];
             int sx = screen_x(cx + i), sy = screen_y(cy + j);
-            draw_rect(sx, sy, s, s, COL_BLACK, true);
-            draw_cell_tile(t, sx, sy, s);
+            if (t == MAP_EMPTY) draw_checker(sx, sy, s, s);
+            else { draw_rect(sx, sy, s, s, COL_BLACK, true); draw_cell_tile(t, sx, sy, s); }
         }
     draw_rect(screen_x(cx) - 1, screen_y(cy) - 1, M.bw * s + 2, M.bh * s + 2, COL_WHITE, false);
 }
@@ -578,7 +604,7 @@ static void draw(void) {
             int t = *cellp(cx, cy);
             int sx = screen_x(cx), sy = screen_y(cy);
             if (t != MAP_EMPTY) draw_cell_tile(t, sx, sy, s);
-            else if (s >= 10 && M.grid) draw_pset(sx, sy, UI_RGB(0, 0, 1));
+            else draw_checker(sx, sy, s, s);
         }
 
     /* screen-sized guides (40 x 24 cells) and the map's edge */
@@ -616,6 +642,7 @@ static void draw(void) {
     int x = draw_text(info, 15, by, COL_WHITE);
     if (M.status[0] && frame_count < M.status_until) {
         draw_text(M.status, x + 8, by, M.status_color);
+        if (ui_status_close(by)) M.status[0] = 0;
     } else if (hover && on_map(mx, my)) {
         uint16_t t = *cellp(mx, my);
         if (t == MAP_EMPTY) snprintf(info, sizeof info, "x%d y%d empty", mx, my);
@@ -624,12 +651,13 @@ static void draw(void) {
     }
     Doc *d = doc_active(RES_MAP);
     snprintf(info, sizeof info, "%s%s %dx%d", d->name, d->dirty ? "*" : "", MAP->w / SCREEN_CELLS_W, MAP->h / SCREEN_CELLS_H);
-    draw_text(info, UI_W - 3 - text_width(info), by, UI_RGB(2, 3, 3));
+    draw_text(info, UI_W - STATUS_CLOSE_W - 2 - text_width(info), by, UI_RGB(2, 3, 3));
 }
 
 void map_frame(void) {
     init();
     if (!cart.loaded || !MAP) { ui_switch(MODE_SHELL); return; }
+    follow_tiles();
     for (int i = 0; i < in.nevents && ui_mode == MODE_MAP; i++) {
         const KeyEvent *ev = &in.events[i];
         if (ev->type != EV_KEY) continue;

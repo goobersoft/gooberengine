@@ -149,7 +149,14 @@ typedef struct {
     Doc *docs[MAX_DOCS];      /* resource files opened so far */
     int ndocs;
     Doc *active[NRES];        /* the file each editor works on */
+    /* what loads into each slot when the game runs ("" = nothing). Resources go
+     * into their run-time slots before the first line runs; code files
+     * ([KIND_CODE]) are compiled in ahead of main.gb, in slot order, as if
+     * main.gb began with an include of each. Kept in cart.txt. */
+    char slot[NRES + 1][NSLOTS][48];
+    bool slots_set;           /* cart.txt lists them; until then slot 0 of each resource kind is its default-named file */
 } Cart;
+#define KIND_CODE NRES        /* cart.slot[KIND_CODE]: code files, named without .gb */
 
 extern Cart cart;
 
@@ -186,6 +193,8 @@ void draw_pset(int x, int y, int c);
 int draw_pget(int x, int y);
 void draw_line(int x0, int y0, int x1, int y1, int c);
 void draw_rect(int x, int y, int w, int h, int c, bool fill);
+void draw_rect_fill_fast(int x, int y, int w, int h, int c);
+void draw_checker(int x, int y, int w, int h);   /* editors' transparent backdrop */
 void draw_circle(int cx, int cy, int r, int c, bool fill);
 int draw_char(int ch, int x, int y, int c);
 int draw_text(const char *s, int x, int y, int c);   /* returns end x; handles \n */
@@ -232,6 +241,7 @@ typedef struct {
     uint8_t key[512];             /* held, by SDL scancode */
     uint8_t key_hit[512];         /* pressed since the last frame */
     int mouse_x, mouse_y;
+    int mouse_dx, mouse_dy;       /* pointer movement since the last frame, in screen pixels */
     bool mouse[4], mouse_hit[4];
     char text[64];                /* typed text since the last frame (shell) */
     bool quit;                    /* window closed */
@@ -243,6 +253,9 @@ extern long frame_count;
 bool platform_init(void);
 void platform_shutdown(void);
 void platform_frame(void);        /* present, wait for the next frame, read input */
+bool platform_poll_stop(void);    /* Esc / window close, checked mid-frame (a cart stuck in a loop) */
+void cart_poll_stop(void);        /* api.c: the VM's loop hook, stops the cart on platform_poll_stop() */
+int platform_frame_load(void);    /* % of this frame's time used so far */
 void input_consume(void);         /* forget this frame's key presses (after a cart returns) */
 bool save_screenshot(const char *path);
 void platform_title(const char *title);
@@ -250,6 +263,7 @@ void platform_set_fullscreen(bool on);
 bool platform_fullscreen(void);
 void platform_set_scale(int scale);   /* the window's size: scale x the screen (not in fullscreen) */
 bool platform_take_dropped(char *path, size_t n);   /* a file dropped on the window (or uploaded) */
+void platform_queue_key(int sc, int mod);           /* deliver a key press next frame, as if typed */
 uint32_t ge_crc32(const void *p, size_t n);
 char *clipboard_get(void);            /* malloc'd, never NULL */
 void clipboard_set(const char *text);
@@ -262,6 +276,14 @@ bool carts_cd(const char *arg, char *err, size_t errn);   /* CD: move between fo
 const char *carts_subdir(void);           /* where CD is, below the carts folder: "" at the top */
 int cart_check(const char *nameOrPath);   /* compile only; prints errors; returns exit code */
 bool cart_valid_name(const char *s);      /* letters, digits, - and _ */
+/* the slots a cart fills by itself when it runs (kind: RES_* or KIND_CODE; code names without .gb) */
+const char *cart_slot_name(int kind, int slot);       /* NULL: nothing goes there */
+int cart_slot_of(int kind, const char *name);         /* -1: not in a slot */
+int cart_slot_free(int kind);                         /* the lowest empty slot, -1 if all are taken */
+bool cart_slot_set(int kind, const char *name, int slot, char *err, int errlen);  /* slot -1: out of its slot.
+                                                         a file already in that slot moves to name's old one; writes cart.txt */
+void cart_slot_rename(int kind, const char *from, const char *to);   /* a file was renamed: its slot follows */
+void cart_slot_forget(int kind, const char *name);    /* a file was deleted */
 
 /* runs the loaded cart; returns 0 if it ended normally, 1 on error, 2 if stopped with Esc.
  * Error text is appended to the shell through shell_print. */
@@ -341,10 +363,23 @@ void audio_lock(void);                      /* platform.c: hold off the audio th
 void audio_unlock(void);
 extern const char ge_pixel_chars[];
 
-/* ---- bundle.c: one-file carts ---- */
-char *cart_pack(size_t *len, char *err, int errlen);   /* the loaded cart as .gbcart text, malloc'd */
-bool cart_export(const char *path, char *out_path, int outlen, char *err, int errlen);
-bool cart_import(const char *file, const char *name, char *out_dir, int outlen, char *err, int errlen);
+/* ---- zlib.c: deflate and gzip, no library ---- */
+uint8_t *ge_inflate(const uint8_t *in, size_t inlen, size_t limit, size_t *outlen, size_t *used, const char **err);
+uint8_t *ge_deflate(const uint8_t *in, size_t n, size_t *outlen);
+uint8_t *ge_gunzip(const uint8_t *in, size_t n, size_t limit, size_t *outlen, const char **err);
+uint8_t *ge_gzip(const uint8_t *in, size_t n, size_t *outlen);
+/* ---- archive.c: zipped carts (.zip, .tar.gz, .tgz, .tar), unpacked into a cart folder on LOAD ---- */
+typedef struct { char title[128], author[128], version[32]; bool ok; } CartStub;   /* ok: it has a main.gb */
+bool archive_name(const char *file);                    /* ends in .zip, .tar.gz, .tgz or .tar */
+bool archive_find(const char *name, char *out, size_t n);   /* "rocket" or "rocket.zip" -> the archive in the carts folder */
+void archive_cart_name(const char *file, char *out, size_t n);  /* "Rocket (1).zip" -> "Rocket" */
+bool archive_stub(const char *file, CartStub *st);      /* its cart.txt, from the cache when the archive is unchanged */
+bool archive_unpack(const char *file, const char *name, char *out_dir, int outlen, char *err, int errlen);
+bool cart_bundled_name(const char *rel);                /* "main.gb", "tiles/x.g64": one of a cart's own files */
+int cart_file_list(const char *dir, char **names, int max);  /* those files in a folder, sorted, strdup'd; -1 = unreadable */
+/* a cart folder's own files, inside the folder `top`, as .zip (or tgz: .tar.gz) bytes, malloc'd */
+uint8_t *archive_pack(const char *dir, const char *top, bool tgz, size_t *len, char *err, int errlen);
+bool cart_export(const char *path, char *out_path, int outlen, char *err, int errlen);   /* EXPORT [file]: zip the cart */
 /* ---- export.c: standalone games (a player runtime with the cart packed in) ---- */
 typedef void (*ExportLog)(const char *line, bool error);
 /* targets: "linux", "windows", "web" or "all" (several may be given, space separated);
@@ -365,7 +400,7 @@ char *save_load(const char *key);                          /* malloc'd, NULL if 
 const char *save_store(const char *key, const char *value);   /* "" removes; returns an error or NULL */
 
 /* ---- shell.c ---- */
-enum { MODE_SHELL, MODE_EDITOR, MODE_TILES, MODE_MAP, MODE_SOUND, MODE_MUSIC, MODE_FONT, MODE_SETTINGS, MODE_BROWSE };
+enum { MODE_SHELL, MODE_EDITOR, MODE_TILES, MODE_MAP, MODE_SOUND, MODE_MUSIC, MODE_FONT, MODE_SETTINGS, MODE_BROWSE, MODE_HELP };
 extern int ui_mode;
 void shell_init(void);
 void shell_print(const char *s, int color);
@@ -374,8 +409,10 @@ void shell_exec_discarding(const char *line);  /* shell_exec, answering Y to "di
 void shell_frame(void);
 void ui_run_from_editor(void);   /* save, run, then come back to the editor (on the error line) */
 extern bool shell_quit;
-bool ui_global_key(const KeyEvent *ev);   /* F1 code ... F5 music, F7 font: true if it switched */
+bool ui_global_key(const KeyEvent *ev);   /* F1 help, F9 tree, F10 settings: true if used */
 int ui_draw_tabs(void);                   /* the editors' top bar; returns the x after the tabs */
+#define STATUS_CLOSE_W (FONT_W + 4)       /* the status message's close button, at the bar's right end */
+bool ui_status_close(int y);              /* draws it on the bar at y; true if clicked */
 void ui_switch(int mode);
 bool ui_unsaved(void);                    /* code or any resource changed and not saved */
 bool ui_save_all(void);
@@ -392,6 +429,8 @@ void font_doc_changed(void);
 
 /* ---- tiles_editor.c, map_editor.c ---- */
 void tiles_frame(void);
+void tiles_selection(int *tile, int *size); /* the tile editor's selected tile and block size (1/2/4) */
+void tiles_select(int tile, int w, int h);  /* select a picked w x h block (2x2, 4x4 kept, else its top-left) */
 void map_frame(void);
 void sound_frame(void);
 void music_frame(void);
@@ -405,6 +444,7 @@ bool editor_open_file(const char *name);  /* edit another .gb file of the cart (
 const char *editor_file(void);            /* the .gb file being edited, "" if none */
 const char *code_name(const char *file);  /* "main.gb" -> "main": code is always .gb, so the editors don't show it */
 bool editor_file_modified(const char *name);
+int editor_open_files(const char *names[], int max);         /* every .gb file with a buffer, saved or not */
 bool editor_rename_file(const char *name, const char *to);   /* a buffer follows its file's new name */
 void editor_close_file(const char *name);                    /* drop a buffer (its file was deleted) */
 void editor_frame(void);
@@ -415,6 +455,17 @@ void editor_follow_cart(void);            /* the cart moved folders (SAVE name) 
 void editor_forget(void);
 void editor_show_error(int line, const char *msg);
 void editor_emergency_save(void);
+bool editor_word_at_cursor(char *out, size_t n);   /* the token under the cursor (for F1): a name, or a kind like "numbers" */
+void editor_colour_code(const char *s, int n, uint8_t *col);   /* syntax colours for one line of code (help's examples) */
+
+/* ---- help.c: the manual, in the console (F1) ---- */
+void help_frame(void);
+bool help_open_word(const char *word, bool exact_only);  /* open the page for a word; false if there is none */
+void help_open_context(void);             /* F1: the page for what's under the cursor in the editor (or the editor's page) */
+void help_open_shell(const char *line);   /* F1 in the shell: the index (narrowed to the command being typed) */
+void help_close(void);                    /* back to where F1 was pressed */
+void help_index(void);                    /* F1 in the help: every page's names, A to Z (F1 again: back to the page) */
+int help_check(void);                     /* --help-check: prints what has no page; returns how many */
 
 /* ---- named colours (indices into the 6-bit palette: r*16 + g*4 + b) ---- */
 #define RGB6(r, g, b) ((r) * 16 + (g) * 4 + (b))
@@ -456,14 +507,31 @@ typedef struct {
     bool fullscreen;
     int scale;                              /* the window: 1-8 screen pixels per console pixel */
     int indent;                             /* the code editor's Enter: INDENT_SMART, _AUTO or _NONE */
+    int tile_right;                         /* the tile editor's right button: RIGHT_EYEDROP or RIGHT_COLOUR_B */
+    /* post-processing effects (postfx.c): how the screen is shown, never what is drawn */
+    int fx_crt;                             /* 0-100: CRT screen bending */
+    int fx_tint;                            /* 0-359: hue shift, in degrees */
+    int fx_saturation;                      /* 0-100: 0 is grey, 100 the console's own colours */
+    int fx_scanlines;                       /* 0-100: 100 makes every scanline gap black (not at 1x) */
+    int fx_burn;                            /* 0-FX_BURN_MAX: how slowly lit pixels fade out */
 } Settings;
+#define FX_BURN_MAX 80
 enum { INDENT_SMART, INDENT_AUTO, INDENT_NONE, NINDENTS };
 extern const char *const indent_names[NINDENTS];
+enum { RIGHT_EYEDROP, RIGHT_COLOUR_B, NRIGHTS };
+extern const char *const tile_right_names[NRIGHTS];   /* as settings.txt writes them */
 extern Settings settings;
 void settings_load(void);                 /* read settings.txt (before the window opens), and use its sound levels */
 bool settings_save(char *err, int errlen);   /* write settings.txt, and use the sound levels from now on */
-void settings_frame(void);                /* settings_screen.c: the settings screen (F9) */
+void settings_frame(void);                /* settings_screen.c: the settings screen (F10) */
 void settings_open(void);                 /* from wherever you are; settings_frame_close() goes back there */
 void settings_frame_close(void);
+/* postfx.c: the post-processing effects, applied when the frame is shown (screenshots stay clean) */
+int postfx_scale(int k);                  /* at k screen pixels per console pixel: the size to render the
+                                           * frame at (k or a divisor of it), or 0 if no effect is on */
+void postfx_render(uint32_t *out, int pitch, int s);   /* the frame at s x the screen, ARGB, pitch in bytes */
+void postfx_map_mouse(int *x, int *y);    /* the console pixel under a pointer on the bent screen */
+void postfx_reset(void);                  /* forget the burn-in (a new picture) */
+int platform_pixel_scale(void);           /* screen pixels per console pixel right now */
 
 #endif

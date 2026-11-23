@@ -1,0 +1,13 @@
+' hosts a game over TCP, then over UDP; tests/carts/net_join joins each
+for m = NET_TCP to NET_UDP
+    if not net_host(29200 + m, m) then print("net host failed: " + net_error()) : end
+    net_set(0, 1234.5)
+    t = 0
+    while net_get(1) <> 777 and t < 800 : delay(10) : t = t + 1 : wend
+    msg$ = ""
+    while msg$ = "" and t < 800 : msg$ = net_recv() : delay(10) : t = t + 1 : wend
+    print("net host " + m + ": slot1 " + net_get(1) + " '" + msg$ + "' from " + net_from())
+    t = 0
+    while net_peers() > 1 and t < 600 : delay(10) : t = t + 1 : wend
+    net_close()
+next

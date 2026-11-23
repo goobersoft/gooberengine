@@ -14,6 +14,13 @@
  *   scale = 1-8            the window: pixels per console pixel
  *   indent = smart | auto | none   the code editor's Enter: smart indents after
  *                          if, for ...; auto keeps the line's indentation; none adds none
+ *   tile_right = eyedrop | colour_b   the tile editor's right button: picks a
+ *                          colour up into A, or draws with colour B
+ *   fx_crt = 0-100         post-processing (postfx.c): CRT screen bending
+ *   fx_tint = 0-359        hue shift, in degrees
+ *   fx_saturation = 0-100  100 is the console's own colours, 0 grey
+ *   fx_scanlines = 0-100   100 makes the gaps between lines black (not at 1x)
+ *   fx_burn = 0-80         screen burn: lit pixels fade out instead of snapping off
  * Lines it doesn't know are kept when it's written. An exported game doesn't
  * read it: its player's settings belong to whoever plays it. */
 #include "engine.h"
@@ -28,9 +35,11 @@
 int ui_theme = THEME_BLUE;
 const char *const theme_names[NTHEMES] = {"blue", "green", "orange", "grey"};
 const char *const indent_names[NINDENTS] = {"smart", "auto", "none"};
-Settings settings = {VOLUME_MAX, VOLUME_MAX, VOLUME_MAX, false, 3, INDENT_SMART};
+const char *const tile_right_names[NRIGHTS] = {"eyedrop", "colour_b"};
+Settings settings = {VOLUME_MAX, VOLUME_MAX, VOLUME_MAX, false, 3, INDENT_SMART, .fx_saturation = 100};
 
-static const char *const keys[] = {"theme", "volume", "music_volume", "sfx_volume", "fullscreen", "scale", "indent"};
+static const char *const keys[] = {"theme", "volume", "music_volume", "sfx_volume", "fullscreen", "scale", "indent", "tile_right",
+                                   "fx_crt", "fx_tint", "fx_saturation", "fx_scanlines", "fx_burn"};
 #define NKEYS (int)(sizeof keys / sizeof keys[0])
 
 static void settings_path(char *out, size_t n) {
@@ -81,8 +90,17 @@ void settings_load(void) {
         else if (!strcasecmp(k, "sfx_volume")) settings.sfx_volume = clampi(n, 0, VOLUME_MAX);
         else if (!strcasecmp(k, "fullscreen")) settings.fullscreen = !strcasecmp(v, "yes") || !strcasecmp(v, "on") || n == 1;
         else if (!strcasecmp(k, "scale")) settings.scale = clampi(n, 1, 8);
-        else if (!strcasecmp(k, "indent"))
+        else if (!strcasecmp(k, "indent")) {
             for (int i = 0; i < NINDENTS; i++) if (!strcasecmp(v, indent_names[i])) settings.indent = i;
+        }
+        else if (!strcasecmp(k, "tile_right")) {
+            for (int i = 0; i < NRIGHTS; i++) if (!strcasecmp(v, tile_right_names[i])) settings.tile_right = i;
+        }
+        else if (!strcasecmp(k, "fx_crt")) settings.fx_crt = clampi(n, 0, 100);
+        else if (!strcasecmp(k, "fx_tint")) settings.fx_tint = ((n % 360) + 360) % 360;
+        else if (!strcasecmp(k, "fx_saturation")) settings.fx_saturation = clampi(n, 0, 100);
+        else if (!strcasecmp(k, "fx_scanlines")) settings.fx_scanlines = clampi(n, 0, 100);
+        else if (!strcasecmp(k, "fx_burn")) settings.fx_burn = clampi(n, 0, FX_BURN_MAX);
     }
     if (f) fclose(f);
     apply_volume();
@@ -111,9 +129,12 @@ bool settings_save(char *err, int errlen) {
         if (!ours) fputs(line, out);
     }
     if (in_f) fclose(in_f);
-    fprintf(out, "theme = %s\nvolume = %d\nmusic_volume = %d\nsfx_volume = %d\nfullscreen = %s\nscale = %d\nindent = %s\n",
+    fprintf(out, "theme = %s\nvolume = %d\nmusic_volume = %d\nsfx_volume = %d\nfullscreen = %s\nscale = %d\nindent = %s\ntile_right = %s\n",
             theme_names[ui_theme], settings.volume, settings.music_volume, settings.sfx_volume,
-            settings.fullscreen ? "yes" : "no", settings.scale, indent_names[settings.indent]);
+            settings.fullscreen ? "yes" : "no", settings.scale, indent_names[settings.indent],
+            tile_right_names[settings.tile_right]);
+    fprintf(out, "fx_crt = %d\nfx_tint = %d\nfx_saturation = %d\nfx_scanlines = %d\nfx_burn = %d\n",
+            settings.fx_crt, settings.fx_tint, settings.fx_saturation, settings.fx_scanlines, settings.fx_burn);
     if (fclose(out) != 0 || rename(tmp, path) != 0) { snprintf(err, (size_t)errlen, "could not write %s", path); return false; }
     return true;
 }

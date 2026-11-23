@@ -54,7 +54,19 @@ void browse_open(void) {
         snprintf(dir, sizeof dir, "%s/%s", carts_root(), e->d_name);
         snprintf(p, sizeof p, "%s/main.gb", dir);
         struct stat st;
-        if (stat(p, &st) != 0) continue;
+        if (stat(p, &st) != 0) {
+            /* a zipped cart, unless it's unpacked already: its title comes from the cache */
+            char cname[128];
+            CartStub stub;
+            if (!archive_name(e->d_name)) continue;
+            archive_cart_name(e->d_name, cname, sizeof cname);
+            snprintf(p, sizeof p, "%s/%s/main.gb", carts_root(), cname);
+            if (stat(p, &st) == 0 || !archive_stub(dir, &stub)) continue;
+            Entry *c = &carts[ncarts++];
+            snprintf(c->name, sizeof c->name, "%s", e->d_name);
+            snprintf(c->title, sizeof c->title, "%s", stub.title[0] ? stub.title : cname);
+            continue;
+        }
         Entry *c = &carts[ncarts++];
         snprintf(c->name, sizeof c->name, "%s", e->d_name);
         snprintf(c->title, sizeof c->title, "%s", e->d_name);

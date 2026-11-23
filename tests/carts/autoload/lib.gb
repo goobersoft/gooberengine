@@ -1,0 +1,5 @@
+' slotted in cart.txt: compiled in ahead of main.gb, so its top level runs first
+global order:string = "lib"
+global function lib_value:int()
+  return 42
+endfunction

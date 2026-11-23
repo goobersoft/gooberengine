@@ -22,14 +22,14 @@
 <body>
 <div id="screen">
   <canvas id="canvas" tabindex="-1" oncontextmenu="event.preventDefault()"></canvas>
-  <div id="drop">drop a .gbcart to load it</div>
+  <div id="drop">drop a cart .zip to load it</div>
 </div>
 <div id="bar">
-  <button id="upload" title="UPLOAD in the shell does the same">open .gbcart</button>
+  <button id="upload" title="UPLOAD in the shell does the same">open cart</button>
   <button id="full">fullscreen</button>
   <span id="status">loading...</span>
 </div>
-<input type="file" id="file" accept=".gbcart" style="display:none">
+<input type="file" id="file" accept=".zip,.tar.gz,.tgz,.tar" style="display:none">
 <script>
   // Carts and save data live in the browser (IndexedDB), under /persist.
   // The example carts are copied there the first time; after that they're yours to edit.
@@ -56,8 +56,9 @@
 
   // a dropped or picked file goes to /tmp/upload; the engine LOADs it next frame
   function takeFile(file) {
-    if (!/\.gbcart$/i.test(file.name)) { status("only .gbcart files can be opened"); return; }
-    var name = file.name.replace(/\s*\(\d+\)(?=\.gbcart$)/i, "").replace(/[^A-Za-z0-9_.-]/g, "_");
+    var cartExt = /\.(zip|tar\.gz|tgz|tar)$/i;
+    if (!cartExt.test(file.name)) { status("only .zip, .tar.gz and .tar carts can be opened"); return; }
+    var name = file.name.replace(/\s*\(\d+\)(?=\.(zip|tar\.gz|tgz|tar)$)/i, "").replace(/[^A-Za-z0-9_.-]/g, "_");
     file.arrayBuffer().then(function (buf) {
       Module.FS.mkdirTree("/tmp/upload");
       var path = "/tmp/upload/" + name;
@@ -107,7 +108,7 @@
     var ctx = Module.SDL2 && Module.SDL2.audioContext;
     if (ctx && ctx.state === "suspended") ctx.resume();
     document.getElementById("canvas").focus();
-    if (/sound/.test(statusEl.textContent)) status("F1-F5 editors, Esc to leave a cart, HELP in the shell");
+    if (/sound/.test(statusEl.textContent)) status("F1 help, Esc to leave a cart, HELP in the shell");
   }
   ["pointerdown", "keydown", "touchstart"].forEach(function (e) { window.addEventListener(e, wake, true); });
 

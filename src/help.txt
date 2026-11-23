@@ -1,0 +1,1151 @@
+; The pages of the in-console manual (F1). make turns this file into
+; help_pages.c; ./gooberengine --help-check (part of make test) checks that
+; every keyword, type, command and constant has a page, and every link works.
+;
+;   @ name name2 PATTERN* | Title     starts a page. F1 on any of the names opens
+;                                      it (case doesn't matter; NAME* matches
+;                                      every word starting with NAME). :name is a
+;                                      shell command (F1 on the shell's prompt).
+;   4 spaces first                    a line of code, shown as it is (62 characters at most)
+;   # text                            a heading
+;   - text                            a bullet
+;   {name} / {name|shown text}        a link to the page for name
+;   `code`                            code inside a sentence
+;   ; first                           a comment, left out
+;
+@ contents manual docs help | Contents
+# GooberEngine manual
+Press F1 on a word in the code editor to open its page. In the manual, F1 shows {index|the index}: every page's names, A to Z. Type anywhere to search them. Tab picks a link, Enter follows it, Backspace goes back, Esc leaves.
+
+The buttons along the top do it with the mouse: `< back` and `forward >` step through the pages you've seen (the index counts as one), `contents` comes here, `index` opens the index, and `close` leaves. Alt+Left and Alt+Right are back and forward too.
+
+# The console
+- {function-keys|Function keys}: F1 to F12
+- {shell|The shell}: loading, running, saving and sharing carts
+- {code-editor|Code editor} - {tile-editor|Tile editor} - {map-editor|Map editor}
+- {sound-editor|Sound editor} - {music-editor|Music editor} - {font-editor|Font editor}
+- {file-tree|The file tree} - {settings|Settings}
+- {machine|The machine}: screen, colours, tiles, sound
+- {cartridges|Cartridges}: what's in a cart folder
+
+# GooberBASIC, the language
+- {language|The language at a glance}
+- {basics|Basics}: lines, comments, case
+- {variables|Variables} and {types|types}
+- {operators|Operators}
+- {if|if} {while|while} {repeat|repeat} {for|for} {select|select}
+- {function|Functions}, {closures|function values}
+- {type|Types (records)}, {list|lists}, {arrays|arrays}
+- {defdata|Data blocks}, {include|files}
+
+# Commands
+- {api|The console API}: drawing, tiles, sound, input, saving
+- {core-commands|Core commands}: printing, maths, strings, time
+
+@ f1 function-keys hotkeys shortcuts | Function keys
+These keys work everywhere: in the shell, in every editor and here.
+
+- F1: help. In the code editor, the page for the word under the cursor. In the shell, the {index} (narrowed to the command you're typing). In the other editors, that editor's page. In the help, F1 shows the {index} of every page (F1 again goes back to the page).
+- F9: show or hide the {file-tree|file tree}
+- F10: the {settings} screen (F10 again goes back)
+- F11 (or Alt+Enter): fullscreen
+- F12: save a screenshot
+
+In every editor: Ctrl+S saves, Ctrl+R saves and runs, and Esc goes back to the {shell}. In a running cart, Esc stops it.
+
+@ machine hardware screen palette | The machine
+- Screen: 400 x 240 pixels, 60 frames a second.
+- Colour: 64 fixed colours, 2 bits each of red, green and blue. A colour's number is r*16 + g*4 + b, with each channel 0 to 3: see {rgb} and {COL_BLACK|the named colours}.
+- Tiles: a tileset is a 400 x 240 sheet of 960 tiles, 10 x 10 pixels each, 40 to a row: see {sprite}.
+- Maps: 1 to 10 screens each way, a screen being 40 x 24 cells: see {map_draw}.
+- Slots: 10 each for tilesets, maps, sound banks, songs and fonts: see {slots}.
+- Dots: a cart may draw 100,000 pixels a frame: see {dot_limit}.
+- Text: the built-in font is 6 x 10, so 66 x 24 characters fit: see {text}.
+- Input: a pad (d-pad, A, B, C, Start), the keyboard and the mouse: see {btn}.
+- Sound: 8 voices, 16 drawable waves plus noise, 64 pitches, 64 sound effects: see {sfx}.
+
+# The pad on the keyboard
+- d-pad: the arrow keys
+- A: Z or Space. B: X. C: C. Start: Enter.
+A game controller works too: its d-pad or left stick, its X, A and B face buttons (Xbox names) and Start.
+
+@ cartridges g64 | Cartridges
+A cart is a folder:
+    mycart/
+      main.gb          the program
+      cart.txt         title = ..., author = ..., version = ...
+                       slot tiles 0 = tileset ...  (see {slots})
+      tiles/NAME.g64   tilesets
+      maps/NAME.g64    maps
+      sfx/NAME.g64     sound banks (waves and sound effects)
+      music/NAME.g64   songs
+      fonts/NAME.g64   fonts
+Everything but `main.gb` is optional, and a cart can have any number of each kind. Each file can be given a slot to load into by itself when the cart runs: the number left of its name in the {file-tree|file tree}. In a cart that hasn't set any, the files named `tileset`, `map`, `sfx`, `music` and `font` are in slot 0 (see {slots}).
+
+`main.gb` is where a cart starts, and it always runs. Other `.gb` files beside it run if they have a slot (they come first, see {file-tree|the file tree}) or if `main.gb` {include|includes} them. Every file is text, so carts can be diffed and edited outside the console. The `.g64` files are base-64 text, one character per number 0 to 63: `0-9`, `a-z`, `A-Z`, `+`, `*`.
+
+See also: {shell}, {:save|SAVE}, {:export|EXPORT}.
+
+; ---------------------------------------------------------------- the shell
+@ shell :help :? :docs :manual :dir :ls :folder :cls :clear :info :quit :exit :edit :tiles :map :sound :sfx :music :font :settings | The shell
+The shell is where GooberEngine starts. Type a command and press Enter; Up and Down bring back earlier ones. F1 opens the {index} of every page; with a command typed, the index shows the names that hold it, the command first.
+
+- `DIR` (or `LS`): list the carts here, the folders of carts, and the zipped carts not unpacked yet.
+- {:cd|CD folder}: go into a folder of carts.
+- {:load|LOAD name}: load a cart.
+- {:run|RUN [name]}: save, then run the loaded cart (or load one and run it).
+- {:new|NEW [name]}: make a new cart.
+- {:save|SAVE [name]}: save everything being edited.
+- `EDIT`, `TILES`, `MAP`, `SOUND`, `MUSIC`, `FONT`: open an editor (or pick a file in the {file-tree|file tree}, or click a tab).
+- {:browse|BROWSE}: pick a cart from a list.
+- {:export|EXPORT}: zip the cart, or make a standalone game.
+- {:import|IMPORT file}: unpack a .zip into a cart folder.
+- `INFO`: the loaded cart's title, author, tiles and files.
+- {:theme|THEME [name]}: the editors' colours.
+- `SETTINGS`: the {settings} screen (F10).
+- `FOLDER`: where carts are read from.
+- `HELP`: a list of the commands. `HELP word` (or `DOCS word`): that word's page here. `HELP index`: the {index}.
+- `CLS`: clear the screen. `QUIT`: leave.
+
+If anything has unsaved changes, `LOAD`, `NEW` and `RUN name` ask "discard them? (Y/N)" first. `QUIT` asks "save changes? (Y/N)": Y saves and quits, N quits without saving, Esc stays. Ctrl+R in the shell runs the cart, as in the editors. Esc on an empty prompt opens the code editor.
+
+GooberEngine boots into an untitled cart, so you can start typing code (`EDIT`) at once. Nothing is written to the carts folder until {:save|SAVE name}.
+
+@ :load | LOAD
+    LOAD name
+Loads a cart: a folder in the carts folder (or in the one {:cd|CD} went into), or a path to a cart folder.
+
+If there is no folder of that name but there is a `name.zip` (or `.tar.gz`, `.tgz`, `.tar`), it is unpacked into a folder beside it first, once. After that the folder is the cart.
+
+Dropping a cart folder or a .zip on the window does the same. If anything has unsaved changes, LOAD asks first. See also {:run|RUN}, {:browse|BROWSE}.
+
+@ :run | RUN
+    RUN [name]
+Saves the code being edited, then runs the loaded cart. With a name, it loads that cart first. Esc stops the cart and comes back.
+
+Ctrl+R does the same from the shell or any editor, and comes back to that editor. On an error the code editor opens at the line and shows the message.
+
+@ :new | NEW
+    NEW [name]
+Makes a cart folder with a starter `main.gb` and opens it in the code editor. Without a name, a fresh untitled cart that nothing is written for until {:save|SAVE name}.
+
+@ :save | SAVE
+    SAVE [name]
+Saves everything being edited: code, tiles, maps, sounds, music and fonts.
+
+On an untitled cart, `SAVE mygame` makes the folder `carts/mygame`, and `SAVE` alone makes `carts/untitled`. If that name is taken it asks before overwriting. A cart that has a name already is saved with plain `SAVE` (or Ctrl+S in an editor).
+
+@ :export :download | EXPORT
+    EXPORT [file]
+    EXPORT target [folder]
+`EXPORT` zips the loaded cart into `carts/NAME.zip`, or into `file` (`.zip` is added; `file.tar.gz` writes a gzipped tar). Others can `LOAD` the zip. SAVE first: EXPORT packs the files on disk.
+
+`EXPORT LINUX`, `WINDOWS`, `WEB` or `ALL` (several may be given) makes a standalone game, written to `exports/NAME/` unless a folder is given.
+
+In the browser, `DOWNLOAD` saves the cart to your computer as a .zip, and `UPLOAD` opens one.
+
+@ :import :upload | IMPORT
+    IMPORT file [name]
+Unpacks a `.zip` (or `.tar.gz`, `.tgz`, `.tar`) into a new cart folder, named `name` or after the file, and loads it. See also {:load|LOAD}, {:export|EXPORT}.
+
+@ :cd | CD
+    CD folder
+    CD ..
+Goes into a folder of carts inside the carts folder, such as `CD examples`. `CD ..` goes back up, and `CD` alone (or `CD /`) goes to the top. `DIR`, `LOAD`, `RUN`, `NEW`, `SAVE` and `BROWSE` then work in that folder, and the prompt shows its name.
+
+@ :browse :carts | BROWSE
+    BROWSE
+Shows the carts here as a list. Up/Down, PgUp/PgDn, Home/End or the mouse pick one (the wheel scrolls). Enter, or a second click, runs it, and L loads it. Esc goes back.
+
+@ :theme | THEME
+    THEME [name]
+The colours of the shell, the editors and the file tree: `blue` (the default), `green`, `orange` or `grey`. It is remembered for next time. `THEME` alone shows the one in use. Carts, tiles and the code editor's syntax colours look the same in every theme. The {settings} screen changes it too.
+
+@ settings | Settings
+F10, `SETTINGS` in the shell, or the settings button at the bottom of the file tree opens the settings screen. Up and Down pick a line, Left and Right (or the mouse) change it. Esc, or F10 again, goes back.
+
+- theme: the shell's and editors' colours (see {:theme|THEME})
+- volume: all sound, 0 to 10
+- music, sound fx: the music, and the sound effects, on top of the volume
+- fullscreen: on or off (F11 does the same)
+- window size: 1x to 8x
+- indent: how Enter indents in the {code-editor|code editor}: smart, auto or none
+- right click: the {tile-editor|tile editor}'s right button: eyedrop (pick a colour up) or colour B
+- effects: opens the {effects|post-processing effects} page
+
+Every change takes effect at once and is kept in `settings.txt`.
+
+@ effects CRT scanlines | Post-processing effects
+The effects line of the {settings} screen opens this page. The effects change how the screen is shown in the window, never what is drawn: carts, `pget()` and F12 screenshots see the plain picture. Drag a slider, or pick a line with Up and Down and move it with Left and Right (Shift moves by 1; Home and End go to the ends). Esc goes back to the settings.
+
+- crt bend, 0 to 100%: the picture bulges like the glass of an old tube; the mouse still points at the pixel you see under it
+- tint, 0 to 359 degrees: every colour is turned around the colour wheel
+- saturation, 0 to 100%: 100 is the console's own colours, 0 is grey
+- scanlines, 0 to 100%: darkens the screen row under each row of console pixels; 100 makes it black. There is no such row at 1x, so it needs a window size of 2x or more
+- screen burn, 0 to 80%: a pixel that goes dark fades out over a few frames instead of snapping off
+- reset: every effect off
+
+An exported game shows none of them.
+
+; ---------------------------------------------------------------- the editors
+@ code-editor | Code editor
+`EDIT` in the shell edits the cart's code. Other `.gb` files open from the {file-tree|file tree}. Each file keeps its own cursor and undo.
+
+- F1: the help page for the word under the cursor
+- Ctrl+R: save and run. On an error the editor jumps to the line and shows the message; click the message to read all of it.
+- Ctrl+S: save. Esc: back to the shell.
+- arrows, Home/End, PgUp/PgDn: move. Ctrl+arrows jump by word, Ctrl+Home/End to the start or end.
+- Shift + a move, or a mouse drag: select. Double-click selects a word, triple-click the line.
+- Ctrl+A / C / X / V: select all, copy, cut, paste (with nothing selected, copy and cut take the line)
+- Ctrl+Z / Ctrl+Y: undo / redo
+- Tab / Shift+Tab: indent / unindent
+- Ctrl+/: comment or uncomment the lines
+- Ctrl+D: duplicate the line
+- Ctrl+F, Ctrl+N: find, find the next one. Ctrl+G: go to a line.
+
+Enter keeps the indent of the line above, and adds one after a line that opens a block (`if`, `for`, `function` ...), unless the indent {settings|setting} says otherwise.
+
+The colours mark keywords, commands, type names, constants, numbers, strings and comments. See {language} for the language itself.
+
+@ tile-editor | Tile editor
+`TILES` edits a tileset: a 400 x 240 sheet of 960 tiles. A yellow box marks the tile being edited (or a 2x2 or 4x4 block, with Z); only it can be painted. Tile 0 is selected at first.
+
+The selection is also the {map-editor|map editor}'s brush: pick a tile (or a block) here, switch to the map, and it paints with it.
+
+- Left button: draw with colour A. Right button: pick up the colour under the mouse into A (or, with the right click {settings|setting} on colour B, draw with colour B, which is transparent at first, so it erases).
+- Middle click: pick up a colour. Middle drag, or Space + drag: pan. Wheel: zoom.
+- P F L R I: pencil, fill, line, rectangle (Shift: filled), pick a colour
+- Z: edit 1x1, 2x2 or 4x4 tiles. H / V / T: flip across, flip up-down, turn.
+- arrows: move to another tile. Shift+arrows: nudge the pixels.
+- Del: clear. X: swap colours A and B. G: grid. Home: reset the view.
+- Ctrl+C / X / V: copy, cut, paste. Ctrl+Z / Y: undo, redo.
+- Ctrl+S: save `tiles/NAME.g64`. Ctrl+R: run. Esc: the shell.
+
+A cart draws tiles with {sprite} and changes them with {tile_pset}.
+
+@ map-editor | Map editor
+`MAP` edits a map. The left button paints with the brush, the right button picks up the tile under the mouse.
+
+The brush follows the {tile-editor|tile editor}: the tile selected there (tile 0 at first) is the brush, and a 2x2 or 4x4 block selected there is stamped whole, as it sits on the sheet; dragging lays it a block at a time. A tile picked here is selected in the tile editor too.
+
+- Tab: the tile picker (drag across tiles for a block brush)
+- P R F S: pen, rectangle, fill, select
+- E: brush = empty (erases). [ / ]: the previous / next tile.
+- T: draw with the next tileset.
+- Ctrl+arrows: add or remove a column or row of screens (1 to 10 each way)
+- wheel, = / -: zoom. Middle drag, Space + drag, arrows: move around.
+- Ctrl+C / X: the selection into the brush. Del: clear the selection.
+- G: guides. Ctrl+Z / Y: undo, redo.
+- Ctrl+S: save `maps/NAME.g64`. Ctrl+R: run. Esc: the shell.
+
+A cart draws the map with {map_draw} and reads it with {map_get}.
+
+@ sound-editor | Sound editor
+`SOUND` edits a sound bank: 64 sound effects and the 16 waves they play. Each effect has 32 steps; a step is a pitch, a wave, a volume and an effect.
+
+- Z S X D C V G B H N J M (and Q W E R T Y U): enter notes, like a small keyboard
+- [ / ]: octave down / up. 1 to 7: volume. 0: rest.
+- Left / Right: move along the steps. Up / Down: the step's pitch.
+- Tab: the step's effect: . none, s slide, v vibrato, d drop, < fade in, > fade out, a arpeggio
+- , / .: the wave pen. - / =: speed.
+- Ctrl+L: end here. Ctrl+B / Ctrl+E: loop from / to this step.
+- PgUp / PgDn: previous / next effect. Space: play. Esc: stop, then the shell.
+- Ctrl+C / V: copy / paste an effect. Ctrl+Z / Y, Ctrl+S, Ctrl+R: undo, redo, save, run.
+
+A cart plays the effects with {sfx}.
+
+@ music-editor tracker piano-roll | Music editor
+`MUSIC` is a tracker for a song: an order list of up to 64 entries, each playing a pattern, jumping to another entry or stopping. A pattern is 32 rows x 8 tracks; track t plays on voice t.
+
+- Z...M, Q...U on the note field: enter a note. 1: note off.
+- hex digit or n / 0 to 7 / effect letters: the wave / volume / effect, on those fields
+- arrows, PgUp/PgDn, Home/End, Tab: move
+- Del / Backspace: clear a cell. [ / ]: octave. - / =: song speed.
+- Ctrl+Left / Right, or the < > arrows: pick an order entry (its number shows after "order"). Ctrl+Up / Down: change its pattern.
+- the pattern list on the left, or Ctrl+PgUp / PgDn: the pattern to edit. Right click or Ctrl+Enter: put it in the order entry.
+- Ctrl+J, Ctrl+.: make the entry a jump, a stop. Ctrl+I / Ctrl+Del: insert / delete one.
+- Space: play the song. Shift+Space: loop the pattern. Esc: stop, then the shell.
+- Ctrl+P: the piano roll (draw notes with the mouse) and back.
+- Ctrl+C / X / V: copy, cut, paste a pattern. Ctrl+Z / Y, Ctrl+S, Ctrl+R: undo, redo, save, run.
+
+A cart plays the song with {music}.
+
+@ font-editor | Font editor
+`FONT` edits a font: the 96 glyphs, characters 32 to 127, that a cart's {text} draws with. A cart without a font starts from a copy of the built-in one.
+
+- any character: edit that character's glyph
+- left button: set pixels. Right button: clear them.
+- arrows, PgUp / PgDn: another glyph. Shift+arrows: nudge the pixels.
+- Ctrl+arrows: make every character wider, narrower, taller or shorter (4x4 to 20x20)
+- Del: clear the glyph. Ctrl+D: the built-in font's glyph.
+- Ctrl+C / X / V, Ctrl+Z / Y: copy, cut, paste, undo, redo
+- Ctrl+S: save `fonts/NAME.g64`. Ctrl+R: run. Esc: the shell.
+
+A glyph fills its whole cell, so the space between characters is part of each glyph. A cart switches fonts with {load_font}.
+
+@ file-tree files | The file tree
+Every editor has the cart's files down its left side. F9 (or the button left of the tabs) hides and shows it.
+
+- Click a file to open it in its editor.
+- `+` beside a section makes a new file.
+- Click a section's name to fold it away.
+- Right-click a file to rename or delete it.
+- The number left of a file is the slot it loads into when the cart runs. Click there to put it in the lowest free slot, or take it out; right-click there to move it to the next slot (the file in that one takes its place). Files in slots come first, in slot order.
+- `*` marks a file with unsaved changes.
+- The settings button at the bottom opens the {settings}.
+
+Code files show without their `.gb`: `main` is `main.gb`.
+
+`main` is always first and shows `-` where the others show a slot: it has no slot, because it always runs. A cart starts there, so it can't be renamed or deleted, and clicking its `-` does nothing. Code files in slots run before it: they are compiled in ahead of `main.gb`, in slot order, as if `main.gb` began by {include|including} each, so their top-level code runs first and their functions and globals are ready when `main.gb` starts. A code file without a slot runs only if something includes it. The slots are kept in `cart.txt`.
+
+; ---------------------------------------------------------------- the language
+@ language GooberBASIC | The language at a glance
+GooberBASIC is a BASIC in the style of BlitzBasic, written in lowercase.
+    strict
+    const SPEED = 2
+    global x:int = 200, y:int = 120
+
+    function move_player()
+      if btn(BTN_LEFT) then x :- SPEED
+      if btn(BTN_RIGHT) then x :+ SPEED
+    endfunction
+
+    repeat
+      move_player()
+      cls()
+      circle_fill(x, y, 8, COL_YELLOW)
+      flip()
+    forever
+- {basics|Basics}: one statement per line, `'` comments, case
+- {variables|Variables}: {local}, {global}, {const}, {dim}, {strict}
+- {types|Types}: {numbers}, {string|strings}, {type|records}, {arrays}, {list|lists}
+- {operators|Operators}: maths, comparisons, {and}, {or}, {not}
+- Control: {if}, {while}, {repeat}, {for}, {eachin}, {select}, {exit}, {end}
+- {function|Functions}: {return}, default arguments, {closures}
+- {include|Files}: {include}, `local function`
+- {defdata|Data blocks}: {defdata}, {restore}, {read_int}
+
+@ basics syntax statements .. | Basics
+- Keywords and names don't care about case: `print`, `Print` and `PRINT` are the same. Underscores count: `draw_rect` and `drawrect` are different.
+- One statement per line, or several separated by `:` (or `;`).
+- {comments|Comments} start with `'`. Longer ones go between `rem` and `endrem`.
+- End a line with `..` to carry on on the next line.
+- Calls always take parentheses, even with no arguments: `cls()`, `flip()`.
+- `include "other.gb"` pastes in another file: see {include}.
+- Code is written in lowercase with snake_case names. Types are named `t_something`, constants `UPPER_CASE`.
+    x = 10 : y = 20           ' two statements on a line
+    total = x + y + ..
+            z                 ' carried on
+
+@ comments rem endrem | Comments
+A comment starts with `'` and runs to the end of the line. `rem` ... `endrem` makes a block comment over several lines.
+    ' a whole-line comment
+    x = 1   ' after code
+    rem
+      all of this is ignored
+    endrem
+In the code editor, Ctrl+/ comments or uncomments the selected lines.
+
+@ variables declarations | Variables
+    local count = 0              ' an int
+    local speed# = 2.5           ' a float, by its suffix
+    local name:string = "Bob"    ' a string, by annotation
+    global score:int             ' global is optional
+    const MAX_ENEMIES = 50
+- A name is **global unless it has `local` in front of it**: shared by every function and every file.
+- {local}: belongs to the function it's in, or to the main program (and its file).
+- {global}: optional, says outright that a variable is global.
+- {const}: a value that never changes.
+- {dim}: makes an array.
+- Without {strict}, using a name you never declared makes it a global, typed by its suffix (int if it has none), even inside a function. So does a {for} counter without `local`: write `for local i = 1 to 10` in functions.
+- Values convert on assignment between number types, and between numbers and strings.
+See {types} for every type.
+
+@ local | local
+    local name[:type] [= value] [, name2 ...]
+Declares variables that belong to the function they're written in. At the top of a file they belong to the main program, and to that file only: the functions written in that file see them (wherever they stand in it), other files don't. A function's own `local` of the same name hides it. A name without `local` is a global.
+
+`local function name(...)` makes a function only its own file can call.
+
+A `local` without a value starts at 0, "" or null. `for local i = 1 to 10` declares the loop variable in the loop.
+    function score_line$(points:int)
+      local text$ = "score: " + points
+      return text$
+    endfunction
+
+@ global | global
+    global name[:type] [= value] [, name2 ...]
+A global variable is seen everywhere: in every function and in every file. Any name without {local} in front is already global, so the word `global` is optional (`global function` is the same as `function`). See {include}.
+    global lives:int = 3
+    function lose_life()
+      lives :- 1
+    endfunction
+
+@ const | const
+    const NAME = value [, NAME2 = value2 ...]
+A value that can't change. Its type comes from the value. Constants are seen in every file and every function.
+    const SPEED = 2, TITLE$ = "Goober"
+    const GRAVITY:float = 0.25
+Built-in constants: {true}, {false}, {pi}, plus the console's: {SCREEN_W}, {COL_BLACK|COL_...}, {BTN_A|BTN_...}, {KEY_A|KEY_...}.
+
+@ dim | dim
+    dim name:type[size [, size2 ...]]
+Makes an array, like `local name:type[size]`. At the top of a file it makes a global array. See {arrays}.
+    dim grid:int[40, 24]
+    grid[3, 4] = 1
+
+@ strict superstrict | strict and superstrict
+`strict` at the top of a file makes every variable need a declaration ({local}, {global}): a misspelt name is then an error instead of a new variable.
+
+`superstrict` does that, and also wants a type on everything declared, so nothing quietly becomes an `int`:
+- `local`, `global`, `dim`, `field`, parameters and `for local` need a type (`:type` or a suffix).
+- A function without a return type returns nothing: `return value` is an error. Write `function f:int()` for one that gives a value.
+- It covers the code after it, so put it first.
+    superstrict
+    local speed:float = 1.5
+    function alive:int(e:t_enemy)
+      return e.hp > 0
+    endfunction
+
+@ types annotations suffixes : | Types
+A variable's type is given by a suffix or a `:type` annotation. Without either, it's an `int`.
+- `%` or `:int`: a 32-bit integer (the default)
+- `#` or `:float`: a 32-bit float. `:double` is 64-bit.
+- `$` or `:string`: text (see {string|strings})
+- `:byte`, `:short`, `:long` and the sized ones (`:uint8` to `:sint64`): see {numbers}
+- `:t_name`: an object of one of your {type|types}
+- `:int[]`, `:float[,]`: an {arrays|array}
+- `:int list`, `:t_enemy list`: a {list}
+- `:int(int, string)`: a {closures|function value}
+    local hp% = 3              ' suffix
+    local hp:int = 3           ' annotation: the same
+    local e:t_enemy = new t_enemy
+
+@ numbers int float double byte short long uint8 sint8 uint16 sint16 uint32 sint32 uint64 sint64 literals | Numbers
+- `int`: signed 32-bit, the default type. `sint32` is the same.
+- `float`: 32-bit floating point. `double`: 64-bit.
+- `byte` / `uint8`, `short` / `uint16`, `long` / `uint64`, `uint32`, `sint8`, `sint16`, `sint64`: fixed-width integers. Storing a value that doesn't fit wraps around.
+Literals: `255`, `3.14`, `1e6`, `$FF` (hex), `%1010` (binary). Numbers too big for an int are 64-bit.
+    local b:byte = 250
+    b :+ 10            ' wraps: b is now 4
+    local f:float = 7 / 2    ' 3: int / int stays an int
+    local g:float = 7 / 2.0  ' 3.5
+- Maths uses the wider side: anything with a float gives a float, any double a double.
+- float to integer drops the fraction (toward zero).
+- Every type name converts too: `int(x)`, `float(x)`, `byte(x)` ... and {str}.
+See also {operators}, {abs}, {floor}.
+
+@ string | Strings
+A string is text: `"like this"`. The `$` suffix or `:string` makes a string variable.
+    local name$ = "Goober"
+    local line:string = "hi, " + name$ + "!"
+    print("score: " + 42)    ' a number joined to a string
+- `+` joins strings. A number joined to a string becomes text.
+- `=` `<` `>` compare strings alphabetically.
+- Escapes: `~n` a new line, `~t` a tab, `~q` a quote, `~~` a tilde.
+- Positions count from 1.
+Functions: {len}, {left}, {right}, {mid}, {upper}, {lower}, {trim}, {instr}, {replace}, {chr}, {asc}, {hex}, {bin}, {repeat_string}, {lset}, {rset}, {str}.
+
+@ operators and or not mod shl shr sar ^ + - * / = < > & | Operators
+Highest first:
+- `^`: power (always a float)
+- `-x`, `+x`, `~x`: minus, plus, bitwise NOT
+- `*` `/` `mod` `shl` `shr` `sar`: `int / int` stays an int (7 / 2 = 3). `mod` is the remainder. `shl` / `shr` shift bits left / right, `sar` keeps the sign.
+- `+` `-`: `+` joins strings too
+- `&`, `|`, `~`: bitwise AND, OR, XOR
+- `=` `<>` `<` `>` `<=` `>=`: 1 if true, 0 if false
+- `not`
+- `and`: stops early if the left side is false
+- `or`: stops early if the left side is true
+    x :+ 1         ' x = x + 1   (also :-  :*  :/)
+    if a > 0 and not done then go()
+    even = (n mod 2 = 0)
+    flags = flags | 4
+
+; ---------------------------------------------------------------- control flow
+@ if then else elseif endif | if
+    if condition then statement [else statement]
+
+    if condition
+      ...
+    elseif other
+      ...
+    else
+      ...
+    endif
+The one-line form puts everything after `then`. The block form ends with `endif` (or `end if`), and `else if` works as `elseif`. A condition is true when it isn't 0.
+    if lives = 0 then end
+    if x < 0
+      x = 0
+    elseif x > SCREEN_W
+      x = SCREEN_W
+    endif
+See {operators} for `and`, `or`, `not` and comparisons, and {select} for many cases.
+
+@ while wend endwhile | while
+    while condition
+      ...
+    wend
+Runs the block over and over while the condition is true (checking before each time). `endwhile` works as well as `wend`. {exit} leaves the loop, {continue} skips to the next time round.
+    while net_messages() > 0
+      print(net_recv())
+    wend
+
+@ repeat until forever | repeat
+    repeat
+      ...
+    until condition
+
+    repeat
+      ...
+    forever
+Runs the block, then checks: `until` stops once the condition is true, so the block always runs at least once. `forever` never stops on its own; a cart's main loop is usually one.
+    repeat
+      update()
+      draw()
+      flip()
+    forever
+See {exit} to leave a loop early.
+
+@ for to step next | for
+    for name = first to last [step n]
+      ...
+    next
+Counts from `first` to `last` (both included), by 1 or by `step`. `step` must be a constant and may be negative. `for local i = ...` declares the loop variable too.
+    for local i:int = 0 to 9
+      sprite(i, i * 10, 0)
+    next
+    for y = 10 to 0 step -2 ... next
+For lists use {eachin}. {exit} leaves the loop, {continue} goes on to the next number.
+
+@ eachin each | for ... eachin
+    for item = eachin list
+      ...
+    next
+Visits every item of a {list}, first to last. The loop variable must have the list's type; without {strict} it gets it on its own. Removing items (this one or others) inside the loop is safe.
+    for local e:t_enemy = eachin enemies
+      if e.hp <= 0 then list_remove(enemies, e)
+    next
+`for ... = each t_type`, from BlitzBasic, was removed: keep your objects in a list.
+
+@ select case default endselect | select
+    select value
+      case a, b : ...
+      case c    : ...
+      default   : ...
+    endselect
+Compares one value against each `case` in turn and runs the first that matches (a case may list several values). `default` runs when none does.
+    select level
+      case 1     : load_map(0, "forest")
+      case 2, 3  : load_map(0, "cave")
+      default    : load_map(0, "castle")
+    endselect
+
+@ exit continue break | exit and continue
+`exit` leaves the innermost loop ({for}, {while}, {repeat}) at once. `continue` skips the rest of this time round and goes on with the next.
+    for local i:int = 1 to 100
+      if i mod 3 = 0 then continue
+      if i > 50 then exit
+      print(i)
+    next
+
+@ end stop | end
+`end` stops the program. In a cart, it ends the cart and goes back to where it was run from.
+
+`end` also closes blocks when written as two words: `end if`, `end function`, `end type`, `end select`, `end while` and `end data` mean `endif`, `endfunction` and so on.
+
+; ---------------------------------------------------------------- functions
+@ function endfunction return ( ) , | Functions
+    function name[:type](param[:type] [= default], ...)
+      ...
+      return value
+    endfunction
+A function's return type goes after its name; its parameters are like {local} declarations, and may have default values. `return` leaves the function, giving back a value.
+    function hypot:float(a:float, b:float)
+      return sqr(a * a + b * b)
+    endfunction
+
+    function greet$(name$, greeting$ = "Hello")
+      return greeting$ + ", " + name$
+    endfunction
+
+    print(greet("Goober"))
+- Calls always take parentheses: `reset_game()`.
+- A function may be called above the place it's written.
+- Numbers and strings are passed by value, arrays and objects by reference.
+- A function with no return type returns an int (0 if nothing is returned); under {strict|superstrict} it returns nothing.
+- Every file can call a function; `local function` keeps it to its own file (see {include}).
+See {closures} for functions as values.
+
+@ closures function-values lambda | Function values and closures
+Functions are values: store them in variables, fields, arrays and lists, and pass them around. A function type is the return type, then the parameter types in brackets: `int(int, string)`. One returning nothing leaves the return type out: `(string)`.
+    function double_it:int(x:int)
+      return x * 2
+    endfunction
+    local f:int(int) = double_it      ' no parentheses
+    print(f(21))                      ' 42
+
+    local log:(string) = function(msg:string)
+      print("> " + msg)
+    endfunction
+`function ... endfunction` written in an expression makes a nameless function. It can use the locals of the function around it, and keeps them alive (a closure):
+    function make_counter:int()(stepsize:int)
+      local count:int = 0
+      return function:int()
+        count = count + stepsize
+        return count
+      endfunction
+    endfunction
+A function variable starts as {null}.
+
+@ include files | include and files
+    include "other.gb"
+Runs another `.gb` file's top-level code at that point (each file is included once). In a cart, the other file sits beside `main.gb`; the {file-tree|file tree} makes new ones. A code file with a slot in the file tree needs no include: it is compiled in ahead of `main.gb`, as if `main.gb` began by including it. `main.gb` itself always runs and has no slot.
+
+Everything a file declares is shared with every file, unless it's declared {local}:
+- a top-level {local}, a `local function`: that file only (its functions included)
+- every other variable and `function`: every file
+- {type} and {const}: every file
+    ' enemies.gb
+    local function pick_spot:int()   ' this file only
+      return rnd(0, 100)
+    endfunction
+    function spawn_enemy()
+      ...
+    endfunction
+
+    ' main.gb
+    include "enemies.gb"
+    spawn_enemy()
+
+; ---------------------------------------------------------------- types, lists, arrays
+@ type endtype field . | type (records)
+    type t_name
+      field name[:type] [, name2 ...]
+    endtype
+A type is a record of fields: data only, no methods (write functions that take the object). Make one with {new}; reach its fields with a dot.
+    type t_enemy
+      field x:float, y:float
+      field hp:int
+      field name$
+    endtype
+
+    local e:t_enemy = new t_enemy
+    e.x = 100 : e.hp = 3
+- A field may be any type, including a list, an array or a function.
+- An object lives as long as something refers to it (see {gc_collect|garbage collection}); there is no {delete}.
+- Keep many of them in a {list}.
+
+@ new | new
+    new t_type
+    new int list
+Makes a new object of a {type}, with every field at 0, "" or null, or a new empty {list}.
+    local p:t_player = new t_player
+    global bullets:t_bullet list = new t_bullet list
+
+@ null | null
+`null` means "no object": the starting value of an object, list, array or function variable. Compare with `=`; setting a variable to `null` lets its object go (see {gc_collect|garbage collection}). Using a null object is a runtime error.
+    if target = null then target = find_target()
+    boss = null
+
+@ delete first last after before | delete (removed)
+BlitzBasic's `delete`, `first`, `last`, `after`, `before` and `for ... = each` are not in GooberBASIC: types don't keep a hidden list of their objects.
+- To get rid of an object, stop referring to it: set its variable to {null} or remove it from its list.
+- To visit every object, keep them in a {list} and use {eachin}.
+
+@ list list_add_last list_add_first list_remove list_contains count_list list_is_empty clear_list | Lists
+A list holds values of one type: `int list`, `string list`, `t_enemy list`. Make one with {new}.
+    local q:int list = new int list
+    list_add_last(q, 20)
+    list_add_first(q, 10)
+    for local n:int = eachin q
+      print(n)          ' 10, then 20
+    next
+- `list_add_last(list, value)`, `list_add_first(list, value)`: add an item at the end / the start
+- `list_remove(list, value)`: remove the first item that matches
+- `list_contains(list, value)`: 1 if it's there
+- `count_list(list)`: how many items
+- `list_is_empty(list)`: 1 if there are none
+- `clear_list(list)`: remove them all
+Numbers and strings are compared by value, objects by identity. Putting the wrong type in is a compile error (an int into a float list is converted). Lists can't hold null or other lists. See {eachin}.
+
+@ arrays [ ] | Arrays
+    local scores:int[10]        ' scores[0] to scores[9]
+    dim grid:int[20, 15]        ' two dimensions
+    grid[3, 4] = 1
+    print(len(scores))          ' 10
+    print(len(grid, 2))         ' 15: the second dimension
+    local names:string[]        ' no array yet (null)
+Arrays count from 0 and are checked: an index outside them is an error. They hold any type, objects too. `local a:int[n]` makes a new array each time it runs. See {len}, {dim}.
+
+@ len | len
+    len(text$)
+    len(array [, dimension])
+The number of characters in a string, or of items in an array (in its first dimension, or the one given, counting from 1).
+    print(len("goober"))      ' 6
+    local a:int[4, 3]
+    print(len(a, 2))          ' 3
+
+@ str conversions | Conversions
+    str(value)
+    int(value)  float(value)  double(value)  byte(value) ...
+`str` turns a number into text. Every number type's name converts to that type: `int("42")` is 42, `int(3.9)` is 3 (it drops the fraction), `float(7)` is 7.0.
+
+Most of the time this happens on its own: assigning a number to a string variable or a string to a number one converts it, and `"score: " + 10` is text. See {numbers}, {string|strings}.
+
+@ true false pi | true, false, pi
+- `true` is 1 and `false` is 0. Conditions treat anything that isn't 0 as true.
+- `pi` is 3.14159... Angles in GooberBASIC are in degrees, so `sin(90)` is 1.
+    local done = false
+    if not done then ...
+    circumference = 2 * pi * r
+
+@ defdata enddata restore read_int read_float read_string data_count data | Data blocks
+    defdata NAME
+      item, item, ...
+    enddata
+A table of values written into the code. `restore(NAME)` points at a block, and `read_int()`, `read_float()` and `read_string()` take the values out in order.
+    restore(LEVEL_1)
+    local w:int = read_int(), h:int = read_int()
+
+    defdata LEVEL_1
+      4, 2              ' width, height
+      1, 1, 1, 1
+      1, 0, 0, 1
+    enddata
+- Items are numbers, strings or constant expressions, separated by commas or new lines.
+- A block may be anywhere at the top level.
+- `NAME` is the block's number, so `restore(LEVEL_1 + n)` picks a later block.
+- Reading past a block's end carries on into the next. `restore()` alone goes back to the first item.
+- `data_count(NAME)` is how many items a block holds.
+
+@ gc_collect gc_mem_alloced garbage-collection GC memory | Memory and garbage collection
+An object, string, array or list stays alive while anything refers to it: a variable, a field, an array element or a list. Once nothing does, it is freed on its own, even groups that only refer to each other.
+- `gc_collect()`: free everything unreachable now
+- `gc_mem_alloced()`: bytes used by live objects
+You rarely need either: set a variable to {null}, or {list_remove} the item, and the memory comes back.
+
+; ---------------------------------------------------------------- core commands
+@ core-commands builtins | Core commands
+These come with GooberBASIC itself.
+- Printing: {print}, {write}, {input}, {runtime_error}, {assert}
+- Time: {millisecs}, {delay}, {current_date}, {current_time}
+- Random numbers: {rnd}, {rand}, {seed_rnd}
+- Maths: {abs}, {sgn}, {min}, {max}, {sin}, {cos}, {atan2}, {sqr}, {exp}, {log}, {floor}, {ceil}, {round}, {distance}, {rects_overlap}
+- Strings: {len}, {left}, {mid}, {instr}, {replace}, {upper}, {trim}, {chr}, {asc}, {hex}, {str}
+- Data: {defdata}, {restore}, {read_int}
+- Lists: {list|list_add_last and the rest}
+- Memory: {gc_collect}
+
+@ print write input | print, write, input
+    print([text])
+    write(text)
+    input([prompt])
+`print` writes a line to the terminal GooberEngine was started from, and `write` writes without ending the line. They don't draw on the console's screen (use {text} for that), so they're handy for debugging.
+
+`input` reads a line typed in that terminal (it waits until one is), returning it as a string.
+    print("x is " + x)
+
+@ runtime_error assert errors | runtime_error, assert
+    runtime_error(message)
+    assert(condition [, message])
+`runtime_error` stops the cart with an error, as if something had gone wrong: the editor opens at the line and shows the message.
+
+`assert` does the same, with "assertion failed" (and the message), when the condition is 0. The message is built every time the line runs, even when the condition holds.
+    assert(lives >= 0, "lives went below 0")
+
+@ millisecs delay current_date current_time time | Time
+- `millisecs()`: milliseconds since the program started. Use it to time things.
+- `delay(ms)`: wait that long. A cart usually waits with {flip} instead, which keeps the screen and sound going.
+- `current_date()`: today's date as text, e.g. "21 Nov 2026"
+- `current_time()`: the time of day as text, e.g. "14:05:09"
+    local start = millisecs()
+    ...
+    print("took " + (millisecs() - start) + " ms")
+To count frames, use {frame_count}.
+
+@ rnd rand seed_rnd random | Random numbers
+    rnd()  rnd(max)  rnd(min, max)
+    rand(max)  rand(min, max)
+    seed_rnd(seed)
+- `rnd` gives a float: 0 up to 1, 0 up to max, or min up to max.
+- `rand` gives a whole number: 1 to max, or min to max, both ends included.
+- `seed_rnd` starts the numbers from a seed, so the same seed gives the same numbers again.
+    dice = rand(6)
+    x = rnd(0, SCREEN_W)
+    seed_rnd(millisecs())
+{spray} uses the same numbers.
+
+@ abs sgn min max | abs, sgn, min, max
+- `abs(x)`: x without its sign
+- `sgn(x)`: -1, 0 or 1
+- `min(a, b)`, `max(a, b)`: the smaller / larger
+They work on every number type and keep it: ints give ints.
+    x = max(0, min(x, SCREEN_W - 1))      ' keep x on screen
+
+@ sin cos tan asin acos atan atan2 degrees trig | Trigonometry
+Angles are in degrees.
+- `sin(a)`, `cos(a)`, `tan(a)`
+- `asin(x)`, `acos(x)`, `atan(x)`: the angle back
+- `atan2(y, x)`: the angle from the origin to (x, y), -180 to 180
+    x = cx + cos(angle) * radius
+    y = cy + sin(angle) * radius
+    aim = atan2(ty - y, tx - x)
+
+@ sqr sqrt exp log log10 | sqr, exp, log
+- `sqr(x)` (or `sqrt(x)`): the square root
+- `exp(x)`: e to the power x
+- `log(x)`: the natural logarithm. `log10(x)`: base 10.
+For powers use `^`: `x ^ 2` (see {operators}).
+
+@ floor ceil round | floor, ceil, round
+- `floor(x)`: down to a whole number
+- `ceil(x)`: up to a whole number
+- `round(x)`: to the nearest
+They give floats; assign to an int, or use `int()`, to make it one.
+    cell = int(floor(px / TILE_SIZE))
+
+@ distance rects_overlap collision | distance, rects_overlap
+    distance(x1, y1, x2, y2)
+    rects_overlap(x1, y1, w1, h1, x2, y2, w2, h2)
+`distance` is how far apart two points are. `rects_overlap` is 1 if two rectangles touch or overlap: a quick collision test.
+    if rects_overlap(px, py, 10, 10, ex, ey, 10, 10) then hurt()
+    if distance(px, py, cx, cy) < 8 then collect()
+
+@ left right mid upper lower trim instr replace chr asc hex bin repeat_string lset rset string-functions | String functions
+Positions count from 1.
+- `left(s, n)`, `right(s, n)`: the first / last n characters
+- `mid(s, start [, count])`: from `start`, `count` characters or to the end
+- `upper(s)`, `lower(s)`: capitals / small letters
+- `trim(s)`: without spaces at either end
+- `instr(s, find [, start])`: where `find` is in `s`, 0 if it isn't
+- `replace(s, find, with)`: every `find` replaced
+- `chr(code)`, `asc(s)`: a character from its code, and back
+- `hex(n)`, `bin(n)`: a number in hex / binary
+- `repeat_string(s, n)`: s, n times
+- `lset(s, n)`, `rset(s, n)`: padded with spaces (or cut) to n characters, on the right / left
+    name$ = upper(left(name$, 1)) + mid(name$, 2)
+    text(rset(str(score), 6), 340, 2)
+See also {len}, {str}, {string|strings}.
+
+; ---------------------------------------------------------------- the console API
+@ API commands | The console API
+GooberEngine adds these to GooberBASIC. Arguments in brackets are optional. A colour is a number 0 to 63 ({rgb}); left out, the {pen} colour is used.
+# Screen
+{cls} {pen} {pset} {line} {rect} {rect_fill_fast} {circle} {text} {text_width} {font_w} {rgb} {camera} {pal} {clip} {spray} {tex_quad} {set_depth} {set_blend}
+# Tiles and maps
+{sprite} {tile_pget} {map_draw} {map_get} {map_w} {slots}
+# Limits
+{dot_limit} {dots_used}
+# Sound
+{sfx} {note} {voice_stop} {voice_sfx} {music}
+# Input and system
+{btn} {key_down} {mouse_x|mouse} {flip} {frame_count} {cpu} {cart_title}
+# Saving and network
+{save_data} {load_data} {network}
+# Constants
+{SCREEN_W|sizes} {COL_BLACK|colours} {BTN_A|buttons} {KEY_A|keys} {BLEND_NORMAL|blend modes} {FLIP_X|flips}
+
+@ cls | cls
+    cls([c])
+Clears the screen to colour `c` (0, black, if left out), or just the {clip} rectangle if one is set. It doesn't count against the {dot_limit}. It also resets the depth buffer (see {set_depth}), and ignores {set_blend}.
+    repeat
+      cls()
+      draw_everything()
+      flip()
+    forever
+
+@ pen | pen
+    pen(c)
+Sets the colour used when a drawing command's colour is left out.
+    pen(COL_GREEN)
+    rect(10, 10, 50, 20)    ' green
+    line(0, 0, 399, 239)    ' green too
+
+@ pset pget | pset, pget
+    pset(x, y [, c])
+    pget(x, y)
+`pset` draws one pixel; `pget` gives the colour of the pixel on screen at (x, y). Both go through the {camera}.
+    pset(mouse_x(), mouse_y(), COL_WHITE)
+    if pget(x, y + 10) <> 0 then on_ground = true
+
+@ line | line
+    line(x1, y1, x2, y2 [, c])
+Draws a line between two points, both ends included.
+    line(0, 120, 399, 120, COL_GREY)
+
+@ rect rect_fill | rect, rect_fill
+    rect(x, y, w, h [, c])
+    rect_fill(x, y, w, h [, c])
+An outlined / filled rectangle, `w` by `h` pixels, with its top-left at (x, y). For big solid boxes {rect_fill_fast} is free of the dot limit.
+    rect(10, 10, 100, 50, COL_WHITE)
+    rect_fill(12, 12, 96, 46, COL_NAVY)
+
+@ rect_fill_fast | rect_fill_fast
+    rect_fill_fast(x, y, w, h [, c])
+A filled rectangle drawn the way {cls} clears: whole rows at once, so it doesn't count against the {dot_limit}. In exchange there's no blending or depth test, and the depth there goes back to the far plane. Good for panels, bars and backgrounds.
+    rect_fill_fast(0, 220, SCREEN_W, 20, COL_NAVY)  ' a bar
+
+@ circle circle_fill | circle, circle_fill
+    circle(x, y, r [, c])
+    circle_fill(x, y, r [, c])
+An outlined / filled circle with its centre at (x, y) and radius r.
+    circle_fill(x, y, 6, COL_YELLOW)
+
+@ text | text
+    text(s, x, y [, c])
+Draws text with its top-left at (x, y), and gives back the x just after it. A new line in the string (`~n`) starts a line below. It uses the cart's font if it has one (see {load_font}), else the built-in 6 x 10 one.
+    text("SCORE " + score, 4, 4, COL_WHITE)
+    local x = text("hp: ", 4, 14)
+    text(str(hp), x, 14, COL_RED)
+See {text_width}, {font_w}.
+
+@ text_width | text_width
+    text_width(s)
+How wide `s` is in pixels in the font in use (6 a character in the built-in font). Handy for centring:
+    local msg$ = "GAME OVER"
+    text(msg$, (SCREEN_W - text_width(msg$)) / 2, 115)
+
+@ font_w font_h | font_w, font_h
+    font_w()
+    font_h()
+The size of a character of the font in use: {text} steps this far across, and this far down at a new line. 6 and 10 for the built-in font; {FONT_W} and {FONT_H} are those numbers as constants.
+
+@ rgb color | rgb
+    rgb(r, g, b)
+The colour number for red, green and blue, each 0 to 3: r * 16 + g * 4 + b. There are 64 colours. The common ones have names: {COL_BLACK|COL_...}.
+    rect_fill(0, 0, 40, 40, rgb(3, 1, 0))   ' orange-red
+
+@ COL_* named-colors | Named colours
+    COL_BLACK  0    COL_ORANGE      56
+    COL_NAVY   1    COL_BROWN       36
+    COL_BLUE   3    COL_PINK        58
+    COL_GREEN 12    COL_DARK_GREEN   4
+    COL_CYAN  15    COL_PURPLE      35
+    COL_RED   48    COL_SKY         27
+    COL_GREY  42    COL_LIME        44
+    COL_WHITE 63    COL_MAGENTA     51
+    COL_YELLOW 60   COL_DARK_GREY   21
+Any other colour is a number 0 to 63: see {rgb}.
+
+@ camera | camera
+    camera([x, y])
+Moves everything drawn afterwards by (-x, -y), so (x, y) becomes the screen's top-left corner: scroll a world bigger than the screen. `camera()` puts it back.
+    camera(player_x - 200, player_y - 120)
+    map_draw()
+    camera()                 ' the score stays put
+    text("SCORE " + score, 4, 4)
+
+@ pal | pal
+    pal([a, b])
+From now on, drawing in colour `a` puts colour `b` on screen: recolour a sprite, or flash an enemy white. `pal()` puts every colour back.
+    pal(COL_RED, COL_WHITE)     ' a hit flash
+    sprite(12, ex, ey)
+    pal()
+
+@ clip | clip
+    clip([x, y, w, h])
+Limits drawing to a rectangle; pixels outside it aren't drawn (and don't count against the {dot_limit}). `clip()` puts it back to the whole screen. {cls} with a clip set clears just that rectangle.
+    clip(0, 0, 200, 240)
+    cls(COL_NAVY)        ' only the left half
+
+@ spray | spray
+    spray(x, y, w, h, n [, c])
+Draws `n` dots at random places in a rectangle: stars, snow, sparks, static. It uses {rnd}'s numbers, so {seed_rnd} with the same seed repeats a spray.
+    seed_rnd(7) : spray(0, 0, SCREEN_W, SCREEN_H, 200, COL_WHITE)
+
+@ tex_quad tex_quad_3d | tex_quad, tex_quad_3d
+    tex_quad(x0, y0, x1, y1, x2, y2, x3, y3, spr, sw, sh)
+    tex_quad_3d(x0, y0, z0, ... x3, y3, z3, spr, sw, sh)
+Stretches the `sw` x `sh` block of tiles starting at tile `spr` over any four-cornered shape: corners top-left, top-right, bottom-right, bottom-left. The edges don't have to be parallel, so it rotates, skews and squashes. Give the corners in another order to flip or turn it.
+
+`tex_quad_3d` gives each corner a depth too, blended across the shape into the depth buffer, so shapes hide each other correctly in any order (see {set_depth}).
+    tex_quad(100, 50, 150, 60, 140, 110, 90, 100, 0, 2, 2)
+
+@ set_depth depth Z-buffer | set_depth
+    set_depth([z])
+Draws at depth `z` from now on (-32768 to 32767; `set_depth()` is 0). Lower is nearer. A pixel is drawn only where what's there already is as far or further, so near things hide far ones whatever order they're drawn in. {cls} pushes the screen back to the far plane and the depth back to 0.
+    set_depth(10) : sprite(tree, 100, 80)    ' behind
+    set_depth(0)  : sprite(hero, 104, 84)    ' in front
+See {tex_quad_3d}, {set_blend}.
+
+@ set_blend BLEND_* blend | set_blend
+    set_blend([mode])
+How drawn colours mix with what's on screen, per red, green and blue channel (0 to 3):
+- `BLEND_NORMAL`: replace (the default; `set_blend()`)
+- `BLEND_ADD`: add, up to 3: lights and glows
+- `BLEND_SUB`: take away from the screen, down to 0: shadows
+- `BLEND_MAX` / `BLEND_MIN`: keep the higher / lower
+- `BLEND_XOR`: XOR the bits
+{cls} ignores it.
+    set_blend(BLEND_ADD)
+    circle_fill(x, y, 20, rgb(1, 1, 0))      ' a soft light
+    set_blend()
+
+@ sprite FLIP_X FLIP_Y | sprite
+    sprite(n, x, y [, w, h, flags])
+Draws tile `n` (0 to 959) from the tileset in use at (x, y), or a `w` x `h` block of tiles starting there (the sheet is 40 tiles wide, so the tile below `n` is `n + 40`). Transparent pixels aren't drawn. Flags: `FLIP_X`, `FLIP_Y`, or both added together.
+    sprite(0, x, y)                       ' one tile
+    sprite(4, x, y, 2, 2)                 ' a 20 x 20 sprite
+    sprite(4, x, y, 2, 2, FLIP_X)         ' facing left
+Tiles are drawn in the {tile-editor|tile editor}; see also {slots}.
+
+@ tile_pget tile_pset | tile_pget, tile_pset
+    tile_pget(n, x, y)
+    tile_pset(n, x, y, c)
+Read / change pixel (x, y), 0 to 9, of tile `n` in the tileset in use. -1 is transparent. Changes last until the cart stops.
+    tile_pset(5, 4, 4, COL_RED)
+
+@ map_draw | map_draw
+    map_draw([mx, my, sx, sy, w, h])
+Draws `w` x `h` map cells, starting at cell (mx, my), with the first at screen pixel (sx, sy). Each cell is a 10 x 10 tile; empty cells aren't drawn. With nothing given it draws the whole map from (0, 0); pixels off the screen aren't drawn and don't count against the {dot_limit}.
+    map_draw(0, 0, 0, 0, 40, 24)   ' the map's first screen
+    camera(cam_x, cam_y)
+    map_draw()                     ' a scrolling level
+See {map_get}, {camera}, {map-editor|the map editor}.
+
+@ map_get map_set | map_get, map_set
+    map_get(x, y)
+    map_set(x, y, tile)
+Read / change the tile in cell (x, y) of the map in use. An empty cell, or one outside the map, reads as -1, and `map_set(x, y, -1)` empties a cell. Changes last until the cart stops.
+    if map_get(px / 10, (py + 10) / 10) >= 0 then on_ground = true
+    map_set(cx, cy, -1)          ' pick up a coin
+See {map_w}.
+
+@ map_w map_h | map_w, map_h
+    map_w()
+    map_h()
+The map's size in cells: 40 to 400 wide, 24 to 240 high (1 to 10 screens each way).
+
+@ slots load_tileset swap_tileset load_map swap_map load_sfx swap_sfx load_music swap_music load_font swap_font | Slots: load_ and swap_
+    load_tileset(slot, "name")    swap_tileset(slot)
+    load_map  load_sfx  load_music  load_font
+Each kind of data has 10 slots, 0 to 9. The {file-tree|file tree} puts files in them before the cart starts; these functions change them while it runs. (Code files have slots too, but only in the file tree: they decide which files run ahead of `main.gb`, which always runs.) `load_...(slot, "name")` loads a file of the cart into a slot; `swap_...(slot)` uses that slot from then on (and gives it back; with no slot, it gives the slot in use). `load_...(slot)` with no name empties a slot.
+- `load_tileset`: `tiles/name.g64`, for {sprite} and {map_draw}
+- `load_map`: `maps/name.g64`, for {map_draw} and {map_get}
+- `load_sfx`: `sfx/name.g64`, for {sfx} and the music's waves
+- `load_music`: `music/name.g64`, for {music} (swapping stops the song)
+- `load_font`: `fonts/name.g64`, for {text}
+When the cart starts, each slot holds the file the {file-tree|file tree} gave it (`slot tiles 3 = cave` in `cart.txt`), and slot 0 is in use; an empty slot 0 holds an empty file (for a font: the built-in one). A cart that hasn't set any slots starts with the file named `tileset`, `map`, `sfx`, `music` or `font` in slot 0. Swapping to an empty slot is an error.
+    load_map(1, "cave") : load_tileset(1, "cave-tiles")
+    swap_map(1) : swap_tileset(1)
+
+@ dot_limit dots_used dots | dot_limit, dots_used
+    dot_limit([n])
+    dots_used()
+Each frame may draw `dot_limit` pixels (100,000 to start with, at most 1,000,000). Past it, further pixels are dropped until the next {flip}, so an over-budget frame shows up unfinished. `dot_limit()` alone reads the limit; `dots_used()` is how many have been drawn since the last flip.
+
+The screen is 96,000 pixels, so draw only what changes: {cls} and {rect_fill_fast} are free, transparent and {clip}ped pixels don't count.
+    text("dots " + dots_used(), 4, 230)
+
+@ sfx | sfx
+    sfx(n [, voice])
+Plays sound effect `n` (0 to 63) of the sound bank in use, on voice 0 to 7, or on any free voice. Gives back the voice it used. A voice the music is playing is borrowed and given back after.
+    if btn_hit(BTN_A) then sfx(0)
+Effects are made in the {sound-editor|sound editor}. See {voice_stop}, {note}.
+
+@ note NOISE VOICES | note
+    note(voice, pitch, wave, vol [, ticks])
+Plays one note on a voice: pitch 0 to 63 (24 is C-4, 33 is A-4 at 440 Hz), wave 0 to 15 or `NOISE`, volume 0 to 7. It lasts `ticks` (120 a second), or until stopped. `VOICES` is 8.
+    note(0, 24, 1, 6, 30)          ' C-4 for a quarter second
+    note(7, 40, NOISE, 4, 10)      ' a burst of noise
+
+@ voice_stop voice_sfx | voice_stop, voice_sfx
+    voice_stop([voice])
+    voice_sfx(voice)
+`voice_stop` stops one voice, or all of them. `voice_sfx` tells what a voice plays: the sound effect's number, -1 for nothing, -2 for a {note}, -3 for the music.
+    if voice_sfx(3) = -1 then sfx(5, 3)
+
+@ music music_stop music_pos music_row | music
+    music([n])
+    music_stop()
+    music_pos()  music_row()
+`music` plays the song in use from order entry `n` (0 if left out). A song can hold several tunes separated by stops, each started by its entry. `music_stop` stops it. `music_pos` and `music_row` tell the entry and row playing, -1 when stopped.
+    music(0)              ' the title tune
+    music(8)              ' the boss tune, further along
+Songs are made in the {music-editor|music editor}; {load_music} switches songs.
+
+@ btn btn_hit BTN_* pad buttons | btn, btn_hit
+    btn(b)
+    btn_hit(b)
+`btn` is 1 while a pad button is held, `btn_hit` only in the frame it was pressed. Buttons: `BTN_LEFT`, `BTN_RIGHT`, `BTN_UP`, `BTN_DOWN`, `BTN_A`, `BTN_B`, `BTN_C`, `BTN_START`.
+
+On the keyboard: arrows, A = Z or Space, B = X, C = C, Start = Enter. A game controller works too.
+    if btn(BTN_LEFT) then x :- 1
+    if btn_hit(BTN_A) then jump()
+See {key_down} for the raw keyboard.
+
+@ key_down key_hit KEY_* keyboard | key_down, key_hit
+    key_down(key)
+    key_hit(key)
+The raw keyboard: `key_down` is 1 while a key is held, `key_hit` when it was pressed this frame.
+
+Keys: `KEY_A` to `KEY_Z`, `KEY_0` to `KEY_9`, `KEY_SPACE`, `KEY_ENTER`, `KEY_TAB`, `KEY_BACKSPACE`, `KEY_LEFT`, `KEY_RIGHT`, `KEY_UP`, `KEY_DOWN`, `KEY_LSHIFT`, `KEY_RSHIFT`, `KEY_LCONTROL`, `KEY_RCONTROL`.
+    if key_hit(KEY_P) then paused = not paused
+Esc always stops the cart. For games, {btn} works with controllers too.
+
+@ mouse mouse_x mouse_y mouse_down mouse_hit mouse_btn mouse_wheel mouse_dx mouse_dy MOUSE_* | Mouse
+- `mouse_x()`, `mouse_y()`: where the mouse is, in screen pixels
+- `mouse_down(b)`, `mouse_hit(b)`: button held / pressed this frame: `MOUSE_LEFT`, `MOUSE_RIGHT`, `MOUSE_MIDDLE`
+- `mouse_btn(b)`: 1 while button b is held, counting 0 left, 1 right, 2 middle
+- `mouse_wheel()`: wheel steps since the last {flip}: positive scrolls down
+- `mouse_dx()`, `mouse_dy()`: how far it moved since the last flip
+    if mouse_hit(MOUSE_LEFT) then shoot_at(mouse_x(), mouse_y())
+
+@ flip vsync | flip
+    flip()
+Shows the frame and waits for the next (60 a second). The screen is not cleared: use {cls}. It also sends and receives {network} messages. A cart's main loop ends with it.
+
+A cart that draws once and ends without calling `flip()` keeps its picture until you press a key.
+    repeat
+      cls() : draw() : flip()
+    forever
+
+@ frame_count | frame_count
+    frame_count()
+Frames since the console started: 60 a second. Good for animation and timers.
+    sprite(16 + (frame_count() / 8) mod 4, x, y)    ' 4 frames
+
+@ cpu | cpu
+    cpu()
+How much of this frame's time (1/60 second) has been used so far, as a percentage. Call it just before {flip} to see the whole frame. Over 100 means frames are being dropped.
+    text("cpu " + cpu() + "%", 4, 230)
+
+@ cart_title | cart_title
+    cart_title()
+The cart's title, from `cart.txt` (the folder's name if it has none). See {cartridges}.
+
+@ save_data load_data save | save_data, load_data
+    save_data(key, value)
+    load_data(key [, default])
+Keeps a value for next time: a high score, settings, progress. `load_data` gives it back, or `default` (or "") if nothing was saved. An empty value forgets the key.
+- Keys: 1 to 64 letters, digits, `_` `-` `.`; 256 keys a cart.
+- Values: text up to 1024 characters. Numbers convert on their own.
+- The data is kept outside the cart, so playing never changes the cart.
+    best = load_data("best", "0")
+    if score > best then save_data("best", score)
+
+@ SCREEN_W SCREEN_H TILE_SIZE SHEET_COLS NTILES SLOTS MAP_SCREEN_W MAP_SCREEN_H FONT_W FONT_H sizes | Size constants
+- `SCREEN_W` 400, `SCREEN_H` 240: the screen
+- `TILE_SIZE` 10: a tile's width and height
+- `SHEET_COLS` 40: tiles per row of a tileset; `NTILES` 960 tiles
+- `SLOTS` 10: slots of each kind (see {slots})
+- `MAP_SCREEN_W` 40, `MAP_SCREEN_H` 24: a screen of map cells
+- `FONT_W` 6, `FONT_H` 10: the built-in font (see {font_w} for the font in use)
+Maps vary in size: use {map_w} and {map_h}.
+
+@ network NET_* multiplayer | Network
+Up to 8 players share a game: one hosts (player 0), the others join (1 to 7). They share 256 numbers and can send text messages. Look at `carts/examples/net`.
+- `net_host(port [, mode])`: start a game; 1 if it worked
+- `net_join(address, port [, mode])`: join one; then `net_status()` is `NET_CONNECTING` until the host answers
+- `net_status()`: `NET_OFF`, `NET_CONNECTING`, `NET_CONNECTED` or `NET_LOST`
+- `net_error()`: why the last thing failed. `net_close()`: leave.
+- `net_id()`: your player number (-1 when not in a game). `net_is_host()`, `net_peers()`, `net_peer(id)`.
+- `net_set(slot, value)`, `net_get(slot)`: the shared numbers, slots 0 to 255
+- `net_send(text [, to])`: a message to everyone (`NET_ALL`) or to one player
+- `net_messages()`, `net_recv()`, `net_from()`: how many are waiting, the next one, who sent it
+- `net_update()`: send and receive now ({flip} already does)
+`mode` is `NET_TCP` (the default) or `NET_UDP`. Constants: `NET_SLOTS` 256, `NET_MAX_PLAYERS` 8. The host owns the slots: give each player slots of their own (`net_id() * 4` and up). There's no networking in the browser.
+    if not net_host(4040) then print(net_error())
+    net_set(net_id(), x)
+    while net_messages() > 0 : print(net_recv()) : wend

@@ -1,0 +1,3 @@
+title = Blend Modes
+author = GooberEngine examples
+version = 1

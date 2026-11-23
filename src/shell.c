@@ -80,26 +80,26 @@ static void cmd_help(void) {
         {"CD folder", "go into a folder of carts (CD .. goes back)"},
         {"LOAD name", "load a cart (a folder with main.gb)"},
         {"RUN [name]", "save, then run the loaded cart (or load one)"},
-        {"EDIT", "edit the cart's code (F1, or Esc on an empty line)"},
+        {"EDIT", "edit the cart's code (or Esc on an empty line)"},
         {"NEW [name]", "make a new cart (untitled without a name)"},
-        {"TILES", "edit the cart's tiles (F2 anywhere)"},
-        {"MAP", "edit the cart's map (F3 anywhere)"},
-        {"SOUND", "edit the cart's sound effects (F4 anywhere)"},
-        {"MUSIC", "edit the cart's music (F5 anywhere)"},
-        {"FONT", "edit the cart's font (F7 anywhere)"},
-        {"F6", "in an editor: show or hide the cart's files"},
+        {"TILES", "edit the cart's tiles"},
+        {"MAP", "edit the cart's map"},
+        {"SOUND", "edit the cart's sound effects"},
+        {"MUSIC", "edit the cart's music"},
+        {"FONT", "edit the cart's font"},
+        {"F9", "in an editor: show or hide the cart's files"},
         {"SAVE [name]", "save everything (an untitled cart is saved as untitled)"},
         {"BROWSE", "pick a cart from a list"},
-        {"EXPORT [file]", "write the cart as one .gbcart file"},
+        {"EXPORT [file]", "zip the cart: carts/<name>.zip, or file"},
         {"EXPORT target", "make a standalone game: LINUX WINDOWS WEB ALL"},
-        {"IMPORT file", "unpack a .gbcart into the carts folder"},
+        {"IMPORT file", "unpack a .zip (or .tar.gz) into the carts folder"},
 #ifdef __EMSCRIPTEN__
-        {"UPLOAD", "open a .gbcart from your computer (or drop one)"},
-        {"DOWNLOAD", "save the cart to your computer as a .gbcart"},
+        {"UPLOAD", "open a .zip cart from your computer (or drop one)"},
+        {"DOWNLOAD", "save the cart to your computer as a .zip"},
 #endif
         {"INFO", "show the loaded cart's details"},
         {"THEME [name]", "editor colours: blue green orange grey"},
-        {"SETTINGS", "theme, volume, fullscreen, window size (F9)"},
+        {"SETTINGS", "theme, volume, fullscreen, window size (F10)"},
         {"FOLDER", "show where carts are read from"},
         {"CLS", "clear the screen"},
         {"QUIT", "leave GooberEngine"},
@@ -107,15 +107,19 @@ static void cmd_help(void) {
     for (size_t i = 0; i < sizeof rows / sizeof rows[0]; i++)
         printf_line(COL_WHITE, "  %-13s %s", rows[i][0], rows[i][1]);
     shell_print("in a cart: Esc returns, F11 fullscreen, F12 shot", COL_GREY);
+    shell_print("F1 or DOCS: the manual. HELP word: look a word up", COL_GREY);
 }
 
 int ui_mode = MODE_SHELL;
 
 /* Commands that would throw away unsaved work ask "discard them? (Y/N)".
  * The command waits in `pending`: Y runs it with `discarding` set, N (or
- * Esc, or any other command) drops it. */
+ * Esc, or any other command) drops it.
+ * QUIT asks "save changes? (Y/N)" instead (`pending_save`): Y saves and then
+ * quits, N quits without saving, Esc (or any other command) stays. */
 static char pending[1024];
 static const char *pending_no = "kept your changes";   /* what N says */
+static bool pending_save;
 static bool discarding;
 bool ui_unsaved(void) { return editor_modified() || (cart.loaded && docs_dirty(-1)); }
 
@@ -131,10 +135,11 @@ bool ui_save_all(void) {
     return ok;
 }
 
-static bool confirm_discard(const char *cmd) {
-    if (!ui_unsaved() || discarding) { pending[0] = 0; return true; }
+static bool confirm_unsaved(const char *cmd, bool save) {
+    if (!ui_unsaved() || discarding) { pending[0] = 0; pending_save = false; return true; }
     snprintf(pending, sizeof pending, "%s", cmd);
     pending_no = "kept your changes";
+    pending_save = save;
     const char *parts[6];
     int n = 0;
     if (editor_modified()) parts[n++] = "code";
@@ -149,9 +154,10 @@ static bool confirm_discard(const char *cmd) {
         strcat(list, parts[i]);
     }
     printf_line(COL_ORANGE, "unsaved changes in the %s:", list);
-    shell_print("discard them? (Y/N)", COL_ORANGE);
+    shell_print(save ? "save changes? (Y/N)" : "discard them? (Y/N)", COL_ORANGE);
     return false;
 }
+static bool confirm_discard(const char *cmd) { return confirm_unsaved(cmd, false); }
 
 /* runs a command as if Y had already been answered (the cart browser asks on its own screen) */
 void shell_exec_discarding(const char *line) {
@@ -177,8 +183,8 @@ static void cmd_dir(void) {
     const char *root = carts_root();
     DIR *d = opendir(root);
     if (!d) { printf_line(COL_RED, "cannot read %s", root); return; }
-    char *names[256], *folders[256];
-    int n = 0, nf = 0;
+    char *names[256], *folders[256], *archives[256];
+    int n = 0, nf = 0, na = 0;
     struct dirent *e;
     while ((e = readdir(d)) && n < 256) {
         if (e->d_name[0] == '.') continue;
@@ -186,6 +192,13 @@ static void cmd_dir(void) {
         struct stat st;
         snprintf(p, sizeof p, "%s/%s/main.gb", root, e->d_name);
         if (stat(p, &st) == 0) { names[n++] = strdup(e->d_name); continue; }
+        if (na < 256 && archive_name(e->d_name)) {              /* a zipped cart, unless it's unpacked */
+            char cname[128];
+            archive_cart_name(e->d_name, cname, sizeof cname);
+            snprintf(p, sizeof p, "%s/%s/main.gb", root, cname);
+            if (stat(p, &st) != 0) archives[na++] = strdup(e->d_name);
+            continue;
+        }
         snprintf(p, sizeof p, "%s/%s", root, e->d_name);       /* a folder of carts: CD into it */
         if (nf < 256 && stat(p, &st) == 0 && S_ISDIR(st.st_mode)) folders[nf++] = strdup(e->d_name);
     }
@@ -197,25 +210,54 @@ static void cmd_dir(void) {
         printf_line(COL_YELLOW, "  %s/", folders[i]);
         free(folders[i]);
     }
-    if (!n && !nf) shell_print("no carts here (try FOLDER)", COL_GREY);
+    if (!n && !nf && !na) shell_print("no carts here (try FOLDER)", COL_GREY);
     for (int i = 0; i < n; i++) {
         printf_line(ui_col(COL_SKY), "  %s", names[i]);
         free(names[i]);
     }
+    qsort(archives, (size_t)na, sizeof archives[0], cmp_str);
+    for (int i = 0; i < na; i++) {          /* LOAD unpacks them: title, version and author from the cache */
+        char p[4096], about[400] = "";
+        CartStub st;
+        snprintf(p, sizeof p, "%s/%s", root, archives[i]);
+        if (!archive_stub(p, &st)) snprintf(about, sizeof about, "(not a cart)");
+        else {
+            char cname[128];
+            archive_cart_name(archives[i], cname, sizeof cname);
+            int k = snprintf(about, sizeof about, "%s", st.title[0] ? st.title : cname);
+            if (st.version[0]) k += snprintf(about + k, sizeof about - (size_t)k, " %s", st.version);
+            if (st.author[0]) snprintf(about + k, sizeof about - (size_t)k, " by %s", st.author);
+        }
+        printf_line(st.ok ? COL_GREEN : COL_GREY, "  %s  %.40s", archives[i], about);
+        free(archives[i]);
+    }
 }
 
-static bool ends_with(const char *s, const char *tail) {
-    size_t a = strlen(s), b = strlen(tail);
-    return a >= b && !strcasecmp(s + a - b, tail);
+/* a cart folder: a path to one, or a name in the carts folder */
+static bool is_cart_folder(const char *name) {
+    char p[4096 + 160];
+    struct stat st;
+    snprintf(p, sizeof p, "%s/main.gb", name);
+    if (stat(p, &st) == 0) return true;
+    snprintf(p, sizeof p, "%s/%s/main.gb", carts_root(), name);
+    return stat(p, &st) == 0;
 }
 
 static bool do_load(const char *name) {
     char err[512], dir[4096];
-    if (ends_with(name, ".gbcart")) {        /* a one-file cart: unpack it into the carts folder first */
-        if (!cart_import(name, NULL, dir, sizeof dir, err, sizeof err)) { shell_print(err, COL_RED); return false; }
-        printf_line(COL_GREEN, "imported %s", dir);
+    char arc[4096];
+    bool archive = archive_name(name);
+    if ((archive || !is_cart_folder(name)) && archive_find(name, arc, sizeof arc)) {
+        /* a zipped cart: unpack it into a folder beside it, once; then the folder is the cart */
+        char cname[128];
+        archive_cart_name(arc, cname, sizeof cname);
+        snprintf(dir, sizeof dir, "%s/%s", carts_root(), cname);
+        const char *base = strrchr(arc, '/');
+        if (is_cart_folder(dir)) printf_line(COL_GREY, "%s is unpacked already: loading %s/", base ? base + 1 : arc, cname);
+        else if (!archive_unpack(arc, cname, dir, sizeof dir, err, sizeof err)) { shell_print(err, COL_RED); return false; }
+        else printf_line(COL_GREEN, "unpacked %s", dir);
         name = dir;
-    }
+    } else if (archive) { printf_line(COL_RED, "no file '%s'", name); return false; }
     if (!cart_load(name, err, sizeof err)) { shell_print(err, COL_RED); return false; }
     editor_forget();
     cart_discard_scratch();                  /* the untitled cart was given up (confirmed if it had edits) */
@@ -261,40 +303,46 @@ static void open_editor(void) { ui_switch(MODE_EDITOR); }
 
 bool ui_global_key(const KeyEvent *ev) {
     if (ev->type != EV_KEY) return false;
-    if (ev->sc == SDL_SCANCODE_F1) { ui_switch(MODE_EDITOR); return true; }
-    if (ev->sc == SDL_SCANCODE_F2) { ui_switch(MODE_TILES); return true; }
-    if (ev->sc == SDL_SCANCODE_F3) { ui_switch(MODE_MAP); return true; }
-    if (ev->sc == SDL_SCANCODE_F4) { ui_switch(MODE_SOUND); return true; }
-    if (ev->sc == SDL_SCANCODE_F5) { ui_switch(MODE_MUSIC); return true; }
-    if (ev->sc == SDL_SCANCODE_F7) { ui_switch(MODE_FONT); return true; }
-    if (ev->sc == SDL_SCANCODE_F9) {            /* the settings screen: F9 again goes back */
+    if (ev->sc == SDL_SCANCODE_F1) {            /* help: the page for what's under the cursor; in the help, the index */
+        if (ui_mode == MODE_HELP) help_index();
+        else help_open_context();
+        return true;
+    }
+    if (ev->sc == SDL_SCANCODE_F10) {           /* the settings screen: F10 again goes back */
         if (ui_mode == MODE_SETTINGS) settings_frame_close();
         else settings_open();
         return true;
     }
-    if (ev->sc == SDL_SCANCODE_F6) { tree_open = !tree_open; return true; }
+    if (ev->sc == SDL_SCANCODE_F9) { tree_open = !tree_open; return true; }
     return false;
+}
+
+/* the x that closes a status message, at the right end of the bar at y: true if clicked */
+bool ui_status_close(int y) {
+    int x = UI_W - STATUS_CLOSE_W;
+    bool over = in.mouse_y >= y && in.mouse_y < y + FONT_H && in.mouse_x >= x && in.mouse_x < UI_W;
+    if (over) draw_rect(x, y, STATUS_CLOSE_W, FONT_H, UI_RGB(1, 2, 3), true);
+    draw_char('x', x + 2, y, over ? COL_BLACK : UI_RGB(2, 3, 3));
+    return over && in.mouse_hit[1];
 }
 
 /* the editors' top bar: the file tree's button, a clickable tab per editor
  * (* = unsaved), and the save / run keys if there is room */
 int ui_draw_tabs(void) {
-    static const struct { const char *label, *word; int mode, kind; } tabs[] = {
-        {"F1 code", "code", MODE_EDITOR, -1}, {"F2 tiles", "tiles", MODE_TILES, RES_TILES}, {"F3 map", "map", MODE_MAP, RES_MAP},
-        {"F4 sound", "sound", MODE_SOUND, RES_SFX}, {"F5 music", "music", MODE_MUSIC, RES_MUSIC},
-        {"F7 font", "font", MODE_FONT, RES_FONT}};
+    static const struct { const char *word; int mode, kind; } tabs[] = {
+        {"code", MODE_EDITOR, -1}, {"tiles", MODE_TILES, RES_TILES}, {"map", MODE_MAP, RES_MAP},
+        {"sound", MODE_SOUND, RES_SFX}, {"music", MODE_MUSIC, RES_MUSIC}, {"font", MODE_FONT, RES_FONT}};
     draw_rect(0, 0, UI_W, FONT_H, UI_RGB(0, 1, 2), true);
-    /* the tree button: F6 */
+    /* the tree button: F9 */
     bool over = in.mouse_y >= 0 && in.mouse_y < FONT_H && in.mouse_x >= 0 && in.mouse_x < 9;
     draw_rect(0, 0, 9, FONT_H, over ? UI_RGB(1, 2, 3) : UI_RGB(0, 0, 1), true);
     for (int k = 0; k < 3; k++) draw_line(2, 2 + k * 3, 6, 2 + k * 3, tree_open ? COL_YELLOW : UI_RGB(2, 3, 3));
     if (in.mouse_hit[1] && over) tree_open = !tree_open;
-    bool full = UI_W >= SCREEN_W;      /* beside the tree there's no room for the F keys */
     int x = 10;
     for (size_t i = 0; i < sizeof tabs / sizeof tabs[0]; i++) {
         bool dirty = tabs[i].kind < 0 ? editor_modified() : docs_dirty(tabs[i].kind);
         char label[32];
-        snprintf(label, sizeof label, "%s%s", full ? tabs[i].label : tabs[i].word, dirty ? "*" : "");
+        snprintf(label, sizeof label, "%s%s", tabs[i].word, dirty ? "*" : "");
         int w = text_width(label) + 5;
         bool on = ui_mode == tabs[i].mode;
         if (on) draw_rect(x, 0, w, FONT_H, UI_RGB(1, 2, 3), true);
@@ -302,8 +350,21 @@ int ui_draw_tabs(void) {
         if (in.mouse_hit[1] && in.mouse_y >= 0 && in.mouse_y < FONT_H && in.mouse_x >= x && in.mouse_x < x + w) ui_switch(tabs[i].mode);
         x += w + 1;
     }
-    const char *keys = "^S save ^R run";
-    if (x + text_width(keys) + 6 <= UI_W) draw_text(keys, UI_W - 3 - text_width(keys), 0, UI_RGB(2, 3, 3));
+    /* save / run: clicking one sends the editor its Ctrl key, so it saves or runs just as the key does
+     * (not on the settings screen, which has nothing to save) */
+    static const struct { const char *label; int sc; } keys[] = {{"^S save", SDL_SCANCODE_S}, {"^R run", SDL_SCANCODE_R}};
+    int kw = text_width(keys[0].label) + text_width(keys[1].label) + 10;
+    if (ui_mode != MODE_SETTINGS && x + kw + 1 <= UI_W) {
+        int kx = UI_W - kw;
+        for (int i = 0; i < 2; i++) {
+            int w = text_width(keys[i].label) + 5;
+            bool hover = in.mouse_y >= 0 && in.mouse_y < FONT_H && in.mouse_x >= kx && in.mouse_x < kx + w;
+            if (hover) draw_rect(kx, 0, w, FONT_H, UI_RGB(1, 2, 3), true);
+            draw_text(keys[i].label, kx + 3, 0, hover ? COL_BLACK : UI_RGB(2, 3, 3));
+            if (hover && in.mouse_hit[1]) platform_queue_key(keys[i].sc, MOD_CTRL);
+            kx += w;
+        }
+    }
     return x;
 }
 
@@ -340,14 +401,27 @@ void shell_exec(const char *raw) {
         char waiting[sizeof pending];
         snprintf(waiting, sizeof waiting, "%s", pending);
         pending[0] = 0;
-        if (!*arg && (!strcasecmp(cmd, "y") || !strcasecmp(cmd, "yes"))) { shell_exec_discarding(waiting); return; }
+        bool save = pending_save;
+        pending_save = false;
+        bool yes = !*arg && (!strcasecmp(cmd, "y") || !strcasecmp(cmd, "yes"));
+        bool no = !*arg && (!strcasecmp(cmd, "n") || !strcasecmp(cmd, "no"));
+        if (save && yes) {                          /* "save changes?" Y: save, then go on only if it all saved */
+            if (ui_save_all()) shell_exec_discarding(waiting);
+            else shell_print("not saved: still here", COL_GREY);
+            return;
+        }
+        if (save && no) { shell_exec_discarding(waiting); return; }   /* N throws the changes away */
+        if (yes) { shell_exec_discarding(waiting); return; }
         if (!*arg && (!strcasecmp(cmd, "n") || !strcasecmp(cmd, "no"))) { shell_print(pending_no, COL_GREY); return; }
         /* anything else is a new command, and the question is dropped */
     }
     char again[1024];
     snprintf(again, sizeof again, "%s %s", cmd, arg);
 
-    if (!strcasecmp(cmd, "help") || !strcmp(cmd, "?")) cmd_help();
+    if ((!strcasecmp(cmd, "help") || !strcmp(cmd, "?")) && !*arg) cmd_help();
+    else if (!strcasecmp(cmd, "help") || !strcmp(cmd, "?") || !strcasecmp(cmd, "docs") || !strcasecmp(cmd, "manual")) {
+        if (!help_open_word(*arg ? arg : "contents", true)) printf_line(COL_RED, "no help for '%s'", arg);
+    }
     else if (!strcasecmp(cmd, "dir") || !strcasecmp(cmd, "ls")) cmd_dir();
     else if (!strcasecmp(cmd, "cls") || !strcasecmp(cmd, "clear")) nlines = 0;
     else if (!strcasecmp(cmd, "folder")) shell_print(carts_root(), ui_col(COL_SKY));
@@ -370,12 +444,12 @@ void shell_exec(const char *raw) {
                     !strcasecmp(first, "web") || !strcasecmp(first, "all");
         if (!cart.loaded) shell_print("no cart loaded", COL_RED);
         else if (cart.untitled) shell_print("untitled cart: SAVE name first", COL_ORANGE);
-        else if (ui_unsaved()) shell_print("SAVE first: EXPORT bundles the files on disk", COL_ORANGE);
+        else if (ui_unsaved()) shell_print("SAVE first: EXPORT zips the files on disk", COL_ORANGE);
         else if (game && !strcasecmp(cmd, "export")) game_export(arg, NULL, export_log);
         else {
             char tmp[300];
 #ifdef __EMSCRIPTEN__
-            if (!*arg) { snprintf(tmp, sizeof tmp, "/tmp/%s.gbcart", cart.name); arg = tmp; }
+            if (!*arg) { snprintf(tmp, sizeof tmp, "/tmp/%s.zip", cart.name); arg = tmp; }
 #else
             (void)tmp;
             if (!strcasecmp(cmd, "download")) { shell_print("DOWNLOAD is for the web version: use EXPORT", COL_GREY); return; }
@@ -388,16 +462,21 @@ void shell_exec(const char *raw) {
     } else if (!strcasecmp(cmd, "upload")) {
 #ifdef __EMSCRIPTEN__
         web_pick_file();
-        shell_print("pick a .gbcart file (or drop one on the screen)", COL_GREY);
+        shell_print("pick a .zip cart (or drop one on the screen)", COL_GREY);
 #else
-        shell_print("UPLOAD is for the web version: drop a .gbcart or cart folder on the window", COL_GREY);
+        shell_print("UPLOAD is for the web version: drop a .zip cart or cart folder on the window", COL_GREY);
 #endif
     } else if (!strcasecmp(cmd, "import")) {
         char err[512], dir[4096], file[256], name[128] = "";
-        if (sscanf(arg, "%255s %127s", file, name) < 1) shell_print("usage: IMPORT file.gbcart [name]", COL_RED);
+        if (sscanf(arg, "%255s %127s", file, name) < 1) shell_print("usage: IMPORT file.zip [name]", COL_RED);
         else if (!confirm_discard(again)) return;
-        else if (!cart_import(file, name, dir, sizeof dir, err, sizeof err)) shell_print(err, COL_RED);
-        else { printf_line(COL_GREEN, "imported %s", dir); do_load(dir); }
+        else if (!archive_name(file)) shell_print("IMPORT takes a .zip, .tar.gz, .tgz or .tar", COL_RED);
+        else {                                     /* unpack under the given name */
+            char arc[4096];
+            if (!archive_find(file, arc, sizeof arc)) printf_line(COL_RED, "no file '%s'", file);
+            else if (!archive_unpack(arc, name, dir, sizeof dir, err, sizeof err)) shell_print(err, COL_RED);
+            else { printf_line(COL_GREEN, "unpacked %s", dir); do_load(dir); }
+        }
     } else if (!strcasecmp(cmd, "browse") || !strcasecmp(cmd, "carts")) {
         browse_open();
     } else if (!strcasecmp(cmd, "edit")) {
@@ -425,6 +504,7 @@ void shell_exec(const char *raw) {
             if (cart_exists(arg) && !discarding) {  /* same Y/N as discarding: Y reruns this SAVE as confirmed */
                 snprintf(pending, sizeof pending, "%s", again);
                 pending_no = "not saved: SAVE another name";
+                pending_save = false;
                 printf_line(COL_ORANGE, "cart '%s' already exists", arg);
                 shell_print("overwrite it? (Y/N)", COL_ORANGE);
                 return;
@@ -462,7 +542,7 @@ void shell_exec(const char *raw) {
         }
         shell_print(cart.untitled ? "untitled: not saved (SAVE name to keep it)" : cart.dir, COL_GREY);
     } else if (!strcasecmp(cmd, "quit") || !strcasecmp(cmd, "exit") || !strcasecmp(cmd, "shutdown")) {
-        if (confirm_discard(again)) shell_quit = true;
+        if (confirm_unsaved(again, true)) shell_quit = true;
     } else if (!strcasecmp(cmd, "tiles")) {
         ui_switch(MODE_TILES);
     } else if (!strcasecmp(cmd, "map")) {
@@ -480,9 +560,17 @@ void shell_exec(const char *raw) {
     }
 }
 
-/* while "discard them? (Y/N)" is waiting, Y or N on an empty line answers at once, and Esc means N */
+/* while "discard them? (Y/N)" is waiting, Y or N on an empty line answers at once, and Esc means N.
+ * For "save changes?" N quits without saving, so there Esc stays put instead. */
 static bool answer_key(void) {
     if (!pending[0] || inlen) return false;
+    if (in.escape && pending_save) {
+        pending[0] = 0;
+        pending_save = false;
+        push_line("> esc", 5, COL_WHITE);
+        shell_print("still here: changes not saved", COL_GREY);
+        return true;
+    }
     const char *ans = NULL;
     if (in.escape) ans = "n";
     for (const char *p = in.text; *p && !ans; p++) {
@@ -504,13 +592,11 @@ void shell_frame(void) {
         if (*p >= 32 && *p < 127 && inlen < (int)sizeof input - 1) input[inlen++] = *p;
     input[inlen] = 0;
     if (in.key_hit[SDL_SCANCODE_BACKSPACE] && inlen > 0) input[--inlen] = 0;
-    if (in.key_hit[SDL_SCANCODE_F1] && cart.loaded) { ui_switch(MODE_EDITOR); return; }
-    if (in.key_hit[SDL_SCANCODE_F2] && cart.loaded) { ui_switch(MODE_TILES); return; }
-    if (in.key_hit[SDL_SCANCODE_F3] && cart.loaded) { ui_switch(MODE_MAP); return; }
-    if (in.key_hit[SDL_SCANCODE_F4] && cart.loaded) { ui_switch(MODE_SOUND); return; }
-    if (in.key_hit[SDL_SCANCODE_F5] && cart.loaded) { ui_switch(MODE_MUSIC); return; }
-    if (in.key_hit[SDL_SCANCODE_F7] && cart.loaded) { ui_switch(MODE_FONT); return; }
-    if (in.key_hit[SDL_SCANCODE_F9]) { settings_open(); return; }
+    if (in.key_hit[SDL_SCANCODE_F1]) { help_open_shell(input); return; }   /* the command being typed, or the shell page */
+    if (in.key_hit[SDL_SCANCODE_F10]) { settings_open(); return; }
+    for (int i = 0; i < in.nevents; i++)    /* Ctrl+R: same as RUN, like in the editors */
+        if (in.events[i].type == EV_KEY && in.events[i].sc == SDL_SCANCODE_R &&
+            (in.events[i].mod & MOD_CTRL) && !(in.events[i].mod & MOD_ALT)) { do_run(); return; }
     if (in.escape) {
         if (inlen == 0 && cart.loaded) { open_editor(); return; }
         inlen = 0;

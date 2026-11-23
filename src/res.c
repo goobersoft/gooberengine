@@ -708,6 +708,7 @@ bool doc_rename(int kind, const char *name, const char *to, char *err, int errle
     Doc *d = doc_find(kind, name);
     if (file_exists(from_p) && rename(from_p, to_p) != 0) { snprintf(err, (size_t)errlen, "could not rename %s", from_p); return false; }
     if (txt && file_exists(from_t) && rename(from_t, to_t) != 0) { snprintf(err, (size_t)errlen, "could not rename %s", from_t); return false; }
+    cart_slot_rename(kind, name, to);      /* before the doc's name changes: an old cart's slot 0 is found by it */
     if (d) {
         snprintf(d->name, sizeof d->name, "%s", to);
         if (txt && !strcmp(d->legacy, from_rel)) snprintf(d->legacy, sizeof d->legacy, "%s", to_rel);
@@ -718,6 +719,7 @@ bool doc_rename(int kind, const char *name, const char *to, char *err, int errle
 /* delete a file of the cart: from disk and from the editors */
 bool doc_delete(int kind, const char *name, char *err, int errlen) {
     char path[PATH_MAX + 128];
+    cart_slot_forget(kind, name);
     res_path(kind, name, path, sizeof path);
     if (file_exists(path) && remove(path) != 0) { snprintf(err, (size_t)errlen, "could not delete %s", path); return false; }
     char rel[80], txt[PATH_MAX + 128];
@@ -853,14 +855,21 @@ static void rt_point(int kind) {
     }
 }
 
-/* slot 0 of each kind starts with the default-named file, or an empty one */
+/* every slot the cart fills by itself (the file tree's numbers, cart.txt's
+ * slot lines) gets its file; slot 0 is never empty, so there's something to draw on */
 void rt_begin(void) {
     rt_end();
     for (int k = 0; k < NRES; k++) {
-        char err[256];
-        Doc *d = doc_find(k, res_default[k]);
-        if (!d) d = doc_open(k, res_default[k], err, sizeof err);
-        rt.slot[k][0] = d ? res_copy(k, d->data) : res_new(k);   /* no file: an empty one to draw on */
+        for (int s = 0; s < NSLOTS; s++) {
+            const char *name = cart_slot_name(k, s);
+            char err[512], msg[600];
+            if (name && !rt_load(k, s, name, err, sizeof err)) {
+                snprintf(msg, sizeof msg, "%s slot %d: %s", res_word[k], s, err);
+                shell_print(msg, COL_ORANGE);
+                if (opt.headless) fprintf(stderr, "%s\n", msg);
+            }
+        }
+        if (!rt.slot[k][0]) rt.slot[k][0] = res_new(k);
         rt.cur[k] = 0;
         rt_point(k);
     }

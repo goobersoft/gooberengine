@@ -1,0 +1,88 @@
+' blend - the six blend modes side by side.
+' A: pause.  B: change the circles' colours.  Up / Down: circle size.
+'
+' set_blend(mode) says how everything drawn after it combines with what is
+' already on screen. Each colour has three channels, red, green and blue,
+' each 0 to 3 (rgb(r, g, b)), and the blend works on each channel apart:
+'
+'   BLEND_NORMAL  the pen colour replaces the screen     (the usual)
+'   BLEND_ADD     screen + pen, stopping at 3            (lights: brighter)
+'   BLEND_SUB     screen - pen, stopping at 0            (shadows: darker)
+'   BLEND_MAX     the brighter of the two, per channel
+'   BLEND_MIN     the darker of the two, per channel     (tinted glass)
+'   BLEND_XOR     the bits flipped: draw the same thing twice and it's gone
+'
+' Every panel has the same four grey bands behind it (black, dark grey,
+' grey, white) so you can see what each mode does to dark and to light.
+' Three circles orbit over them: where they overlap, each one blends
+' with the one under it too.
+strict
+
+const PW = 132, PH = 104            ' one panel
+const TOP = 14                      ' below the title bar
+
+global paused:int
+global t:float
+global radius:int = 24
+global set:int                      ' which colours the circles are
+global names:string[6]
+names[0] = "BLEND_NORMAL" : names[1] = "BLEND_ADD" : names[2] = "BLEND_SUB"
+names[3] = "BLEND_MAX" : names[4] = "BLEND_MIN" : names[5] = "BLEND_XOR"
+global cols:int[3]
+
+' the three circles' colours: full red/green/blue, then half-strength, then mixed
+function pick_colours()
+  if set = 0
+    cols[0] = rgb(3, 0, 0) : cols[1] = rgb(0, 3, 0) : cols[2] = rgb(0, 0, 3)
+  elseif set = 1
+    cols[0] = rgb(1, 0, 0) : cols[1] = rgb(0, 1, 0) : cols[2] = rgb(0, 0, 1)
+  else
+    cols[0] = COL_ORANGE : cols[1] = COL_SKY : cols[2] = COL_PINK
+  endif
+endfunction
+
+function panel(mode:int, px:int, py:int)
+  clip(px, py, PW, PH)              ' keep this panel's circles inside it
+
+  ' the background, drawn normally: four grey bands
+  set_blend(BLEND_NORMAL)
+  for local i:int = 0 to 3
+    rect_fill(px + i * PW / 4, py, PW / 4 + 1, PH, rgb(i, i, i))
+  next
+
+  ' the three circles, in this panel's mode
+  set_blend(mode)
+  local cx:int = px + PW / 2, cy:int = py + PH / 2 + 6
+  for local k:int = 0 to 2
+    local a:float = t + k * 120
+    circle_fill(cx + cos(a) * 22, cy + sin(a) * 18, radius, cols[k])
+  next
+
+  ' the label, back to normal so it reads the same everywhere
+  set_blend(BLEND_NORMAL)
+  rect_fill(px, py, text_width(names[mode]) + 6, 11, COL_BLACK)
+  text(names[mode], px + 3, py + 1, COL_YELLOW)
+  rect(px, py, PW, PH, COL_DARK_GREY)
+  clip()
+endfunction
+
+dot_limit(300000)                   ' six full panels plus the circles: about 210,000 dots
+pick_colours()
+
+repeat
+  if btn_hit(BTN_A) then paused = not paused
+  if btn_hit(BTN_B) then set = (set + 1) mod 3 : pick_colours()
+  if btn(BTN_UP) then radius = min(40, radius + 1)
+  if btn(BTN_DOWN) then radius = max(6, radius - 1)
+  if not paused then t :+ 1.5
+
+  cls(COL_NAVY)
+  text("set_blend(mode): how a colour combines with the screen", 4, 2, COL_WHITE)
+
+  for local m:int = 0 to 5
+    panel(m, 2 + (m mod 3) * (PW + 1), TOP + int(m / 3) * (PH + 2))
+  next
+
+  text("A pause  B colours  Up/Down size", 4, SCREEN_H - 11, COL_GREY)
+  flip()
+forever

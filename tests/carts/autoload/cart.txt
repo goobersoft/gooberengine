@@ -1,0 +1,5 @@
+title = autoload
+slot code 2 = lib
+slot tiles 3 = tiles-1
+slot maps 0 = map-1
+slot maps 5 = gone

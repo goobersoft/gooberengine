@@ -4,7 +4,8 @@
  *
  * The dot limit: drawing is done in software, so a cart may only plot
  * dot_limit pixels per frame (flip() starts a new frame). Pixels clipped away
- * don't count, nor do a tile's transparent ones. Past the limit, pixels are
+ * don't count, nor do a tile's transparent ones, nor cls() and rect_fill_fast().
+ * Past the limit, pixels are
  * dropped until the next flip(), so a cart is rewarded for redrawing only
  * what changed.
  *
@@ -75,17 +76,37 @@ static inline int dots(int n) {
     return n;
 }
 
-/* clears the clip rectangle (the whole screen unless clip() was used), and its
- * depth to DEPTH_FAR. Neither the blend mode nor the depth applies to it, and
- * the drawing depth goes back to 0. */
-void draw_cls(int c) {
-    uint8_t col = (uint8_t)(c < 0 ? 0 : (c & 63));
-    int x0 = ds.clip_x0, x1 = ds.clip_x1;
-    for (int y = ds.clip_y0; y < ds.clip_y1 && x0 < x1; y++) {
-        memset(&fb[y][x0], ds.pal[col], (size_t)dots(x1 - x0));
+/* the fast fill behind cls() and rect_fill_fast(): screen-space x0..x1-1,
+ * y0..y1-1, cut to the clip rectangle, set to colour col (through the palette
+ * map) at depth DEPTH_FAR. Whole rows are written at once, with no depth test
+ * or blending, so none of it counts against the dot limit. */
+static void fast_fill(int x0, int y0, int x1, int y1, uint8_t col) {
+    if (x0 < ds.clip_x0) x0 = ds.clip_x0;
+    if (y0 < ds.clip_y0) y0 = ds.clip_y0;
+    if (x1 > ds.clip_x1) x1 = ds.clip_x1;
+    if (y1 > ds.clip_y1) y1 = ds.clip_y1;
+    for (int y = y0; y < y1 && x0 < x1; y++) {
+        memset(&fb[y][x0], ds.pal[col], (size_t)(x1 - x0));
         zfill(y, x0, x1);
     }
+}
+
+/* clears the clip rectangle (the whole screen unless clip() was used), and its
+ * depth to DEPTH_FAR. Neither the blend mode nor the depth applies to it, and
+ * the drawing depth goes back to 0. Free: see fast_fill(). */
+void draw_cls(int c) {
+    fast_fill(ds.clip_x0, ds.clip_y0, ds.clip_x1, ds.clip_y1, (uint8_t)(c < 0 ? 0 : (c & 63)));
     ds.depth = 0;
+}
+
+/* a filled rectangle the way cls() fills: through the camera and the clip
+ * rectangle like rect_fill, but its depth goes to DEPTH_FAR, the blend mode
+ * and depth test don't apply, and it is free. The drawing depth is left alone. */
+void draw_rect_fill_fast(int x, int y, int w, int h, int c) {
+    if (w <= 0 || h <= 0) return;
+    x -= ds.cam_x;
+    y -= ds.cam_y;
+    fast_fill(x, y, x + w, y + h, (uint8_t)pen_or(c));
 }
 
 /* src drawn over dst, per 2-bit channel */
@@ -171,6 +192,21 @@ void draw_rect(int x, int y, int w, int h, int c, bool fill) {
     for (int j = 1; j < h - 1; j++) { put(x, y + j, col); put(x + w - 1, y + j, col); }
 }
 
+/* the editors' "transparent" backdrop: 5 x 5 pink checks anchored to screen
+ * (0, 0), so neighbouring cells and swatches line up seamlessly */
+#define CHECK_SIZE 5
+void draw_checker(int x, int y, int w, int h) {
+    for (int j = 0; j < h; j++) {
+        int sy = y + j, ry = ((sy % CHECK_SIZE) + CHECK_SIZE) % CHECK_SIZE;
+        int by = (sy - ry) / CHECK_SIZE;                 /* floor, even off-screen */
+        for (int i = 0; i < w; i++) {
+            int sx = x + i, rx = ((sx % CHECK_SIZE) + CHECK_SIZE) % CHECK_SIZE;
+            int bx = (sx - rx) / CHECK_SIZE;
+            draw_pset(sx, sy, (bx + by) & 1 ? 50 : 34);
+        }
+    }
+}
+
 void draw_circle(int cx, int cy, int r, int c, bool fill) {
     if (r < 0) return;
     uint8_t col = (uint8_t)pen_or(c);
@@ -179,8 +215,15 @@ void draw_circle(int cx, int cy, int r, int c, bool fill) {
     int x = r, y = 0, err = 1 - r;
     while (x >= y) {
         if (fill) {
-            hspan(cx - x, cx + x, cy + y, col); hspan(cx - x, cx + x, cy - y, col);
-            hspan(cx - y, cx + y, cy + x, col); hspan(cx - y, cx + y, cy - x, col);
+            /* each row exactly once, at its widest, or XOR / ADD / SUB would
+             * blend the rows drawn twice twice. Rows cy +- y are new every
+             * step (cy itself only once); rows cy +- x are drawn on x's last
+             * step, when y is widest, unless they are a cy +- y row already */
+            hspan(cx - x, cx + x, cy + y, col);
+            if (y) hspan(cx - x, cx + x, cy - y, col);
+            if ((err >= 0 || y + 1 > x) && x > y) {
+                hspan(cx - y, cx + y, cy + x, col); hspan(cx - y, cx + y, cy - x, col);
+            }
         } else {
             put(cx + x, cy + y, col); put(cx - x, cy + y, col); put(cx + x, cy - y, col); put(cx - x, cy - y, col);
             put(cx + y, cy + x, col); put(cx - y, cy + x, col); put(cx + y, cy - x, col); put(cx - y, cy - x, col);

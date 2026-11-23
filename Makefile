@@ -22,7 +22,7 @@ SDL_CFLAGS := $(shell pkg-config --cflags sdl2)
 SDL_LIBS   := $(shell pkg-config --libs sdl2)
 LDLIBS  += $(SDL_LIBS) -lm
 
-GB_SRC := lexer.c compiler.c vm.c objects.c builtins.c
+GB_SRC := lexer.c compiler.c vm.c objects.c builtins.c net.c
 GB_OBJ := $(GB_SRC:%.c=build/gb/%.o)
 GE_SRC := $(wildcard src/*.c)
 GE_OBJ := $(GE_SRC:src/%.c=build/%.o)
@@ -41,6 +41,19 @@ build/gb/%.o: $(GB)/src/%.c $(HDRS) | build
 
 build:
 	mkdir -p build/gb
+
+# the in-console manual (F1): help.txt's pages as C strings, so every build
+# (the web and Windows ones too) has them without reading a file. The result
+# is kept in the repository, so building doesn't need this rule to run.
+src/help_pages.c: src/help.txt
+	{ echo '/* made from help.txt by make: edit that, not this */'; \
+	  echo 'typedef struct { const char *names, *title, *body; } HelpPage;'; \
+	  echo 'const HelpPage help_pages[] = {'; \
+	  sed -e '/^;/d' -e 's/\\/\\\\/g' -e 's/"/\\"/g' \
+	      -e 's/^@ *\([^|]*[^| ]\) *| *\(.*\)$$/}, {"\1", "\2", ""/' \
+	      -e '/^}, {"/!s/.*/    "&\\n"/' $< | sed -e '1s/^}, //'; \
+	  echo '}};'; \
+	  echo 'const int help_npages = sizeof help_pages / sizeof help_pages[0];'; } > $@
 
 # every cart must compile; then boot the shell and each cart headless for a few frames
 test: gooberengine
@@ -96,7 +109,7 @@ runtimes/player-windows-x86_64.exe: $(ALL_SRC) $(HDRS) $(SDL_WIN)/lib/libSDL2.a
 	$(MINGW)-gcc $(PLAYER_FLAGS) -I$(SDL_WIN)/include -o $@ $(ALL_SRC) \
 	      -static -L$(SDL_WIN)/lib -lmingw32 -lSDL2main -lSDL2 -mwindows \
 	      -lm -ldinput8 -ldxguid -ldxerr8 -luser32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 \
-	      -lshell32 -lsetupapi -lversion -luuid -lcfgmgr32 -lpthread -s
+	      -lshell32 -lsetupapi -lversion -luuid -lcfgmgr32 -lws2_32 -lpthread -s
 
 # ---------------------------------------------------------------------------
 # The browser. Emscripten comes from the emsdk in tools/emsdk
@@ -136,11 +149,71 @@ web: web-build
 	@echo "GooberEngine for the browser: http://localhost:$(PORT)/"
 	python3 -m http.server $(PORT) --bind 127.0.0.1 -d build/web
 
+# ---------------------------------------------------------------------------
+# Release zips (for itch.io and the like), in dist/:
+#   gooberengine-linux-x86_64.zip    the engine, SDL2 linked in, + carts/ + runtimes/
+#   gooberengine-windows-x86_64.zip  the same for Windows
+#   gooberengine-web.zip             the browser engine: index.html at the top, as itch wants
+# The desktop engines find carts/ and runtimes/ beside themselves (cart.c, export.c).
+DIST_LINUX := build/dist/linux/gooberengine
+DIST_WIN   := build/dist/windows/gooberengine
+DIST_SKIP  ?= test untitled
+DIST_CARTS := $(filter-out %.unsaved %.saving %.old $(DIST_SKIP:%=carts/%/%),$(CARTS))
+
+$(DIST_LINUX)/gooberengine: $(ALL_SRC) $(HDRS) $(SDL_LINUX)/lib/libSDL2.a
+	mkdir -p $(@D)
+	$(CC) -O2 $(WARN) $(CPPFLAGS) -I$(SDL_LINUX)/include -D_REENTRANT -o $@ $(ALL_SRC) \
+	      $(SDL_LINUX)/lib/libSDL2.a -lm -ldl -lpthread -lrt -static-libgcc -s
+
+$(DIST_WIN)/gooberengine.exe: $(ALL_SRC) $(HDRS) $(SDL_WIN)/lib/libSDL2.a
+	mkdir -p $(@D)
+	$(MINGW)-gcc -O2 $(WARN) $(CPPFLAGS) -I$(SDL_WIN)/include -o $@ $(ALL_SRC) \
+	      -static -L$(SDL_WIN)/lib -lmingw32 -lSDL2main -lSDL2 -mwindows \
+	      -lm -ldinput8 -ldxguid -ldxerr8 -luser32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 \
+	      -lshell32 -lsetupapi -lversion -luuid -lcfgmgr32 -lws2_32 -lpthread -s
+
+# the carts that ship, copied once into build/dist/carts
+build/dist/carts.stamp: $(DIST_CARTS)
+	rm -rf build/dist/carts && mkdir -p build/dist/carts
+	cd carts && cp --parents $(DIST_CARTS:carts/%=%) ../build/dist/carts/
+	touch $@
+
+# $(1) = the folder that becomes the top of the zip, $(2) = the zip
+define dist_zip
+	rm -rf $(1)/carts $(1)/runtimes
+	mkdir -p dist
+	cp -r build/dist/carts $(1)/carts
+	cp -r runtimes $(1)/runtimes
+	cp README.md $(1)/
+	rm -f $(2) && cd $(dir $(1)) && zip -qr9 $(abspath $(2)) $(notdir $(1))
+endef
+
+dist/gooberengine-linux-x86_64.zip: $(DIST_LINUX)/gooberengine runtimes build/dist/carts.stamp README.md
+	$(call dist_zip,$(DIST_LINUX),$@)
+
+dist/gooberengine-windows-x86_64.zip: $(DIST_WIN)/gooberengine.exe runtimes build/dist/carts.stamp README.md
+	$(call dist_zip,$(DIST_WIN),$@)
+
+# its own web build, so only the shipped carts are preloaded (make web keeps them all)
+build/dist/web/index.html: $(ALL_SRC) $(HDRS) web/engine.html build/dist/carts.stamp
+	@test -x $(EMSDK)/upstream/emscripten/emcc || { echo "need Emscripten: install emsdk and set EMSDK=/path/to/emsdk"; exit 1; }
+	mkdir -p build/dist/web
+	$(EMCC) $(WEB_FLAGS) --shell-file web/engine.html --preload-file build/dist/carts@/bundled-carts \
+	      -o $@ $(ALL_SRC)
+
+dist/gooberengine-web.zip: build/dist/web/index.html runtimes
+	rm -rf build/dist/web/runtimes && cp -r runtimes build/dist/web/runtimes
+	mkdir -p dist && rm -f $@
+	cd build/dist/web && zip -qr9 $(abspath $@) index.html index.js index.wasm index.data runtimes
+
+dist: dist/gooberengine-linux-x86_64.zip dist/gooberengine-windows-x86_64.zip dist/gooberengine-web.zip
+	@ls -l dist
+
 clean:
 	rm -rf build gooberengine
 
-# also forget the built runtimes
+# also forget the built runtimes and release zips
 distclean: clean
-	rm -rf runtimes exports
+	rm -rf runtimes exports dist
 
-.PHONY: all test clean distclean vscode runtimes web web-build
+.PHONY: all test clean distclean vscode runtimes web web-build dist

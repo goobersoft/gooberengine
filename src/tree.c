@@ -1,16 +1,22 @@
 /* The file tree: the cart's files down the left side of every editor.
  *
  *   code      +        click a file to edit it; + makes a new one
- *    main
- *   tiles     +        the file each editor has open is highlighted;
- *    tileset*          * = changed, not saved
- *   maps      +
- *   ...
+ *   - main
+ *   1 enemies          the number at the left: the slot the file loads into
+ *     scratch          by itself when the game runs. Click there to put a
+ *   tilesets  +        file in the lowest free slot or take it out again;
+ *   0 tileset*         right-click there for the next slot (swapping with
+ *   2 cave             the file in it). Slotted files come first, by slot.
+ *     tiles-1          load_tileset() and friends still work on top of that.
+ *   maps      +        main.gb always runs (-); slotted code is compiled in
+ *   ...                ahead of it, in slot order, as if main included it.
+ *
+ * The file each editor has open is highlighted; * = changed, not saved.
  *
  * Right-click a file for rename (type the new name, Enter) or delete (Y to
  * confirm). main.gb can't be renamed or deleted: a cart starts there.
  *
- * F6 (or the button at the left of the tabs) shows and hides it. The editor
+ * F9 (or the button at the left of the tabs) shows and hides it. The editor
  * runs in the rest of the screen: its drawing is shifted right by the tree's
  * width (view_x) and the mouse is shifted to match, so an editor's own
  * coordinates start at 0 either way. */
@@ -28,14 +34,16 @@ bool tree_open = true;
 #define ROW FONT_H
 #define TOP (FONT_H + 1)
 #define MAX_ROWS 200
+#define GAP 1                           /* the separator line between one section and the next */
 #define SETTINGS_Y (SCREEN_H - ROW)     /* the settings button: the tree's bottom row */
 
 enum { SEC_CODE = NRES };          /* sections: the resource kinds, then code */
 static const int sec_order[] = {SEC_CODE, RES_TILES, RES_MAP, RES_SFX, RES_MUSIC, RES_FONT};
-static const char *const sec_title[] = {"tiles", "maps", "sfx", "music", "fonts", "code"};
+static const char *const sec_title[] = {"tilesets", "maps", "sfx", "music", "fonts", "code"};
 static const int sec_mode[] = {MODE_TILES, MODE_MAP, MODE_SOUND, MODE_MUSIC, MODE_FONT, MODE_EDITOR};
 
-typedef struct { int sec; char name[64]; bool header; int nfiles; bool dirty; } Row;   /* nfiles, dirty: a header's section */
+typedef struct { int sec; char name[64]; bool header; bool dirty; int slot; } Row;   /* dirty: a header's section has an unsaved file; slot -1: none */
+#define GUTTER 8                   /* the slot number's column, left of a file's name */
 static Row rows[MAX_ROWS];
 static int nrows, scroll;
 static bool folded[SEC_CODE + 1];  /* a click on a section's name folds its files away, and back */
@@ -61,7 +69,7 @@ static void say(int color, const char *msg) {
 
 static int cmp_str(const void *a, const void *b) { return strcmp(*(const char *const *)a, *(const char *const *)b); }
 
-/* the cart's .gb files: on disk, plus one the editor has open that isn't saved yet */
+/* the cart's .gb files: on disk, plus any the editor has open that aren't saved yet */
 static int code_files(char names[][64], int max) {
     int n = 0;
     DIR *d = opendir(cart.dir);
@@ -71,10 +79,13 @@ static int code_files(char names[][64], int max) {
         if (len > 3 && len < 64 && !strcmp(e->d_name + len - 3, ".gb") && e->d_name[0] != '.') snprintf(names[n++], 64, "%s", e->d_name);
     }
     if (d) closedir(d);
-    const char *cur = editor_file();
-    bool have = !*cur;
-    for (int i = 0; i < n && !have; i++) have = !strcmp(names[i], cur);
-    if (!have && n < max) snprintf(names[n++], 64, "%s", cur);
+    const char *open[64];
+    int nopen = editor_open_files(open, 64);
+    for (int k = 0; k < nopen && n < max; k++) {
+        bool have = false;
+        for (int i = 0; i < n && !have; i++) have = !strcmp(names[i], open[k]);
+        if (!have) snprintf(names[n++], 64, "%s", open[k]);
+    }
     char *ptr[64];
     for (int i = 0; i < n; i++) ptr[i] = names[i];
     qsort(ptr, (size_t)n, sizeof ptr[0], cmp_str);
@@ -83,6 +94,9 @@ static int code_files(char names[][64], int max) {
     memcpy(names, sorted, sizeof sorted[0] * (size_t)n);
     return n;
 }
+
+static const char *slot_key(const Row *r) { return r->sec == SEC_CODE ? code_name(r->name) : r->name; }
+static bool is_main(const Row *r) { return r->sec == SEC_CODE && !strcmp(r->name, "main.gb"); }
 
 static bool row_active(const Row *r) {
     if (r->sec == SEC_CODE) return !strcmp(editor_file(), r->name);
@@ -108,13 +122,23 @@ static void build(void) {
             for (int i = 0; i < n; i++) names[i] = code[i];
         } else n = docs_list(sec, names, MAX_DOCS * 2);
         Row *h = &rows[nrows++];
-        *h = (Row){sec, "", true, n, false};
+        *h = (Row){sec, "", true, false, -1};
+        Row files[MAX_DOCS * 2];
+        int order[MAX_DOCS * 2];   /* main.gb, then the slotted files by slot, then the rest by name */
         for (int i = 0; i < n; i++) {
-            Row r = {sec, "", false, 0, false};
-            snprintf(r.name, sizeof r.name, "%s", names[i]);
-            if (row_dirty(&r)) h->dirty = true;
-            if (!folded[sec] && nrows < MAX_ROWS) rows[nrows++] = r;
+            Row *r = &files[i];
+            *r = (Row){sec, "", false, false, -1};
+            snprintf(r->name, sizeof r->name, "%s", names[i]);
+            r->slot = cart_slot_of(sec, slot_key(r));
+            order[i] = is_main(r) ? -1 : r->slot >= 0 ? r->slot : NSLOTS + i;
+            if (row_dirty(r)) h->dirty = true;
         }
+        for (int i = 1; i < n; i++)            /* a handful of files: insertion sort */
+            for (int j = i; j > 0 && order[j - 1] > order[j]; j--) {
+                int o = order[j]; order[j] = order[j - 1]; order[j - 1] = o;
+                Row t = files[j]; files[j] = files[j - 1]; files[j - 1] = t;
+            }
+        for (int i = 0; i < n && !folded[sec] && nrows < MAX_ROWS; i++) rows[nrows++] = files[i];
     }
 }
 
@@ -150,7 +174,7 @@ static void new_file(int sec) {
             FILE *f = fopen(path, "r");
             if (f) { fclose(f); continue; }
             if (editor_file_modified(name) || !strcmp(editor_file(), name)) continue;
-            Row r = {sec, "", false, 0, false};
+            Row r = {sec, "", false, false, -1};
             snprintf(r.name, sizeof r.name, "%s", name);
             open_row(&r);
             return;
@@ -159,11 +183,25 @@ static void new_file(int sec) {
         char err[256];
         Doc *d = doc_find(sec, name) ? NULL : doc_create(sec, name, err, sizeof err);
         if (!d) continue;
-        Row r = {sec, "", false, 0, false};
+        Row r = {sec, "", false, false, -1};
         snprintf(r.name, sizeof r.name, "%s", name);
         open_row(&r);
         return;
     }
+}
+
+/* a click on a file's slot number: into the lowest free slot / out of its slot;
+ * next (a right-click): on to the next slot, swapping with the file there */
+static void slot_click(const Row *r, bool next) {
+    const char *name = slot_key(r);
+    if (is_main(r)) return;            /* main.gb always runs: it has no slot to change */
+    int cur = cart_slot_of(r->sec, name), to;
+    if (cur < 0) {
+        to = cart_slot_free(r->sec);
+        if (to < 0) { say(COL_RED, "every slot is taken"); return; }
+    } else to = next ? (cur + 1) % NSLOTS : -1;
+    char err[256];                     /* success is silent: the row's slot column shows it */
+    if (!cart_slot_set(r->sec, name, to, err, sizeof err)) say(COL_RED, err);
 }
 
 static bool file_there(const char *path) { FILE *f = fopen(path, "r"); if (f) fclose(f); return f != NULL; }
@@ -186,6 +224,7 @@ static void do_rename(void) {
         }
         if (file_there(from_p) && rename(from_p, to_p) != 0) { say(COL_RED, "could not rename it"); return; }
         editor_rename_file(r->name, to);
+        cart_slot_rename(KIND_CODE, code_name(r->name), code_name(to));
     } else {
         snprintf(to, sizeof to, "%s", act.text);
         if (!doc_rename(r->sec, r->name, to, err, sizeof err)) { say(COL_RED, err); return; }
@@ -202,6 +241,7 @@ static void do_delete(void) {
         snprintf(path, sizeof path, "%s/%s", cart.dir, r->name);
         if (file_there(path) && remove(path) != 0) { say(COL_RED, "could not delete it"); return; }
         editor_close_file(r->name);
+        cart_slot_forget(KIND_CODE, code_name(r->name));
     } else if (!doc_delete(r->sec, r->name, err, sizeof err)) { say(COL_RED, err); return; }
     snprintf(err, sizeof err, "deleted %s", r->sec == SEC_CODE ? code_name(r->name) : r->name);
     say(COL_GREEN, err);
@@ -241,18 +281,41 @@ static int row_index(const Row *r) {
     return -1;
 }
 
+/* every section but the first has a separator above it, so positions are sums of heights */
+static int row_h(int i) { return rows[i].header && i > 0 ? ROW + GAP : ROW; }
+static int row_y(int i) {                  /* the screen y of row i (at or below the scroll) */
+    int y = TOP;
+    for (int j = scroll; j < i; j++) y += row_h(j);
+    return y;
+}
+static int row_at(int y) {                 /* the row under screen y, or nrows */
+    int ry = TOP;
+    for (int i = scroll; i < nrows; i++) {
+        if (y < ry + row_h(i)) return i;
+        ry += row_h(i);
+    }
+    return nrows;
+}
+static int rows_fit(int from) {            /* how many rows from `from` fit above the settings button */
+    int n = 0, h = 0;
+    while (from + n < nrows && h + row_h(from + n) <= SETTINGS_Y - TOP) h += row_h(from + n++);
+    return n;
+}
+
 static void tree_frame(void) {
     build();
-    int shown = (SETTINGS_Y - TOP) / ROW;
     bool over = in.mouse_x >= 0 && in.mouse_x < TREE_W;
     if (over && in.wheel) scroll -= in.wheel * 2;
-    if (scroll > nrows - shown) scroll = nrows - shown;
+    int max_scroll = nrows, h = 0;             /* the last scroll that still fills the view */
+    while (max_scroll > 0 && h + row_h(max_scroll - 1) <= SETTINGS_Y - TOP) h += row_h(--max_scroll);
+    if (scroll > max_scroll) scroll = max_scroll;
     if (scroll < 0) scroll = 0;
+    int shown = rows_fit(scroll);
 
     if (act.mode != ACT_NONE) act_keys();          /* Esc closes the menu too */
     int arow = act.mode ? row_index(&act.row) : -1;
     if (act.mode && arow < 0) act.mode = ACT_NONE;          /* the file went away */
-    int ay = TOP + (arow - scroll) * ROW;                      /* the menu sits below its row */
+    int ay = arow >= scroll ? row_y(arow) : TOP - ROW * (scroll - arow);                      /* the menu sits below its row */
     int my = ay + ROW + 2 * ROW > SCREEN_H ? ay - 2 * ROW : ay + ROW;
 
     /* clicks */
@@ -271,9 +334,12 @@ static void tree_frame(void) {
         if (!on_row) act.mode = ACT_NONE;                       /* a click elsewhere cancels */
         memset(in.mouse_hit, 0, sizeof in.mouse_hit);
     }
-    if (over && in.mouse_hit[2] && in.mouse_y >= TOP) {
-        int i = scroll + (in.mouse_y - TOP) / ROW;
-        if (i < nrows && !rows[i].header) open_menu(&rows[i]);
+    if (over && in.mouse_hit[2] && in.mouse_y >= TOP && in.mouse_y < SETTINGS_Y) {
+        int i = row_at(in.mouse_y);
+        if (i < nrows && !rows[i].header) {
+            if (in.mouse_x < GUTTER) slot_click(&rows[i], true);
+            else open_menu(&rows[i]);
+        }
     }
     if (over && in.mouse_hit[1]) {
         if (in.mouse_y < FONT_H) { if (in.mouse_x >= TREE_W - 10) tree_open = false; }
@@ -281,17 +347,24 @@ static void tree_frame(void) {
             if (ui_mode == MODE_SETTINGS) settings_frame_close();
             else settings_open();
         } else {
-            int i = scroll + (in.mouse_y - TOP) / ROW;
+            int i = row_at(in.mouse_y);
             if (in.mouse_y >= TOP && i < nrows) {
                 if (rows[i].header) {
                     if (in.mouse_x >= TREE_W - 10) { folded[rows[i].sec] = false; new_file(rows[i].sec); }   /* the new file shows */
                     else folded[rows[i].sec] = !folded[rows[i].sec];
                 }
+                else if (in.mouse_x < GUTTER) slot_click(&rows[i], false);
                 else open_row(&rows[i]);
                 build();
             }
         }
     }
+
+    /* a click above may have just opened a menu: place it on its row this frame, not the next */
+    arow = act.mode ? row_index(&act.row) : -1;
+    if (act.mode && arow < 0) act.mode = ACT_NONE;
+    ay = arow >= scroll ? row_y(arow) : TOP - ROW * (scroll - arow);
+    my = ay + ROW + 2 * ROW > SCREEN_H ? ay - 2 * ROW : ay + ROW;
 
     /* drawing */
     draw_reset();
@@ -305,9 +378,10 @@ static void tree_frame(void) {
         int i = scroll + k;
         if (i >= nrows) break;
         const Row *r = &rows[i];
-        int y = TOP + k * ROW;
-        bool hover = over && in.mouse_y >= y && in.mouse_y < y + ROW;
+        int y = row_y(i);
+        bool hover = over && in.mouse_y >= y && in.mouse_y < y + row_h(i);
         if (r->header) {
+            if (i > 0) { draw_rect(0, y, TREE_W, GAP, UI_RGB(0, 1, 2), true); y += GAP; }   /* the separator */
             bool f = folded[r->sec], name_hover = hover && in.mouse_x < TREE_W - 10;
             int c = r->sec == mode_sec ? COL_YELLOW : name_hover ? COL_WHITE : UI_RGB(2, 2, 3);
             int tc = name_hover ? COL_YELLOW : UI_RGB(1, 2, 2);
@@ -316,11 +390,7 @@ static void tree_frame(void) {
                 else draw_line(2 + k, y + 4 + k, 6 - k, y + 4 + k, tc);
             }
             int x = draw_text(sec_title[r->sec], 9, y, c);
-            if (f) {              /* folded: how many files it holds, and * if one isn't saved */
-                char n[16];
-                snprintf(n, sizeof n, "%d%s", r->nfiles, r->dirty ? "*" : "");
-                draw_text(n, x + 3, y, UI_RGB(1, 2, 2));
-            }
+            if (f && r->dirty) draw_text("*", x + 1, y, UI_RGB(1, 2, 2));   /* folded: * if a file in it isn't saved */
             draw_text("+", TREE_W - 8, y, hover && in.mouse_x >= TREE_W - 10 ? COL_YELLOW : UI_RGB(1, 2, 2));
             continue;
         }
@@ -342,11 +412,17 @@ static void tree_frame(void) {
             continue;
         }
         bool active = row_active(r);
-        if (active) draw_rect(0, y, TREE_W, ROW, r->sec == mode_sec ? UI_RGB(1, 2, 3) : UI_RGB(0, 1, 2), true);
+        if (active && r->sec == mode_sec) draw_rect(0, y, TREE_W, ROW, UI_RGB(1, 2, 3), true);
         else if (hover) draw_rect(0, y, TREE_W, ROW, UI_RGB(0, 1, 1), true);
         char label[16];
-        snprintf(label, sizeof label, "%.10s%s", r->sec == SEC_CODE ? code_name(r->name) : r->name, row_dirty(r) ? "*" : "");
-        draw_text(label, 8, y, active && r->sec == mode_sec ? COL_BLACK : COL_WHITE);
+        snprintf(label, sizeof label, "%.10s%s", slot_key(r), row_dirty(r) ? "*" : "");
+        bool dark = active && r->sec == mode_sec;           /* black text on the bright highlight */
+        draw_text(label, GUTTER, y, dark ? COL_BLACK : COL_WHITE);
+        bool on_gutter = hover && in.mouse_x < GUTTER && !is_main(r);     /* main's dash isn't a button */
+        if (on_gutter) draw_rect(0, y, GUTTER - 1, ROW, UI_RGB(1, 1, 2), true);
+        if (is_main(r)) draw_char('-', 1, y, dark ? COL_BLACK : UI_RGB(1, 2, 2));
+        else if (r->slot >= 0) draw_char('0' + r->slot, 1, y, on_gutter ? COL_YELLOW : dark ? COL_BLACK : COL_ORANGE);
+        else if (on_gutter) draw_char('+', 1, y, COL_YELLOW);
     }
     if (scroll > 0) draw_char('^', TREE_W - 8, TOP, COL_YELLOW);
     if (scroll + shown < nrows) draw_char('v', TREE_W - 8, SETTINGS_Y - ROW, COL_YELLOW);
@@ -421,7 +497,7 @@ void ui_editor_frame(void) {
     if (tree_keys()) { in.nevents = 0; in.escape = false; }
     int mode = ui_mode;
     run_editor();
-    if (ui_mode != mode && ui_mode != MODE_SHELL && ui_mode != MODE_BROWSE) {
+    if (ui_mode != mode && ui_mode != MODE_SHELL && ui_mode != MODE_BROWSE && ui_mode != MODE_HELP) {
         /* a key switched editors: show the new one this frame too */
         memset(in.mouse_hit, 0, sizeof in.mouse_hit);
         in.nevents = 0;

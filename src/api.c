@@ -31,6 +31,16 @@ void gfx_pump_events(void) {
     if (in.quit || in.escape) { cart_stopped = true; vm_exit(gb_vm, 0); }
 }
 
+/* called by the VM on loop back-edges: a cart spinning in a loop with no
+ * flip() can still be stopped with Esc. Looks at most every 50 ms. */
+void cart_poll_stop(void) {
+    static Uint32 last;
+    Uint32 now = SDL_GetTicks();
+    if (!in_cart || now - last < 50) return;
+    last = now;
+    if (platform_poll_stop()) { cart_stopped = true; vm_exit(gb_vm, 0); }
+}
+
 void gfx_shutdown(void) {}
 
 /* ---- screen ---- */
@@ -52,6 +62,13 @@ static Value a_rect(VM *vm, int argc, Value *args) {
 static Value a_rect_fill(VM *vm, int argc, Value *args) {
     UNUSED;
     draw_rect(ARG_I(0), ARG_I(1), ARG_I(2), ARG_I(3), OPT_I(4, -1), true);
+    RET_VOID;
+}
+/* rect_fill_fast(x, y, w, h [, c]): filled like cls(), so free of the dot limit,
+ * depth set to the far plane, no blending */
+static Value a_rect_fill_fast(VM *vm, int argc, Value *args) {
+    UNUSED;
+    draw_rect_fill_fast(ARG_I(0), ARG_I(1), ARG_I(2), ARG_I(3), OPT_I(4, -1));
     RET_VOID;
 }
 static Value a_circle(VM *vm, int argc, Value *args) {
@@ -302,6 +319,12 @@ static Value a_mouse_x(VM *vm, int argc, Value *args) { UNUSED; return v_int(in.
 static Value a_mouse_y(VM *vm, int argc, Value *args) { UNUSED; return v_int(in.mouse_y); }
 static Value a_mouse_down(VM *vm, int argc, Value *args) { UNUSED; int b = ARG_I(0); return v_int(b >= 1 && b <= 3 && in.mouse[b]); }
 static Value a_mouse_hit(VM *vm, int argc, Value *args) { UNUSED; int b = ARG_I(0); return v_int(b >= 1 && b <= 3 && in.mouse_hit[b]); }
+/* mouse_btn numbers from 0 (left, right, middle); in.mouse[] is 1-based like MOUSE_LEFT.. */
+static Value a_mouse_btn(VM *vm, int argc, Value *args) { UNUSED; int b = ARG_I(0); return v_int(b >= 0 && b <= 2 && in.mouse[b + 1]); }
+/* SDL counts the wheel + = up; carts get + = down (scrolling down the page) */
+static Value a_mouse_wheel(VM *vm, int argc, Value *args) { UNUSED; return v_int(-in.wheel); }
+static Value a_mouse_dx(VM *vm, int argc, Value *args) { UNUSED; return v_int(in.mouse_dx); }
+static Value a_mouse_dy(VM *vm, int argc, Value *args) { UNUSED; return v_int(in.mouse_dy); }
 
 /* ---- sound ---- */
 
@@ -411,12 +434,14 @@ static Value a_load_data(VM *vm, int argc, Value *args) {
 static Value a_flip(VM *vm, int argc, Value *args) {
     UNUSED;
     cart_flipped = true;
+    net_poll();
     platform_frame();
     dots_used = 0;              /* a new frame, a new dot budget */
     if (in.quit || in.escape) { cart_stopped = true; vm_exit(vm, 0); }
     RET_VOID;
 }
 static Value a_frame_count(VM *vm, int argc, Value *args) { UNUSED; return v_int((int32_t)frame_count); }
+static Value a_cpu(VM *vm, int argc, Value *args) { UNUSED; return v_int(platform_frame_load()); }
 static Value a_cart_title(VM *vm, int argc, Value *args) { UNUSED; return v_str(str_from_c(vm, cart.title)); }
 
 NativeDef gb_gfx_natives[] = {
@@ -427,6 +452,7 @@ NativeDef gb_gfx_natives[] = {
     {"line", 'v', "iiii|i", a_line},
     {"rect", 'v', "iiii|i", a_rect},
     {"rect_fill", 'v', "iiii|i", a_rect_fill},
+    {"rect_fill_fast", 'v', "iiii|i", a_rect_fill_fast},
     {"circle", 'v', "iii|i", a_circle},
     {"circle_fill", 'v', "iii|i", a_circle_fill},
     {"text", 'i', "sii|i", a_text},
@@ -472,6 +498,10 @@ NativeDef gb_gfx_natives[] = {
     {"mouse_y", 'i', "", a_mouse_y},
     {"mouse_down", 'i', "i", a_mouse_down},
     {"mouse_hit", 'i', "i", a_mouse_hit},
+    {"mouse_btn", 'i', "i", a_mouse_btn},
+    {"mouse_wheel", 'i', "", a_mouse_wheel},
+    {"mouse_dx", 'i', "", a_mouse_dx},
+    {"mouse_dy", 'i', "", a_mouse_dy},
 
     {"sfx", 'i', "i|i", a_sfx},
     {"note", 'v', "iiii|i", a_note},
@@ -487,6 +517,7 @@ NativeDef gb_gfx_natives[] = {
 
     {"flip", 'v', "", a_flip},
     {"frame_count", 'i', "", a_frame_count},
+    {"cpu", 'i', "", a_cpu},
     {"cart_title", 's', "", a_cart_title},
     {NULL, 0, NULL, NULL},
 };

@@ -1,0 +1,113 @@
+' mouse - grab a ball, fling it, and watch it bounce.
+' Left: grab and throw.  Right (hold): pull the ball to the pointer.
+' Middle: change colour.  Wheel: grow / shrink.
+'
+' The mouse commands:
+'   mouse_x(), mouse_y()    where the pointer is, in screen pixels
+'   mouse_btn(b)            1 while a button is held: 0 left, 1 right, 2 middle
+'   mouse_wheel()           wheel steps since the last flip(): + down, - up
+'   mouse_dx(), mouse_dy()  how far the pointer moved since the last flip()
+'
+' mouse_dx/dy are pixels per frame, the same units as the ball's speed, so
+' a throw just hands the pointer's movement to the ball. One frame's
+' movement is jumpy, though (a hand doesn't move evenly), so while the ball
+' is held its speed follows the pointer's with some smoothing, and letting
+' go keeps that.
+strict
+
+const GRAVITY:float = 0.25
+const BOUNCE:float = 0.8           ' speed kept by a bounce off a wall
+const FLOOR_Y:int = SCREEN_H - 14  ' the bottom of the play area
+
+global bx:float = SCREEN_W / 2, by:float = 80
+global vx:float = 2, vy:float
+global radius:int = 14
+global held:int                    ' 1 while the left button holds the ball
+global grab_x:float, grab_y:float  ' where on the ball it was grabbed
+global colour:int
+global middle_was:int              ' the middle button last frame
+global colours:int[6]
+colours[0] = COL_ORANGE : colours[1] = COL_CYAN : colours[2] = COL_LIME
+colours[3] = COL_PINK : colours[4] = COL_YELLOW : colours[5] = COL_PURPLE
+
+' keep the ball inside the play area, bouncing off whatever it touches
+function bounce_walls()
+  if bx < radius then bx = radius : vx = -vx * BOUNCE
+  if bx > SCREEN_W - radius then bx = SCREEN_W - radius : vx = -vx * BOUNCE
+  if by < 12 + radius then by = 12 + radius : vy = -vy * BOUNCE
+  if by > FLOOR_Y - radius
+    by = FLOOR_Y - radius
+    vy = -vy * BOUNCE
+    vx = vx * 0.98                 ' a little friction on the floor
+    if abs(vy) < 1 then vy = 0     ' stop bouncing once it's tiny
+  endif
+endfunction
+
+dot_limit(200000)                  ' a full cls alone is 96,000 of the usual 100,000
+
+repeat
+  local mx:int = mouse_x(), my:int = mouse_y()
+  local dx:int = mouse_dx(), dy:int = mouse_dy()
+  local over:int = distance(mx, my, bx, by) <= radius
+
+  ' wheel: scroll up to grow, down to shrink
+  radius = max(4, min(40, radius - mouse_wheel() * 2))
+
+  ' middle: mouse_btn only says "held", so remember last frame's state to
+  ' see the moment it goes down (mouse_hit(MOUSE_MIDDLE) does this for you)
+  local middle:int = mouse_btn(2)
+  if middle and not middle_was then colour = (colour + 1) mod 6
+  middle_was = middle
+
+  ' left: grab the ball, carry it, throw it
+  if mouse_btn(0)
+    if not held and over
+      held = 1
+      grab_x = bx - mx : grab_y = by - my
+      vx = 0 : vy = 0
+    endif
+  else
+    held = 0                       ' let go: vx, vy carry on as the throw
+  endif
+
+  if held
+    bx = mx + grab_x : by = my + grab_y
+    vx = vx * 0.5 + dx * 0.5       ' smoothed pointer speed
+    vy = vy * 0.5 + dy * 0.5
+  else
+    if mouse_btn(1)                ' right: a magnet towards the pointer
+      vx :+ (mx - bx) * 0.02
+      vy :+ (my - by) * 0.02
+      vx = vx * 0.95 : vy = vy * 0.95
+    else
+      vy :+ GRAVITY
+    endif
+    bx :+ vx : by :+ vy
+  endif
+  bounce_walls()
+
+  ' ---- draw ----
+  cls(rgb(0, 0, 1))
+  rect_fill(0, FLOOR_Y, SCREEN_W, SCREEN_H - FLOOR_Y, rgb(0, 1, 1))
+  if mouse_btn(1) and not held then line(mx, my, int(bx), int(by), COL_DARK_GREY)
+
+  rect_fill(int(bx) - radius + 3, FLOOR_Y, radius * 2, 3, rgb(0, 0, 0))   ' shadow on the floor
+  circle_fill(int(bx), int(by), radius, colours[colour])
+  circle_fill(int(bx - radius / 3), int(by - radius / 3), max(1, radius / 4), COL_WHITE)
+  if held or over then circle(int(bx), int(by), radius + 2, COL_WHITE)
+  ' the ball's speed, ten frames ahead
+  line(int(bx), int(by), int(bx + vx * 10), int(by + vy * 10), COL_RED)
+
+  ' the pointer, with this frame's movement as a tail
+  line(mx - dx, my - dy, mx, my, COL_YELLOW)
+  line(mx - 4, my, mx + 4, my, COL_WHITE)
+  line(mx, my - 4, mx, my + 4, COL_WHITE)
+
+  ' what the mouse commands are saying this frame
+  rect_fill(0, 0, SCREEN_W, 12, COL_NAVY)
+  local b:string = str(mouse_btn(0)) + str(mouse_btn(1)) + str(mouse_btn(2))
+  text("x " + str(mx) + " y " + str(my) + "  dx " + str(dx) + " dy " + str(dy) + "  btn " + b + "  size " + str(radius), 4, 1, COL_YELLOW)
+  text("Left throw  Right pull  Middle colour  Wheel size", 4, SCREEN_H - 11, COL_GREY)
+
+  flip()
+forever

@@ -1,0 +1,5 @@
+' a loop that never flips: only Esc (or closing the window) gets out
+print("spinning")
+while true
+wend
+print("never")

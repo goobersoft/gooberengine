@@ -16,8 +16,11 @@ long frame_count;
 static SDL_Window *win;
 static SDL_Renderer *ren;
 static SDL_Texture *tex;
+static SDL_Texture *fx_tex;      /* the frame with post-processing, at fx_s x the screen */
+static int fx_s, pixel_scale = 1;
 static SDL_GameController *pad;
 static Uint64 next_frame;
+static Uint64 frame_start;          /* when the cart got control back for this frame */
 static SDL_AudioDeviceID audio_dev;
 
 /* ---- audio: the synth renders straight into SDL's buffer ---- */
@@ -78,6 +81,7 @@ void platform_set_scale(int scale) {
 bool platform_init(void) {
     font_init();
     draw_reset();
+    frame_start = SDL_GetPerformanceCounter();
     if (opt.headless) return true;
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER | SDL_INIT_AUDIO) != 0 &&
         SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER) != 0) {
@@ -115,6 +119,7 @@ void platform_shutdown(void) {
     if (audio_dev) SDL_CloseAudioDevice(audio_dev);
     if (pad) SDL_GameControllerClose(pad);
     if (tex) SDL_DestroyTexture(tex);
+    if (fx_tex) SDL_DestroyTexture(fx_tex);
     if (ren) SDL_DestroyRenderer(ren);
     if (win) SDL_DestroyWindow(win);
     SDL_Quit();
@@ -191,10 +196,29 @@ bool save_screenshot(const char *path) {
 
 void platform_title(const char *title) { if (win) SDL_SetWindowTitle(win, title); }
 
+
+int platform_pixel_scale(void) { return opt.headless ? opt.scale : pixel_scale; }
+
 static void present(void) {
+    int ow = 0, oh = 0;
+    if (SDL_GetRendererOutputSize(ren, &ow, &oh) == 0) {
+        pixel_scale = ow / SCREEN_W < oh / SCREEN_H ? ow / SCREEN_W : oh / SCREEN_H;
+        if (pixel_scale < 1) pixel_scale = 1;
+    }
+    SDL_Texture *shown = tex;
     void *pixels;
     int pitch;
-    if (SDL_LockTexture(tex, NULL, &pixels, &pitch) == 0) {
+    int s = postfx_scale(pixel_scale);
+    if (s && s != fx_s) {
+        if (fx_tex) SDL_DestroyTexture(fx_tex);
+        fx_tex = SDL_CreateTexture(ren, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_W * s, SCREEN_H * s);
+        fx_s = fx_tex ? s : 0;
+    }
+    if (s && fx_tex && SDL_LockTexture(fx_tex, NULL, &pixels, &pitch) == 0) {
+        postfx_render(pixels, pitch, s);
+        SDL_UnlockTexture(fx_tex);
+        shown = fx_tex;
+    } else if (SDL_LockTexture(tex, NULL, &pixels, &pitch) == 0) {
         for (int y = 0; y < SCREEN_H; y++) {
             Uint32 *row = (Uint32 *)((Uint8 *)pixels + y * pitch);
             for (int x = 0; x < SCREEN_W; x++) row[x] = 0xFF000000u | palette[fb[y][x] & 63];
@@ -203,7 +227,7 @@ static void present(void) {
     }
     SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
     SDL_RenderClear(ren);
-    SDL_RenderCopy(ren, tex, NULL, NULL);
+    SDL_RenderCopy(ren, shown, NULL, NULL);
     SDL_RenderPresent(ren);
 }
 
@@ -273,6 +297,12 @@ static void add_event(int type, int sc, int mod, const char *text) {
     snprintf(ev->text, sizeof ev->text, "%s", text ? text : "");
 }
 
+/* a key press the UI asked for (clicking "^S save" in the tab bar): it arrives
+ * next frame like a real one, so whichever editor is open handles it its own way */
+static int queued_sc, queued_mod;
+
+void platform_queue_key(int sc, int mod) { queued_sc = sc; queued_mod = mod; }
+
 static void clear_frame_input(void) {
     memset(in.key_hit, 0, sizeof in.key_hit);
     memset(in.mouse_hit, 0, sizeof in.mouse_hit);
@@ -280,6 +310,11 @@ static void clear_frame_input(void) {
     in.escape = false;
     in.nevents = 0;
     in.wheel = 0;
+    if (queued_sc > 0 && queued_sc < 512) {
+        in.key_hit[queued_sc] = 1;
+        add_event(EV_KEY, queued_sc, queued_mod, NULL);
+    }
+    queued_sc = 0;
 }
 
 void input_consume(void) { clear_frame_input(); }
@@ -428,7 +463,10 @@ static void pump(void) {
                 if (!(SDL_GetModState() & KMOD_CTRL)) typed(e.text.text);
                 break;
             case SDL_MOUSEWHEEL: in.wheel += e.wheel.y; break;
-            case SDL_MOUSEMOTION: in.mouse_x = e.motion.x; in.mouse_y = e.motion.y; break;
+            case SDL_MOUSEMOTION:
+                in.mouse_x = e.motion.x; in.mouse_y = e.motion.y;
+                postfx_map_mouse(&in.mouse_x, &in.mouse_y);     /* the pixel you see under it on a bent screen */
+                break;
             case SDL_MOUSEBUTTONDOWN:
             case SDL_MOUSEBUTTONUP: {
                 int b = e.button.button == SDL_BUTTON_LEFT ? 1 : e.button.button == SDL_BUTTON_RIGHT ? 2
@@ -437,9 +475,10 @@ static void pump(void) {
                 in.mouse[b] = e.type == SDL_MOUSEBUTTONDOWN;
                 if (in.mouse[b]) in.mouse_hit[b] = true;
                 in.mouse_x = e.button.x; in.mouse_y = e.button.y;
+                postfx_map_mouse(&in.mouse_x, &in.mouse_y);
                 break;
             }
-            case SDL_DROPFILE:          /* a .gbcart or a cart folder dropped on the window */
+            case SDL_DROPFILE:          /* a zipped cart or a cart folder dropped on the window */
                 if (e.drop.file) {
                     snprintf(dropped, sizeof dropped, "%s", e.drop.file);
                     SDL_free(e.drop.file);
@@ -459,23 +498,80 @@ static void pump(void) {
     read_buttons();
 }
 
+/* how far the pointer moved since the last frame; the first frame reports 0 */
+static void mouse_motion(void) {
+    static int last_x, last_y;
+    static bool seen;
+    in.mouse_dx = seen ? in.mouse_x - last_x : 0;
+    in.mouse_dy = seen ? in.mouse_y - last_y : 0;
+    last_x = in.mouse_x; last_y = in.mouse_y;
+    seen = true;
+}
+
+/* --frames ran out: the screenshot, then quit */
+static void frame_limit(void) {
+    if (opt.shot && !save_screenshot(opt.shot)) fprintf(stderr, "gooberengine: could not write %s\n", opt.shot);
+    in.quit = true;
+}
+
+/* A cart stuck in a loop that never reaches flip(): look for Esc or a window
+ * close without running a frame. Events are only peeked, so a cart that is
+ * merely busy loses no input; frame state (key_hit, btnp) is left alone. */
+bool platform_poll_stop(void) {
+    if (opt.headless) {
+        /* scripted input: an {esc} up next stops a stuck cart as well */
+        const char *p = script_pos ? script_pos : opt.script;
+        if (p && !opt.player && !strncasecmp(p, "{esc}", 5)) { script_pos = p + 5; return true; }
+        /* --frames: time spent stuck counts as the frames a window would have shown in it,
+         * so a cart that never calls flip() still ends the run */
+        if (opt.max_frames > 0) {
+            Uint64 stuck = (SDL_GetPerformanceCounter() - frame_start) * FPS / SDL_GetPerformanceFrequency();
+            if (frame_count + (long)stuck >= opt.max_frames) { frame_limit(); return true; }
+        }
+        return false;
+    }
+#ifdef __EMSCRIPTEN__
+    emscripten_sleep(0);            /* the browser only delivers input while it has control */
+#endif
+    SDL_PumpEvents();
+    if (SDL_HasEvent(SDL_QUIT)) { in.quit = true; return true; }   /* closing the window always works */
+    if (opt.player) return false;   /* a game can't be "stopped" */
+    SDL_Event ev[64];
+    int n = SDL_PeepEvents(ev, 64, SDL_PEEKEVENT, SDL_KEYDOWN, SDL_KEYDOWN);
+    for (int i = 0; i < n; i++)
+        if (ev[i].key.keysym.scancode == SDL_SCANCODE_ESCAPE && !ev[i].key.repeat) {
+            SDL_FlushEvents(SDL_KEYDOWN, SDL_TEXTINPUT);   /* this Esc is used up: the shell mustn't see it too */
+            return true;
+        }
+    return false;
+}
+
 void platform_frame(void) {
     frame_count++;
-    if (opt.max_frames > 0 && frame_count >= opt.max_frames) {
-        if (opt.shot && !save_screenshot(opt.shot)) fprintf(stderr, "gooberengine: could not write %s\n", opt.shot);
-        in.quit = true;
-    }
+    if (opt.max_frames > 0 && frame_count >= opt.max_frames) frame_limit();
     if (opt.headless) {
         headless_audio();
         clear_frame_input();
         script_step();
         read_buttons();
+        mouse_motion();
+        frame_start = SDL_GetPerformanceCounter();
         return;
     }
     present();
     wait_for_frame();
     pump();
     script_step();
+    mouse_motion();
+    frame_start = SDL_GetPerformanceCounter();
+}
+
+/* how much of one frame's time (1/FPS s) has gone since the cart got control back,
+ * as a percentage: over 100 means this frame will be late */
+int platform_frame_load(void) {
+    Uint64 used = SDL_GetPerformanceCounter() - frame_start;
+    Uint64 load = used * 100 * FPS / SDL_GetPerformanceFrequency();
+    return load > 9999 ? 9999 : (int)load;
 }
 
 static char clip_mem[1 << 16];      /* headless stand-in for the system clipboard */

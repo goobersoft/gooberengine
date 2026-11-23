@@ -62,9 +62,10 @@ typedef struct {
     bool *rem_at;                /* rem-block state at the start of each line */
     int rem_cap;
     bool rem_dirty;
-    char status[160];
+    char status[512];
     int status_color;
     long status_until;
+    bool status_open;            /* the full status text is shown in a panel (click the bar to open) */
     int err_line;                /* 1-based, 0 = none */
     int prompt;                  /* 0 none, 1 find, 2 go to line */
     char prompt_text[64];
@@ -234,6 +235,7 @@ static void push_snap(Snap *stack, int *n) {
 enum { EDIT_OTHER = 0, EDIT_TYPE = 1, EDIT_DELETE = 2 };
 static void before_edit(int kind) {
     E.err_line = 0;
+    E.status_open = false;
     if (kind == EDIT_OTHER || kind != E.last_kind || E.cy != E.last_kind_line) push_snap(E.undo, &E.nundo);
     free_snaps(E.redo, &E.nredo);
     E.last_kind = kind;
@@ -276,7 +278,37 @@ static void status(int color, const char *fmt, ...) {
     va_end(ap);
     E.status_color = color;
     E.status_until = frame_count + 4 * FPS;
+    E.status_open = false;
     if (opt.headless) printf("[editor] %s\n", E.status);
+}
+
+/* where the status text starts in the bottom bar, and whether it is cut off there */
+#define STATUS_END (UI_W - STATUS_CLOSE_W - 2)     /* it ends just left of its close button */
+static bool status_shown(void) { return E.status[0] && frame_count < E.status_until; }
+static int status_x(void) {
+    int sxp = STATUS_END - text_width(E.status);
+    return sxp < 150 ? 150 : sxp;
+}
+static bool status_cut(void) { return status_x() + text_width(E.status) > STATUS_END; }
+
+/* splits the status into lines of at most cols characters, breaking at spaces
+ * where it can. Returns how many lines; starts[i]/lens[i] give each one. */
+static int status_wrap(int cols, int max, int *starts, int *lens) {
+    int n = 0, i = 0, len = (int)strlen(E.status);
+    while (i < len && n < max) {
+        int end = i + cols < len ? i + cols : len;
+        const char *nl = memchr(E.status + i, '\n', (size_t)(end - i));
+        if (nl) end = (int)(nl - E.status);
+        else if (end < len) {
+            int b = end;
+            while (b > i && E.status[b] != ' ') b--;
+            if (b > i) end = b;
+        }
+        starts[n] = i; lens[n] = end - i; n++;
+        i = end;
+        while (i < len && (E.status[i] == ' ' || E.status[i] == '\n')) i++;
+    }
+    return n;
 }
 
 /* ---------------------------------------------------------------- files */
@@ -376,6 +408,16 @@ bool editor_open_file(const char *name) {
         }
     load_into_E(name);
     return true;
+}
+
+/* every .gb file with a buffer (the one being edited, then the parked ones),
+ * on disk or not: a new file isn't written until the next save */
+int editor_open_files(const char *names[], int max) {
+    int n = 0;
+    if (E.path[0] && n < max) names[n++] = file_of(&E);
+    for (int i = 0; i < nparked && n < max; i++)
+        if (parked[i].path[0]) names[n++] = file_of(&parked[i]);
+    return n;
 }
 
 bool editor_file_modified(const char *name) {
@@ -595,6 +637,64 @@ static void colour_line(const char *s, int n, uint8_t *col, bool *rem) {
         i++;
     }
 #undef PAINT
+}
+
+void editor_colour_code(const char *s, int n, uint8_t *col) {
+    bool rem = false;
+    colour_line(s, n, col, &rem);
+}
+
+static void update_rem_state(void);
+
+/* F1: what the cursor is on, as a word the help can look up. A name gives
+ * itself (lower case, without its type suffix); a number, string or comment
+ * gives the page about those; punctuation gives "operators" (or the page for
+ * what it does). The cursor sits between characters, so a name just typed
+ * (cursor right after it) counts too. */
+bool editor_word_at_cursor(char *out, size_t n) {
+    if (!E.lines || E.n == 0 || n < 2) return false;
+    update_rem_state();
+    const Line *l = &E.lines[E.cy];
+    const char *s = l->s;
+    int len = l->len, x = E.cx;
+    static uint8_t cols[4096];
+    if (len > (int)sizeof cols) len = (int)sizeof cols;
+    if (x > len) x = len;
+    bool rem = E.rem_at[E.cy];
+    colour_line(s, len, cols, &rem);
+    /* the character to look at: a name's character at or just before the cursor wins, then any non-space */
+    #define IDENT_AT(i) ((i) >= 0 && (i) < len && (is_ident((unsigned char)s[i]) || \
+                         (((s[i] == '%' || s[i] == '#' || s[i] == '$') && (i) > 0 && is_ident((unsigned char)s[(i) - 1])) && cols[i] != C_NUMBER)))
+    int at = -1;
+    if (IDENT_AT(x)) at = x;
+    else if (IDENT_AT(x - 1)) at = x - 1;
+    else if (x < len && s[x] != ' ') at = x;
+    else if (x > 0 && x - 1 < len && s[x - 1] != ' ') at = x - 1;
+    if (at < 0) return false;
+    int c = cols[at];
+    if (c == C_COMMENT) { snprintf(out, n, "comments"); return true; }
+    if (c == C_STRING) { snprintf(out, n, "strings"); return true; }
+    if (c == C_NUMBER) { snprintf(out, n, "numbers"); return true; }
+    if (is_ident((unsigned char)s[at]) || s[at] == '%' || s[at] == '#' || s[at] == '$') {
+        int a = at, b = at;
+        if (!is_ident((unsigned char)s[a])) a--;              /* on the suffix: the name before it */
+        while (a > 0 && is_ident((unsigned char)s[a - 1])) a--;
+        while (b < len && is_ident((unsigned char)s[b])) b++;
+        int k = 0;
+        for (int i = a; i < b && k < (int)n - 1; i++) out[k++] = (char)tolower((unsigned char)s[i]);
+        out[k] = 0;
+        return k > 0;
+    }
+    char ch = s[at], next = at + 1 < len ? s[at + 1] : 0, prev = at > 0 ? s[at - 1] : 0;
+    const char *w = "operators";
+    if (ch == ':' && !strchr("+-*/", next)) w = (next == ' ' || !next) ? "basics" : "types";  /* separator / x:int */
+    else if (ch == ';') w = "basics";
+    else if (ch == '.') w = (next == '.' || prev == '.') ? "basics" : "type";              /* .. continues; a.b is a field */
+    else if (ch == '[' || ch == ']') w = "arrays";
+    else if (ch == '(' || ch == ')' || ch == ',') w = "functions";
+    snprintf(out, n, "%s", w);
+    return true;
+    #undef IDENT_AT
 }
 
 static void update_rem_state(void) {
@@ -966,6 +1066,7 @@ static void key(const KeyEvent *ev) {
     }
     switch (sc) {
         case SDL_SCANCODE_ESCAPE:
+            if (E.status_open) { E.status_open = false; return; }
             if (E.sel) { E.sel = false; return; }
             ui_mode = MODE_SHELL;
             return;
@@ -1015,12 +1116,72 @@ static bool mouse_to_pos(int *y, int *x) {
     return true;
 }
 
+/* the bounds [*a, *b) of the token on line y that holds column x: a string
+ * (quotes included), a number, a name (with its type suffix), a run of
+ * spaces, or one punctuation character. Inside a comment it picks the word. */
+static void token_at(int y, int x, int *a, int *b) {
+    const char *s = E.lines[y].s;
+    int n = E.lines[y].len;
+    *a = *b = x;
+    if (n == 0) return;
+    if (x >= n) x = n - 1;
+    int i = 0;
+    while (i < n) {
+        unsigned char c = (unsigned char)s[i];
+        int j = i + 1;
+        if (c == '\'') break;                                  /* comment: fall back to words */
+        if (c == '"') {
+            while (j < n && s[j] != '"') j++;
+            if (j < n) j++;
+        } else if (isdigit(c) || ((c == '.' || c == '$' || c == '%') && j < n && isalnum((unsigned char)s[j]))) {
+            while (j < n && (isalnum((unsigned char)s[j]) || (s[j] == '.' && !(j + 1 < n && s[j + 1] == '.')))) j++;
+        } else if (is_ident(c)) {
+            while (j < n && is_ident((unsigned char)s[j])) j++;
+            if (j < n && (s[j] == '%' || s[j] == '#' || s[j] == '$')) j++;
+        } else if (c == ' ' || c == '\t') {
+            while (j < n && (s[j] == ' ' || s[j] == '\t')) j++;
+        }
+        if (x < j) { *a = i; *b = j; return; }
+        i = j;
+    }
+    /* in a comment (or rem block): the word or run of non-word characters */
+    bool w = is_ident((unsigned char)s[x]);
+    *a = x; *b = x + 1;
+    while (*a > 0 && is_ident((unsigned char)s[*a - 1]) == w) (*a)--;
+    while (*b < n && is_ident((unsigned char)s[*b]) == w) (*b)++;
+}
+
 static void mouse(void) {
+    static long last_click = -1000;
+    static int clicks, click_y, click_mx;
     if (in.wheel) { E.top -= in.wheel * 3; clamp_scroll(); }
+    /* the status panel: a click anywhere closes it; a click on the status text opens it */
+    if (in.mouse_hit[1] && E.status_open) { E.status_open = false; E.dragging = false; return; }
+    if (in.mouse_hit[1] && !E.prompt && in.mouse_y >= SCREEN_H - BAR_H && status_shown()
+        && in.mouse_x >= status_x() && in.mouse_x < STATUS_END) { E.status_open = true; E.dragging = false; return; }
     bool in_text = in.mouse_y >= TEXT_Y && in.mouse_y < TEXT_Y + ROWS * FONT_H;
     int y, x;
     if (in.mouse_hit[1] && in_text) {
         mouse_to_pos(&y, &x);
+        /* double / triple click: same row, near the same spot, within 0.4 s */
+        int mx = in.mouse_x;
+        if (frame_count - last_click <= FPS * 2 / 5 && y == click_y && abs(mx - click_mx) <= FONT_W) clicks++;
+        else clicks = 1;
+        last_click = frame_count; click_y = y; click_mx = mx;
+        if (clicks >= 2) {
+            int a, b;
+            if (clicks == 2) {
+                int cx = E.left + (mx - GUTTER) / FONT_W;    /* the character under the pointer, not the nearest gap */
+                if (cx < 0) cx = 0;
+                token_at(y, cx, &a, &b);
+            } else { a = 0; b = E.lines[y].len; clicks = 0; }
+            E.sel = true; E.ay = y; E.ax = a;
+            E.cy = y; E.cx = E.want_x = b;
+            E.dragging = false;
+            E.last_kind = -1;
+            E.blink_from = frame_count;
+            return;
+        }
         bool shift = in.key[SDL_SCANCODE_LSHIFT] || in.key[SDL_SCANCODE_RSHIFT];
         if (!shift || !E.sel) { E.sel = true; E.ay = shift ? E.cy : y; E.ax = shift ? E.cx : x; }
         E.cy = y; E.cx = E.want_x = x;
@@ -1034,6 +1195,9 @@ static void mouse(void) {
         E.cy = y; E.cx = E.want_x = x;
         if (in.mouse_y < TEXT_Y && E.top > 0) E.top--;
         if (in.mouse_y >= TEXT_Y + ROWS * FONT_H) E.top++;
+        /* pan sideways when dragged past the left or right edge */
+        if (in.mouse_x < GUTTER && E.left > 0) E.left--;
+        if (in.mouse_x >= UI_W - FONT_W && E.cx >= E.left + COLS - 1) E.left++;
         clamp_scroll();
     } else E.dragging = false;
 }
@@ -1103,12 +1267,32 @@ static void draw(void) {
     char pos[64];
     snprintf(pos, sizeof pos, "%s%s  ln %d  col %d", code_name(file_of(&E)), E.modified ? "*" : "", E.cy + 1, E.cx + 1);
     draw_text(pos, 3, by, UI_RGB(2, 3, 3));
-    if (E.status[0] && frame_count < E.status_until) {
-        int w = text_width(E.status), sxp = UI_W - 3 - w;
-        if (sxp < 150) sxp = 150;
-        draw_clip(sxp, by, UI_W - sxp, BAR_H);
+    if (!status_shown()) { E.status_open = false; return; }
+    int sxp = status_x();
+    if (!status_cut()) draw_text(E.status, sxp, by, E.status_color);
+    else {
+        /* cut off: show what fits, then "..." to say there is more */
+        int dots = text_width("...");
+        draw_clip(sxp, by, STATUS_END - dots - sxp, BAR_H);
         draw_text(E.status, sxp, by, E.status_color);
         draw_clip_reset();
+        draw_text("...", STATUS_END - dots, by, COL_WHITE);
+    }
+    if (ui_status_close(by)) { E.status[0] = 0; E.status_open = false; return; }
+    if (!E.status_open) return;
+
+    /* the panel: the whole status, wrapped, just above the bottom bar */
+    enum { MAX_PANEL = 12 };
+    int starts[MAX_PANEL], lens[MAX_PANEL];
+    int wrap_cols = (UI_W - 8) / FONT_W;
+    int n = status_wrap(wrap_cols, MAX_PANEL, starts, lens);
+    int ph = n * FONT_H + 4, py = by - ph;
+    draw_rect(0, py, UI_W, ph, C_BG, true);
+    draw_rect(0, py, UI_W, ph, E.status_color, false);
+    char buf[512];
+    for (int i = 0; i < n; i++) {
+        snprintf(buf, sizeof buf, "%.*s", lens[i], E.status + starts[i]);
+        draw_text(buf, 4, py + 2 + i * FONT_H, E.status_color);
     }
 }
 

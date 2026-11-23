@@ -3,6 +3,7 @@
  *   mycart/
  *     main.gb      the program (may `include` other .gb files next to it)
  *     cart.txt     title = ..., author = ..., version = ...       (optional)
+ *                  slot tiles 0 = tileset  ...  what the game loads by itself
  *     tiles/       tilesets, NAME.g64                              (optional)
  *     maps/        maps, NAME.g64                                  (optional)
  *     sfx/         sound banks, NAME.g64                           (optional)
@@ -124,6 +125,8 @@ static FILE *open_in(const char *dir, const char *file) {
     return fopen(p, "r");
 }
 
+static int slot_kind(const char *word);
+
 static void load_meta(void) {
     FILE *f = open_in(cart.dir, "cart.txt");
     if (!f) return;
@@ -138,8 +141,138 @@ static void load_meta(void) {
         if (!strcasecmp(k, "title")) snprintf(cart.title, sizeof cart.title, "%s", v);
         else if (!strcasecmp(k, "author")) snprintf(cart.author, sizeof cart.author, "%s", v);
         else if (!strcasecmp(k, "version")) snprintf(cart.version, sizeof cart.version, "%s", v);
+        else if (!strcasecmp(k, "slots")) cart.slots_set = true;          /* "slots = none": every slot empty */
+        else {
+            char word[16];
+            int n, kind;
+            if (sscanf(k, "slot %15s %d", word, &n) != 2 || (kind = slot_kind(word)) < 0 || n < 0 || n >= NSLOTS) continue;
+            size_t vl = strlen(v);
+            if (kind == KIND_CODE && vl > 3 && !strcmp(v + vl - 3, ".gb")) v[vl - 3] = 0;
+            if (!cart_valid_name(v) || strlen(v) >= sizeof cart.slot[0][0]) continue;
+            snprintf(cart.slot[kind][n], sizeof cart.slot[0][0], "%s", v);
+            cart.slots_set = true;
+        }
     }
     fclose(f);
+}
+
+/* ---- the slots the cart fills by itself when it runs ----
+ * cart.txt lists them, a line each:
+ *   slot code 1 = enemies       enemies.gb, compiled in ahead of main.gb
+ *   slot tiles 0 = tileset      tiles/tileset.g64 in tileset slot 0
+ * A cart.txt without any (an older cart, or one nobody changed the slots of)
+ * gets the old rule: slot 0 of each resource kind holds its default-named file.
+ * The first change writes that rule out as lines, and from then on cart.txt
+ * says it all ("slots = none" when every slot is empty). */
+static const char *slot_word(int kind) { return kind == KIND_CODE ? "code" : res_dir[kind]; }
+
+static int slot_kind(const char *word) {
+    for (int k = 0; k <= KIND_CODE; k++)
+        if (!strcasecmp(word, slot_word(k))) return k;
+    return -1;
+}
+
+const char *cart_slot_name(int kind, int slot) {
+    if (kind < 0 || kind > KIND_CODE || slot < 0 || slot >= NSLOTS) return NULL;
+    if (!cart.slots_set)
+        return kind != KIND_CODE && slot == 0 && doc_find(kind, res_default[kind]) ? res_default[kind] : NULL;
+    return cart.slot[kind][slot][0] ? cart.slot[kind][slot] : NULL;
+}
+
+int cart_slot_of(int kind, const char *name) {
+    for (int s = 0; s < NSLOTS; s++) {
+        const char *n = cart_slot_name(kind, s);
+        if (n && !strcmp(n, name)) return s;
+    }
+    return -1;
+}
+
+int cart_slot_free(int kind) {
+    for (int s = 0; s < NSLOTS; s++)
+        if (!cart_slot_name(kind, s)) return s;
+    return -1;
+}
+
+static void slots_settle(void) {      /* the old rule becomes lines of its own */
+    if (cart.slots_set) return;
+    for (int k = 0; k < NRES; k++) {
+        const char *n = cart_slot_name(k, 0);
+        if (n) snprintf(cart.slot[k][0], sizeof cart.slot[0][0], "%s", n);
+    }
+    cart.slots_set = true;
+}
+
+static void put_slots(FILE *f) {
+    if (!cart.slots_set) return;
+    bool any = false;
+    for (int k = 0; k <= KIND_CODE; k++)
+        for (int s = 0; s < NSLOTS; s++)
+            if (cart.slot[k][s][0]) { fprintf(f, "slot %s %d = %s\n", slot_word(k), s, cart.slot[k][s]); any = true; }
+    if (!any) fputs("slots = none\n", f);
+}
+
+static bool is_slot_line(const char *line) {
+    while (isspace((unsigned char)*line)) line++;
+    return !strncasecmp(line, "slot ", 5) || !strncasecmp(line, "slot\t", 5)
+        || (!strncasecmp(line, "slots", 5) && (isspace((unsigned char)line[5]) || line[5] == '='));
+}
+
+/* cart.txt again: the lines it had (title, comments, anything else) and the slots, last */
+static bool write_slots(char *err, int errlen) {
+    char path[PATH_MAX + 64], tmp[PATH_MAX + 80];
+    snprintf(path, sizeof path, "%s/cart.txt", cart.dir);
+    snprintf(tmp, sizeof tmp, "%s/.cart.txt.tmp", cart.dir);
+    FILE *in = fopen(path, "r"), *out = fopen(tmp, "w");
+    if (!out) {
+        if (in) fclose(in);
+        snprintf(err, (size_t)errlen, "could not write %s", path);
+        return false;
+    }
+    if (in) {
+        char line[512];
+        while (fgets(line, sizeof line, in))
+            if (!is_slot_line(line)) {
+                fputs(line, out);
+                if (!strchr(line, '\n')) fputc('\n', out);
+            }
+        fclose(in);
+    } else fprintf(out, "title = %s\nauthor = %s\nversion = %s\n", cart.title, cart.author, cart.version[0] ? cart.version : "1");
+    put_slots(out);
+    bool ok = fclose(out) == 0 && rename(tmp, path) == 0;
+    if (!ok) { remove(tmp); snprintf(err, (size_t)errlen, "could not write %s", path); }
+    return ok;
+}
+
+bool cart_slot_set(int kind, const char *name, int slot, char *err, int errlen) {
+    if (kind < 0 || kind > KIND_CODE || slot < -1 || slot >= NSLOTS) { snprintf(err, (size_t)errlen, "no such slot"); return false; }
+    char me[sizeof cart.slot[0][0]], there[sizeof cart.slot[0][0]];   /* copies: name may be one of the table's own */
+    snprintf(me, sizeof me, "%s", name);
+    slots_settle();
+    int old = cart_slot_of(kind, me);
+    if (old == slot) return true;
+    if (slot >= 0) {               /* whatever was there takes this file's old place (or none) */
+        memcpy(there, cart.slot[kind][slot], sizeof there);
+        if (old >= 0) memcpy(cart.slot[kind][old], there, sizeof there);
+        memcpy(cart.slot[kind][slot], me, sizeof me);
+    } else if (old >= 0) cart.slot[kind][old][0] = 0;
+    return write_slots(err, errlen);
+}
+
+void cart_slot_rename(int kind, const char *from, const char *to) {
+    if (cart_slot_of(kind, from) < 0) return;
+    slots_settle();               /* a renamed default file keeps its slot */
+    for (int s = 0; s < NSLOTS; s++)
+        if (!strcmp(cart.slot[kind][s], from)) snprintf(cart.slot[kind][s], sizeof cart.slot[0][0], "%s", to);
+    char err[256];
+    write_slots(err, sizeof err);
+}
+
+void cart_slot_forget(int kind, const char *name) {
+    if (!cart.slots_set || cart_slot_of(kind, name) < 0) return;
+    for (int s = 0; s < NSLOTS; s++)
+        if (!strcmp(cart.slot[kind][s], name)) cart.slot[kind][s][0] = 0;
+    char err[256];
+    write_slots(err, sizeof err);
 }
 
 /* ---- the old formats, read once and converted (SAVE writes the new files) ----
@@ -467,7 +600,7 @@ bool cart_valid_name(const char *s) {
 }
 
 /* writes a starter cart.txt and main.gb into dir */
-static bool write_starter(const char *dir, const char *name, char *err, int errlen) {
+static bool write_starter(const char *dir, const char *name, bool untitled, char *err, int errlen) {
     char path[PATH_MAX + 100];
     snprintf(path, sizeof path, "%s/cart.txt", dir);
     FILE *f = fopen(path, "w");
@@ -475,7 +608,19 @@ static bool write_starter(const char *dir, const char *name, char *err, int errl
     snprintf(path, sizeof path, "%s/main.gb", dir);
     f = fopen(path, "w");
     if (!f) { snprintf(err, (size_t)errlen, "could not write %s", path); return false; }
-    fprintf(f,
+    if (untitled)                          /* the untitled cart: a bare loop to start from */
+        fputs("strict\n"
+              "\n"
+              "global running:int = true\n"
+              "\n"
+              "while running\n"
+              "  cls()\n"
+              "  if btn(BTN_A)\n"
+              "    running = false\n"
+              "  endif\n"
+              "  flip()\n"
+              "wend\n", f);
+    else fprintf(f,
             "' %s - a new GooberEngine cart\n"
             "strict\n"
             "\n"
@@ -506,7 +651,7 @@ bool cart_create(const char *name, char *err, int errlen) {
     snprintf(dir, sizeof dir, "%s/%s", carts_root(), name);
     if (is_dir(dir)) { snprintf(err, (size_t)errlen, "cart '%s' already exists (LOAD it)", name); return false; }
     if (mkdir(dir, 0755) != 0) { snprintf(err, (size_t)errlen, "could not create %s", dir); return false; }
-    if (!write_starter(dir, name, err, errlen)) return false;
+    if (!write_starter(dir, name, false, err, errlen)) return false;
     return cart_load(dir, err, errlen);
 }
 
@@ -549,7 +694,7 @@ bool cart_new_untitled(char *err, int errlen) {
         scratch[0] = 0;
         return false;
     }
-    if (!write_starter(scratch, "untitled", err, errlen) || !cart_load(scratch, err, errlen)) return false;
+    if (!write_starter(scratch, "untitled", true, err, errlen) || !cart_load(scratch, err, errlen)) return false;
     snprintf(cart.name, sizeof cart.name, "untitled");
     cart.untitled = true;
     return true;
@@ -624,6 +769,7 @@ bool cart_save_as(const char *name, bool overwrite, char *err, int errlen) {
     FILE *f = fopen(path, "w");
     if (f) {
         fprintf(f, "title = %s\nauthor = %s\nversion = %s\n", cart.title, cart.author, cart.version[0] ? cart.version : "1");
+        put_slots(f);
         fclose(f);
     }
     char *real = realpath(dir, NULL);
@@ -647,6 +793,19 @@ static bool compile_cart(Program *prog) {
     if (setjmp(compile_jmp)) {
         gb_error_jmp = NULL;
         return false;
+    }
+    /* the code files in slots first, in slot order, as if main.gb included each
+     * at its top (and, like an include, a file only once) */
+    for (int s = 0; s < NSLOTS; s++) {
+        const char *name = cart_slot_name(KIND_CODE, s);
+        if (!name || !strcmp(name, "main")) continue;
+        char p[PATH_MAX + 64];
+        snprintf(p, sizeof p, "%s/%s.gb", cart.dir, name);
+        bool seen = false;
+        for (int i = 0; i < prog->nfiles && !seen; i++) seen = !strcmp(prog->files[i], p);
+        if (seen) continue;
+        lex_file(p, &toks, prog);
+        if (toks.count && toks.toks[toks.count - 1].type == T_EOF) toks.count--;   /* main.gb's tokens follow */
     }
     lex_file(path, &toks, prog);
     compile_program(&toks, prog);
@@ -695,7 +854,9 @@ int cart_run(void) {
     dots_used = 0;
     ds.count_dots = true;
     in_cart = true;
+    gb_poll_hook = cart_poll_stop;      /* Esc gets out of a loop that never flips */
     int code = vm_run(&vm);
+    gb_poll_hook = NULL;
     in_cart = false;
     ds.count_dots = false;
     audio_lock();
@@ -703,6 +864,7 @@ int cart_run(void) {
     synth_music_stop();
     audio_unlock();
     rt_end();
+    net_shutdown();             /* and so does its network game */
     vm_free(&vm);
     gb_diag_hook = NULL;
     view_x = vx;

@@ -5,15 +5,15 @@
  * Nothing is compiled at export time, so any GooberEngine - including the web
  * one - can export to every target.
  *
- * The packed cart is the cart's .gbcart text (its source and data files; the
- * player compiles main.gb when it starts, which takes milliseconds).
+ * The packed cart is the cart zipped, as EXPORT writes it (its source and data
+ * files; the player compiles main.gb when it starts, which takes milliseconds).
  *
- *   Linux / Windows: the runtime executable, then the .gbcart bytes, then an
- *   80-byte trailer: the cart name (64 bytes, zero padded), the .gbcart length
- *   (8 bytes, little-endian) and the magic "GOOBERPK". Executables ignore
+ *   Linux / Windows: the runtime executable, then the .zip bytes, then an
+ *   80-byte trailer: the cart name (64 bytes, zero padded), the .zip length
+ *   (8 bytes, little-endian) and the magic "GOOBERZP". Executables ignore
  *   bytes after their end, so the result is still an ordinary program.
  *
- *   Web: the runtime's index.html with the .gbcart embedded (base64) in a
+ *   Web: the runtime's index.html with the .zip embedded (base64) in a
  *   <script> tag, next to player.js and player.wasm: three files for any static
  *   host, also written as a .zip ready for upload.
  */
@@ -32,7 +32,7 @@
 #include <emscripten.h>
 #endif
 
-#define PACK_MAGIC "GOOBERPK"
+#define PACK_MAGIC "GOOBERZP"     /* ZP: the pack is a .zip (PK was the old .gbcart text) */
 #define PACK_NAME 64
 #define PACK_TRAILER (PACK_NAME + 8 + 8)
 
@@ -373,7 +373,7 @@ bool game_export(const char *targets, const char *outdir, ExportLog log) {
     mkdirs(out);
     char err[256];
     size_t len;
-    char *pack = cart_pack(&len, err, sizeof err);
+    char *pack = (char *)archive_pack(cart.dir, cart.name, false, &len, err, sizeof err);
     if (!pack) { log(err, true); return false; }
     bool ok = true;
     char path[PATH_MAX + 96];
@@ -392,7 +392,7 @@ bool game_export(const char *targets, const char *outdir, ExportLog log) {
 
 /* ---- the player: what an exported game runs ---- */
 
-/* the .gbcart packed onto the end of this executable */
+/* the .zip packed onto the end of this executable */
 static bool read_own_pack(char *name, char **pack, size_t *len) {
     char exe[PATH_MAX];
     if (!ge_exe_path(exe, sizeof exe)) return false;
@@ -455,7 +455,7 @@ static void player_usage(void) {
             "%s - made with GooberEngine %s\n"
             "  --scale N       window scale (default 3)\n"
             "  --headless      no window (with --frames, --shot, --type, --wav: for testing)\n"
-            "  --cart file     play this .gbcart instead of the packed one\n",
+            "  --cart file     play this cart (.zip, .tar.gz) instead of the packed one\n",
             cart.title[0] ? cart.title : "a GooberEngine game", GE_VERSION);
 }
 
@@ -485,11 +485,10 @@ int player_main(int argc, char **argv) {
     size_t len = 0;
     if (cart_file) {
         if (!read_file(cart_file, &pack, &len)) { player_fail("could not read the cart file"); return 1; }
-        const char *slash = strrchr(cart_file, '/'), *bs = strrchr(cart_file, '\\');
-        if (bs && (!slash || bs > slash)) slash = bs;
-        snprintf(name, sizeof name, "%s", slash ? slash + 1 : cart_file);
-        char *dot = strstr(name, ".gbcart");
-        if (dot) *dot = 0;
+        char base[PATH_MAX];
+        snprintf(base, sizeof base, "%s", cart_file);
+        for (char *p = base; *p; p++) if (*p == '\\') *p = '/';
+        archive_cart_name(base, name, sizeof name);
     } else if (!read_own_pack(name, &pack, &len)) {
         player_fail("This is the GooberEngine player runtime with no game packed in it.\n"
                     "Export a cart from GooberEngine (EXPORT LINUX / WINDOWS / WEB) to make a game.");
@@ -502,11 +501,12 @@ int player_main(int argc, char **argv) {
     if (!tmp) { player_fail("could not make a temporary folder for the game"); free(pack); return 1; }
     carts_root_set(tmp);
     char file[PATH_MAX + 96], dir[PATH_MAX + 96], err[512] = "";
-    snprintf(file, sizeof file, "%s/%s.gbcart", tmp, name);
+    bool tgz = cart_file && archive_name(cart_file) && strcasecmp(cart_file + strlen(cart_file) - 4, ".zip");
+    snprintf(file, sizeof file, "%s/%s.%s", tmp, name, tgz ? "tar.gz" : "zip");
     Part part = {pack, len};
     bool ok = write_parts(file, &part, 1, false);
     free(pack);
-    ok = ok && cart_import(file, name, dir, sizeof dir, err, sizeof err);
+    ok = ok && archive_unpack(file, name, dir, sizeof dir, err, sizeof err);
     remove(file);
     if (!ok || !cart_load(dir, err, sizeof err)) {
         player_fail(err[0] ? err : "could not unpack the game");

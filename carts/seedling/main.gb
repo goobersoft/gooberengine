@@ -127,13 +127,13 @@ endfunction
 function draw_hud()
   rect_fill(0, 0, SCREEN_W, 12, COL_BLACK)
   sprite(T_SEED, 2, 1)
-  text("seeds " + str(seeds_total - seeds_left) + " / " + str(seeds_total), 15, 1, COL_YELLOW)
+  text("seeds " + str(seeds_total - seeds_left) + " / " + str(seeds_total), 15, 1, COL_WHITE)
   local secs$ = str(frames / 60)
   text("time " + secs$, SCREEN_W - 4 - text_width("time " + secs$), 1, COL_WHITE)
   if won
     local msg$ = "the garden is full of seedlings!  Z to play again"
-    rect_fill(0, SCREEN_H / 2 - 10, SCREEN_W, 20, COL_NAVY)
-    text(msg$, (SCREEN_W - text_width(msg$)) / 2, SCREEN_H / 2 - 5, COL_LIME)
+    rect_fill(0, SCREEN_H / 2 - 10, SCREEN_W, 20, COL_BLACK)
+    text(msg$, (SCREEN_W - text_width(msg$)) / 2, SCREEN_H / 2 - 5, COL_WHITE)
   endif
 endfunction
 

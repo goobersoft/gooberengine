@@ -15,12 +15,12 @@
 <body>
 <canvas id="canvas" tabindex="-1" oncontextmenu="event.preventDefault()"></canvas>
 <div id="hint">loading...</div>
-<!-- the game: a GooberEngine .gbcart (its code and data), base64 -->
+<!-- the game: a GooberEngine cart, zipped (its code and data), base64 -->
 <script type="application/octet-stream" id="ge-cart" data-name="__GE_CART_NAME__">__GE_CART__</script>
 <script>
   var hint = document.getElementById("hint");
   var cartEl = document.getElementById("ge-cart");
-  var cartName = cartEl.dataset.name, cartPath = "/" + cartName + ".gbcart";
+  var cartName = cartEl.dataset.name, cartPath = "/" + cartName + ".zip";
   var syncing = false;
   function persist() {
     if (syncing || !Module.FS) return;
