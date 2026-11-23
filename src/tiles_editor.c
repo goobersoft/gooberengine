@@ -9,7 +9,8 @@
  *     part that can be painted: a stroke stops at its edge. Clicking outside
  *     it selects the tile clicked instead; Shift+click there grows the
  *     selection to take that tile in too (and keeps growing while dragged).
- *     Inside it, Shift is the shapes' 1:1 key, as before. Tile 0 is selected at first.
+ *     Inside it, Shift is the shapes' 1:1 key, as before. A click off the
+ *     sheet goes back to tile 0 by itself. Tile 0 is selected at first.
  *   - the selection is also the map editor's pen: switch to the map and it
  *     paints with that tile, or stamps the whole block.
  *   - the preview window shows the selection by itself, at a size that fits.
@@ -574,7 +575,9 @@ static void sheet_press(int btn) {
     int x, y;
     if (!block_px_at(in.mouse_x, in.mouse_y, &x, &y)) {
         int t = sheet_tile_at(in.mouse_x, in.mouse_y);
-        if (t >= 0) { T.sel = t; T.bw = T.bh = 1; }    /* a plain click: just that tile (Shift+click grows instead) */
+        if (t < 0) t = 0;            /* off the sheet: back to tile 0, say after selecting the whole sheet */
+        T.sel = t;                   /* a plain click: just that tile (Shift+click grows instead) */
+        T.bw = T.bh = 1;
         return;
     }
     int c = btn == 1 ? T.col_a : T.col_b;
@@ -745,8 +748,8 @@ static void mouse(void) {
         return;
     }
     int bx, by;                       /* inside the selection, Shift is for the shapes */
-    if (btn == 1 && shift_held() && T.tool != T_PICK && !block_px_at(in.mouse_x, in.mouse_y, &bx, &by)) {
-        if (sheet_tile_at(in.mouse_x, in.mouse_y) < 0) return;
+    if (btn == 1 && shift_held() && T.tool != T_PICK && !block_px_at(in.mouse_x, in.mouse_y, &bx, &by) &&
+        sheet_tile_at(in.mouse_x, in.mouse_y) >= 0) {    /* off the sheet, Shift or not, a click goes back to tile 0 */
         T.drag = 5;
         T.rs_sel = T.sel; T.rs_bw = T.bw; T.rs_bh = T.bh;
         region_drag();
@@ -947,7 +950,7 @@ static void draw(void) {
         snprintf(line, sizeof line, "tile %d (col %d row %d) x%d%s", ht, ht % SHEET_COLS, ht / SHEET_COLS, zooms[T.zoom],
                  T.tool == T_PICK ? "" : "  click: select  Shift: add");
         draw_text(line, x, by, UI_RGB(2, 3, 3));
-    } else draw_text("middle drag: pan  wheel: zoom", x, by, UI_RGB(1, 2, 2));
+    } else draw_text("click: tile 0  middle drag: pan  wheel: zoom", x, by, UI_RGB(1, 2, 2));
 }
 
 void tiles_frame(void) {
