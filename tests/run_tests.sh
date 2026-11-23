@@ -191,7 +191,7 @@ edit "help: back from the first place leaves" '{ctrl+end}{enter}cls{f1}{click:10
 edit "help: follow a link"    '{ctrl+end}{enter}cls{f1}{tab}{enter}'; said "help: follow a link" '[help] clip'
 edit "help: back"             '{ctrl+end}{enter}cls{f1}{tab}{enter}{backspace}{backspace}y{ctrl+s}'; has "help: back" 'clsy'
 edit "help: search"           '{ctrl+end}{enter}{f1}circle_f{enter}'; said "help: search" '[help] circle, circle_fill'
-out=$($GE --headless --frames 30 --type '{f1}' 2>&1);     said "help: F1 in the shell is the index" '[help] Index: 350 names'
+out=$($GE --headless --frames 30 --type '{f1}' 2>&1);     said "help: F1 in the shell is the index" '[help] Index: 356 names'
 out=$($GE --headless --frames 30 --type 'load{f1}' 2>&1); said "help: F1 in the shell narrows to the command" 'first LOAD (shell)'
 out=$($GE --headless --frames 30 --type 'load{f1}{enter}' 2>&1); said "help: F1 in the shell, Enter" '[help] LOAD'
 out=$($GE --headless --frames 30 --type '{f1}{esc}cls{enter}help{enter}' 2>&1); said "help: Esc from the index, back to the prompt" 'RUN [name]'
