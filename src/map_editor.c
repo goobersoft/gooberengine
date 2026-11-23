@@ -3,7 +3,7 @@
  * The map fills the editor. The brush is one tile, or a block of tiles
  * taken from the tileset (Tab opens the tile picker; drag across it for a
  * block) or copied from the map with the select tool. It follows the tile
- * editor: whatever is selected there (a tile, or a 2x2 / 4x4 block) becomes
+ * editor: whatever is selected there (a tile, or a block of them) becomes
  * the brush, and a tile picked here is selected there too. Left button paints,
  * right button picks up the tile under the mouse. E makes the brush the
  * eraser: an empty cell. Tile 0 is a tile like any other.
@@ -58,7 +58,7 @@ static struct {
     int pk_mx, pk_my, pk_px, pk_py;
     bool panning;
     int pan_mx, pan_my, pan_vx, pan_vy;
-    int tsel, tsize;             /* the tile editor's selection when the brush last followed it */
+    int tsel, tw, th;            /* the tile editor's selection when the brush last followed it */
     char status[128];
     int status_color;
     long status_until;
@@ -80,7 +80,7 @@ static void status(int color, const char *fmt, ...) {
 static void tell_tiles(void) {
     if (M.brush[0][0] == MAP_EMPTY) return;
     tiles_select(M.brush[0][0], M.bw, M.bh);
-    tiles_selection(&M.tsel, &M.tsize);
+    tiles_selection(&M.tsel, &M.tw, &M.th);
 }
 
 static void set_brush_tile(int t) {
@@ -92,14 +92,16 @@ static void set_brush_tile(int t) {
 /* a new selection in the tile editor becomes the brush: its tile, or its whole
  * block as it is laid out on the sheet */
 static void follow_tiles(void) {
-    int t, n;
-    tiles_selection(&t, &n);
-    if (t == M.tsel && n == M.tsize) return;
+    int t, w, h;
+    tiles_selection(&t, &w, &h);
+    if (t == M.tsel && w == M.tw && h == M.th) return;
     M.tsel = t;
-    M.tsize = n;
-    M.bw = M.bh = n;
-    for (int j = 0; j < n; j++)
-        for (int i = 0; i < n; i++) M.brush[j][i] = (uint16_t)(t + j * SHEET_COLS + i);
+    M.tw = w;
+    M.th = h;
+    M.bw = w < MAXB ? w : MAXB;
+    M.bh = h < MAXB ? h : MAXB;
+    for (int j = 0; j < M.bh; j++)
+        for (int i = 0; i < M.bw; i++) M.brush[j][i] = (uint16_t)(t + j * SHEET_COLS + i);
 }
 
 static void init(void) {
@@ -107,7 +109,7 @@ static void init(void) {
     M.ready = true;
     M.zoom = 1;
     M.grid = true;
-    M.tsel = M.tsize = -1;       /* the first frame takes the tile editor's selection: tile 0 */
+    M.tsel = M.tw = M.th = -1;       /* the first frame takes the tile editor's selection: tile 0 */
 }
 
 /* ---------------------------------------------------------------- coordinates */

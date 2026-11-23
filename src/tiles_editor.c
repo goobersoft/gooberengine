@@ -5,11 +5,12 @@
  *
  *   - the whole tileset is the canvas. Middle-drag (or Space + drag) pans it,
  *     and the wheel zooms it around the mouse.
- *   - the selected tile (or a 2x2 / 4x4 block), boxed in yellow, is the only
+ *   - the selected tile (or a block of tiles), boxed in yellow, is the only
  *     part that can be painted: a stroke stops at its edge. Clicking outside
- *     it selects the tile clicked instead. Tile 0 is selected at first.
+ *     it selects the tile clicked instead; Alt + drag selects every tile from
+ *     where the drag started to where it is. Tile 0 is selected at first.
  *   - the selection is also the map editor's pen: switch to the map and it
- *     paints with that tile, or stamps the whole 2x2 / 4x4 block.
+ *     paints with that tile, or stamps the whole block.
  *   - the preview window shows the selection by itself, at a size that fits.
  *     Drag it by its title bar; drag its bottom-right corner to resize it.
  *   - the tools, actions and the 64 colors (4 to a row) are in another,
@@ -42,9 +43,9 @@ enum { T_PENCIL, T_FILL, T_LINE, T_RECT, T_OVAL, T_PICK, NTOOLS };
 static const char tool_keys[NTOOLS] = {'P', 'F', 'L', 'R', 'O', 'I'};
 static bool has_alt(int t) { return t == T_FILL || t == T_RECT || t == T_OVAL; }
 static const char *const tool_names[NTOOLS] = {"pencil (P)", "fill (F)", "line (L), Shift: snap to 45", "rect (R)", "oval (O)", "pick a color (I)"};
-enum { A_SIZE, A_FLIPX, A_FLIPY, A_TURN, A_CLEAR, NACTS };
-static const char act_keys[NACTS] = {'Z', 'H', 'V', 'T', 'X'};
-static const char *const act_names[NACTS] = {"block size 1x1 / 2x2 / 4x4 (Z)", "flip across (H)", "flip up-down (V)", "turn clockwise (T)", "clear the block (Del)"};
+enum { A_FLIPX, A_FLIPY, A_TURN, A_CLEAR, NACTS };
+static const char act_keys[NACTS] = {'H', 'V', 'T', 'X'};
+static const char *const act_names[NACTS] = {"flip across (H)", "flip up-down (V)", "turn clockwise (T)", "clear the block (Del)"};
 static const int zooms[] = {1, 2, 3, 4, 6, 8, 12, 16};
 #define NZOOM 8
 #define START_ZOOM 4                /* 6x: a tile is 60 screen pixels */
@@ -57,7 +58,7 @@ enum { W_TILE, W_TOOLS, NWIN };
 static struct {
     bool ready;
     int sel;                 /* top-left tile of the block being edited */
-    int bsize;               /* block size in tiles: 1, 2 or 4 */
+    int bw, bh;              /* the block's size in tiles */
     int tool, prev_tool;
     bool alt[NTOOLS];        /* a right click on the button swaps: rect / oval filled, fill every pixel of the
                               * color rather than just the touching ones. Ctrl does the other for one use */
@@ -68,7 +69,8 @@ static struct {
     int top;                 /* the window drawn last (on top) */
     bool placed;             /* windows put in their starting places */
     int placed_w;            /* the editor's width then: the windows keep to its right edge */
-    int drag;                /* 0 none, 1 window move, 2 window resize, 3 pan, 4 paint */
+    int drag;                /* 0 none, 1 window move, 2 window resize, 3 pan, 4 paint, 5 select tiles */
+    int rs_t0, rs_sel, rs_bw, rs_bh;   /* Alt + drag: the tile it started on, and the selection before */
     int drag_win, drag_dx, drag_dy, pan_x, pan_y;
     int pan_btn, pan_sx, pan_sy;   /* the button panning, where it went down */
     bool pan_moved;          /* a middle click that didn't move picks a color instead */
@@ -76,8 +78,8 @@ static struct {
     Tileset *base;           /* the tileset when a line/rect drag started */
     Tileset *undo[MAX_UNDO], *redo[MAX_UNDO];
     int nundo, nredo;
-    uint8_t clip[4 * TILE * 4 * TILE];
-    int clip_size;           /* 0 = empty, else block size in tiles */
+    uint8_t clip[SHEET_W * SHEET_H];   /* clip_w x clip_h tiles of pixels, row by row */
+    int clip_w, clip_h;      /* 0 = empty */
     char status[128];
     int status_color;
     long status_until;
@@ -101,7 +103,7 @@ static void init(void) {
     if (T.ready) return;
     T.ready = true;
     T.sel = 0;
-    T.bsize = 1;
+    T.bw = T.bh = 1;
     T.col_a = COL_WHITE;
     T.col_b = CLEAR;
     T.grid = true;
@@ -136,11 +138,16 @@ static void keep_windows_inside(void) {
 
 /* ---------------------------------------------------------------- block pixels */
 
-static int bpx(void) { return T.bsize * TILE; }
+static int bpw(void) { return T.bw * TILE; }     /* the block's size in pixels */
+static int bph(void) { return T.bh * TILE; }
 
 static void clamp_sel(void) {
+    if (T.bw > SHEET_COLS) T.bw = SHEET_COLS;
+    if (T.bh > SHEET_ROWS) T.bh = SHEET_ROWS;
+    if (T.bw < 1) T.bw = 1;
+    if (T.bh < 1) T.bh = 1;
     int col = T.sel % SHEET_COLS, row = T.sel / SHEET_COLS;
-    int maxc = SHEET_COLS - T.bsize, maxr = SHEET_ROWS - T.bsize;
+    int maxc = SHEET_COLS - T.bw, maxr = SHEET_ROWS - T.bh;
     if (col > maxc) col = maxc;
     if (row > maxr) row = maxr;
     if (col < 0) col = 0;
@@ -148,20 +155,21 @@ static void clamp_sel(void) {
     T.sel = row * SHEET_COLS + col;
 }
 
-/* the selection, for the map editor's pen: its top-left tile and size (1, 2 or 4) */
-void tiles_selection(int *tile, int *size) {
+/* the selection, for the map editor's pen: its top-left tile and size in tiles */
+void tiles_selection(int *tile, int *w, int *h) {
     init();
     *tile = T.sel;
-    *size = T.bsize;
+    *w = T.bw;
+    *h = T.bh;
 }
 
-/* the map editor picked w x h tiles from `tile`: select them here too. A 2x2 or
- * 4x4 block keeps its size; any other shape selects its top-left tile. */
+/* the map editor picked w x h tiles from `tile`: select them here too */
 void tiles_select(int tile, int w, int h) {
     init();
     if (tile < 0 || tile >= NTILES) return;
-    T.bsize = w == h && (w == 2 || w == 4) ? w : 1;
     T.sel = tile;
+    T.bw = w;
+    T.bh = h;
     clamp_sel();
 }
 
@@ -171,12 +179,12 @@ static uint8_t *bpix(int x, int y) {
 }
 
 static int bget(int x, int y) {
-    if (x < 0 || y < 0 || x >= bpx() || y >= bpx()) return -1;
+    if (x < 0 || y < 0 || x >= bpw() || y >= bph()) return -1;
     return *bpix(x, y);
 }
 
 static void bset(int x, int y, int c) {
-    if (x < 0 || y < 0 || x >= bpx() || y >= bpx()) return;
+    if (x < 0 || y < 0 || x >= bpw() || y >= bph()) return;
     *bpix(x, y) = (uint8_t)c;
 }
 
@@ -234,24 +242,26 @@ static void bfill(int x, int y, int c, bool all) {
     int from = bget(x, y);
     if (from < 0 || from == c) return;
     if (all) {
-        for (int py = 0; py < bpx(); py++)
-            for (int px = 0; px < bpx(); px++)
+        for (int py = 0; py < bph(); py++)
+            for (int px = 0; px < bpw(); px++)
                 if (bget(px, py) == from) bset(px, py, c);
         return;
     }
-    static int stack[4 * TILE * 4 * TILE * 4][2];
+    /* a pixel is painted as it goes on the stack, so none goes on twice: the
+     * whole sheet is the most it can ever hold */
+    static int16_t stack[SHEET_W * SHEET_H][2];
     int n = 0;
-    stack[n][0] = x; stack[n][1] = y; n++;
+    bset(x, y, c);
+    stack[n][0] = (int16_t)x; stack[n][1] = (int16_t)y; n++;
     while (n > 0) {
         n--;
         int px = stack[n][0], py = stack[n][1];
-        if (bget(px, py) != from) continue;
-        bset(px, py, c);
         static const int d[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
         for (int k = 0; k < 4; k++) {
             int qx = px + d[k][0], qy = py + d[k][1];
-            if (bget(qx, qy) == from && n < (int)(sizeof stack / sizeof stack[0])) {
-                stack[n][0] = qx; stack[n][1] = qy; n++;
+            if (bget(qx, qy) == from) {
+                bset(qx, qy, c);
+                stack[n][0] = (int16_t)qx; stack[n][1] = (int16_t)qy; n++;
             }
         }
     }
@@ -259,16 +269,16 @@ static void bfill(int x, int y, int c, bool all) {
 
 /* whole-block transforms: read the block out, write it back moved */
 static void transform(int kind, int dx, int dy) {
-    int n = bpx();
-    static uint8_t tmp[4 * TILE][4 * TILE];
-    for (int y = 0; y < n; y++) for (int x = 0; x < n; x++) tmp[y][x] = (uint8_t)bget(x, y);
-    for (int y = 0; y < n; y++)
-        for (int x = 0; x < n; x++) {
+    int w = bpw(), h = bph();          /* turning ('t') needs w == h: act() checks */
+    static uint8_t tmp[SHEET_H][SHEET_W];
+    for (int y = 0; y < h; y++) for (int x = 0; x < w; x++) tmp[y][x] = (uint8_t)bget(x, y);
+    for (int y = 0; y < h; y++)
+        for (int x = 0; x < w; x++) {
             int sx = x, sy = y;
-            if (kind == 'h') sx = n - 1 - x;
-            else if (kind == 'v') sy = n - 1 - y;
-            else if (kind == 't') { sx = y; sy = n - 1 - x; }          /* rotate clockwise */
-            else if (kind == 's') { sx = (x - dx + n) % n; sy = (y - dy + n) % n; }
+            if (kind == 'h') sx = w - 1 - x;
+            else if (kind == 'v') sy = h - 1 - y;
+            else if (kind == 't') { sx = y; sy = h - 1 - x; }          /* rotate clockwise */
+            else if (kind == 's') { sx = (x - dx + w) % w; sy = (y - dy + h) % h; }
             bset(x, y, tmp[sy][sx]);
         }
 }
@@ -309,6 +319,7 @@ static void undo_redo(bool redo) {
 void tiles_doc_changed(void) {
     init();
     T.sel = 0;                /* a new tileset starts at tile 0 (the block size stays) */
+    clamp_sel();
     clear_stack(T.undo, &T.nundo);
     clear_stack(T.redo, &T.nredo);
     if (T.drag == 4) T.drag = 0;
@@ -363,26 +374,28 @@ static void save(void) {
 }
 
 static void copy_block(bool cut) {
-    int n = bpx();
-    for (int y = 0; y < n; y++) for (int x = 0; x < n; x++) T.clip[y * 4 * TILE + x] = (uint8_t)bget(x, y);
-    T.clip_size = T.bsize;
+    int w = bpw(), h = bph();
+    for (int y = 0; y < h; y++) for (int x = 0; x < w; x++) T.clip[y * w + x] = (uint8_t)bget(x, y);
+    T.clip_w = T.bw;
+    T.clip_h = T.bh;
     if (cut) {
         before_change();
-        brect(0, 0, n - 1, n - 1, CLEAR, true);
+        brect(0, 0, w - 1, h - 1, CLEAR, true);
     }
-    status(COL_GREY, "%s %dx%d tile%s", cut ? "cut" : "copied", T.bsize, T.bsize, T.bsize > 1 ? "s" : "");
+    status(COL_GREY, "%s %dx%d tile%s", cut ? "cut" : "copied", T.bw, T.bh, T.bw * T.bh > 1 ? "s" : "");
 }
 
+/* the copied tiles go in with their top-left at the selection's; what would be off the sheet is left out */
 static void paste_block(void) {
-    if (!T.clip_size) { status(COL_GREY, "nothing copied yet"); return; }
+    if (!T.clip_w) { status(COL_GREY, "nothing copied yet"); return; }
     before_change();
-    int n = T.clip_size * TILE;
+    int w = T.clip_w * TILE, h = T.clip_h * TILE;
     int col = T.sel % SHEET_COLS, row = T.sel / SHEET_COLS;
-    for (int y = 0; y < n; y++)
-        for (int x = 0; x < n; x++) {
+    for (int y = 0; y < h; y++)
+        for (int x = 0; x < w; x++) {
             int tc = col + x / TILE, tr = row + y / TILE;
             if (tc >= SHEET_COLS || tr >= SHEET_ROWS) continue;
-            TS->t[tr * SHEET_COLS + tc][(y % TILE) * TILE + x % TILE] = T.clip[y * 4 * TILE + x];
+            TS->t[tr * SHEET_COLS + tc][(y % TILE) * TILE + x % TILE] = T.clip[y * w + x];
         }
 }
 
@@ -393,11 +406,12 @@ static void set_tool(int t) {
 
 static void act(int a) {
     switch (a) {
-        case A_SIZE: T.bsize = T.bsize == 1 ? 2 : T.bsize == 2 ? 4 : 1; clamp_sel(); break;
         case A_FLIPX: before_change(); transform('h', 0, 0); break;
         case A_FLIPY: before_change(); transform('v', 0, 0); break;
-        case A_TURN: before_change(); transform('t', 0, 0); break;
-        case A_CLEAR: before_change(); brect(0, 0, bpx() - 1, bpx() - 1, CLEAR, true); break;
+        case A_TURN:
+            if (T.bw != T.bh) { status(COL_GREY, "only a square block can turn (this one is %dx%d)", T.bw, T.bh); break; }
+            before_change(); transform('t', 0, 0); break;
+        case A_CLEAR: before_change(); brect(0, 0, bpw() - 1, bph() - 1, CLEAR, true); break;
     }
 }
 
@@ -424,10 +438,10 @@ static void clamp_pan(void) {
 
 /* scroll the sheet the least that brings the whole selection into view */
 static void show_selection(void) {
-    int z = zooms[T.zoom], n = bpx() * z;
+    int z = zooms[T.zoom], w = bpw() * z, h = bph() * z;
     int x = T.ox + (T.sel % SHEET_COLS) * TILE * z, y = T.oy + (T.sel / SHEET_COLS) * TILE * z;
-    if (x + n > UI_W) T.ox -= x + n - UI_W;
-    if (y + n > BOT) T.oy -= y + n - BOT;
+    if (x + w > UI_W) T.ox -= x + w - UI_W;
+    if (y + h > BOT) T.oy -= y + h - BOT;
     x = T.ox + (T.sel % SHEET_COLS) * TILE * z;
     y = T.oy + (T.sel / SHEET_COLS) * TILE * z;
     if (x < 0) T.ox -= x;
@@ -460,7 +474,6 @@ static void key(const KeyEvent *ev) {
         case SDL_SCANCODE_I: set_tool(T_PICK); return;
         case SDL_SCANCODE_G: T.grid = !T.grid; return;
         case SDL_SCANCODE_X: { int t = T.col_a; T.col_a = T.col_b; T.col_b = t; return; }
-        case SDL_SCANCODE_Z: act(A_SIZE); show_selection(); return;
         case SDL_SCANCODE_H: act(A_FLIPX); return;
         case SDL_SCANCODE_V: act(A_FLIPY); return;
         case SDL_SCANCODE_T: act(A_TURN); return;
@@ -476,7 +489,7 @@ static void key(const KeyEvent *ev) {
     }
     if (shift) { before_change(); transform('s', dx, dy); return; }   /* nudge the pixels, wrapping */
     int col = T.sel % SHEET_COLS + dx, row = T.sel / SHEET_COLS + dy;
-    if (col < 0 || row < 0 || col > SHEET_COLS - T.bsize || row > SHEET_ROWS - T.bsize) return;
+    if (col < 0 || row < 0 || col > SHEET_COLS - T.bw || row > SHEET_ROWS - T.bh) return;
     T.sel = row * SHEET_COLS + col;
     show_selection();
 }
@@ -492,14 +505,14 @@ static bool in_win(int i) { const Win *w = &T.win[i]; return inside(w->x, w->y, 
 /* the preview window: the selection at the biggest whole scale that fits, centred */
 static int preview_scale(void) {
     const Win *w = &T.win[W_TILE];
-    int s = (w->w < w->h ? w->w : w->h) / bpx();
+    int sx = w->w / bpw(), sy = w->h / bph(), s = sx < sy ? sx : sy;
     return s < 1 ? 1 : s;
 }
 static void preview_origin(int *cx, int *cy) {
     const Win *w = &T.win[W_TILE];
-    int size = preview_scale() * bpx();
-    *cx = w->x + (w->w - size) / 2;
-    *cy = w->y + TITLE_H + (w->h - size) / 2;
+    int s = preview_scale();
+    *cx = w->x + (w->w - s * bpw()) / 2;
+    *cy = w->y + TITLE_H + (w->h - s * bph()) / 2;
 }
 
 /* the tools window's parts, top to bottom: tool buttons and action buttons
@@ -529,7 +542,7 @@ static bool block_px_at(int mx, int my, int *bx, int *by) {
     int z = zooms[T.zoom];
     *bx = floor_div(mx - T.ox, z) - (T.sel % SHEET_COLS) * TILE;
     *by = floor_div(my - T.oy, z) - (T.sel / SHEET_COLS) * TILE;
-    return *bx >= 0 && *by >= 0 && *bx < bpx() && *by < bpx();
+    return *bx >= 0 && *by >= 0 && *bx < bpw() && *by < bph();
 }
 
 static int sheet_tile_at(int mx, int my) {     /* -1 if not on the sheet */
@@ -590,12 +603,12 @@ static void snap(int *x, int *y) {
 
 /* a stroke goes on while the button is held; bset leaves out what falls outside the block */
 static void sheet_drag(void) {
-    int n = bpx(), x, y;
+    int x, y;
     block_px_at(in.mouse_x, in.mouse_y, &x, &y);
     if (x < -1) x = -1;               /* just past the edge is enough to reach it */
     if (y < -1) y = -1;
-    if (x > n) x = n;
-    if (y > n) y = n;
+    if (x > bpw()) x = bpw();
+    if (y > bph()) y = bph();
     int c = T.stroke_btn == 1 ? T.col_a : T.col_b;
     if (T.tool == T_PENCIL) {
         bline(T.lastx, T.lasty, x, y, c);
@@ -609,6 +622,31 @@ static void sheet_drag(void) {
     }
     T.lastx = x;
     T.lasty = y;
+}
+
+static bool alt_held(void) { return in.key[SDL_SCANCODE_LALT] || in.key[SDL_SCANCODE_RALT]; }
+
+/* the sheet's tile column and row at the mouse, kept on the sheet */
+static void sheet_cell_at(int *col, int *row) {
+    int z = zooms[T.zoom];
+    *col = floor_div(in.mouse_x - T.ox, z * TILE);
+    *row = floor_div(in.mouse_y - T.oy, z * TILE);
+    if (*col < 0) *col = 0;
+    if (*row < 0) *row = 0;
+    if (*col >= SHEET_COLS) *col = SHEET_COLS - 1;
+    if (*row >= SHEET_ROWS) *row = SHEET_ROWS - 1;
+}
+
+/* Alt + drag: the tiles from the one the drag started on to the one under the
+ * mouse. Back on the first tile, the selection is what it was before. */
+static void region_drag(void) {
+    int c1, r1;
+    sheet_cell_at(&c1, &r1);
+    int c0 = T.rs_t0 % SHEET_COLS, r0 = T.rs_t0 / SHEET_COLS;
+    if (c1 == c0 && r1 == r0) { T.sel = T.rs_sel; T.bw = T.rs_bw; T.bh = T.rs_bh; return; }
+    T.sel = (r0 < r1 ? r0 : r1) * SHEET_COLS + (c0 < c1 ? c0 : c1);
+    T.bw = abs(c1 - c0) + 1;
+    T.bh = abs(r1 - r0) + 1;
 }
 
 static void tools_press(int btn) {
@@ -635,7 +673,7 @@ static void tools_press(int btn) {
 static void mouse(void) {
     bool space = in.key[SDL_SCANCODE_SPACE];
     if (T.drag) {
-        int held = T.drag == 4 ? T.stroke_btn : T.drag == 3 ? T.pan_btn : 1;
+        int held = T.drag == 4 ? T.stroke_btn : T.drag == 3 ? T.pan_btn : 1;   /* 1, 2 and 5: the left button */
         /* a new press (even one with no frame of release before it) ends the drag */
         if (in.mouse[held] && !in.mouse_hit[held]) {
             Win *w = &T.win[T.drag_win];
@@ -654,6 +692,7 @@ static void mouse(void) {
                     if (abs(in.mouse_x - T.pan_sx) > 2 || abs(in.mouse_y - T.pan_sy) > 2) T.pan_moved = true;
                     break;
                 case 4: sheet_drag(); break;
+                case 5: region_drag(); break;
             }
             return;
         }
@@ -661,6 +700,7 @@ static void mouse(void) {
             T.ox = in.mouse_x - T.pan_x; T.oy = in.mouse_y - T.pan_y;
             pick_color(false);
         }
+        if (T.drag == 5) { region_drag(); show_selection(); }
         T.drag = 0;
     }
     int btn = in.mouse_hit[1] ? 1 : in.mouse_hit[2] ? 2 : in.mouse_hit[3] ? 3 : 0;
@@ -698,6 +738,14 @@ static void mouse(void) {
         T.pan_sx = in.mouse_x;
         T.pan_sy = in.mouse_y;
         T.pan_moved = false;
+        return;
+    }
+    if (btn == 1 && alt_held()) {
+        int t = sheet_tile_at(in.mouse_x, in.mouse_y);
+        if (t < 0) return;
+        T.drag = 5;
+        T.rs_t0 = t;
+        T.rs_sel = T.sel; T.rs_bw = T.bw; T.rs_bh = T.bh;
         return;
     }
     if (btn == 1 || btn == 2) sheet_press(btn);
@@ -738,32 +786,32 @@ static void draw_background(int *hx, int *hy) {
             else if (z == 1) draw_plot(sx, sy, c);
             else draw_rect(sx, sy, z, z, c, true);
         }
-    int scol = T.sel % SHEET_COLS, srow = T.sel / SHEET_COLS, n = bpx(), bt = n * z;
+    int scol = T.sel % SHEET_COLS, srow = T.sel / SHEET_COLS, nw = bpw(), nh = bph(), btw = nw * z, bth = nh * z;
     int bx0 = T.ox + scol * TILE * z, by0 = T.oy + srow * TILE * z;
     if (T.grid && z >= 2) {    /* lines between tiles, but not across the selection: a block reads as one picture */
         int sheet_w = SHEET_W * z, sheet_h = SHEET_H * z;
         for (int c = 0; c <= SHEET_COLS; c++) {
             int x = T.ox + c * TILE * z;
-            if (c > scol && c < scol + T.bsize) {
+            if (c > scol && c < scol + T.bw) {
                 draw_line(x, T.oy, x, by0 - 1, UI_RGB(1, 0, 1));
-                draw_line(x, by0 + bt, x, T.oy + sheet_h - 1, UI_RGB(1, 0, 1));
+                draw_line(x, by0 + bth, x, T.oy + sheet_h - 1, UI_RGB(1, 0, 1));
             } else draw_line(x, T.oy, x, T.oy + sheet_h - 1, UI_RGB(1, 0, 1));
         }
         for (int r = 0; r <= SHEET_ROWS; r++) {
             int y = T.oy + r * TILE * z;
-            if (r > srow && r < srow + T.bsize) {
+            if (r > srow && r < srow + T.bh) {
                 draw_line(T.ox, y, bx0 - 1, y, UI_RGB(1, 0, 1));
-                draw_line(bx0 + bt, y, T.ox + sheet_w - 1, y, UI_RGB(1, 0, 1));
+                draw_line(bx0 + btw, y, T.ox + sheet_w - 1, y, UI_RGB(1, 0, 1));
             } else draw_line(T.ox, y, T.ox + sheet_w - 1, y, UI_RGB(1, 0, 1));
         }
     }
     draw_rect(T.ox - 1, T.oy - 1, SHEET_W * z + 2, SHEET_H * z + 2, UI_RGB(1, 2, 3), false);
     if (T.grid && z >= 6)               /* a faint pixel grid where painting happens, the same at tile edges */
-        for (int k = 1; k < n; k++) {
-            draw_line(bx0 + k * z, by0, bx0 + k * z, by0 + bt - 1, UI_RGB(1, 1, 1));
-            draw_line(bx0, by0 + k * z, bx0 + bt - 1, by0 + k * z, UI_RGB(1, 1, 1));
-        }
-    draw_rect(bx0 - 1, by0 - 1, bt + 2, bt + 2, COL_YELLOW, false);
+    {
+        for (int k = 1; k < nw; k++) draw_line(bx0 + k * z, by0, bx0 + k * z, by0 + bth - 1, UI_RGB(1, 1, 1));
+        for (int k = 1; k < nh; k++) draw_line(bx0, by0 + k * z, bx0 + btw - 1, by0 + k * z, UI_RGB(1, 1, 1));
+    }
+    draw_rect(bx0 - 1, by0 - 1, btw + 2, bth + 2, COL_YELLOW, false);
     if (z >= 2 && *hx >= 0)              /* the pixel the mouse would paint */
         draw_rect(bx0 + *hx * z - 1, by0 + *hy * z - 1, z + 2, z + 2, COL_WHITE, false);
     draw_clip_reset();
@@ -784,14 +832,14 @@ static void window_frame(int i, const char *title) {
 static void draw_preview(void) {
     const Win *w = &T.win[W_TILE];
     char title[48];
-    if (T.bsize > 1) snprintf(title, sizeof title, "tiles %d %dx%d", T.sel, T.bsize, T.bsize);
+    if (T.bw * T.bh > 1) snprintf(title, sizeof title, "tiles %d %dx%d", T.sel, T.bw, T.bh);
     else snprintf(title, sizeof title, "tile %d", T.sel);
     window_frame(W_TILE, title);
-    int s = preview_scale(), n = bpx(), cx, cy;
+    int s = preview_scale(), nw = bpw(), nh = bph(), cx, cy;
     preview_origin(&cx, &cy);
     draw_clip(w->x, w->y + TITLE_H, w->w, w->h);
-    for (int y = 0; y < n; y++)
-        for (int x = 0; x < n; x++) {
+    for (int y = 0; y < nh; y++)
+        for (int x = 0; x < nw; x++) {
             int c = bget(x, y);
             if (c == CLEAR) checker(cx + x * s, cy + y * s, s, s);
             else draw_rect(cx + x * s, cy + y * s, s, s, c, true);
@@ -829,8 +877,7 @@ static void draw_tools_window(void) {
     for (int i = 0; i < NACTS; i++) {
         w = act_btn(i, &x, &y);
         bool hover = live && inside(x, y, w, 10);
-        char label = i == A_SIZE ? (char)('0' + T.bsize) : act_keys[i];
-        button(x, y, w, label, false, hover);
+        button(x, y, w, act_keys[i], false, hover);
         if (hover) T.hint = act_names[i];
     }
     int px, py;
@@ -894,7 +941,7 @@ static void draw(void) {
     } else if (T.hint) draw_text(T.hint, x, by, UI_RGB(2, 3, 3));
     else if (ht >= 0) {
         snprintf(line, sizeof line, "tile %d (col %d row %d) x%d%s", ht, ht % SHEET_COLS, ht / SHEET_COLS, zooms[T.zoom],
-                 T.tool == T_PICK ? "" : "  click: select");
+                 T.tool == T_PICK ? "" : "  click, Alt+drag: select");
         draw_text(line, x, by, UI_RGB(2, 3, 3));
     } else draw_text("middle drag: pan  wheel: zoom", x, by, UI_RGB(1, 2, 2));
 }

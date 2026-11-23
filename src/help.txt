@@ -211,7 +211,7 @@ Enter keeps the indent of the line above, and adds one after a line that opens a
 The colors mark keywords, commands, type names, constants, numbers, strings and comments. See {language} for the language itself.
 
 @ tile-editor | Tile editor
-`TILES` edits a tileset: a 400 x 240 sheet of 960 tiles. A yellow box marks the tile being edited (or a 2x2 or 4x4 block, with Z); only it can be painted. Tile 0 is selected at first.
+`TILES` edits a tileset: a 400 x 240 sheet of 960 tiles. A yellow box marks the tile being edited (or a block of tiles); only it can be painted. Tile 0 is selected at first.
 
 The selection is also the {map-editor|map editor}'s brush: pick a tile (or a block) here, switch to the map, and it paints with it.
 
@@ -220,7 +220,8 @@ The selection is also the {map-editor|map editor}'s brush: pick a tile (or a blo
 - P F L R O I: pencil, fill, line, rectangle, oval, pick a color
 - While dragging a line, rectangle or oval: Shift keeps it 1:1 (a line snaps to across, up-down or 45 degrees; a rectangle becomes a square, an oval a circle). Ctrl fills a rectangle or oval, or, if it is set to filled, draws just its outline. A right click on the rectangle or oval button sets it to filled (marked with a dot) or back.
 - Fill paints over the pixels of the clicked color that touch it. A right click on its button (marked with a dot) makes it paint over every pixel of that color in the yellow box instead; Ctrl+click does the other one, once.
-- Z: edit 1x1, 2x2 or 4x4 tiles. H / V / T: flip across, flip up-down, turn.
+- Click a tile to edit it. Alt + drag: edit every tile from where the drag starts to where it ends, as one block (an Alt+click on one tile changes nothing).
+- H / V / T: flip across, flip up-down, turn (a square block only).
 - arrows: move to another tile. Shift+arrows: nudge the pixels.
 - Del: clear. X: swap colors A and B. G: grid. Home: reset the view.
 - Ctrl+C / X / V: copy, cut, paste. Ctrl+Z / Y: undo, redo.
@@ -233,7 +234,7 @@ A cart draws tiles with {sprite} and changes them with {tile_plot}.
 @ map-editor | Map editor
 `MAP` edits a map. The left button paints with the brush, the right button picks up the tile under the mouse.
 
-The brush follows the {tile-editor|tile editor}: the tile selected there (tile 0 at first) is the brush, and a 2x2 or 4x4 block selected there is stamped whole, as it sits on the sheet; dragging lays it a block at a time. A tile picked here is selected in the tile editor too.
+The brush follows the {tile-editor|tile editor}: the tile selected there (tile 0 at first) is the brush, and a block selected there is stamped whole, as it sits on the sheet; dragging lays it a block at a time. A tile picked here is selected in the tile editor too.
 
 - Tab: the tile picker (drag across tiles for a block brush)
 - P R F S: pen, rectangle, fill, select

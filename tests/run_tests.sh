@@ -304,10 +304,15 @@ edit "map resize" '{click:161,5}{f9}{ctrl+right}{ctrl+down}{ctrl+down}{ctrl+up}{
 edit "map unsaved" '{click:161,5}{f9}{click:5,15}{esc}new t2{enter}';                         said "map unsaved" 'unsaved changes in the map'
 # the tile editor's selection is the map's pen, and a tile picked in the map is selected there
 edit "tiles pen"  '{click:125,5}{f9}{click:185,15}{click:89,5}{click:5,15}{ctrl+s}';                  maprow "tiles pen: tile 3 from the tile editor" 0 "03"
-edit "tiles block pen" '{click:125,5}{f9}{right}{z}{click:89,5}{click:5,15}{ctrl+s}'
+edit "tiles block pen" '{click:125,5}{f9}{down:left alt}{click:65,15}{drag:125,75}{mouse:125,75}{up:left alt}{click:89,5}{click:5,15}{ctrl+s}'
 maprow "tiles block pen: a 2x2 stamp" 0 "01 02"; maprow "tiles block pen: a 2x2 stamp" 1 "0F 0G"
-edit "tiles block drag" '{click:125,5}{f9}{right}{z}{click:89,5}{click:5,15}{drag:45,15}{mouse:45,15}{ctrl+s}'
+edit "tiles block drag" '{click:125,5}{f9}{down:left alt}{click:65,15}{drag:125,75}{mouse:125,75}{up:left alt}{click:89,5}{click:5,15}{drag:45,15}{mouse:45,15}{ctrl+s}'
 maprow "tiles block drag: steps a block at a time" 0 "01 02 01 02 01 02"; maprow "tiles block drag" 1 "0F 0G 0F 0G 0F 0G"
+# Alt + drag selects any block of tiles (here 3x2, from tile 0); an Alt+click that stays on one tile changes nothing
+edit "tiles region" '{click:125,5}{f9}{down:left alt}{click:5,15}{drag:65,45}{drag:125,75}{mouse:125,75}{up:left alt}{click:89,5}{click:5,15}{ctrl+s}'
+maprow "tiles region: a 3x2 stamp" 0 "00 01 02"; maprow "tiles region: a 3x2 stamp" 1 "0E 0F 0G"
+edit "tiles alt click" '{click:125,5}{f9}{down:left alt}{click:305,15}{mouse:305,15}{up:left alt}{click:89,5}{click:5,15}{ctrl+s}'
+maprow "tiles alt click: the selection stays tile 0" 0 "00"
 edit "map picks for tiles" '{click:161,5}{f9}{tab}{click:15,35}{mouse:15,35}{click:53,5}{click:63,73}{ctrl+s}';    row "map picks for tiles: tile 41 is selected" 41 0 '*.........'
 
 # with Seedling's map: an unchanged save is byte-for-byte the same; right-click picks;

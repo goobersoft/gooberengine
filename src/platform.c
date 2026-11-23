@@ -352,7 +352,17 @@ static void script_step(void) {
     }
     if (!*script_pos) return;
     /* mouse tokens: {click:x,y} {rclick:x,y} {mclick:x,y} press there; {drag:x,y} moves with the
-     * button still held; {mouse:x,y} just moves; {wheel:n} scrolls */
+     * button still held; {mouse:x,y} just moves; {wheel:n} scrolls. {down:key} holds a key
+     * (as SDL names it: {down:left alt}) until {up:key}, for a modifier held while the mouse works */
+    char kn[32];
+    bool down = sscanf(script_pos, "{down:%31[^}]}", kn) == 1;
+    if (down || sscanf(script_pos, "{up:%31[^}]}", kn) == 1) {
+        script_pos = strchr(script_pos, '}') + 1;
+        SDL_Scancode k = SDL_GetScancodeFromName(kn);
+        if (k == SDL_SCANCODE_UNKNOWN) fprintf(stderr, "gooberengine: unknown key {%s}\n", kn);
+        else in.key[k] = down;
+        return;
+    }
     int mx, my, b = 0;
     if (sscanf(script_pos, "{click:%d,%d}", &mx, &my) == 2) b = 1;
     else if (sscanf(script_pos, "{rclick:%d,%d}", &mx, &my) == 2) b = 2;

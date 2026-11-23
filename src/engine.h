@@ -442,8 +442,8 @@ void font_doc_changed(void);
 
 /* ---- tiles_editor.c, map_editor.c ---- */
 void tiles_frame(void);
-void tiles_selection(int *tile, int *size); /* the tile editor's selected tile and block size (1/2/4) */
-void tiles_select(int tile, int w, int h);  /* select a picked w x h block (2x2, 4x4 kept, else its top-left) */
+void tiles_selection(int *tile, int *w, int *h); /* the tile editor's selected tile and block size in tiles */
+void tiles_select(int tile, int w, int h);  /* select a picked w x h block in the tile editor */
 bool tiles_import(const char *path, const char *name, char *msg, int msglen);   /* IMPORT file.png: a PNG into tiles/NAME */
 /* ---- png.c: reading PNGs ---- */
 uint8_t *png_read_rgba(const char *path, int *w, int *h, char *err, int errlen);   /* malloc'd w*h*4 RGBA, NULL on error */
