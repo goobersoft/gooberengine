@@ -1,0 +1,78 @@
+GooberEngine Game Exception, version 1.0
+
+Copyright (C) 2026 goobersoft
+
+This is an additional permission under section 7 of the GNU General Public
+License, version 3 ("GPLv3"). It is granted by the copyright holders of
+GooberEngine and of GooberBASIC, and applies to both programs, which are
+otherwise licensed under the GPLv3 (see LICENSE).
+
+The aim is simple: GooberEngine and GooberBASIC themselves stay free software,
+but the games you make with them are yours, under whatever terms you like.
+
+
+0. Definitions.
+
+"Engine" means GooberEngine and GooberBASIC, in source or object form, as
+published by their copyright holders.
+
+"Cart" means a program written to be run by the Engine, together with its
+data: its GooberBASIC source files (.gb), tiles, maps, fonts, sound effects,
+music, save data and any other files that belong to it, whether in a folder,
+in an archive (.zip, .tar, .tar.gz) or in any other form.
+
+"Player Runtime" means the runtimes the Engine provides for running a Cart on
+its own (such as the files in runtimes/: the Linux and Windows player
+executables and the web player's player.js, player.wasm and index.html),
+including the parts of GooberBASIC and of any libraries compiled into them.
+
+"Exported Game" means a Cart combined with a Player Runtime, whether by the
+Engine's EXPORT command or by any other means that gives the same result.
+
+"Example Code" means the Carts, examples and templates distributed with the
+Engine (such as those in carts/ and in GooberBASIC's examples/).
+
+
+1. Carts are not covered by the GPLv3.
+
+A Cart is not a work based on the Engine merely because it is written in
+GooberBASIC, is run by the Engine, calls the Engine's commands and constants,
+or is made or edited with the Engine's editors. You may license and
+distribute your Carts under terms of your choice.
+
+
+2. Exported Games.
+
+You may distribute an Exported Game under terms of your choice, provided the
+Player Runtime in it is unmodified. You need not meet the GPLv3's conditions
+for that Player Runtime when you distribute it as part of an Exported Game:
+in particular, you need not provide its source code or a written offer of it.
+
+If you modify a Player Runtime, the modified Player Runtime is covered by the
+GPLv3 as usual, but the Cart in your Exported Game still falls under
+section 1.
+
+
+3. Example Code.
+
+You may copy Example Code, in whole or in part, into your own Carts, and
+distribute it as part of them under terms of your choice.
+
+
+4. What this exception does not do.
+
+This exception does not change the license of the Engine itself. Anyone who
+distributes the Engine, or a modified version of it, other than as a Player
+Runtime inside an Exported Game, must do so under the GPLv3.
+
+Third-party libraries in the Player Runtime keep their own licenses. SDL2,
+which is linked into the Linux and Windows players and, through Emscripten,
+into the web player, is under the zlib license, which places no conditions on
+distributing it in binary form.
+
+
+5. Modified versions of the Engine.
+
+If you modify the Engine, you may extend this exception to your version, but
+you are not obliged to. If you do not wish to, delete this exception
+from your version.

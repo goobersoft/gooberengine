@@ -718,6 +718,8 @@ A cart is shared as one `.zip`. `EXPORT` zips the loaded cart folder, as compres
 
 GooberEngine finds the runtimes in `$GOOBERENGINE_RUNTIMES`, then in `runtimes/` next to the executable, then in `./runtimes`. The web version fetches them from `runtimes/` on its own server.
 
+**Your game is yours.** You can sell an exported game, or give it away, under any license you like. You don't have to publish its code or GooberEngine's source with it, as long as you leave the player runtime unmodified. See [License](#license).
+
 ## Milestone plan
 
 1. **Console core** ✅
@@ -830,3 +832,13 @@ GooberEngine finds the runtimes in `$GOOBERENGINE_RUNTIMES`, then in `runtimes/`
 | `src/main.c` | command line |
 | `web/engine.html`, `web/player.html` | the pages around the web engine and around an exported web game |
 | `third_party/SDL2-2.32.10.zip` | SDL2's source, for building the runtimes |
+
+## License
+
+GooberEngine is free software, under the [GNU General Public License, version 3](LICENSE), with the [GooberEngine Game Exception](GAME-EXCEPTION.txt). GooberBASIC is under the same terms.
+
+- **The engine stays free.** If you share GooberEngine or a modified version of it, you must do so under the GPLv3, with its source.
+- **Your carts and games are yours.** A cart isn't covered by the GPLv3 just because it's written in GooberBASIC or runs on GooberEngine. License it however you want. An exported game can be sold or shared under any terms, without its source or the engine's, as long as the player runtime inside it is unmodified.
+- **The example carts** in `carts/` can be copied into your own carts freely.
+
+SDL2, which is built into the player runtimes, is under the [zlib license](https://www.libsdl.org/license.php).
