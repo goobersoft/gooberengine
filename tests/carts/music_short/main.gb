@@ -1,0 +1,7 @@
+' pattern 0 is 8 rows long (6 ticks a row), and entry 1 jumps back to it:
+' after 60 ticks the song is on row 2 of its second time through, not row 10
+music()
+for local i:int = 1 to 30
+    flip()
+next
+print("short " + str(music_pos()) + " " + str(music_row()))

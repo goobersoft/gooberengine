@@ -54,11 +54,17 @@
 /* the pad: a d-pad, three buttons A B C, and Start */
 enum { BTN_LEFT, BTN_RIGHT, BTN_UP, BTN_DOWN, BTN_A, BTN_B, BTN_C, BTN_START, NBUTTONS };
 
-/* ---- sound (v1): 8 voices playing 32-sample waveforms ---- */
+/* ---- sound (v1): 8 voices playing 32-sample waveforms ----
+ * wave numbers: 0-7 are drawn waves, 8-15 play sfx 0-7 as instruments, 16 is noise */
 #define NVOICES 8
-#define NWAVES 16
+#define NWAVES 8               /* drawn waves */
 #define WAVE_LEN 32
+#define WAVE_INSTR 8           /* waves WAVE_INSTR + n play sfx n as an instrument */
+#define NINSTR 8
+#define INSTR_PITCH 24         /* an instrument step at C-4 sounds at the note's own pitch */
 #define WAVE_NOISE 16          /* the wave number that means "noise" */
+#define OLD_NWAVES 16          /* sound banks used to hold 16 drawn waves: 8-15 are skipped when read */
+static inline char wave_char(int w) { return w >= WAVE_NOISE ? 'n' : "0123456789abcdef"[w & 15]; }
 #define NSFX 64
 #define SFX_STEPS 32
 #define NPITCH 64              /* pitch 0 = C2 (MIDI 36) ... 63 = D#7 */
@@ -82,7 +88,11 @@ typedef struct {
 #define ORDER_LEN 64
 enum { CELL_EMPTY, CELL_NOTE, CELL_OFF };          /* empty: the last note carries on */
 typedef struct { uint8_t kind, pitch, wave, vol, fx; } Cell;
-typedef struct { Cell cells[PATTERN_ROWS][NTRACKS]; } Pattern;
+typedef struct {
+    Cell cells[PATTERN_ROWS][NTRACKS];
+    uint8_t length;                                /* rows played, 1-32: a pattern can end early (0 = all 32) */
+} Pattern;
+static inline int pattern_len(const Pattern *p) { return p->length < 1 || p->length > PATTERN_ROWS ? PATTERN_ROWS : p->length; }
 enum { ORDER_PATTERN, ORDER_JUMP, ORDER_STOP };
 typedef struct { uint8_t kind, value; } OrderEntry; /* play pattern `value` / jump to entry `value` / stop */
 

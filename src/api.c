@@ -364,7 +364,7 @@ static Value a_note(VM *vm, int argc, Value *args) {
     int v = ARG_I(0), p = ARG_I(1), w = ARG_I(2), vol = ARG_I(3), ticks = OPT_I(4, 0);
     if (v < 0 || v >= NVOICES) vm_error(vm, "note: voice %d out of range 0-%d", v, NVOICES - 1);
     if (p < 0 || p >= NPITCH) vm_error(vm, "note: pitch %d out of range 0-%d", p, NPITCH - 1);
-    if (w < 0 || w > WAVE_NOISE) vm_error(vm, "note: wave %d out of range 0-%d (%d = NOISE)", w, WAVE_NOISE, WAVE_NOISE);
+    if (w < 0 || w > WAVE_NOISE) vm_error(vm, "note: wave %d out of range 0-%d (8-15 = INSTRUMENT + sfx 0-7, %d = NOISE)", w, WAVE_NOISE, WAVE_NOISE);
     if (vol < 0 || vol > 7) vm_error(vm, "note: volume %d out of range 0-7", vol);
     audio_lock();
     synth_note(v, p, w, vol, ticks);
@@ -551,7 +551,7 @@ ConstDef gb_gfx_consts[] = {
     {"FLIP_X", 1}, {"FLIP_Y", 2},
     {"BLEND_NORMAL", BLEND_NORMAL}, {"BLEND_ADD", BLEND_ADD}, {"BLEND_SUB", BLEND_SUB},
     {"BLEND_MAX", BLEND_MAX}, {"BLEND_MIN", BLEND_MIN}, {"BLEND_XOR", BLEND_XOR},
-    {"NOISE", WAVE_NOISE}, {"VOICES", NVOICES},
+    {"NOISE", WAVE_NOISE}, {"INSTRUMENT", WAVE_INSTR}, {"VOICES", NVOICES},
 
     {"BTN_LEFT", BTN_LEFT}, {"BTN_RIGHT", BTN_RIGHT}, {"BTN_UP", BTN_UP}, {"BTN_DOWN", BTN_DOWN},
     {"BTN_A", BTN_A}, {"BTN_B", BTN_B}, {"BTN_C", BTN_C}, {"BTN_START", BTN_START},

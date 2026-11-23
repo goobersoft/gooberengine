@@ -1,0 +1,10 @@
+' plays A-4 on instrument 0 (sfx 0: one looping step at C-5 on a square wave),
+' so it sounds an octave up at A-5, 880 Hz, for half a second, then stops
+note(0, 33, INSTRUMENT + 0, 7)
+for local i:int = 1 to 30
+    flip()
+next
+voice_stop()
+for local i:int = 1 to 30
+    flip()
+next

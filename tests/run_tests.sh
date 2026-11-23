@@ -191,7 +191,7 @@ edit "help: back from the first place leaves" '{ctrl+end}{enter}cls{f1}{click:10
 edit "help: follow a link"    '{ctrl+end}{enter}cls{f1}{tab}{enter}'; said "help: follow a link" '[help] clip'
 edit "help: back"             '{ctrl+end}{enter}cls{f1}{tab}{enter}{backspace}{backspace}y{ctrl+s}'; has "help: back" 'clsy'
 edit "help: search"           '{ctrl+end}{enter}{f1}circle_f{enter}'; said "help: search" '[help] circle, circle_fill'
-out=$($GE --headless --frames 30 --type '{f1}' 2>&1);     said "help: F1 in the shell is the index" '[help] Index: 356 names'
+out=$($GE --headless --frames 30 --type '{f1}' 2>&1);     said "help: F1 in the shell is the index" '[help] Index: 359 names'
 out=$($GE --headless --frames 30 --type 'load{f1}' 2>&1); said "help: F1 in the shell narrows to the command" 'first LOAD (shell)'
 out=$($GE --headless --frames 30 --type 'load{f1}{enter}' 2>&1); said "help: F1 in the shell, Enter" '[help] LOAD'
 out=$($GE --headless --frames 30 --type '{f1}{esc}cls{enter}help{enter}' 2>&1); said "help: Esc from the index, back to the prompt" 'RUN [name]'
@@ -401,6 +401,9 @@ if command -v python3 > /dev/null; then
     case "$got" in *"freq 440"*) ok ;; *) bad "note A-4 is 440 Hz" "$got" ;; esac
     got=$(python3 -I tests/wav_check.py build/tone.wav 0.6 1.0)
     case "$got" in "peak 0 "*) ok ;; *) bad "voice_stop silences" "$got" ;; esac
+    $GE --headless --frames 70 --wav build/inst.wav tests/carts/instrument > /dev/null 2>&1   # wave 8 = sfx 0
+    got=$(python3 -I tests/wav_check.py build/inst.wav 0.1 0.45)
+    case "$got" in *"freq 880"*) ok ;; *) bad "an instrument step at C-5 plays A-4 an octave up" "$got" ;; esac
     out=$($GE --headless --frames 70 --wav build/sfx.wav tests/carts/sfx 2>&1)
     got=$(python3 -I tests/wav_check.py build/sfx.wav 0.75 1.1)
     case "$got" in "peak 0 "*) ok ;; *) bad "an sfx ends" "$got" ;; esac
@@ -413,7 +416,7 @@ printf 'sfx(64)\n' > build/bad_sfx.gb && mkdir -p build/bad_sfx && mv build/bad_
 out=$($GE --headless --frames 10 build/bad_sfx 2>&1); said "sfx range" 'sfx: 64 out of range'
 
 # ---- the sound editor: Z row = notes, 1-7 = volume, Tab = effect ----
-# sfx/sfx.g64 is "f" + (sound effects - 1), 16 wave lines, then one line per sfx:
+# sfx/sfx.g64 is "7" + (sound effects - 1), 8 wave lines, then one line per sfx:
 # speed-1 length-1 loop loop, then 32 steps of pitch wave volume effect (C-4 = o, so a rest is o000)
 ST=$TC/t/sfx/sfx.g64
 sfxhas() { grep -q -- "$2" "$ST" 2>/dev/null && ok || bad "$1: sfx/sfx.g64 has no '$2'" "$(cat "$ST" 2>/dev/null)"; }
@@ -421,15 +424,19 @@ edit "notes"       '{click:185,5}{f9}zx{ctrl+s}';                               
 edit "volume"      '{click:185,5}{f9}z{left}7{ctrl+s}';                           sfxhas "volume" '^7v00o070'
 edit "effect"      '{click:185,5}{f9}z{left}{tab}{ctrl+s}';                       sfxhas "effect" '^7v00o051'
 edit "octave"      '{click:185,5}{f9}{]}z{ctrl+s}';                               sfxhas "octave" '^7v00A050'
-edit "wave pen"    '{click:185,5}{f9}.z{ctrl+s}';                                 sfxhas "wave pen" '^7v00o150'
+edit "oct click"   '{click:185,5}{f9}{click:324,15}z{ctrl+s}';                     sfxhas "oct click" '^7v00A050'
+edit "oct rclick"  '{click:185,5}{f9}{click:324,15}{rclick:324,15}z{ctrl+s}';      sfxhas "oct rclick" '^7v00o050'
+edit "wave pen"   '{click:185,5}{f9}.z{ctrl+s}';                                 sfxhas "wave pen" '^7v00o150'
 edit "length"      '{click:185,5}{f9}zxc{left}{ctrl+l}{ctrl+s}';                  sfxhas "length" '^7200o050q050s050'
 edit "loop"        '{click:185,5}{f9}z{ctrl+b}{right}{right}{ctrl+e}{ctrl+s}';    sfxhas "loop" '^7v14o050'
+edit "loop drag"   '{click:185,5}{f9}z{click:111,150}{drag:76,150}{ctrl+s}';       sfxhas "loop drag" '^7v15o050'
+edit "loop clear"  '{click:185,5}{f9}z{click:111,150}{drag:76,150}{rclick:90,150}{ctrl+s}'; sfxhas "loop clear" '^7v00o050'
 edit "speed"       '{click:185,5}{f9}z{-}{-}{ctrl+s}';                            sfxhas "speed" '^5v00o050'
-edit "next sfx"    '{click:185,5}{f9}{pgdn}z{ctrl+s}';                            sfxhas "next sfx" '^f1$'; sfxhas "next sfx 2" '^7v00o050'
+edit "next sfx"    '{click:185,5}{f9}{pgdn}z{ctrl+s}';                            sfxhas "next sfx" '^71$'; sfxhas "next sfx 2" '^7v00o050'
 edit "draw pitch"  '{click:185,5}{f9}{click:71,57}{ctrl+s}';                      sfxhas "draw pitch" '^7v00u050'
 edit "draw wave"   '{click:185,5}{f9}{click:67,223}{ctrl+s}';                     sfxhas "draw wave" '^0fffffffffffffff0000000000000000$'
 edit "sound undo"  '{click:185,5}{f9}z{ctrl+z}{ctrl+s}'
-[ "$(sed -n 1p "$ST") $(sed -n 18p "$ST")" = "f0 7v00$(printf 'o000%.0s' $(seq 32))" ] && ok || bad "sound undo: sfx.g64 still has an sfx" "$(cat "$ST")"
+[ "$(sed -n 1p "$ST") $(sed -n 10p "$ST")" = "70 7v00$(printf 'o000%.0s' $(seq 32))" ] && ok || bad "sound undo: sfx.g64 still has an sfx" "$(cat "$ST")"
 edit "sound unsaved" '{click:185,5}{f9}z{esc}new t2{enter}';                      said "sound unsaved" 'unsaved changes in the sound'
 rm -rf "$TC" && mkdir -p "$TC" && cp -r carts/seedling "$TC/s"
 GOOBERENGINE_CARTS=$TC $GE --headless --frames 20 --exec "load s" --type 'sound{enter}{ctrl+s}' > /dev/null 2>&1
@@ -438,6 +445,7 @@ cmp -s carts/seedling/sfx/sfx.g64 "$TC/s/sfx/sfx.g64" && ok || bad "sfx round tr
 # ---- music: timing, pitch and the end of the song ----
 out=$($GE --headless --frames 130 --wav build/music.wav tests/carts/music 2>&1)
 said "music row" 'row 10 voice -3'; said "music ends" 'end -1 -1'
+out=$($GE --headless --frames 40 tests/carts/music_short 2>&1); said "short pattern ends early" 'short 0 2'
 if command -v python3 > /dev/null; then
     got=$(python3 -I tests/wav_check.py build/music.wav 0.1 0.7)
     case "$got" in *"freq 440"*) ok ;; *) bad "music A-4 is 440 Hz" "$got" ;; esac
@@ -462,6 +470,10 @@ edit "mus order"   '{click:221,5}{f9}{ctrl+right}{ctrl+up}{ctrl+up}z{ctrl+s}'; m
 [ "$(sed -n 37p "$MU")" = o050 ] && ok || bad "mus order pattern: pattern 1 row 0 is '$(sed -n 37p "$MU")'"
 edit "mus jump"    '{click:221,5}{f9}{ctrl+right}{ctrl+j}{ctrl+s}';            muhead "mus jump" '7100 0010 '
 edit "mus speed"   '{click:221,5}{f9}-{ctrl+s}';                               muhead "mus speed" '6000 00 '
+edit "mus length"  '{click:221,5}{f9}{pagedown}{up}{ctrl+l}{ctrl+s}'
+[ "$(tail -1 "$MU")" = 7 ] && ok || bad "mus length: Ctrl+L on row 7 ends the pattern at 8 rows" "$(tail -3 "$MU")"
+edit "mus length again" '{click:221,5}{f9}{pagedown}{up}{ctrl+l}{ctrl+l}{ctrl+s}'
+[ "$(wc -l < "$MU")" = 35 ] && ok || bad "mus length again: back to 32 rows, no lengths line" "$(tail -3 "$MU")"
 edit "mus undo"    '{click:221,5}{f9}z{ctrl+z}{ctrl+s}'
 [ "$(sed 1,2d "$MU" | grep -vc '^\.*$')" = 0 ] && ok || bad "mus undo: music.g64 still has notes" "$(cat "$MU")"
 # the piano roll (Ctrl+P), tree hidden: columns 10 px from x 66 (after the strip on the left), a pitch every 6 px up from y 224;
@@ -479,6 +491,9 @@ edit "mus unsaved" '{click:221,5}{f9}z{esc}new t2{enter}';                     s
 rm -rf "$TC" && mkdir -p "$TC" && cp -r carts/seedling "$TC/s"
 GOOBERENGINE_CARTS=$TC $GE --headless --frames 20 --exec "load s" --type 'music{enter}{ctrl+s}' > /dev/null 2>&1
 cmp -s carts/seedling/music/music.g64 "$TC/s/music/music.g64" && ok || bad "music round trip" "$(diff carts/seedling/music/music.g64 "$TC/s/music/music.g64" | head)"
+rm -rf "$TC" && mkdir -p "$TC" && cp -r tests/carts/music_short "$TC/s"
+GOOBERENGINE_CARTS=$TC $GE --headless --frames 20 --exec "load s" --type 'music{enter}{ctrl+s}' > /dev/null 2>&1
+cmp -s tests/carts/music_short/music/music.g64 "$TC/s/music/music.g64" && ok || bad "short pattern round trip" "$(diff tests/carts/music_short/music/music.g64 "$TC/s/music/music.g64" | head)"
 
 # ---- fonts: a cart's text() uses its font slot; fonts/font.g64 is slot 0 ----
 out=$($GE --headless --frames 8 tests/carts/font 2>&1)

@@ -62,7 +62,7 @@ In every editor: Ctrl+S saves, Ctrl+R saves and runs, and Esc goes back to the {
 - Dots: a cart may draw 100,000 pixels a frame: see {dot_limit}.
 - Text: the built-in font is 6 x 10, so 66 x 24 characters fit: see {text}.
 - Input: a pad (d-pad, A, B, C, Start), the keyboard and the mouse: see {btn}.
-- Sound: 8 voices, 16 drawable waves plus noise, 64 pitches, 64 sound effects: see {sfx}.
+- Sound: 8 voices, 8 drawable waves, 8 instruments and noise, 64 pitches, 64 sound effects: see {sfx}, {instruments}.
 
 # The pad on the keyboard
 - d-pad: the arrow keys
@@ -241,28 +241,45 @@ The brush follows the {tile-editor|tile editor}: the tile selected there (tile 0
 A cart draws the map with {map_draw} and reads it with {map_get}.
 
 @ sound-editor | Sound editor
-`SOUND` edits a sound bank: 64 sound effects and the 16 waves they play. Each effect has 32 steps; a step is a pitch, a wave, a volume and an effect.
+`SOUND` edits a sound bank: 64 sound effects and the 8 waves they play. Each effect has 32 steps; a step is a pitch, a wave, a volume and an effect. A wave is 0 to 7 (drawn), 8 to f (an {instruments|instrument}: sfx 0 to 7), or n (noise).
 
 - Z S X D C V G B H N J M (and Q W E R T Y U): enter notes, like a small keyboard
-- [ / ]: octave down / up. 1 to 7: volume. 0: rest.
+- [ / ]: octave down / up (or right / left click the header's "oct"). 1 to 7: volume. 0: rest.
 - Left / Right: move along the steps. Up / Down: the step's pitch.
 - Tab: the step's effect: . none, s slide, v vibrato, d drop, < fade in, > fade out, a arpeggio
 - , / .: the wave pen. - / =: speed.
+- Click an instrument (the second row of waves), then its box, to edit the sfx it plays. Sfx 0 to 7 are green in the list.
 - Drawing pitches with the mouse gives each step the wave, volume and effect pens.
 - Ctrl+L: end here. Ctrl+B / Ctrl+E: loop from / to this step.
+- Drag along the row under the effects to set the loop (the green bracket). Right-click it for no loop.
 - PgUp / PgDn: previous / next effect. Space: play. Esc: stop, then the shell.
 - Ctrl+C / V: copy / paste an effect. Ctrl+Z / Y, Ctrl+S, Ctrl+R: undo, redo, save, run.
 
 A cart plays the effects with {sfx}.
 
+@ instruments instrument INSTRUMENT | Instruments
+Waves 8 to f are instruments: wave 8 plays sfx 0, wave 9 sfx 1, ... wave f sfx 7. Give a music note (or a sound effect step, or {note}) an instrument instead of a plain wave and it plays that whole sound effect, at its own speed, starting again with each note.
+
+- Pitch: the sfx is moved by the note. A step at C-4 sounds at the note's own pitch; one at C-5 an octave above it.
+- Volume: the sfx's volumes are scaled by the note's.
+- Effects: the sfx's own effects play, and the note's effect goes on top (a vibrato note wobbles the whole instrument).
+- Length: a loop in the sfx holds the note for as long as it lasts; without one it falls silent at the sfx's end, like a plucked string.
+- Inside an instrument, waves 8 to f mean drawn waves 0 to 7: an instrument can't play another.
+
+In GooberBASIC the first one is `INSTRUMENT`:
+    note(0, 33, INSTRUMENT + 2, 6)   ' A-4 on sfx 2
+
+Sound banks saved before instruments had 16 drawn waves; waves 8 to f of those are skipped when the bank is read.
+
 @ music-editor tracker piano-roll | Music editor
-`MUSIC` is a tracker for a song: an order list of up to 64 entries, each playing a pattern, jumping to another entry or stopping. A pattern is 32 rows x 8 tracks; track t plays on voice t.
+`MUSIC` is a tracker for a song: an order list of up to 64 entries, each playing a pattern, jumping to another entry or stopping. A pattern is up to 32 rows x 8 tracks; track t plays on voice t.
 
 - Z...M, Q...U on the note field: enter a note. 1: note off.
 - hex digit or n / 0 to 7 / effect letters: the wave / volume / effect, on those fields
 - arrows, PgUp/PgDn, Home/End, Tab: move
 - Del / Backspace: clear a cell. [ / ]: octave. - / =, or the - + under "speed": song speed.
-- the strip on the left shows the order list ("ord") or the pattern list ("pat"); click its header to switch.
+- Ctrl+L: the pattern ends after this row (again: all 32 rows), or the - + under "len". The song moves on to the next entry there, so a pattern of 24 rows can be 3/4 bars among 4/4 ones. Rows past the end are kept, dimmed, but don't play.
+- the strip on the left shows the pattern list ("pat") or the order list ("ord"); click its header to switch.
 - order list: each entry's number, then its pattern, >NN for a jump to entry NN, or . for a stop. Click, or Ctrl+Left / Right: pick an entry. Ctrl+Up / Down, or the wheel on the picked entry: change its pattern. Right click: pattern / jump / stop.
 - pattern list, or Ctrl+PgUp / PgDn: the pattern to edit. Right click or Ctrl+Enter: put it in the order entry.
 - Ctrl+J, Ctrl+.: make the entry a jump, a stop. Ctrl+I / Ctrl+Del: insert / delete one.
@@ -905,7 +922,7 @@ GooberEngine adds these to GooberBASIC. Arguments in brackets are optional. A co
 # Limits
 {dot_limit} {dots_used}
 # Sound
-{sfx} {note} {voice_stop} {voice_sfx} {music}
+{sfx} {note} {instruments} {voice_stop} {voice_sfx} {music}
 # Input and system
 {btn} {key_down} {mouse_x|mouse} {flip} {frame_count} {cpu} {cart_title}
 # Saving and network
@@ -1113,7 +1130,7 @@ Effects are made in the {sound-editor|sound editor}. See {voice_stop}, {note}.
 
 @ note NOISE VOICES | note
     note(voice, pitch, wave, vol [, ticks])
-Plays one note on a voice: pitch 0 to 63 (24 is C-4, 33 is A-4 at 440 Hz), wave 0 to 15 or `NOISE`, volume 0 to 7. It lasts `ticks` (120 a second), or until stopped. `VOICES` is 8.
+Plays one note on a voice: pitch 0 to 63 (24 is C-4, 33 is A-4 at 440 Hz), wave 0 to 7, `INSTRUMENT` + 0 to 7 (an {instruments|instrument}) or `NOISE`, volume 0 to 7. It lasts `ticks` (120 a second), or until stopped. `VOICES` is 8.
     note(0, 24, 1, 6, 30)          ' C-4 for a quarter second
     note(7, 40, NOISE, 4, 10)      ' a burst of noise
 

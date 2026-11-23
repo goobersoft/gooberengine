@@ -223,7 +223,7 @@ static bool parse_sound(const char *path, SoundBank *b, char *err, int errlen) {
     int nw = n >= 2 ? b64(s[0]) + 1 : 0, ns = n >= 2 ? b64(s[1]) + 1 : 0;
     size_t want = 2 + (size_t)nw * WAVE_LEN + (size_t)ns * SFX_CHARS;
     if (nw < 1 || ns < 1) snprintf(err, (size_t)errlen, "%s: starts with its number of waves and sound effects (two characters 0-9 a-z A-Z + *)", fn);
-    else if (nw > NWAVES) snprintf(err, (size_t)errlen, "%s: has %d waves; a sound bank has at most %d", fn, nw, NWAVES);
+    else if (nw > OLD_NWAVES) snprintf(err, (size_t)errlen, "%s: has %d waves; a sound bank has at most %d", fn, nw, OLD_NWAVES);
     else if (n != want) snprintf(err, (size_t)errlen, "%s: %d waves and %d sound effects are %zu characters, this one has %zu", fn, nw, ns, want, n);
     else {
         ok = true;
@@ -236,7 +236,7 @@ static bool parse_sound(const char *path, SoundBank *b, char *err, int errlen) {
                     ok = false;
                     break;
                 }
-                b->waves[w][i] = (uint8_t)v;
+                if (w < NWAVES) b->waves[w][i] = (uint8_t)v;     /* an old bank's waves 8-15 are instruments now */
             }
         for (int k = 0; k < ns && ok; k++, p += SFX_CHARS) {
             Sfx *x = &b->sfx[k];
@@ -308,12 +308,14 @@ static bool parse_music(const char *path, Song *song, char *err, int errlen) {
     int sp = n >= 4 ? b64(s[0]) : -1, no = n >= 4 ? b64(s[1]) + 1 : 0;
     int np = n >= 4 ? b64(s[2]) + 1 : 0, nt = n >= 4 ? b64(s[3]) + 1 : 0;
     size_t want = 4 + (size_t)no * 2 + (size_t)np * PATTERN_ROWS * (size_t)nt * CELL_CHARS;
+    bool lens = n == want + (size_t)np;          /* a line of pattern lengths at the end, when one is short */
     if (sp < 0 || no < 1 || np < 1 || nt < 1)
         snprintf(err, (size_t)errlen, "%s: starts with its speed and its numbers of order entries, patterns and tracks (four characters 0-9 a-z A-Z + *)", fn);
     else if (np > NPATTERNS || nt > NTRACKS)
         snprintf(err, (size_t)errlen, "%s: has %d patterns of %d tracks; a song has at most %d of %d", fn, np, nt, NPATTERNS, NTRACKS);
-    else if (n != want)
-        snprintf(err, (size_t)errlen, "%s: %d order entries and %d patterns of %d tracks are %zu characters, this one has %zu", fn, no, np, nt, want, n);
+    else if (n != want && !lens)
+        snprintf(err, (size_t)errlen, "%s: %d order entries and %d patterns of %d tracks are %zu characters (%zu with the patterns' lengths), this one has %zu",
+                 fn, no, np, nt, want, want + (size_t)np, n);
     else {
         ok = true;
         song->song_speed = (uint8_t)(sp + 1);
@@ -348,6 +350,16 @@ static bool parse_music(const char *path, Song *song, char *err, int errlen) {
                     }
                     *c = (Cell){CELL_NOTE, (uint8_t)pi, (uint8_t)wv, (uint8_t)vol, (uint8_t)fx};
                 }
+        for (int pt = 0; pt < np && ok; pt++, p += lens) {
+            int len = lens ? b64(*p) + 1 : PATTERN_ROWS;
+            if (len < 1 || len > PATTERN_ROWS) {
+                snprintf(err, (size_t)errlen, "%s: pattern %d's length is '%c', not 0-%c (1 to %d rows)", fn, pt, *p,
+                         ge_pixel_chars[PATTERN_ROWS - 1], PATTERN_ROWS);
+                ok = false;
+                break;
+            }
+            song->patterns[pt].length = (uint8_t)len;
+        }
     }
     free(s);
     return ok;
@@ -367,9 +379,11 @@ static bool write_music(const char *path, const Song *song, char *err, int errle
     int np = 1, nt = 1;                          /* patterns up to the last used one, as wide as the widest */
     for (int p = 0; p < NPATTERNS; p++) {
         int t = pattern_tracks(song, p);
-        if (t) np = p + 1;
+        if (t || pattern_len(&song->patterns[p]) < PATTERN_ROWS) np = p + 1;
         if (t > nt) nt = t;
     }
+    bool lens = false;                           /* the lengths line only when a pattern ends early */
+    for (int p = 0; p < np; p++) if (pattern_len(&song->patterns[p]) < PATTERN_ROWS) lens = true;
     char tmp[PATH_MAX + 16];
     FILE *f = save_begin(path, tmp, sizeof tmp, err, errlen);
     if (!f) return false;
@@ -397,6 +411,11 @@ static bool write_music(const char *path, const Song *song, char *err, int errle
             }
             fputc('\n', f);
         }
+    }
+    if (lens) {                                  /* each pattern's length - 1 */
+        fputc('\n', f);
+        for (int p = 0; p < np; p++) fputc(ge_pixel_chars[pattern_len(&song->patterns[p]) - 1], f);
+        fputc('\n', f);
     }
     return save_end(f, tmp, path, err, errlen);
 }

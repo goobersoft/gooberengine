@@ -12,7 +12,10 @@
  * number, then the pattern it plays, >NN for a jump to entry NN, or . for
  * a stop) or, picked by its header, the pattern list: a click there picks
  * the pattern to edit (Ctrl+PgUp / PgDn), a right click, or Ctrl+Enter,
- * puts it in the order entry. The song's speed sits under it.
+ * puts it in the order entry. The song's speed sits under it, then the
+ * pattern's length: a pattern can end early (Ctrl+L: at the cursor's row),
+ * for a bar of 3/4 among bars of 4/4. The rows past its end are kept, dimmed,
+ * but don't play.
  *
  * Each cell is note, wave, volume, effect. The cursor sits on one of
  * those four fields: on the note, the Z..M / Q..U keys play and enter
@@ -36,10 +39,11 @@
 #define GRID_Y 21
 #define ROWS_SHOWN 20
 #define SIDE_W 30             /* the strip down the left: the order list or the pattern list, the speed under it */
-#define SIDE_ROWS 18          /* order entries shown */
-#define SPEED_Y (GRID_Y + SIDE_ROWS * FONT_H)   /* "speed", and under it "-24+" */
-#define TAB_ORD_X 1           /* the strip's header: "ord" "pat" */
-#define TAB_PAT_X 23
+#define SIDE_ROWS 16          /* order entries shown */
+#define LEN_Y (SCREEN_H - 3 * FONT_H)           /* "len", and under it "-32+": the pattern's length, on the bottom bar */
+#define SPEED_Y (LEN_Y - 2 * FONT_H)            /* "speed", and under it "-24+" */
+#define TAB_PAT_X 1           /* the strip's header: "pat" "ord" */
+#define TAB_ORD_X 23
 #define TAB_W 20
 #define TW 44                 /* track width: "C-4 05." + gap */
 #define CELL_W (7 * FONT_W)
@@ -108,6 +112,7 @@ static void init(void) {
     U.octave = 2;
     U.pen_vol = 5;
     U.plow = 12;
+    U.side = SIDE_PATTERNS;   /* the strip starts on the pattern list */
 }
 
 static int clampi(int v, int lo, int hi) { return v < lo ? lo : v > hi ? hi : v; }
@@ -368,7 +373,15 @@ static void key(const KeyEvent *ev) {
                 before_change();
                 for (int r = 0; r < PATTERN_ROWS; r++)
                     for (int t = 0; t < NTRACKS; t++) cur_song->patterns[U.pat].cells[r][t] = (Cell){CELL_EMPTY, 24, 0, 0, 0};
+                cur_song->patterns[U.pat].length = PATTERN_ROWS;
                 return;
+            case SDL_SCANCODE_L: {        /* the pattern ends after this row; again: all 32 rows */
+                Pattern *pt = &cur_song->patterns[U.pat];
+                before_change();
+                pt->length = (uint8_t)(pattern_len(pt) == U.row + 1 ? PATTERN_ROWS : U.row + 1);
+                status(COL_GREY, "pattern %d: %d rows", U.pat, pattern_len(pt));
+                return;
+            }
             case SDL_SCANCODE_V:
                 if (!U.has_clip) return;
                 before_change();
@@ -538,6 +551,12 @@ static void mouse(void) {
         cur_song->song_speed = (uint8_t)clampi(cur_song->song_speed + (in.mouse_x < 14 ? -1 : 1), 1, 64);
         return;
     }
+    if (btn && (inside(1, LEN_Y + FONT_H, 7, FONT_H) || inside(19, LEN_Y + FONT_H, 8, FONT_H))) {   /* length's - and + */
+        Pattern *pt = &cur_song->patterns[U.pat];
+        before_change();
+        pt->length = (uint8_t)clampi(pattern_len(pt) + (in.mouse_x < 14 ? -1 : 1), 1, PATTERN_ROWS);
+        return;
+    }
     if (U.roll) { roll_mouse(btn); return; }
     if (in.wheel && inside(0, GRID_Y, UI_W, ROWS_SHOWN * FONT_H)) U.top = clampi(U.top - in.wheel * 2, 0, PATTERN_ROWS - ROWS_SHOWN);
     if (!btn) return;
@@ -555,6 +574,7 @@ static void mouse(void) {
 /* the tracker: rows down, the tracks across */
 static void draw_grid(int mpos, int mpat, int mrow) {
     char buf[128];
+    int len = pattern_len(&cur_song->patterns[U.pat]);
     if (U.row < U.top) U.top = U.row;
     if (U.row >= U.top + ROWS_SHOWN) U.top = U.row - ROWS_SHOWN + 1;
     if (mpat == U.pat && mpos >= 0) {                        /* keep the playing row in view */
@@ -578,8 +598,9 @@ static void draw_grid(int mpos, int mpat, int mrow) {
         int bx = ROWNUM_X - 2;
         if (playing) draw_rect(bx, y, UI_W - bx, FONT_H, UI_RGB(1, 1, 0), true);
         else if (row == U.row) draw_rect(bx, y, UI_W - bx, FONT_H, UI_RGB(0, 0, 1), true);
+        bool past = row >= len;              /* after the pattern's end: kept, not played */
         snprintf(buf, sizeof buf, "%02d", row);
-        draw_text(buf, ROWNUM_X, y, row % 8 == 0 ? COL_YELLOW : row % 4 == 0 ? UI_RGB(2, 2, 3) : UI_RGB(1, 1, 2));
+        draw_text(buf, ROWNUM_X, y, past ? UI_RGB(0, 1, 1) : row % 8 == 0 ? COL_YELLOW : row % 4 == 0 ? UI_RGB(2, 2, 3) : UI_RGB(1, 1, 2));
         for (int k = 0; k < TSHOWN; k++) {
             int t = U.tleft + k;
             const Cell *c = &cur_song->patterns[U.pat].cells[row][t];
@@ -588,15 +609,18 @@ static void draw_grid(int mpos, int mpat, int mrow) {
                 int fx0 = U.field == F_NOTE ? 0 : U.field + 3, fw = U.field == F_NOTE ? 3 : 1;
                 draw_rect(x + fx0 * FONT_W - 1, y, fw * FONT_W + 1, FONT_H, UI_RGB(1, 2, 3), true);
             }
-            if (c->kind == CELL_EMPTY) { draw_text("... ...", x, y, UI_RGB(0, 1, 2)); continue; }
-            if (c->kind == CELL_OFF) { draw_text("=== ...", x, y, COL_RED); draw_text("...", x + 4 * FONT_W, y, UI_RGB(0, 1, 2)); continue; }
+            int dim = UI_RGB(0, 1, 1);
+            if (c->kind == CELL_EMPTY) { draw_text("... ...", x, y, past ? UI_RGB(0, 0, 1) : UI_RGB(0, 1, 2)); continue; }
+            if (c->kind == CELL_OFF) { draw_text("=== ...", x, y, past ? dim : COL_RED); draw_text("...", x + 4 * FONT_W, y, past ? UI_RGB(0, 0, 1) : UI_RGB(0, 1, 2)); continue; }
             char name[4];
             pitch_name(c->pitch, name);
-            draw_text(name, x, y, COL_WHITE);
-            draw_char(c->wave >= NWAVES ? 'n' : "0123456789abcdef"[c->wave], x + 4 * FONT_W, y, COL_CYAN);
-            draw_char('0' + c->vol, x + 5 * FONT_W, y, UI_RGB(3, 1, 2));
-            draw_char(fx_chars[c->fx % NFX], x + 6 * FONT_W, y, COL_ORANGE);
+            draw_text(name, x, y, past ? dim : COL_WHITE);
+            draw_char(wave_char(c->wave), x + 4 * FONT_W, y, past ? dim : c->wave >= WAVE_INSTR && c->wave < WAVE_NOISE ? COL_GREEN : COL_CYAN);
+            draw_char('0' + c->vol, x + 5 * FONT_W, y, past ? dim : UI_RGB(3, 1, 2));
+            draw_char(fx_chars[c->fx % NFX], x + 6 * FONT_W, y, past ? dim : COL_ORANGE);
         }
+        if (row == len - 1 && len < PATTERN_ROWS)   /* the end: a line under the last row played */
+            draw_line(ROWNUM_X - 2, y + FONT_H - 1, UI_W - 1, y + FONT_H - 1, COL_RED);
     }
     for (int t = 1; t < TSHOWN; t++) draw_line(GX + t * TW - 2, HEAD_Y, GX + t * TW - 2, GRID_Y + ROWS_SHOWN * FONT_H - 1, UI_RGB(0, 1, 1));
 }
@@ -616,7 +640,7 @@ static void draw_roll(int mpat, int mrow) {
         if (t == U.track) draw_rect(x - 1, HEAD_Y, 9, 10, UI_RGB(1, 2, 3), true);
         draw_char('1' + t, x + 1, HEAD_Y, t == U.track ? COL_BLACK : UI_RGB(2, 2, 3));
     }
-    snprintf(buf, sizeof buf, "wave - %c +", U.pen_wave >= NWAVES ? 'n' : "0123456789abcdef"[U.pen_wave]);
+    snprintf(buf, sizeof buf, "wave - %c +", wave_char(U.pen_wave));
     draw_text(buf, PEN_X, HEAD_Y, COL_CYAN);
     snprintf(buf, sizeof buf, "vol - %d +", U.pen_vol);
     draw_text(buf, VOLPEN_X, HEAD_Y, UI_RGB(3, 1, 2));
@@ -631,6 +655,11 @@ static void draw_roll(int mpat, int mrow) {
     }
     for (int r = 4; r < PATTERN_ROWS; r += 4)                  /* beats: a line every 4 rows, brighter every 8 */
         draw_line(RX + r * cw, GRID_Y, RX + r * cw, ROLL_BOTTOM - 1, r % 8 ? UI_RGB(0, 1, 1) : UI_RGB(0, 1, 2));
+    int len = pattern_len(&cur_song->patterns[U.pat]);
+    if (len < PATTERN_ROWS) {                                  /* past the pattern's end: shaded, a line at it */
+        draw_rect(RX + len * cw, GRID_Y, gw - len * cw, PSHOWN * PH, COL_BLACK, true);
+        draw_line(RX + len * cw, GRID_Y, RX + len * cw, ROLL_BOTTOM - 1, COL_RED);
+    }
     if (mpat == U.pat && mrow >= 0) draw_rect(RX + mrow * cw, GRID_Y, cw, PSHOWN * PH, UI_RGB(1, 1, 0), true);
     draw_rect(RX + U.row * cw, GRID_Y, cw, PSHOWN * PH, UI_RGB(1, 2, 3), false);
 
@@ -678,6 +707,8 @@ static void draw_roll(int mpat, int mrow) {
 static void draw_side(int mpos, int mpat) {
     char buf[16];
     draw_rect(0, HEAD_Y, SIDE_W, SCREEN_H - FONT_H - HEAD_Y, UI_RGB(0, 0, 1), true);
+    /* the two tabs are wider than the strip: their row's background reaches past it to cover both */
+    draw_rect(0, HEAD_Y, TAB_ORD_X - 1 + TAB_W, FONT_H, UI_RGB(0, 0, 1), true);
     static const char *const tabs[2] = {"ord", "pat"};
     for (int t = 0; t < 2; t++) {
         int x = t == SIDE_ORDER ? TAB_ORD_X : TAB_PAT_X;
@@ -713,6 +744,12 @@ static void draw_side(int mpos, int mpat) {
     snprintf(buf, sizeof buf, "%2d", cur_song->song_speed);
     draw_text(buf, 8, sy, UI_RGB(2, 3, 3));
     draw_char('+', 20, sy, inside(19, sy, 8, FONT_H) ? COL_YELLOW : COL_WHITE);
+    int ly = LEN_Y + FONT_H, len = pattern_len(&cur_song->patterns[U.pat]);
+    draw_text("len", 1, LEN_Y, UI_RGB(2, 3, 3));
+    draw_char('-', 2, ly, inside(1, ly, 7, FONT_H) ? COL_YELLOW : COL_WHITE);
+    snprintf(buf, sizeof buf, "%2d", len);
+    draw_text(buf, 8, ly, len < PATTERN_ROWS ? COL_ORANGE : UI_RGB(2, 3, 3));
+    draw_char('+', 20, ly, inside(19, ly, 8, FONT_H) ? COL_YELLOW : COL_WHITE);
 }
 
 static void draw(void) {

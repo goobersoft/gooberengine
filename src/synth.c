@@ -1,8 +1,15 @@
 /* The GooberEngine sound chip.
  *
- *   8 voices. Each plays one of 16 waveforms (32 samples of 0-15, drawn in
- *   the sound editor) or pitched noise, at a pitch of 0-63 semitones
- *   (C2 .. D#7) and a volume of 0-7.
+ *   8 voices. Each plays one of 8 waveforms (32 samples of 0-15, drawn in
+ *   the sound editor), an instrument, or pitched noise, at a pitch of 0-63
+ *   semitones (C2 .. D#7) and a volume of 0-7.
+ *
+ *   Waves 8-15 are instruments: wave 8 + n plays sfx n at its own speed,
+ *   restarting with each note (or sfx step). Its steps are moved by the
+ *   note's pitch (a step at C-4 sounds at the note), its volumes scaled by
+ *   the note's, and the note's effect goes on top. Its loop sustains it;
+ *   without one it falls silent at its end. Inside an instrument, waves
+ *   8-15 play drawn waves 0-7 (an instrument can't hold another).
  *
  *   A sound effect is up to 32 steps. Each step has a pitch, a wave, a
  *   volume and an effect, and lasts `speed` ticks (120 ticks a second).
@@ -50,6 +57,7 @@ static long start_counter;
 static uint32_t lfsr = 0xACE1u;
 
 static void release_music_voices(void);
+static void sound(Voice *v, int wave, double p, double vol, int age);
 static double pitch_freq(double p) { return 440.0 * pow(2.0, (p + 36 - 69) / 12.0); }
 
 void synth_default_wave(int w, uint8_t *out) {
@@ -82,6 +90,7 @@ void music_defaults(Song *m) {
     for (int p = 0; p < NPATTERNS; p++)
         for (int r = 0; r < PATTERN_ROWS; r++)
             for (int t = 0; t < NTRACKS; t++) m->patterns[p].cells[r][t].pitch = 24;
+    for (int p = 0; p < NPATTERNS; p++) m->patterns[p].length = PATTERN_ROWS;
     memset(m->order, 0, sizeof m->order);
     for (int i = 1; i < ORDER_LEN; i++) m->order[i].kind = ORDER_STOP;   /* entry 0: pattern 0 */
     m->song_speed = 8;
@@ -134,9 +143,8 @@ void synth_note(int voice, int pitch, int wave, int vol, int ticks) {
     start_voice(v);
     if (!was) v->vol = 0;
     v->sfx = -1;
-    v->wave = wave;
-    v->freq = pitch_freq(pitch);
-    v->target = vol / 7.0f;
+    v->cell = (SfxStep){(uint8_t)pitch, (uint8_t)wave, (uint8_t)vol, FX_NONE};
+    sound(v, wave, pitch, vol / 7.0, 0);
     v->note_ticks = ticks > 0 ? ticks : 0;
 }
 
@@ -163,9 +171,9 @@ int synth_voice_step(int voice) {
 
 /* ---- the 120 Hz tick: step through sound effects and music ---- */
 
-/* sets a voice's wave, pitch and volume for tick `tick` of a step lasting `speed`
- * ticks; next_pitch is the following note's pitch (for slides), or -1 */
-static void play_step(Voice *v, const SfxStep *st, int next_pitch, int tick, int speed, int age) {
+/* the pitch and volume (0-1) at tick `tick` of a step lasting `speed` ticks;
+ * next_pitch is the following note's pitch (for slides), or -1 */
+static void shape(const SfxStep *st, int next_pitch, int tick, int speed, int age, double *pitch, double *volume) {
     double t = (tick < speed ? tick : speed) / (double)speed;   /* 0..1 through the step, then held */
     double p = st->pitch;
     double vol = st->vol / 7.0;
@@ -177,9 +185,37 @@ static void play_step(Voice *v, const SfxStep *st, int next_pitch, int tick, int
         case FX_FADE_OUT: vol *= 1.0 - t; break;
         case FX_ARPEGGIO: { static const int up[3] = {0, 4, 7}; p += up[(tick / 2) % 3]; break; }
     }
-    v->wave = st->wave;
+    *pitch = p;
+    *volume = vol;
+}
+
+/* sets what a voice sounds: wave at pitch p and volume vol; an instrument wave
+ * plays its sfx `age` ticks in, moved and scaled by p and vol */
+static void sound(Voice *v, int wave, double p, double vol, int age) {
+    if (wave >= WAVE_INSTR && wave < WAVE_NOISE) {
+        const Sfx *s = v->bank ? &v->bank->sfx[wave - WAVE_INSTR] : NULL;
+        int len = !s ? 0 : s->length < 1 ? 1 : s->length > SFX_STEPS ? SFX_STEPS : s->length;
+        int speed = !s || s->speed < 1 ? 1 : s->speed;
+        int k = age / speed;
+        if (s && s->loop_end > s->loop_start && s->loop_end <= len && k >= s->loop_end)
+            k = s->loop_start + (k - s->loop_start) % (s->loop_end - s->loop_start);
+        if (k >= len) { v->target = 0; return; }        /* played out (or no bank): silent, keep the last wave */
+        const SfxStep *st = &s->steps[k];
+        double ip, ivol;
+        shape(st, k + 1 < len ? s->steps[k + 1].pitch : -1, age % speed, speed, age, &ip, &ivol);
+        p += ip - INSTR_PITCH;
+        vol *= ivol;
+        wave = st->wave >= WAVE_NOISE ? WAVE_NOISE : st->wave % NWAVES;
+    }
+    v->wave = wave > WAVE_NOISE ? WAVE_NOISE : wave;
     v->freq = pitch_freq(p);
     v->target = (float)vol;
+}
+
+static void play_step(Voice *v, const SfxStep *st, int next_pitch, int tick, int speed, int age) {
+    double p, vol;
+    shape(st, next_pitch, tick, speed, age, &p, &vol);
+    sound(v, st->wave, p, vol, tick);
 }
 
 static void tick_voice(Voice *v) {
@@ -193,7 +229,9 @@ static void tick_voice(Voice *v) {
         return;
     }
     if (v->sfx < 0) {
-        if (v->note_ticks > 0 && --v->note_ticks == 0) release(v);
+        if (v->note_ticks > 0 && --v->note_ticks == 0) { release(v); return; }
+        sound(v, v->cell.wave, v->cell.pitch, v->cell.vol / 7.0, v->tick);   /* an instrument moves on */
+        if (v->tick < 1 << 20) v->tick++;
         return;
     }
     if (!v->bank) { release(v); return; }
@@ -268,7 +306,7 @@ static void start_row(void) {
         v->sfx = MUSIC;
         v->cell = (SfxStep){c->pitch, c->wave, c->vol, c->fx};
         v->next_pitch = -1;
-        for (int r = mus.row + 1; r < PATTERN_ROWS; r++) {        /* the note a slide heads for */
+        for (int r = mus.row + 1; r < pattern_len(pat); r++) {    /* the note a slide heads for */
             const Cell *n = &pat->cells[r][t];
             if (n->kind == CELL_NOTE) { v->next_pitch = n->pitch; break; }
             if (n->kind == CELL_OFF) break;
@@ -283,7 +321,7 @@ static void tick_music(void) {
     int speed = mus.song->song_speed < 1 ? 1 : mus.song->song_speed;
     if (++mus.tick < speed) return;
     mus.tick = 0;
-    if (++mus.row < PATTERN_ROWS) return;
+    if (++mus.row < pattern_len(&mus.song->patterns[mus.pattern])) return;   /* a short pattern ends early */
     mus.row = 0;
     if (mus.loop_pattern >= 0) return;
     mus.pos++;
@@ -309,14 +347,14 @@ void synth_mix(int16_t *out, int n) {
             if (v->releasing && v->vol < 0.001f) { v->on = false; continue; }
             int idx = (int)(v->phase * WAVE_LEN) & (WAVE_LEN - 1);
             float s;
-            if (v->wave >= NWAVES) {                         /* noise: a new random level 32 times a cycle */
+            if (v->wave >= WAVE_NOISE) {                     /* noise: a new random level 32 times a cycle */
                 if (idx != v->noise_idx) {
                     v->noise_idx = idx;
                     lfsr = (lfsr >> 1) ^ (-(lfsr & 1u) & 0xB400u);
                     v->noise_val = (float)(lfsr & 0xF) / 7.5f - 1.0f;
                 }
                 s = v->noise_val;
-            } else if (v->bank) s = (v->bank->waves[v->wave][idx] - 7.5f) / 7.5f;
+            } else if (v->bank && v->wave < NWAVES) s = (v->bank->waves[v->wave][idx] - 7.5f) / 7.5f;
             else s = 0;
             acc += s * v->vol * (v->sfx == MUSIC ? vol_music : vol_sfx);
             v->phase += v->freq / SYNTH_RATE;

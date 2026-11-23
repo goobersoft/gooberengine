@@ -403,10 +403,10 @@ bool res_parse_legacy_sound(const char *path, SoundBank *bank, char *err, int er
         int n, a, b, c, d;
         char hex[64];
         if (sscanf(s, "wave %d %63s", &n, hex) == 2) {
-            if (n < 0 || n >= NWAVES || strlen(hex) != WAVE_LEN) FAIL("wave N then %d hex digits", WAVE_LEN);
+            if (n < 0 || n >= OLD_NWAVES || strlen(hex) != WAVE_LEN) FAIL("wave N then %d hex digits", WAVE_LEN);
             for (int i = 0; i < WAVE_LEN; i++) {
                 if (!isxdigit((unsigned char)hex[i])) FAIL("'%c' is not a hex digit", hex[i]);
-                bank->waves[n][i] = (uint8_t)(isdigit((unsigned char)hex[i]) ? hex[i] - '0' : tolower((unsigned char)hex[i]) - 'a' + 10);
+                if (n < NWAVES) bank->waves[n][i] = (uint8_t)(isdigit((unsigned char)hex[i]) ? hex[i] - '0' : tolower((unsigned char)hex[i]) - 'a' + 10);
             }
             cur = -1;
         } else if (sscanf(s, "sfx %d speed %d length %d loop %d %d", &n, &a, &b, &c, &d) == 5) {

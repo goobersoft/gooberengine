@@ -23,7 +23,7 @@ editor on a cart folder at any time.
 | Dots | a cart may draw 100,000 pixels a frame (`dot_limit` changes it, up to 1,000,000). The screen alone is 96,000, so redrawing only what changed pays off |
 | Text | built-in 6×10 font, letters 5 wide: 66 × 24 characters. A cart can bring fonts of its own, 4×4 to 20×20. Capitals and lowercase letters, with descenders (see [The font](#the-font)) |
 | Input | a pad with a d-pad, three buttons **A B C** and **Start** (keyboard or game controller), plus raw keyboard and mouse |
-| Sound | 8 voices. Each plays one of 16 drawable waveforms (32 samples each) or noise, at 64 pitches (C-2 to D#7) and 8 volumes. There are 64 sound effects |
+| Sound | 8 voices. Each plays one of 8 drawable waveforms (32 samples each), one of 8 instruments (sound effects 0–7 played as a note) or noise, at 64 pitches (C-2 to D#7) and 8 volumes. There are 64 sound effects |
 
 | Pad button | Keyboard | Game controller (Xbox-style names) |
 |---|---|---|
@@ -307,13 +307,13 @@ Saving writes only as much of the sheet as is used, so a tileset with ten tiles 
 
 ## Sound editor
 
-`SOUND` edits a sound bank: 64 sound effects and the 16 waveforms they play.
+`SOUND` edits a sound bank: 64 sound effects and the 8 waveforms they play. Sound effects 0–7 double as instruments 8–f (see [Instruments](#instruments)).
 
 - **Layout:**
   - On the left is the list of effects; white ones have notes.
   - Across the top are the speed, the length and the loop, plus a play button.
-  - Then, for each of the 32 steps: its pitch (a bar), its volume, its wave (`0`–`f`, `n` = noise) and its effect.
-  - At the bottom is the wave being drawn, all 16 waves, and the effect pens.
+  - Then, for each of the 32 steps: its pitch (a bar), its volume, its wave (`0`–`7` drawn, `8`–`f` an instrument, `n` = noise) and its effect.
+  - At the bottom is the wave being drawn, the 8 waves, the 8 instruments (each showing its sound effect's notes), noise, and the effect pens. With an instrument picked, click the wave box to edit its sound effect.
 - **Mouse:** draw bars in the pitch and volume graphs with the left button. The right button makes a step a rest. Clicking the wave or effect row stamps the current pen; right-clicking picks it up. Draw a waveform in the wave box. Click a wave or effect pen to select it.
 - **Keyboard:** typing works like a small musical keyboard. Each note you enter sounds, uses the wave pen, and moves to the next step.
 - **Playing:** Space plays the effect, and the step being played lights up. Leaving the editor stops all sound.
@@ -337,6 +337,18 @@ Saving writes only as much of the sheet as is used, so a tileset with ten tiles 
 | Ctrl+Z / Ctrl+Y, Ctrl+S, Ctrl+R | undo / redo, save `sfx/NAME.g64`, run |
 
 Beside the file tree there's no room for the list of effects. PgUp / PgDn switch effects, and the bottom bar shows which one is open. Hide the tree (F9) to get the list back.
+
+### Instruments
+
+Waves `8`–`f` are instruments: wave `8` plays sound effect 0, `9` plays 1, … `f` plays 7. A music note (or a sound-effect step, or `note()`) on an instrument plays that whole sound effect at its own speed, starting again with each note:
+
+- **Pitch:** the sound effect is moved by the note. A step at C-4 sounds at the note's pitch, one at C-5 an octave above it.
+- **Volume:** its volumes are scaled by the note's.
+- **Effects:** its own effects play, and the note's effect goes on top.
+- **Length:** a loop holds the note for as long as it lasts; without one the instrument falls silent at its end, like a plucked string.
+- Inside an instrument, waves `8`–`f` play drawn waves `0`–`7`: instruments don't nest.
+
+Sound banks from before instruments held 16 drawn waves; waves 8–15 of those are skipped when they're read, and saving writes 8.
 
 ## Music editor
 
@@ -431,13 +443,13 @@ A cart can have any number of each. Each file can have a slot it loads into by i
 03010101..0101...        .. = an empty cell
 ```
 
-**sfx/NAME.g64**: `WS`, then the waves, then the sound effects. `W` and `S` give the number of waves and of sound effects as digit + 1. GooberEngine writes all 16 waves (`f`), and sound effects up to the last one that isn't empty. Waves and sound effects that aren't in the file are the defaults.
+**sfx/NAME.g64**: `WS`, then the waves, then the sound effects. `W` and `S` give the number of waves and of sound effects as digit + 1. GooberEngine writes all 8 waves (`7`), and sound effects up to the last one that isn't empty. Waves and sound effects that aren't in the file are the defaults.
 
 - **A wave** is 32 samples `0`–`f`, with 7–8 the middle. GooberEngine writes one wave per line.
-- **A sound effect** is one line: speed − 1, length − 1, loop start, loop end, then all 32 steps. A step is four characters: the pitch (0–63: `0` is C-2, `c` C-3, `o` C-4, `A` C-5, `M` C-6), the wave (`0`–`f`, or `g` for noise), the volume 0–7, and the effect (`0` none, `1` slide, `2` vibrato, `3` drop, `4` fade in, `5` fade out, `6` arpeggio). A rest is volume 0, so an empty step reads `o000`.
+- **A sound effect** is one line: speed − 1, length − 1, loop start, loop end, then all 32 steps. A step is four characters: the pitch (0–63: `0` is C-2, `c` C-3, `o` C-4, `A` C-5, `M` C-6), the wave (`0`–`7`, `8`–`f` for instruments, or `g` for noise), the volume 0–7, and the effect (`0` none, `1` slide, `2` vibrato, `3` drop, `4` fade in, `5` fade out, `6` arpeggio). A rest is volume 0, so an empty step reads `o000`.
 
 ```
-f2                                     16 waves, 3 sound effects
+72                                     8 waves, 3 sound effects
 ffffffffffffffff0000000000000000       wave 0, a square
 ...
 2300A360E360H350M345o000o000...        sfx 0: speed 3, length 4, no loop; C-5 E-5 G-5 C-6 on wave 3, fading out
@@ -566,7 +578,7 @@ The screen is 96,000 pixels, so filling it with a map or a full-screen `rect_fil
 | Command | |
 |---|---|
 | `sfx(n [, voice])` | play sound effect `n` (0–63) on a voice (0–7), or on any free voice. Returns the voice it used |
-| `note(voice, pitch, wave, vol [, ticks])` | play one note: pitch 0–63 (24 = C-4, 33 = A-4 at 440 Hz), wave 0–15 or `NOISE`, volume 0–7. It lasts `ticks` (120 a second), or until stopped |
+| `note(voice, pitch, wave, vol [, ticks])` | play one note: pitch 0–63 (24 = C-4, 33 = A-4 at 440 Hz), wave 0–7, `INSTRUMENT` + 0–7 or `NOISE`, volume 0–7. It lasts `ticks` (120 a second), or until stopped |
 | `voice_stop([voice])` | stop one voice, or all of them |
 | `voice_sfx(voice)` | the effect a voice is playing: −1 for nothing, −2 for a `note` |
 
@@ -574,7 +586,7 @@ The screen is 96,000 pixels, so filling it with a map or a full-screen `rect_fil
 | `music_stop()` | stop the music |
 | `music_pos()` / `music_row()` | the order entry and row playing, −1 when stopped |
 
-`voice_sfx` gives −3 for a voice the music is playing. All sound and music stop when the cart does. Constants: `VOICES` (8) and `NOISE` (the noise "wave").
+`voice_sfx` gives −3 for a voice the music is playing. All sound and music stop when the cart does. Constants: `VOICES` (8), `INSTRUMENT` (8, the first instrument "wave") and `NOISE` (16, the noise "wave").
 
 ### Input and system
 
@@ -752,7 +764,7 @@ GooberEngine finds the runtimes in `$GOOBERENGINE_RUNTIMES`, then in `runtimes/`
    - Still to do: map layers or flags (e.g. "solid"), and a "show where this tile is used" view.
 5. **Sound** ✅
    - An 8-voice wavetable synth (`src/synth.c`, no SDL inside) fed to the SDL audio device.
-   - 16 drawable waveforms plus pitched noise, with click-free volume changes.
+   - 8 drawable waveforms, 8 instruments (sound effects 0–7 transposed to the note), and pitched noise, with click-free volume changes.
    - 64 sound effects of up to 32 steps. Each step has its own effect: slide, vibrato, drop, fades, arpeggio. Effects can loop.
    - A sound editor with musical-keyboard entry, and `sfx.txt` that keeps comments and saves unchanged files byte-for-byte.
    - API: `sfx`, `note`, `voice_stop`, `voice_sfx`.
