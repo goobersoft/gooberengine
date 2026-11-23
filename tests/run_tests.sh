@@ -312,6 +312,9 @@ maprow "tiles block drag: steps a block at a time" 0 "01 02 01 02 01 02"; maprow
 # from tile 0 to a 3x2 block); a Shift+click inside it paints, and the selection stays as it is
 edit "tiles region" '{click:125,5}{f9}{down:left shift}{click:65,45}{drag:125,75}{mouse:125,75}{up:left shift}{click:89,5}{click:5,15}{ctrl+s}'
 maprow "tiles region: a 3x2 stamp" 0 "00 01 02"; maprow "tiles region: a 3x2 stamp" 1 "0E 0F 0G"
+# a plain click outside the block selects just that tile again
+edit "tiles click resets" '{click:125,5}{f9}{down:left shift}{click:65,75}{mouse:65,75}{up:left shift}{click:185,15}{mouse:185,15}{click:89,5}{click:5,15}{ctrl+s}'
+maprow "tiles click resets: tile 3, 1x1" 0 "03"; maprow "tiles click resets: tile 3, 1x1" 1 ""
 edit "tiles shift inside" '{click:125,5}{f9}{down:left shift}{click:65,75}{mouse:65,75}{click:3,13}{mouse:3,13}{up:left shift}{ctrl+s}{click:89,5}{click:5,15}{ctrl+s}'
 maprow "tiles shift inside: still 2x2" 0 "00 01"; maprow "tiles shift inside: still 2x2" 1 "0E 0F"; row "tiles shift inside: it paints" 0 0 '*.........'
 edit "map picks for tiles" '{click:161,5}{f9}{tab}{click:15,35}{mouse:15,35}{click:53,5}{click:63,73}{ctrl+s}';    row "map picks for tiles: tile 41 is selected" 41 0 '*.........'

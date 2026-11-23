@@ -574,7 +574,7 @@ static void sheet_press(int btn) {
     int x, y;
     if (!block_px_at(in.mouse_x, in.mouse_y, &x, &y)) {
         int t = sheet_tile_at(in.mouse_x, in.mouse_y);
-        if (t >= 0) { T.sel = t; clamp_sel(); }
+        if (t >= 0) { T.sel = t; T.bw = T.bh = 1; }    /* a plain click: just that tile (Shift+click grows instead) */
         return;
     }
     int c = btn == 1 ? T.col_a : T.col_b;
