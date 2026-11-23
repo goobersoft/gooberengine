@@ -453,6 +453,26 @@ bool archive_find(const char *name, char *out, size_t n) {
 
 /* ---- unpacking ---- */
 
+uint8_t *archive_member(const char *file, const char *name, size_t *len, char *err, int errlen) {
+    Members ms = {0};
+    if (!read_archive(file, &ms, err, errlen)) return NULL;
+    uint8_t *data = NULL;
+    for (int i = 0; i < ms.n; i++) {
+        const char *n = ms.m[i].name;
+        if (!strncmp(n, "./", 2)) n += 2;
+        if (strcmp(n, name)) continue;
+        *len = ms.m[i].len;
+        data = realloc(ms.m[i].data, *len + 1);     /* zero-ended, so text can be used as a string */
+        if (!data) break;
+        data[*len] = 0;
+        ms.m[i].data = NULL;        /* the caller has it now */
+        break;
+    }
+    members_free(&ms);
+    if (!data) snprintf(err, (size_t)errlen, "%s has no %s", file, name);
+    return data;
+}
+
 bool archive_unpack(const char *file, const char *name, char *out_dir, int outlen, char *err, int errlen) {
     char base[128];
     if (!name || !*name) { archive_cart_name(file, base, sizeof base); name = base; }

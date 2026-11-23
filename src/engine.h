@@ -374,6 +374,7 @@ bool archive_name(const char *file);                    /* ends in .zip, .tar.gz
 bool archive_find(const char *name, char *out, size_t n);   /* "rocket" or "rocket.zip" -> the archive in the carts folder */
 void archive_cart_name(const char *file, char *out, size_t n);  /* "Rocket (1).zip" -> "Rocket" */
 bool archive_stub(const char *file, CartStub *st);      /* its cart.txt, from the cache when the archive is unchanged */
+uint8_t *archive_member(const char *file, const char *name, size_t *len, char *err, int errlen);  /* one file of it, malloc'd */
 bool archive_unpack(const char *file, const char *name, char *out_dir, int outlen, char *err, int errlen);
 bool cart_bundled_name(const char *rel);                /* "main.gb", "tiles/x.g64": one of a cart's own files */
 int cart_file_list(const char *dir, char **names, int max);  /* those files in a folder, sorted, strdup'd; -1 = unreadable */

@@ -10,8 +10,7 @@
 #                       runtimes/player-linux-x86_64        (SDL2 linked in)
 #                       runtimes/player-windows-x86_64.exe  (mingw-w64, SDL2 linked in)
 #                       runtimes/web/{index.html,player.js,player.wasm}  (Emscripten)
-#   make web          the whole engine for the browser, in build/web, then serve it
-#   make web-build    ...just build it
+#   make web          the whole engine for the browser, in build/web (web-build is the same)
 GB      ?= ../gooberbasic
 CC      ?= cc
 CFLAGS  ?= -O2 -g
@@ -139,15 +138,15 @@ build/web/index.html: $(ALL_SRC) $(HDRS) web/engine.html $(CARTS)
 	$(EMCC) $(WEB_FLAGS) --shell-file web/engine.html --preload-file carts@/bundled-carts \
 	      -o $@ $(ALL_SRC)
 
-# the web engine exports games too: it fetches the runtimes from runtimes/ on its server
-web-build: build/web/index.html
-	@if [ -d runtimes ]; then rm -rf build/web/runtimes && cp -r runtimes build/web/runtimes; \
+# the web engine exports games too: it fetches runtimes.zip (runtimes/, zipped) from its server
+# $(1) = the zip to write
+runtimes_zip = rm -rf $(dir $(1))runtimes $(1) && (cd runtimes && zip -qr9 $(abspath $(1)) .)
+
+web: build/web/index.html
+	@if [ -d runtimes ]; then $(call runtimes_zip,build/web/runtimes.zip); \
 	 else echo "(no runtimes/ yet: EXPORT in the web engine needs: make runtimes)"; fi
 
-PORT ?= 8000
-web: web-build
-	@echo "GooberEngine for the browser: http://localhost:$(PORT)/"
-	python3 -m http.server $(PORT) --bind 127.0.0.1 -d build/web
+web-build: web
 
 # ---------------------------------------------------------------------------
 # Release zips (for itch.io and the like), in dist/:
@@ -202,9 +201,9 @@ build/dist/web/index.html: $(ALL_SRC) $(HDRS) web/engine.html build/dist/carts.s
 	      -o $@ $(ALL_SRC)
 
 dist/gooberengine-web.zip: build/dist/web/index.html runtimes
-	rm -rf build/dist/web/runtimes && cp -r runtimes build/dist/web/runtimes
+	$(call runtimes_zip,build/dist/web/runtimes.zip)
 	mkdir -p dist && rm -f $@
-	cd build/dist/web && zip -qr9 $(abspath $@) index.html index.js index.wasm index.data runtimes
+	cd build/dist/web && zip -q9 $(abspath $@) index.html index.js index.wasm index.data runtimes.zip
 
 dist: dist/gooberengine-linux-x86_64.zip dist/gooberengine-windows-x86_64.zip dist/gooberengine-web.zip
 	@ls -l dist

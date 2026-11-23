@@ -162,13 +162,17 @@ static bool load_runtime(const char *rel, char **data, size_t *len, ExportLog lo
     snprintf(path, sizeof path, "%s/%s", runtimes_dir(), rel);
     if (read_file(path, data, len)) return true;
 #ifdef __EMSCRIPTEN__
-    /* the web engine fetches runtimes from its own server the first time they're needed */
-    char url[PATH_MAX + 64];
-    snprintf(url, sizeof url, "runtimes/%s", rel);
-    mkdirs("/runtimes/web");
-    log("fetching the player runtime...", false);
-    emscripten_wget(url, path);
-    if (read_file(path, data, len) && *len > 0) return true;
+    /* the web engine fetches runtimes.zip from its own server the first time a runtime is needed */
+    static const char *zip = "/runtimes.zip";
+    struct stat st;
+    if (stat(zip, &st) != 0 || st.st_size == 0) {
+        log("fetching the player runtimes...", false);
+        emscripten_wget("runtimes.zip", zip);
+    }
+    char err[PATH_MAX + 160];
+    *data = (char *)archive_member(zip, rel, len, err, sizeof err);
+    if (*data) return true;
+    snprintf(path, sizeof path, "runtimes.zip/%s", rel);
 #endif
     char msg[PATH_MAX + 160];
     snprintf(msg, sizeof msg, "missing player runtime %s (build them with: make runtimes)", path);

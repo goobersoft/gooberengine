@@ -51,7 +51,7 @@ make test
 | `make` | `./gooberengine` for this machine | the above |
 | `make test` | runs the test suite (`GE_TEST_WINE=1 make test` adds the Windows game under wine) | the above |
 | `make runtimes` | the player runtimes that `EXPORT` packs games into, in `runtimes/` | `cmake`, `unzip`, `mingw-w64`, Emscripten |
-| `make web` | the whole engine for the browser, in `build/web`, then serves it at http://localhost:8000 (`make web-build` only builds) | Emscripten |
+| `make web` | the whole engine for the browser, in `build/web` (`make web-build` is the same) | Emscripten |
 
 Emscripten comes from [emsdk](https://emscripten.org/docs/getting_started/downloads.html). The Makefile uses the copy in `tools/emsdk` (set it up once with `tools/emsdk/emsdk install latest && tools/emsdk/emsdk activate latest`); pass `EMSDK=/path/to/emsdk` for another place. Windows builds use the `mingw-w64` cross compiler (`sudo apt install mingw-w64`). SDL2 for the runtimes is built from `third_party/SDL2-2.32.10.zip` the first time, which takes a minute or two.
 
@@ -677,7 +677,7 @@ A cart is shared as one `.zip`. `EXPORT` zips the loaded cart folder, as compres
 
 ## GooberEngine in the browser
 
-`make web` builds the whole engine (shell, editors and all) with Emscripten and serves it at http://localhost:8000. The files in `build/web` work from any static web server; copy `runtimes/` in beside them (`make web-build` does) and `EXPORT` works in the browser too.
+`make web` builds the whole engine (shell, editors and all) with Emscripten into `build/web`. It doesn't serve it: the files work from any static web server, for instance `python3 -m http.server 8000 --bind 127.0.0.1 -d build/web`. `make web` zips `runtimes/` into `runtimes.zip` beside them, so `EXPORT` works in the browser too.
 
 - **Your carts stay in the browser.** They live in its IndexedDB storage, saved every couple of seconds and when you leave the page. The example carts are copied in on the first visit; a new example in a later build appears, and your own carts are never overwritten.
 - **Moving carts in and out:** drop a cart `.zip` on the page, use the **open cart** button, or type `UPLOAD`. `DOWNLOAD` (or `EXPORT`) saves the loaded cart to your computer. `EXPORT LINUX / WINDOWS / WEB` downloads a finished game; the web one comes as a `.zip`.
@@ -716,7 +716,7 @@ A cart is shared as one `.zip`. `EXPORT` zips the loaded cart folder, as compres
 | `player-windows-x86_64.exe` | `x86_64-w64-mingw32-gcc`, with SDL2 cross-compiled and linked in statically |
 | `web/player.js`, `player.wasm`, `index.html` | Emscripten's SDL2 port, with `-sASYNCIFY` so the frame loop can hand control back to the browser |
 
-GooberEngine finds the runtimes in `$GOOBERENGINE_RUNTIMES`, then in `runtimes/` next to the executable, then in `./runtimes`. The web version fetches them from `runtimes/` on its own server.
+GooberEngine finds the runtimes in `$GOOBERENGINE_RUNTIMES`, then in `runtimes/` next to the executable, then in `./runtimes`. The web version fetches them as one `runtimes.zip` from its own server, the first time it exports.
 
 **Your game is yours.** You can sell an exported game, or give it away, under any license you like. You don't have to publish its code or GooberEngine's source with it, as long as you leave the player runtime unmodified. See [License](#license).
 
