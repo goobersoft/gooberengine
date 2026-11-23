@@ -17,6 +17,8 @@
  *     Drag it by its title bar; drag its bottom-right corner to resize it.
  *   - the tools, actions and the 64 colors (4 to a row) are in another,
  *     narrow window, which can also be dragged around.
+ *   - the box at the right of either window's title bar minimizes it to just
+ *     the title bar, and opens it again.
  *
  * Transparent pixels show as a pink checkerboard (colors 50 and 34). The
  * left button draws with color A. The right button picks the color under
@@ -37,7 +39,8 @@
 #define BOT (SCREEN_H - FONT_H)
 #define TITLE_H 9
 #define MAX_UNDO 64
-#define TOOLS_W 36
+#define TOOLS_W 42                 /* room for the title and its minimize box */
+#define TOOLS_IN 5                 /* the contents' left margin: centred */
 #define TOOLS_H 197
 #define GRIP 6
 
@@ -69,6 +72,7 @@ static struct {
     int zoom, ox, oy;        /* the background: zoom index, where the sheet's top-left is */
     Win win[NWIN];
     int top;                 /* the window drawn last (on top) */
+    bool min[NWIN];          /* minimized: only the title bar shows */
     bool placed;             /* windows put in their starting places */
     int placed_w;            /* the editor's width then: the windows keep to its right edge */
     int drag;                /* 0 none, 1 window move, 2 window resize, 3 pan, 4 paint, 5 select tiles */
@@ -502,7 +506,11 @@ static bool inside(int x, int y, int w, int h) {
     return in.mouse_x >= x && in.mouse_x < x + w && in.mouse_y >= y && in.mouse_y < y + h;
 }
 
-static bool in_win(int i) { const Win *w = &T.win[i]; return inside(w->x, w->y, w->w, TITLE_H + w->h); }
+static int win_h(int i) { return T.min[i] ? 0 : T.win[i].h; }   /* the content's height as shown */
+static bool in_win(int i) { const Win *w = &T.win[i]; return inside(w->x, w->y, w->w, TITLE_H + win_h(i)); }
+/* the minimize box, at the right end of the title bar */
+static int min_box_x(int i) { return T.win[i].x + T.win[i].w - TITLE_H; }
+static bool in_min_box(int i) { return inside(min_box_x(i), T.win[i].y, TITLE_H, TITLE_H); }
 
 /* the preview window: the selection at the biggest whole scale that fits, centred */
 static int preview_scale(void) {
@@ -523,7 +531,7 @@ static void preview_origin(int *cx, int *cy) {
 #define BTN_COLS 3
 #define BTN_STEP 11
 static int btn_at(int i, int row0, int *x, int *y) {
-    *x = T.win[W_TOOLS].x + 2 + (i % BTN_COLS) * BTN_STEP;
+    *x = T.win[W_TOOLS].x + TOOLS_IN + (i % BTN_COLS) * BTN_STEP;
     *y = T.win[W_TOOLS].y + TITLE_H + 1 + (row0 + i / BTN_COLS) * BTN_STEP;
     return BTN_STEP - 1;
 }
@@ -534,7 +542,7 @@ static int act_btn(int i, int *x, int *y) { return btn_at(i, 2, x, y); }
 #define PAL_ROWS (NCOLORS / PAL_COLS)
 #define PAL_W (PAL_COLS * PAL_CELL)
 #define PAL_H (PAL_ROWS * PAL_CELL)
-static void pal_origin(int *x, int *y) { *x = T.win[W_TOOLS].x + 2; *y = T.win[W_TOOLS].y + TITLE_H + 3 + 3 * BTN_STEP; }
+static void pal_origin(int *x, int *y) { *x = T.win[W_TOOLS].x + TOOLS_IN; *y = T.win[W_TOOLS].y + TITLE_H + 3 + 3 * BTN_STEP; }
 
 static int floor_div(int a, int b) { return a >= 0 ? a / b : -((-a + b - 1) / b); }
 
@@ -720,12 +728,13 @@ static void mouse(void) {
         Win *w = &T.win[i];
         if (!btn) return;                       /* the wheel over a window does nothing */
         T.top = i;
+        if (btn == 1 && in_min_box(i)) { T.min[i] = !T.min[i]; return; }
         if (btn == 1 && in.mouse_y < w->y + TITLE_H) {          /* title bar: move */
             T.drag = 1; T.drag_win = i;
             T.drag_dx = in.mouse_x - w->x; T.drag_dy = in.mouse_y - w->y;
             return;
         }
-        if (btn == 1 && i == W_TILE && inside(w->x + w->w - GRIP, w->y + TITLE_H + w->h - GRIP, GRIP, GRIP)) {
+        if (btn == 1 && i == W_TILE && !T.min[i] && inside(w->x + w->w - GRIP, w->y + TITLE_H + w->h - GRIP, GRIP, GRIP)) {
             T.drag = 2; T.drag_win = i;                            /* corner: resize */
             T.drag_dx = w->x + w->w - in.mouse_x; T.drag_dy = w->y + TITLE_H + w->h - in.mouse_y;
             return;
@@ -827,12 +836,23 @@ static void draw_background(int *hx, int *hy) {
 static void window_frame(int i, const char *title) {
     const Win *w = &T.win[i];
     bool on = T.top == i;
-    draw_rect(w->x - 1, w->y - 1, w->w + 2, TITLE_H + w->h + 2, on ? UI_RGB(1, 2, 3) : UI_RGB(1, 1, 2), false);
+    int h = win_h(i);
+    draw_rect(w->x - 1, w->y - 1, w->w + 2, TITLE_H + h + 2, on ? UI_RGB(1, 2, 3) : UI_RGB(1, 1, 2), false);
     draw_rect(w->x, w->y, w->w, TITLE_H, on ? UI_RGB(0, 1, 2) : UI_RGB(0, 1, 1), true);
-    draw_rect(w->x, w->y + TITLE_H, w->w, w->h, UI_RGB(0, 0, 0), true);
-    draw_clip(w->x, w->y, w->w, TITLE_H);
+    if (h) draw_rect(w->x, w->y + TITLE_H, w->w, h, UI_RGB(0, 0, 0), true);
+    draw_clip(w->x, w->y, w->w - TITLE_H, TITLE_H);      /* the title stops short of the minimize box */
     draw_text(title, w->x + 2, w->y - 1, on ? COL_WHITE : UI_RGB(2, 2, 3));
     draw_clip_reset();
+    /* the minimize box: a dash while open, a little window while minimized */
+    int bx = min_box_x(i), by = w->y;
+    bool hover = in_min_box(i) && (T.top == i || !in_win(T.top));
+    if (hover) {
+        draw_rect(bx + 1, by + 1, TITLE_H - 2, TITLE_H - 2, UI_RGB(1, 2, 3), true);
+        T.hint = T.min[i] ? "open the window again" : "minimize: just the title bar";
+    }
+    int ink = hover ? COL_BLACK : on ? COL_WHITE : UI_RGB(2, 2, 3);
+    if (T.min[i]) draw_rect(bx + 2, by + 2, TITLE_H - 4, TITLE_H - 4, ink, false);
+    else draw_line(bx + 2, by + TITLE_H - 3, bx + TITLE_H - 3, by + TITLE_H - 3, ink);
 }
 
 /* the selection by itself, as a cart would draw it */
@@ -842,6 +862,7 @@ static void draw_preview(void) {
     if (T.bw * T.bh > 1) snprintf(title, sizeof title, "tiles %d %dx%d", T.sel, T.bw, T.bh);
     else snprintf(title, sizeof title, "tile %d", T.sel);
     window_frame(W_TILE, title);
+    if (T.min[W_TILE]) return;
     int s = preview_scale(), nw = bpw(), nh = bph(), cx, cy;
     preview_origin(&cx, &cy);
     draw_clip(w->x, w->y + TITLE_H, w->w, w->h);
@@ -851,7 +872,7 @@ static void draw_preview(void) {
             if (c == CLEAR) checker(cx + x * s, cy + y * s, s, s);
             else draw_rect(cx + x * s, cy + y * s, s, s, c, true);
         }
-    if (T.top == W_TILE && in_win(W_TILE)) T.hint = "preview: paint on the tileset, in the yellow box";
+    if (T.top == W_TILE && in_win(W_TILE) && !in_min_box(W_TILE)) T.hint = "preview: paint on the tileset, in the yellow box";
     /* the resize grip */
     for (int k = 0; k < GRIP; k += 2) draw_line(w->x + w->w - 1 - k, w->y + TITLE_H + w->h - 1, w->x + w->w - 1, w->y + TITLE_H + w->h - 1 - k, UI_RGB(2, 2, 3));
     draw_clip_reset();
@@ -864,6 +885,7 @@ static void button(int x, int y, int w, char label, bool on, bool hover) {
 
 static void draw_tools_window(void) {
     window_frame(W_TOOLS, "tools");
+    if (T.min[W_TOOLS]) return;
     int x, y, w;
     bool live = T.top == W_TOOLS || !in_win(W_TILE);
     for (int i = 0; i < NTOOLS; i++) {
