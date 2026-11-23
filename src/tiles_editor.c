@@ -7,8 +7,9 @@
  *     and the wheel zooms it around the mouse.
  *   - the selected tile (or a block of tiles), boxed in yellow, is the only
  *     part that can be painted: a stroke stops at its edge. Clicking outside
- *     it selects the tile clicked instead; Alt + drag selects every tile from
- *     where the drag started to where it is. Tile 0 is selected at first.
+ *     it selects the tile clicked instead; Shift+click there grows the
+ *     selection to take that tile in too (and keeps growing while dragged).
+ *     Inside it, Shift is the shapes' 1:1 key, as before. Tile 0 is selected at first.
  *   - the selection is also the map editor's pen: switch to the map and it
  *     paints with that tile, or stamps the whole block.
  *   - the preview window shows the selection by itself, at a size that fits.
@@ -70,7 +71,7 @@ static struct {
     bool placed;             /* windows put in their starting places */
     int placed_w;            /* the editor's width then: the windows keep to its right edge */
     int drag;                /* 0 none, 1 window move, 2 window resize, 3 pan, 4 paint, 5 select tiles */
-    int rs_t0, rs_sel, rs_bw, rs_bh;   /* Alt + drag: the tile it started on, and the selection before */
+    int rs_sel, rs_bw, rs_bh;   /* Shift+click outside the selection: the selection before it grew */
     int drag_win, drag_dx, drag_dy, pan_x, pan_y;
     int pan_btn, pan_sx, pan_sy;   /* the button panning, where it went down */
     bool pan_moved;          /* a middle click that didn't move picks a color instead */
@@ -563,6 +564,7 @@ static void pick_color(bool into_b) {
 }
 
 static bool ctrl_held(void) { return in.key[SDL_SCANCODE_LCTRL] || in.key[SDL_SCANCODE_RCTRL]; }
+static bool shift_held(void) { return in.key[SDL_SCANCODE_LSHIFT] || in.key[SDL_SCANCODE_RSHIFT]; }
 
 /* a left or right press on the sheet: paint inside the selection, select outside it.
  * With the eyedrop setting the right button picks a color up into A instead. */
@@ -615,7 +617,7 @@ static void sheet_drag(void) {
     } else {
         memcpy(TS, T.base, sizeof *TS);
         bool fill = T.alt[T.tool] != ctrl_held();
-        if (in.key[SDL_SCANCODE_LSHIFT] || in.key[SDL_SCANCODE_RSHIFT]) snap(&x, &y);
+        if (shift_held()) snap(&x, &y);
         if (T.tool == T_LINE) bline(T.x0, T.y0, x, y, c);
         else if (T.tool == T_OVAL) boval(T.x0, T.y0, x, y, c, fill);
         else brect(T.x0, T.y0, x, y, c, fill);
@@ -624,7 +626,6 @@ static void sheet_drag(void) {
     T.lasty = y;
 }
 
-static bool alt_held(void) { return in.key[SDL_SCANCODE_LALT] || in.key[SDL_SCANCODE_RALT]; }
 
 /* the sheet's tile column and row at the mouse, kept on the sheet */
 static void sheet_cell_at(int *col, int *row) {
@@ -637,16 +638,19 @@ static void sheet_cell_at(int *col, int *row) {
     if (*row >= SHEET_ROWS) *row = SHEET_ROWS - 1;
 }
 
-/* Alt + drag: the tiles from the one the drag started on to the one under the
- * mouse. Back on the first tile, the selection is what it was before. */
+/* Shift+click (and drag) outside the selection: the smallest block that holds
+ * both the selection as it was and the tile under the mouse */
 static void region_drag(void) {
-    int c1, r1;
-    sheet_cell_at(&c1, &r1);
-    int c0 = T.rs_t0 % SHEET_COLS, r0 = T.rs_t0 / SHEET_COLS;
-    if (c1 == c0 && r1 == r0) { T.sel = T.rs_sel; T.bw = T.rs_bw; T.bh = T.rs_bh; return; }
-    T.sel = (r0 < r1 ? r0 : r1) * SHEET_COLS + (c0 < c1 ? c0 : c1);
-    T.bw = abs(c1 - c0) + 1;
-    T.bh = abs(r1 - r0) + 1;
+    int c, r;
+    sheet_cell_at(&c, &r);
+    int c0 = T.rs_sel % SHEET_COLS, r0 = T.rs_sel / SHEET_COLS, c1 = c0 + T.rs_bw - 1, r1 = r0 + T.rs_bh - 1;
+    if (c < c0) c0 = c;
+    if (c > c1) c1 = c;
+    if (r < r0) r0 = r;
+    if (r > r1) r1 = r;
+    T.sel = r0 * SHEET_COLS + c0;
+    T.bw = c1 - c0 + 1;
+    T.bh = r1 - r0 + 1;
 }
 
 static void tools_press(int btn) {
@@ -740,12 +744,12 @@ static void mouse(void) {
         T.pan_moved = false;
         return;
     }
-    if (btn == 1 && alt_held()) {
-        int t = sheet_tile_at(in.mouse_x, in.mouse_y);
-        if (t < 0) return;
+    int bx, by;                       /* inside the selection, Shift is for the shapes */
+    if (btn == 1 && shift_held() && T.tool != T_PICK && !block_px_at(in.mouse_x, in.mouse_y, &bx, &by)) {
+        if (sheet_tile_at(in.mouse_x, in.mouse_y) < 0) return;
         T.drag = 5;
-        T.rs_t0 = t;
         T.rs_sel = T.sel; T.rs_bw = T.bw; T.rs_bh = T.bh;
+        region_drag();
         return;
     }
     if (btn == 1 || btn == 2) sheet_press(btn);
@@ -941,7 +945,7 @@ static void draw(void) {
     } else if (T.hint) draw_text(T.hint, x, by, UI_RGB(2, 3, 3));
     else if (ht >= 0) {
         snprintf(line, sizeof line, "tile %d (col %d row %d) x%d%s", ht, ht % SHEET_COLS, ht / SHEET_COLS, zooms[T.zoom],
-                 T.tool == T_PICK ? "" : "  click, Alt+drag: select");
+                 T.tool == T_PICK ? "" : "  click: select  Shift: add");
         draw_text(line, x, by, UI_RGB(2, 3, 3));
     } else draw_text("middle drag: pan  wheel: zoom", x, by, UI_RGB(1, 2, 2));
 }

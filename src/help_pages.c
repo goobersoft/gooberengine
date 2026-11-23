@@ -206,7 +206,7 @@ const HelpPage help_pages[] = {
     "- P F L R O I: pencil, fill, line, rectangle, oval, pick a color\n"
     "- While dragging a line, rectangle or oval: Shift keeps it 1:1 (a line snaps to across, up-down or 45 degrees; a rectangle becomes a square, an oval a circle). Ctrl fills a rectangle or oval, or, if it is set to filled, draws just its outline. A right click on the rectangle or oval button sets it to filled (marked with a dot) or back.\n"
     "- Fill paints over the pixels of the clicked color that touch it. A right click on its button (marked with a dot) makes it paint over every pixel of that color in the yellow box instead; Ctrl+click does the other one, once.\n"
-    "- Click a tile to edit it. Alt + drag: edit every tile from where the drag starts to where it ends, as one block (an Alt+click on one tile changes nothing).\n"
+    "- Click a tile to edit it. Shift+click a tile outside the yellow box to grow the box to take it in, as one block (drag to keep growing it). Inside the box, Shift keeps a shape 1:1 as usual.\n"
     "- H / V / T: flip across, flip up-down, turn (a square block only).\n"
     "- arrows: move to another tile. Shift+arrows: nudge the pixels.\n"
     "- Del: clear the block. X: swap colors A and B. G: grid. Home: reset the view.\n"
