@@ -315,9 +315,14 @@ maprow "tiles region: a 3x2 stamp" 0 "00 01 02"; maprow "tiles region: a 3x2 sta
 # a plain click outside the block selects just that tile again
 edit "tiles click resets" '{click:125,5}{f9}{down:left shift}{click:65,75}{mouse:65,75}{up:left shift}{click:185,15}{mouse:185,15}{click:89,5}{click:5,15}{ctrl+s}'
 maprow "tiles click resets: tile 3, 1x1" 0 "03"; maprow "tiles click resets: tile 3, 1x1" 1 ""
-# a click off the sheet (zoomed out, so the background shows) goes back to tile 0, 1x1
-edit "tiles off sheet" '{click:125,5}{f9}{click:185,15}{mouse:185,15}{down:left shift}{click:245,75}{mouse:245,75}{up:left shift}{-}{-}{click:20,30}{mouse:20,30}{click:89,5}{click:5,15}{ctrl+s}'
-maprow "tiles off sheet: tile 0, 1x1" 0 "00"; maprow "tiles off sheet: tile 0, 1x1" 1 ""
+# off the sheet (zoomed out, so the background shows) Ctrl or Shift + click goes back to tile 0, 1x1;
+# a plain click there leaves the selection alone (here a 2x2 from tile 3)
+edit "tiles off sheet ctrl" '{click:125,5}{f9}{click:185,15}{mouse:185,15}{down:left shift}{click:245,75}{mouse:245,75}{up:left shift}{-}{-}{down:left ctrl}{click:20,30}{mouse:20,30}{up:left ctrl}{click:89,5}{click:5,15}{ctrl+s}'
+maprow "tiles off sheet ctrl: tile 0, 1x1" 0 "00"; maprow "tiles off sheet ctrl: tile 0, 1x1" 1 ""
+edit "tiles off sheet shift" '{click:125,5}{f9}{click:185,15}{mouse:185,15}{down:left shift}{click:245,75}{mouse:245,75}{up:left shift}{-}{-}{down:left shift}{click:20,30}{mouse:20,30}{up:left shift}{click:89,5}{click:5,15}{ctrl+s}'
+maprow "tiles off sheet shift: tile 0, 1x1" 0 "00"
+edit "tiles off sheet plain" '{click:125,5}{f9}{click:185,15}{mouse:185,15}{down:left shift}{click:245,75}{mouse:245,75}{up:left shift}{-}{-}{click:20,30}{mouse:20,30}{click:89,5}{click:5,15}{ctrl+s}'
+maprow "tiles off sheet plain: still 2x2" 0 "03 04"; maprow "tiles off sheet plain: still 2x2" 1 "0H 0I"
 edit "tiles shift inside" '{click:125,5}{f9}{down:left shift}{click:65,75}{mouse:65,75}{click:3,13}{mouse:3,13}{up:left shift}{ctrl+s}{click:89,5}{click:5,15}{ctrl+s}'
 maprow "tiles shift inside: still 2x2" 0 "00 01"; maprow "tiles shift inside: still 2x2" 1 "0E 0F"; row "tiles shift inside: it paints" 0 0 '*.........'
 edit "map picks for tiles" '{click:161,5}{f9}{tab}{click:15,35}{mouse:15,35}{click:53,5}{click:63,73}{ctrl+s}';    row "map picks for tiles: tile 41 is selected" 41 0 '*.........'
