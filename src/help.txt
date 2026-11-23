@@ -217,7 +217,8 @@ The selection is also the {map-editor|map editor}'s brush: pick a tile (or a blo
 
 - Left button: draw with color A. Right button: pick up the color under the mouse into A (or, with the right click {settings|setting} on color B, draw with color B, which is transparent at first, so it erases).
 - Middle click: pick up a color. Middle drag, or Space + drag: pan. Wheel: zoom.
-- P F L R O I: pencil, fill, line, rectangle, oval (Shift: filled), pick a color
+- P F L R O I: pencil, fill, line, rectangle, oval, pick a color
+- While dragging a line, rectangle or oval: Shift keeps it 1:1 (a line snaps to across, up-down or 45 degrees; a rectangle becomes a square, an oval a circle). Ctrl fills a rectangle or oval.
 - Z: edit 1x1, 2x2 or 4x4 tiles. H / V / T: flip across, flip up-down, turn.
 - arrows: move to another tile. Shift+arrows: nudge the pixels.
 - Del: clear. X: swap colors A and B. G: grid. Home: reset the view.

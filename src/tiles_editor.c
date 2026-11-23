@@ -40,7 +40,7 @@
 
 enum { T_PENCIL, T_FILL, T_LINE, T_RECT, T_OVAL, T_PICK, NTOOLS };
 static const char tool_keys[NTOOLS] = {'P', 'F', 'L', 'R', 'O', 'I'};
-static const char *const tool_names[NTOOLS] = {"pencil (P)", "fill (F)", "line (L)", "rect (R), Shift: filled", "oval (O), Shift: filled", "pick a color (I)"};
+static const char *const tool_names[NTOOLS] = {"pencil (P)", "fill (F)", "line (L), Shift: snap to 45", "rect (R), Ctrl: filled, Shift: square", "oval (O), Ctrl: filled, Shift: circle", "pick a color (I)"};
 enum { A_SIZE, A_FLIPX, A_FLIPY, A_TURN, A_CLEAR, NACTS };
 static const char act_keys[NACTS] = {'Z', 'H', 'V', 'T', 'X'};
 static const char *const act_names[NACTS] = {"block size 1x1 / 2x2 / 4x4 (Z)", "flip across (H)", "flip up-down (V)", "turn clockwise (T)", "clear the block (Del)"};
@@ -562,6 +562,20 @@ static void sheet_press(int btn) {
     if (T.tool == T_PENCIL) bset(x, y, c);
 }
 
+/* Shift keeps a shape 1:1: a line snaps to across, up-down or 45 degrees, and a
+ * rect or oval's box becomes a square, as big as the drag's shorter side */
+static void snap(int *x, int *y) {
+    int dx = *x - T.x0, dy = *y - T.y0, ax = abs(dx), ay = abs(dy);
+    int d = ax < ay ? ax : ay;
+    if (T.tool == T_LINE) {
+        if (ay * 5 < ax * 2) { *y = T.y0; return; }    /* under about 22 degrees: across */
+        if (ax * 5 < ay * 2) { *x = T.x0; return; }    /* and up-down */
+        d = ax > ay ? ax : ay;                         /* a diagonal follows the mouse */
+    }
+    *x = T.x0 + (dx < 0 ? -d : d);
+    *y = T.y0 + (dy < 0 ? -d : d);
+}
+
 /* a stroke goes on while the button is held; bset leaves out what falls outside the block */
 static void sheet_drag(void) {
     int n = bpx(), x, y;
@@ -575,10 +589,11 @@ static void sheet_drag(void) {
         bline(T.lastx, T.lasty, x, y, c);
     } else {
         memcpy(TS, T.base, sizeof *TS);
-        bool shift = in.key[SDL_SCANCODE_LSHIFT] || in.key[SDL_SCANCODE_RSHIFT];
+        bool fill = in.key[SDL_SCANCODE_LCTRL] || in.key[SDL_SCANCODE_RCTRL];
+        if (in.key[SDL_SCANCODE_LSHIFT] || in.key[SDL_SCANCODE_RSHIFT]) snap(&x, &y);
         if (T.tool == T_LINE) bline(T.x0, T.y0, x, y, c);
-        else if (T.tool == T_OVAL) boval(T.x0, T.y0, x, y, c, shift);
-        else brect(T.x0, T.y0, x, y, c, shift);
+        else if (T.tool == T_OVAL) boval(T.x0, T.y0, x, y, c, fill);
+        else brect(T.x0, T.y0, x, y, c, fill);
     }
     T.lastx = x;
     T.lasty = y;
