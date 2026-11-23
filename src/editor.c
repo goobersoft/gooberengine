@@ -30,7 +30,7 @@
 /* the editor's chrome follows the theme (UI_RGB); the syntax colors below don't */
 #define C_BG UI_RGB(0, 0, 0)
 #define C_CURLINE (ui_theme == THEME_GREY ? RGB6(1, 1, 1) : UI_RGB(0, 0, 1))   /* grey has no shade between black and dark grey */
-#define C_SEL UI_RGB(1, 1, 2)
+#define C_SEL (ui_theme == THEME_GREY ? RGB6(2, 2, 2) : UI_RGB(1, 1, 2))   /* one step above C_CURLINE, which grey has taken */
 #define C_ERRLINE RGB6(1, 0, 0)
 #define C_BAR UI_RGB(0, 1, 2)
 #define C_GUTTER UI_RGB(1, 1, 2)

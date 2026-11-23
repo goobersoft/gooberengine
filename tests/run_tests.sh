@@ -464,15 +464,15 @@ edit "mus jump"    '{click:221,5}{f9}{ctrl+right}{ctrl+j}{ctrl+s}';            m
 edit "mus speed"   '{click:221,5}{f9}-{ctrl+s}';                               muhead "mus speed" '6000 00 '
 edit "mus undo"    '{click:221,5}{f9}z{ctrl+z}{ctrl+s}'
 [ "$(sed 1,2d "$MU" | grep -vc '^\.*$')" = 0 ] && ok || bad "mus undo: music.g64 still has notes" "$(cat "$MU")"
-# the piano roll (Ctrl+P), tree hidden: columns 10 px from x 66 (after the pattern list), a pitch every 6 px up from y 224;
-# with no notes it opens on pitches 14-45, so C-4 (24, 'o') is the lane around y 161
-edit "roll draw"   '{click:221,5}{f9}{ctrl+p}{click:71,161}{drag:101,161}{ctrl+s}'
+# the piano roll (Ctrl+P), tree hidden: columns 10 px from x 66 (after the strip on the left), a pitch every 6 px up from y 224;
+# with no notes it opens on pitches 13-46, so C-4 (24, 'o') is the lane around y 155
+edit "roll draw"   '{click:221,5}{f9}{ctrl+p}{click:71,155}{drag:101,155}{ctrl+s}'
 [ "$(sed -n 4p "$MU") $(sed -n 8p "$MU")" = "o050 ====" ] && ok || bad "roll draw: rows 0 and 4 are '$(sed -n 4p "$MU") $(sed -n 8p "$MU")'" "$(head -10 "$MU")"
 [ "$(sed -n 5,7p "$MU" | grep -vc '^\.*$')" = 0 ] && ok || bad "roll draw: rows 1-3 carry the note on" "$(head -10 "$MU")"
-edit "roll pitch"  '{click:221,5}{f9}{ctrl+p}{click:71,155}{ctrl+s}';          mushas "roll pitch" 'p050'
-edit "roll erase"  '{click:221,5}{f9}{ctrl+p}{click:71,161}{drag:101,161}{rclick:91,100}{ctrl+s}'
+edit "roll pitch"  '{click:221,5}{f9}{ctrl+p}{click:71,149}{ctrl+s}';          mushas "roll pitch" 'p050'
+edit "roll erase"  '{click:221,5}{f9}{ctrl+p}{click:71,155}{drag:101,155}{rclick:91,100}{ctrl+s}'
 [ "$(sed 1,2d "$MU" | grep -vc '^\.*$')" = 0 ] && ok || bad "roll erase: music.g64 still has notes" "$(head -10 "$MU")"
-edit "roll undo"   '{click:221,5}{f9}{ctrl+p}{click:71,161}{drag:101,161}{ctrl+z}{ctrl+s}'
+edit "roll undo"   '{click:221,5}{f9}{ctrl+p}{click:71,155}{drag:101,155}{ctrl+z}{ctrl+s}'
 [ "$(sed 1,2d "$MU" | grep -vc '^\.*$')" = 0 ] && ok || bad "roll undo: one stroke, one undo" "$(head -10 "$MU")"
 edit "roll keys"   '{click:221,5}{f9}{ctrl+p}{right}{right}c{ctrl+s}';         [ "$(sed -n 6p "$MU")" = s050 ] && ok || bad "roll keys: row 2 is '$(sed -n 6p "$MU")'"
 edit "mus unsaved" '{click:221,5}{f9}z{esc}new t2{enter}';                     said "mus unsaved" 'unsaved changes in the music'

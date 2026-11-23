@@ -267,7 +267,9 @@ static void apply(int area, int k, int val, int btn) {
         case 1:
             if (btn == 2) { st->vol = 0; break; }
             st->pitch = (uint8_t)clampi(val, 0, NPITCH - 1);
-            if (!st->vol) { st->vol = (uint8_t)S.pen_vol; st->wave = (uint8_t)S.pen_wave; }
+            st->vol = (uint8_t)S.pen_vol;            /* a drawn step takes the pens */
+            st->wave = (uint8_t)S.pen_wave;
+            st->fx = (uint8_t)S.pen_fx;
             break;
         case 2: st->vol = (uint8_t)clampi(btn == 2 ? 0 : val, 0, 7); break;
         case 3: if (btn == 2) S.pen_wave = st->wave; else st->wave = (uint8_t)S.pen_wave; break;

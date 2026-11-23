@@ -1,12 +1,18 @@
 /* The built-in music editor: a tracker.
  *
- *   speed - 8 +   order: [00][01][00][>0][ .][ .] ...     the song
- *   pat | row | track 1 | track 2 | ... | track 8          one pattern
- *  00 01|  00 | C-4 05. | ...     |
- *  02 03|
+ *   ord pat  | track 1 | track 2 | ... | track 8
+ *   00 00 00 | C-4 05. | ...
+ *   01 01 01 |
+ *   02>00 02 |
+ *   ...
+ *   speed
+ *   -24+
  *
- * The pattern list down the left picks the pattern to edit (Ctrl+PgUp /
- * PgDn); a right click, or Ctrl+Enter, puts it in the order entry.
+ * The strip down the left shows the song's order list (each entry's
+ * number, then the pattern it plays, >NN for a jump to entry NN, or . for
+ * a stop) or, picked by its header, the pattern list: a click there picks
+ * the pattern to edit (Ctrl+PgUp / PgDn), a right click, or Ctrl+Enter,
+ * puts it in the order entry. The song's speed sits under it.
  *
  * Each cell is note, wave, volume, effect. The cursor sits on one of
  * those four fields: on the note, the Z..M / Q..U keys play and enter
@@ -26,49 +32,39 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define SONG_Y 11
-#define ORDER_LABEL_X 80      /* "order 02 <" then the entries, then ">" */
-#define ORDER_IDX_X 116
-#define ORDER_PREV_X 132
-#define ORDER_X 142
-#define ORDER_W 18
-#define ORDER_NEXT_X (UI_W - 8)
-#define ORDER_SHOWN ((ORDER_NEXT_X - 2 - ORDER_X) / ORDER_W)
-#define HEAD_Y 23
-#define GRID_Y 33
-#define ROWS_SHOWN 19
+#define HEAD_Y 11
+#define GRID_Y 21
+#define ROWS_SHOWN 20
+#define SIDE_W 30             /* the strip down the left: the order list or the pattern list, the speed under it */
+#define SIDE_ROWS 18          /* order entries shown */
+#define SPEED_Y (GRID_Y + SIDE_ROWS * FONT_H)   /* "speed", and under it "-24+" */
+#define TAB_ORD_X 1           /* the strip's header: "ord" "pat" */
+#define TAB_PAT_X 23
+#define TAB_W 20
 #define TW 44                 /* track width: "C-4 05." + gap */
 #define CELL_W (7 * FONT_W)
 #define TSHOWN ((UI_W - GX - CELL_W) / TW + 1 < NTRACKS ? (UI_W - GX - CELL_W) / TW + 1 : NTRACKS)   /* tracks on screen */
 #define MAX_UNDO 32
 #define PREVIEW_VOICE (NVOICES - 1)
-#define LIST_X 2              /* the pattern list down the left, two columns of 16 */
+#define LIST_X 2              /* the pattern list: two columns of 16 */
 #define LIST_ROW 10
 #define LIST_COL 14
 #define LIST_W (2 * LIST_COL)
 #define TRK_X 50              /* roll header: "trk 1 2 ... 8" */
-static bool narrow;           /* beside the file tree: no pattern list (Ctrl+PgUp / PgDn) */
-static int GX = 20;           /* first track's x */
-static int KEYS_X = 14;       /* roll: the keyboard, octave labels left of it */
-static int RX = 36;           /* roll: first column's x */
-static int ROWNUM_X = 2;      /* grid: the row numbers */
-
-static void layout(void) {
-    narrow = UI_W < LIST_W + 20 + 7 * TW + CELL_W;
-    int s = narrow ? 0 : LIST_W + 2;
-    GX = 20 + s;
-    KEYS_X = 14 + s;
-    RX = 36 + s;
-    ROWNUM_X = 2 + s;
-}
+#define GX (SIDE_W + 20)      /* first track's x */
+#define KEYS_X (SIDE_W + 14)  /* roll: the keyboard, octave labels left of it */
+#define RX (SIDE_W + 36)      /* roll: first column's x */
+#define ROWNUM_X (SIDE_W + 4) /* grid: the row numbers */
 #define PH 6                  /* roll: pixels per pitch */
-#define PSHOWN 32             /* roll: pitches on screen */
+#define PSHOWN 34             /* roll: pitches on screen */
 #define ROLL_BOTTOM (GRID_Y + PSHOWN * PH)
 #define CW (UI_W - RX - 1 < PATTERN_ROWS * 4 ? 4 : (UI_W - RX - 1) / PATTERN_ROWS)   /* roll: column width */
-#define PEN_X 158             /* roll header: "wave - 0 +  vol - 5 +" */
-#define VOLPEN_X 226
+#define PEN_X 154             /* roll header: "wave - 0 +  vol - 5 +  fx - . +" */
+#define VOLPEN_X 218
+#define FXPEN_X 280
 
 enum { F_NOTE, F_WAVE, F_VOL, F_FX };
+enum { SIDE_ORDER, SIDE_PATTERNS };
 
 typedef struct { Pattern patterns[NPATTERNS]; OrderEntry order[ORDER_LEN]; uint8_t speed; } SongSnap;
 
@@ -76,10 +72,11 @@ static struct {
     bool ready;
     int pat;                  /* pattern shown */
     int opos;                 /* order entry selected */
-    int oscroll;
+    int oscroll;              /* first order entry shown */
+    int side;                 /* what the strip on the left shows: SIDE_ORDER / SIDE_PATTERNS */
     int row, track, field;
     int top;
-    int octave, pen_wave, pen_vol;
+    int octave, pen_wave, pen_vol, pen_fx;   /* the pens: what drawn and entered notes take */
     SongSnap undo[MAX_UNDO], redo[MAX_UNDO];
     int tleft;                /* first track shown (they don't all fit beside the file tree) */
     bool roll;                /* the piano roll instead of the tracker grid (Ctrl+P) */
@@ -171,7 +168,13 @@ static void preview(const Cell *c) {
 
 /* ---------------------------------------------------------------- the order list */
 
-static void select_pattern(int p) { U.pat = clampi(p, 0, NPATTERNS - 1); }
+static void select_pattern(int p) { U.pat = clampi(p, 0, NPATTERNS - 1); U.side = SIDE_PATTERNS; }
+
+/* scroll the order list to the selected entry */
+static void order_show(void) {
+    if (U.opos < U.oscroll) U.oscroll = U.opos;
+    if (U.opos >= U.oscroll + SIDE_ROWS) U.oscroll = U.opos - SIDE_ROWS + 1;
+}
 
 /* the selected order entry plays pattern p */
 static void assign_pattern(int p) {
@@ -189,6 +192,8 @@ static bool pattern_used(int p) {
 
 static void select_entry(int i) {
     U.opos = clampi(i, 0, ORDER_LEN - 1);
+    U.side = SIDE_ORDER;
+    order_show();
     if (cur_song->order[U.opos].kind == ORDER_PATTERN) U.pat = cur_song->order[U.opos].value;
 }
 
@@ -279,11 +284,9 @@ static void roll_toggle(void) {
 static void roll_place(int r0, int r1, int p) {
     for (int r = 0; r < PATTERN_ROWS; r++) *at(r, U.track) = U.col[r];
     Cell *c = at(r0, U.track);
-    if (U.col[r0].kind != CELL_NOTE) {        /* a new note takes the pens; an old one keeps its sound */
-        c->wave = (uint8_t)U.pen_wave;
-        c->vol = (uint8_t)(U.pen_vol ? U.pen_vol : 5);
-        c->fx = FX_NONE;
-    }
+    c->wave = (uint8_t)U.pen_wave;           /* a drawn note takes the pens */
+    c->vol = (uint8_t)(U.pen_vol ? U.pen_vol : 5);
+    c->fx = (uint8_t)U.pen_fx;
     c->kind = CELL_NOTE;
     c->pitch = (uint8_t)p;
     for (int r = r0 + 1; r <= r1; r++) *at(r, U.track) = (Cell){CELL_EMPTY, 24, 0, 0, 0};
@@ -306,7 +309,7 @@ static void enter_note(int semitone) {
     bool fresh = c->kind != CELL_NOTE;
     c->kind = CELL_NOTE;
     c->pitch = (uint8_t)clampi(U.octave * 12 + semitone, 0, NPITCH - 1);
-    if (fresh) { c->wave = (uint8_t)U.pen_wave; c->vol = (uint8_t)U.pen_vol; c->fx = FX_NONE; }
+    if (fresh) { c->wave = (uint8_t)U.pen_wave; c->vol = (uint8_t)U.pen_vol; c->fx = (uint8_t)U.pen_fx; }
     if (U.roll) roll_show(c->pitch);
     preview(c);
     advance();
@@ -329,7 +332,7 @@ static void type_field(char ch) {
         const char *f = strchr(fx_chars, ch);
         if (!f || !ch) return;
         before_change();
-        c->fx = (uint8_t)(f - fx_chars);
+        c->fx = (uint8_t)(U.pen_fx = (int)(f - fx_chars));
     }
     preview(c);
     advance();
@@ -378,9 +381,9 @@ static void key(const KeyEvent *ev) {
             case SDL_SCANCODE_PAGEUP: select_pattern(U.pat - 1); return;
             case SDL_SCANCODE_PAGEDOWN: select_pattern(U.pat + 1); return;
             case SDL_SCANCODE_RETURN: assign_pattern(U.pat); return;
-            case SDL_SCANCODE_J: before_change(); cur_song->order[U.opos] = (OrderEntry){ORDER_JUMP, 0}; return;
-            case SDL_SCANCODE_PERIOD: before_change(); cur_song->order[U.opos] = (OrderEntry){ORDER_STOP, 0}; return;
-            case SDL_SCANCODE_I: case SDL_SCANCODE_INSERT: insert_entry(); return;
+            case SDL_SCANCODE_J: before_change(); cur_song->order[U.opos] = (OrderEntry){ORDER_JUMP, 0}; U.side = SIDE_ORDER; return;
+            case SDL_SCANCODE_PERIOD: before_change(); cur_song->order[U.opos] = (OrderEntry){ORDER_STOP, 0}; U.side = SIDE_ORDER; return;
+            case SDL_SCANCODE_I: case SDL_SCANCODE_INSERT: insert_entry(); U.side = SIDE_ORDER; return;
             case SDL_SCANCODE_DELETE: case SDL_SCANCODE_BACKSPACE: delete_entry(); return;
             default: return;
         }
@@ -483,11 +486,12 @@ static void roll_mouse(int btn) {
     const struct { int x, *pen, lo, hi, d; } pens[] = {
         {PEN_X + 30, &U.pen_wave, 0, WAVE_NOISE, -1}, {PEN_X + 54, &U.pen_wave, 0, WAVE_NOISE, 1},
         {VOLPEN_X + 24, &U.pen_vol, 1, 7, -1}, {VOLPEN_X + 48, &U.pen_vol, 1, 7, 1},
+        {FXPEN_X + 18, &U.pen_fx, 0, NFX - 1, -1}, {FXPEN_X + 42, &U.pen_fx, 0, NFX - 1, 1},
     };
     for (size_t i = 0; i < sizeof pens / sizeof pens[0]; i++)
         if (inside(pens[i].x - 1, HEAD_Y, 8, 10)) { *pens[i].pen = clampi(*pens[i].pen + pens[i].d, pens[i].lo, pens[i].hi); return; }
     if (over_keys() && btn == 1) {            /* a key of the keyboard: hear it */
-        Cell c = {CELL_NOTE, (uint8_t)roll_pitch(), (uint8_t)U.pen_wave, (uint8_t)(U.pen_vol ? U.pen_vol : 5), FX_NONE};
+        Cell c = {CELL_NOTE, (uint8_t)roll_pitch(), (uint8_t)U.pen_wave, (uint8_t)(U.pen_vol ? U.pen_vol : 5), (uint8_t)U.pen_fx};
         preview(&c);
         return;
     }
@@ -509,26 +513,29 @@ static void roll_mouse(int btn) {
 static void mouse(void) {
     int btn = in.mouse_hit[1] ? 1 : in.mouse_hit[2] ? 2 : 0;
     if (btn == 1 && inside(view_btn_x(), SCREEN_H - FONT_H, VIEW_BTN_W, FONT_H)) { roll_toggle(); return; }
-    if (btn == 1 && inside(ORDER_PREV_X - 1, SONG_Y, 8, 10)) { select_entry(U.opos - 1); return; }
-    if (btn == 1 && inside(ORDER_NEXT_X - 1, SONG_Y, 8, 10)) { select_entry(U.opos + 1); return; }
-    if (inside(ORDER_X, SONG_Y, ORDER_SHOWN * ORDER_W, 10)) {
-        int i = U.oscroll + (in.mouse_x - ORDER_X) / ORDER_W;
+    if (btn == 1 && inside(TAB_ORD_X - 1, HEAD_Y, TAB_W, FONT_H)) { U.side = SIDE_ORDER; return; }
+    if (btn == 1 && inside(TAB_PAT_X - 1, HEAD_Y, TAB_W, FONT_H)) { U.side = SIDE_PATTERNS; return; }
+    /* the order list: click picks an entry, right click makes it a pattern / jump / stop;
+     * the wheel changes the picked entry's pattern (or jump), and scrolls over the others */
+    if (U.side == SIDE_ORDER && inside(0, GRID_Y, SIDE_W, SIDE_ROWS * FONT_H)) {
+        int i = U.oscroll + (in.mouse_y - GRID_Y) / FONT_H;
         if (btn) select_entry(i);
         if (btn == 2) cycle_entry_kind();
-        if (in.wheel) { select_entry(i); change_entry(in.wheel > 0 ? 1 : -1); }
+        if (in.wheel && i == U.opos) change_entry(in.wheel > 0 ? 1 : -1);
+        else if (in.wheel) U.oscroll = clampi(U.oscroll - in.wheel * 2, 0, ORDER_LEN - SIDE_ROWS);
         return;
     }
     /* the pattern list: left click edits one, right click puts it in the order entry */
-    if (!narrow && inside(LIST_X, GRID_Y, LIST_W, (NPATTERNS / 2) * LIST_ROW)) {
+    if (U.side == SIDE_PATTERNS && inside(LIST_X, GRID_Y, LIST_W, (NPATTERNS / 2) * LIST_ROW)) {
         int p = ((in.mouse_y - GRID_Y) / LIST_ROW) * 2 + (in.mouse_x - LIST_X) / LIST_COL;
         if (btn == 1) select_pattern(p);
         if (btn == 2) assign_pattern(p);
         if (in.wheel) select_pattern(U.pat - in.wheel);
         return;
     }
-    if (btn && (inside(36, SONG_Y, 8, 10) || inside(62, SONG_Y, 8, 10))) {
+    if (btn && (inside(1, SPEED_Y + FONT_H, 7, FONT_H) || inside(19, SPEED_Y + FONT_H, 8, FONT_H))) {   /* speed's - and + */
         before_change();
-        cur_song->song_speed = (uint8_t)clampi(cur_song->song_speed + (in.mouse_x < 50 ? -1 : 1), 1, 64);
+        cur_song->song_speed = (uint8_t)clampi(cur_song->song_speed + (in.mouse_x < 14 ? -1 : 1), 1, 64);
         return;
     }
     if (U.roll) { roll_mouse(btn); return; }
@@ -557,8 +564,6 @@ static void draw_grid(int mpos, int mpat, int mrow) {
     if (U.track < U.tleft) U.tleft = U.track;
     if (U.track >= U.tleft + TSHOWN) U.tleft = U.track - TSHOWN + 1;
     U.tleft = clampi(U.tleft, 0, NTRACKS - TSHOWN);
-    snprintf(buf, sizeof buf, narrow ? "%02d" : "pat: %02d", U.pat);    /* beside the tree, track 1 starts at 20 */
-    draw_text(buf, 2, HEAD_Y, COL_YELLOW);
     for (int k = 0; k < TSHOWN; k++) {
         int t = U.tleft + k;
         snprintf(buf, sizeof buf, "track %d", t + 1);
@@ -605,8 +610,6 @@ static void draw_roll(int mpat, int mrow) {
     int hover = over_roll() || over_keys() ? roll_pitch() : -1;
 
     /* header: which track, the pens new notes take */
-    snprintf(buf, sizeof buf, "pat: %02d", U.pat);
-    draw_text(buf, 2, HEAD_Y, COL_YELLOW);
     draw_text("trk", TRK_X, HEAD_Y, UI_RGB(1, 2, 2));
     for (int t = 0; t < NTRACKS; t++) {
         int x = TRK_X + 20 + t * 10;
@@ -617,6 +620,8 @@ static void draw_roll(int mpat, int mrow) {
     draw_text(buf, PEN_X, HEAD_Y, COL_CYAN);
     snprintf(buf, sizeof buf, "vol - %d +", U.pen_vol);
     draw_text(buf, VOLPEN_X, HEAD_Y, UI_RGB(3, 1, 2));
+    snprintf(buf, sizeof buf, "fx - %c +", fx_chars[U.pen_fx % NFX]);
+    draw_text(buf, FXPEN_X, HEAD_Y, COL_ORANGE);
 
     /* the lanes: dark for black keys, a line where each octave starts */
     for (int i = 0; i < PSHOWN; i++) {
@@ -669,49 +674,59 @@ static void draw_roll(int mpat, int mrow) {
     }
 }
 
+/* the strip down the left: its header, the order list or the pattern list, the speed */
+static void draw_side(int mpos, int mpat) {
+    char buf[16];
+    draw_rect(0, HEAD_Y, SIDE_W, SCREEN_H - FONT_H - HEAD_Y, UI_RGB(0, 0, 1), true);
+    static const char *const tabs[2] = {"ord", "pat"};
+    for (int t = 0; t < 2; t++) {
+        int x = t == SIDE_ORDER ? TAB_ORD_X : TAB_PAT_X;
+        bool hot = inside(x - 1, HEAD_Y, TAB_W, FONT_H);
+        if (t == U.side) draw_rect(x - 1, HEAD_Y, TAB_W, FONT_H, UI_RGB(1, 2, 3), true);
+        draw_text(tabs[t], x, HEAD_Y, t == U.side ? COL_BLACK : hot ? COL_YELLOW : UI_RGB(1, 2, 2));
+    }
+    if (U.side == SIDE_ORDER)         /* "03 01": entry 3 plays pattern 1; "04>00" jumps to entry 0; "05  ." stops */
+        for (int k = 0; k < SIDE_ROWS; k++) {
+            int i = U.oscroll + k, y = GRID_Y + k * FONT_H;
+            const OrderEntry *e = &cur_song->order[i];
+            bool sel = i == U.opos;
+            if (sel) draw_rect(0, y, SIDE_W, FONT_H, UI_RGB(1, 2, 3), true);
+            snprintf(buf, sizeof buf, "%02d", i);
+            draw_text(buf, 1, y, sel ? COL_BLACK : i % 8 == 0 ? UI_RGB(2, 2, 3) : UI_RGB(1, 1, 2));
+            if (e->kind == ORDER_PATTERN) snprintf(buf, sizeof buf, " %02d", e->value);
+            else if (e->kind == ORDER_JUMP) snprintf(buf, sizeof buf, ">%02d", e->value);
+            else snprintf(buf, sizeof buf, "  .");
+            int c = sel ? COL_BLACK : i == mpos ? COL_YELLOW : e->kind == ORDER_STOP ? UI_RGB(1, 1, 2) : e->kind == ORDER_JUMP ? COL_ORANGE : COL_WHITE;
+            draw_text(buf, 1 + 2 * FONT_W, y, c);
+        }
+    else
+        for (int p = 0; p < NPATTERNS; p++) {
+            int lx = LIST_X + (p % 2) * LIST_COL, ly = GRID_Y + (p / 2) * LIST_ROW;
+            if (p == U.pat) draw_rect(lx - 1, ly, LIST_COL, LIST_ROW, UI_RGB(1, 2, 3), true);
+            snprintf(buf, sizeof buf, "%02d", p);
+            int c = p == U.pat ? COL_BLACK : p == mpat ? COL_YELLOW : pattern_used(p) ? COL_WHITE : UI_RGB(1, 1, 2);
+            draw_text(buf, lx, ly, c);
+        }
+    int sy = SPEED_Y + FONT_H;
+    draw_text("speed", 1, SPEED_Y, UI_RGB(2, 3, 3));
+    draw_char('-', 2, sy, inside(1, sy, 7, FONT_H) ? COL_YELLOW : COL_WHITE);
+    snprintf(buf, sizeof buf, "%2d", cur_song->song_speed);
+    draw_text(buf, 8, sy, UI_RGB(2, 3, 3));
+    draw_char('+', 20, sy, inside(19, sy, 8, FONT_H) ? COL_YELLOW : COL_WHITE);
+}
+
 static void draw(void) {
     draw_reset();
     draw_cls(COL_BLACK);
     char buf[128];
     int mpos = synth_music_pos(), mpat = synth_music_pattern(), mrow = synth_music_row();
-    if (mpos >= 0) { U.opos = mpos; U.pat = mpat; }          /* follow the song while it plays */
+    if (mpos >= 0) { U.opos = mpos; U.pat = mpat; order_show(); }   /* follow the song while it plays */
 
-    /* song: speed and the order list */
-    snprintf(buf, sizeof buf, "speed - %-2d +", cur_song->song_speed);
-    draw_text(buf, 2, SONG_Y, UI_RGB(2, 3, 3));
-    draw_text("order", ORDER_LABEL_X, SONG_Y, UI_RGB(2, 2, 3));
-    snprintf(buf, sizeof buf, "%02d", U.opos);
-    draw_text(buf, ORDER_IDX_X, SONG_Y, COL_YELLOW);
-    bool hot_prev = inside(ORDER_PREV_X - 1, SONG_Y, 8, 10), hot_next = inside(ORDER_NEXT_X - 1, SONG_Y, 8, 10);
-    draw_char('<', ORDER_PREV_X, SONG_Y, U.opos > 0 ? (hot_prev ? COL_YELLOW : COL_WHITE) : UI_RGB(1, 1, 2));
-    draw_char('>', ORDER_NEXT_X, SONG_Y, U.opos < ORDER_LEN - 1 ? (hot_next ? COL_YELLOW : COL_WHITE) : UI_RGB(1, 1, 2));
-    if (U.opos < U.oscroll) U.oscroll = U.opos;
-    if (U.opos >= U.oscroll + ORDER_SHOWN) U.oscroll = U.opos - ORDER_SHOWN + 1;
-    for (int k = 0; k < ORDER_SHOWN; k++) {
-        int i = U.oscroll + k;
-        if (i >= ORDER_LEN) break;
-        const OrderEntry *e = &cur_song->order[i];
-        int x = ORDER_X + k * ORDER_W;
-        if (i == U.opos) draw_rect(x, SONG_Y, ORDER_W - 1, 10, UI_RGB(1, 2, 3), true);
-        if (e->kind == ORDER_PATTERN) snprintf(buf, sizeof buf, "%02d", e->value);
-        else if (e->kind == ORDER_JUMP) snprintf(buf, sizeof buf, ">%d", e->value);
-        else snprintf(buf, sizeof buf, " .");
-        int c = i == U.opos ? COL_BLACK : i == mpos ? COL_YELLOW : e->kind == ORDER_STOP ? UI_RGB(1, 1, 2) : e->kind == ORDER_JUMP ? COL_ORANGE : COL_WHITE;
-        draw_text(buf, x + 3, SONG_Y, c);
-    }
-
-    /* the pattern list */
-    if (!narrow) draw_rect(0, GRID_Y, LIST_X + LIST_W, (NPATTERNS / 2) * LIST_ROW, UI_RGB(0, 0, 1), true);
-    for (int p = 0; p < NPATTERNS && !narrow; p++) {
-        int lx = LIST_X + (p % 2) * LIST_COL, ly = GRID_Y + (p / 2) * LIST_ROW;
-        if (p == U.pat) draw_rect(lx - 1, ly, LIST_COL, LIST_ROW, UI_RGB(1, 2, 3), true);
-        snprintf(buf, sizeof buf, "%02d", p);
-        int c = p == U.pat ? COL_BLACK : p == mpat ? COL_YELLOW : pattern_used(p) ? COL_WHITE : UI_RGB(1, 1, 2);
-        draw_text(buf, lx, ly, c);
-    }
+    draw_side(mpos, mpat);
 
     if (U.roll) draw_roll(mpat, mrow);
     else draw_grid(mpos, mpat, mrow);
+    draw_line(SIDE_W, GRID_Y, SIDE_W, SCREEN_H - FONT_H - 1, UI_RGB(1, 1, 2));   /* the strip's edge */
 
     /* bars */
     ui_draw_tabs();
@@ -740,12 +755,11 @@ static void draw(void) {
 /* the tree opened another song: its undo history doesn't apply */
 void music_doc_changed(void) {
     U.nundo = U.nredo = 0;
-    U.opos = U.pat = U.row = U.top = 0;
+    U.opos = U.oscroll = U.pat = U.row = U.top = 0;
 }
 
 void music_frame(void) {
     init();
-    layout();
     if (!cart.loaded) { ui_switch(MODE_SHELL); return; }
     for (int i = 0; i < in.nevents && ui_mode == MODE_MUSIC; i++) {
         const KeyEvent *ev = &in.events[i];

@@ -248,6 +248,7 @@ A cart draws the map with {map_draw} and reads it with {map_get}.
 - Left / Right: move along the steps. Up / Down: the step's pitch.
 - Tab: the step's effect: . none, s slide, v vibrato, d drop, < fade in, > fade out, a arpeggio
 - , / .: the wave pen. - / =: speed.
+- Drawing pitches with the mouse gives each step the wave, volume and effect pens.
 - Ctrl+L: end here. Ctrl+B / Ctrl+E: loop from / to this step.
 - PgUp / PgDn: previous / next effect. Space: play. Esc: stop, then the shell.
 - Ctrl+C / V: copy / paste an effect. Ctrl+Z / Y, Ctrl+S, Ctrl+R: undo, redo, save, run.
@@ -260,12 +261,13 @@ A cart plays the effects with {sfx}.
 - Z...M, Q...U on the note field: enter a note. 1: note off.
 - hex digit or n / 0 to 7 / effect letters: the wave / volume / effect, on those fields
 - arrows, PgUp/PgDn, Home/End, Tab: move
-- Del / Backspace: clear a cell. [ / ]: octave. - / =: song speed.
-- Ctrl+Left / Right, or the < > arrows: pick an order entry (its number shows after "order"). Ctrl+Up / Down: change its pattern.
-- the pattern list on the left, or Ctrl+PgUp / PgDn: the pattern to edit. Right click or Ctrl+Enter: put it in the order entry.
+- Del / Backspace: clear a cell. [ / ]: octave. - / =, or the - + under "speed": song speed.
+- the strip on the left shows the order list ("ord") or the pattern list ("pat"); click its header to switch.
+- order list: each entry's number, then its pattern, >NN for a jump to entry NN, or . for a stop. Click, or Ctrl+Left / Right: pick an entry. Ctrl+Up / Down, or the wheel on the picked entry: change its pattern. Right click: pattern / jump / stop.
+- pattern list, or Ctrl+PgUp / PgDn: the pattern to edit. Right click or Ctrl+Enter: put it in the order entry.
 - Ctrl+J, Ctrl+.: make the entry a jump, a stop. Ctrl+I / Ctrl+Del: insert / delete one.
 - Space: play the song. Shift+Space: loop the pattern. Esc: stop, then the shell.
-- Ctrl+P: the piano roll (draw notes with the mouse) and back.
+- Ctrl+P: the piano roll (draw notes with the mouse) and back. Drawn notes take the wave, vol and fx pens in its header; typing on a field picks that pen too.
 - Ctrl+C / X / V: copy, cut, paste a pattern. Ctrl+Z / Y, Ctrl+S, Ctrl+R: undo, redo, save, run.
 
 A cart plays the song with {music}.
