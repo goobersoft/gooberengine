@@ -524,7 +524,7 @@ For lists use {eachin}. {exit} leaves the loop, {continue} goes on to the next n
     next
 Visits every item of a {list}, first to last. The loop variable must have the list's type; without {strict} it gets it on its own. Removing items (this one or others) inside the loop is safe.
     for local e:t_enemy = eachin enemies
-      if e.hp <= 0 then list_remove(enemies, e)
+      if e.hp <= 0 then remove(enemies, e)
     next
 `for ... = each t_type`, from BlitzBasic, was removed: keep your objects in a list.
 
@@ -648,26 +648,31 @@ Makes a new object of a {type}, with every field at 0, "" or null, or a new empt
     if target = null then target = find_target()
     boss = null
 
-@ delete first last after before | delete (removed)
-BlitzBasic's `delete`, `first`, `last`, `after`, `before` and `for ... = each` are not in GooberBASIC: types don't keep a hidden list of their objects.
+@ delete after before | delete (removed)
+BlitzBasic's `delete`, `after`, `before` and `for ... = each` are not in GooberBASIC: types don't keep a hidden list of their objects. (`first` and `last` work on a {list}.)
 - To get rid of an object, stop referring to it: set its variable to {null} or remove it from its list.
 - To visit every object, keep them in a {list} and use {eachin}.
 
-@ list list_add_last list_add_first list_remove list_contains count_list list_is_empty clear_list | Lists
+@ list add_last add_first insert first last remove_first remove_last remove contains count is_empty clear | Lists
 A list holds values of one type: `int list`, `string list`, `t_enemy list`. Make one with {new}.
     local q:int list = new int list
-    list_add_last(q, 20)
-    list_add_first(q, 10)
+    add_last(q, 20)
+    add_first(q, 10)
+    insert(q, 2, 15)    ' 15 becomes item 2
     for local n:int = eachin q
-      print(n)          ' 10, then 20
+      print(n)          ' 10, 15, then 20
     next
-- `list_add_last(list, value)`, `list_add_first(list, value)`: add an item at the end / the start
-- `list_remove(list, value)`: remove the first item that matches
-- `list_contains(list, value)`: 1 if it's there
-- `count_list(list)`: how many items
-- `list_is_empty(list)`: 1 if there are none
-- `clear_list(list)`: remove them all
-Numbers and strings are compared by value, objects by identity. Putting the wrong type in is a compile error (an int into a float list is converted). Lists can't hold null or other lists. See {eachin}.
+Items count from 1.
+- `add_last(list, value)`, `add_first(list, value)`: add an item at the end / the start
+- `insert(list, n, value)`: make it item n; below 1 goes first, past the end goes last
+- `first(list)`, `last(list)`: the first / last item
+- `remove_first(list)`, `remove_last(list)`: take the first / last item out and return it
+- `remove(list, value)`: take out the first item that matches; its position, or 0
+- `contains(list, value)`: the position of the first match, or 0
+- `count(list)`: how many items
+- `is_empty(list)`: 1 if there are none
+- `clear(list)`: remove them all
+`first`, `last`, `remove_first` and `remove_last` give the list's own type (`first(enemies).hp`) and stop with an error on an empty list. A variable named `count` or `first` still works. Numbers and strings are compared by value, objects by identity. Putting the wrong type in is a compile error (an int into a float list is converted). Lists can't hold null or other lists. See {eachin}.
 
 @ arrays [ ] | Arrays
     local scores:int[10]        ' scores[0] to scores[9]
@@ -723,7 +728,7 @@ A table of values written into the code. `restore(NAME)` points at a block, and 
 An object, string, array or list stays alive while anything refers to it: a variable, a field, an array element or a list. Once nothing does, it is freed on its own, even groups that only refer to each other.
 - `gc_collect()`: free everything unreachable now
 - `gc_mem_alloced()`: bytes used by live objects
-You rarely need either: set a variable to {null}, or {list_remove} the item, and the memory comes back.
+You rarely need either: set a variable to {null}, or {remove} the item, and the memory comes back.
 
 ; ---------------------------------------------------------------- core commands
 @ core-commands builtins | Core commands
@@ -734,7 +739,7 @@ These come with GooberBASIC itself.
 - Maths: {abs}, {sgn}, {min}, {max}, {sin}, {cos}, {atan2}, {sqr}, {exp}, {log}, {floor}, {ceil}, {round}, {distance}, {rects_overlap}
 - Strings: {len}, {left}, {mid}, {instr}, {replace}, {upper}, {trim}, {chr}, {asc}, {hex}, {str}
 - Data: {defdata}, {restore}, {read_int}
-- Lists: {list|list_add_last and the rest}
+- Lists: {list|add_last, first, remove and the rest}
 - Memory: {gc_collect}
 
 @ print write input | print, write, input

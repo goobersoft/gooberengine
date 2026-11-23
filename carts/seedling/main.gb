@@ -58,15 +58,15 @@ function new_round()
   seeds_left = seeds_total
   px = START_X : py = START_Y
   frames = 0 : hurt = 0 : won = false
-  clear_list(beetles)
-  while count_list(beetles) < 6
+  clear(beetles)
+  while count(beetles) < 6
     local b:t_beetle = new t_beetle
     b.x = rand(10, WORLD_W - 10) * TILE_SIZE
     b.y = rand(10, WORLD_H - 10) * TILE_SIZE
     if not blocked(b.x, b.y)
       local a:float = rnd(0, 360)
       b.dx = cos(a) * 0.8 : b.dy = sin(a) * 0.8
-      list_add_last(beetles, b)
+      add_last(beetles, b)
     endif
   wend
 endfunction

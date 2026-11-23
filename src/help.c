@@ -288,7 +288,7 @@ static bool is_code_word(const char *name) {
     /* words written in code that the lexer reads as plain names: constants, the list type, and
      * other BASICs' words that have a page saying what to use instead */
     static const char *const more[] = {"true", "false", "pi", "list", "break", "stop", "data",
-        "first", "last", "after", "before", NULL};
+        "after", "before", NULL};
     for (int i = 0; more[i]; i++) if (!strcmp(lower, more[i])) return true;
     const ConstDef *tables[] = {gb_gfx_consts, gb_net_consts};
     for (int t = 0; t < 2; t++)
@@ -528,7 +528,8 @@ int help_check(void) {
     static const char *const more[] = {"endwhile", "rem", "endrem", "true", "false", "pi", "list",
         "int", "float", "double", "byte", "short", "long", "string", "uint8", "sint8", "uint16", "sint16",
         "uint32", "sint32", "uint64", "sint64", "len", "str", "abs", "sgn", "min", "max",
-        "list_add_last", "list_add_first", "list_remove", "list_contains", "count_list", "list_is_empty", "clear_list",
+        "add_last", "add_first", "insert", "first", "last", "remove_first", "remove_last", "remove", "contains",
+        "count", "is_empty", "clear",
         "comments", "numbers", "operators", "basics", "types", "type", "arrays",
         "contents", "shell", "code-editor", "tile-editor", "map-editor", "sound-editor", "music-editor",
         "font-editor", "settings", ":browse", NULL};
