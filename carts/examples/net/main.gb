@@ -26,9 +26,9 @@ global x:float, y:float
 global bx:float, by:float, bvx:float = 1.5, bvy:float = 1.1
 global said:string[NET_MAX_PLAYERS]   ' each player's last wave...
 global said_at:int[NET_MAX_PLAYERS]   ' ...and when it came
-global colours:int[NET_MAX_PLAYERS]
-colours[0] = COL_ORANGE : colours[1] = COL_CYAN : colours[2] = COL_LIME : colours[3] = COL_PINK
-colours[4] = COL_YELLOW : colours[5] = COL_PURPLE : colours[6] = COL_RED : colours[7] = COL_SKY
+global colors:int[NET_MAX_PLAYERS]
+colors[0] = COL_ORANGE : colors[1] = COL_CYAN : colors[2] = COL_LIME : colors[3] = COL_PINK
+colors[4] = COL_YELLOW : colors[5] = COL_PURPLE : colors[6] = COL_RED : colors[7] = COL_SKY
 
 function mode_name:string()
   if mode = NET_UDP then return "UDP"
@@ -108,8 +108,8 @@ function play()
       if not net_peer(p) then continue
       local px:int = int(net_get(p * 4)), py:int = int(net_get(p * 4 + 1))
       if p = me then px = int(x) : py = int(y)   ' mine: no need to wait for the network
-      rect_fill(px, py, SIZE, SIZE, colours[p])
-      text("P" + p, px, py - 10, colours[p])
+      rect_fill(px, py, SIZE, SIZE, colors[p])
+      text("P" + p, px, py - 10, colors[p])
       if said[p] <> "" and frame_count() - said_at[p] < 120 then text(said[p], px + SIZE + 2, py, COL_WHITE)
     next
     rect_fill(0, 0, SCREEN_W, 12, COL_NAVY)

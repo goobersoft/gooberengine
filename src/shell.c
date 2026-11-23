@@ -98,7 +98,7 @@ static void cmd_help(void) {
         {"DOWNLOAD", "save the cart to your computer as a .zip"},
 #endif
         {"INFO", "show the loaded cart's details"},
-        {"THEME [name]", "editor colours: blue green orange grey"},
+        {"THEME [name]", "editor colors: blue green orange grey"},
         {"SETTINGS", "theme, volume, fullscreen, window size (F10)"},
         {"FOLDER", "show where carts are read from"},
         {"CLS", "clear the screen"},
@@ -368,7 +368,7 @@ int ui_draw_tabs(void) {
     return x;
 }
 
-/* THEME: show the themes, THEME name: switch the editors' colours (and remember it) */
+/* THEME: show the themes, THEME name: switch the editors' colors (and remember it) */
 static void cmd_theme(const char *arg) {
     if (!*arg) {
         char line[128];

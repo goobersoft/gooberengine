@@ -1,5 +1,5 @@
 /* Framebuffer drawing. Everything draws palette indices into fb; the
- * platform layer turns them into real colours once per frame.
+ * platform layer turns them into real colors once per frame.
  * All drawing goes through the camera offset and the clip rectangle.
  *
  * The dot limit: drawing is done in software, so a cart may only plot
@@ -24,7 +24,7 @@ DrawState ds;
 int dot_limit = DOT_LIMIT_DEFAULT, dots_used;
 int view_x = 0, view_w = SCREEN_W;
 
-/* 6-bit colour: index = r*16 + g*4 + b, each channel 0..3 -> 0, 85, 170, 255 */
+/* 6-bit color: index = r*16 + g*4 + b, each channel 0..3 -> 0, 85, 170, 255 */
 #define L(v) ((v) * 85)
 #define P(i) ((uint32_t)L(((i) >> 4) & 3) << 16 | (uint32_t)L(((i) >> 2) & 3) << 8 | (uint32_t)L((i) & 3))
 #define P4(i) P(i), P(i + 1), P(i + 2), P(i + 3)
@@ -77,7 +77,7 @@ static inline int dots(int n) {
 }
 
 /* the fast fill behind cls() and rect_fill_fast(): screen-space x0..x1-1,
- * y0..y1-1, cut to the clip rectangle, set to colour col (through the palette
+ * y0..y1-1, cut to the clip rectangle, set to color col (through the palette
  * map) at depth DEPTH_FAR. Whole rows are written at once, with no depth test
  * or blending, so none of it counts against the dot limit. */
 static void fast_fill(int x0, int y0, int x1, int y1, uint8_t col) {
@@ -127,7 +127,7 @@ static inline uint8_t blend(uint8_t s, uint8_t d) {
     return out;
 }
 
-/* one screen-space pixel of final colour c at depth z, already clipped */
+/* one screen-space pixel of final color c at depth z, already clipped */
 static inline void plot(int x, int y, uint8_t c, int16_t z) {
     if (z > zbuf[y][x]) return;       /* something nearer is there */
     if (!dots(1)) return;
@@ -154,7 +154,7 @@ static void hspan(int x0, int x1, int y, uint8_t c) {
     for (int x = x0; x <= x1; x++) plot(x, y, col, ds.depth);
 }
 
-void draw_pset(int x, int y, int c) { put(x - ds.cam_x, y - ds.cam_y, (uint8_t)pen_or(c)); }
+void draw_plot(int x, int y, int c) { put(x - ds.cam_x, y - ds.cam_y, (uint8_t)pen_or(c)); }
 
 int draw_pget(int x, int y) {
     x -= ds.cam_x;
@@ -202,7 +202,7 @@ void draw_checker(int x, int y, int w, int h) {
         for (int i = 0; i < w; i++) {
             int sx = x + i, rx = ((sx % CHECK_SIZE) + CHECK_SIZE) % CHECK_SIZE;
             int bx = (sx - rx) / CHECK_SIZE;
-            draw_pset(sx, sy, (bx + by) & 1 ? 50 : 34);
+            draw_plot(sx, sy, (bx + by) & 1 ? 50 : 34);
         }
     }
 }
@@ -318,7 +318,7 @@ void draw_map(int mx, int my, int sx, int sy, int w, int h) {
     }
 }
 
-/* n dots of colour c at random places in the rectangle (x, y, w, h).
+/* n dots of color c at random places in the rectangle (x, y, w, h).
  * unit_rng gives [0, 1): the cart's rnd() stream, so seed_rnd() repeats a spray */
 void draw_spray(int x, int y, int w, int h, int n, int c, double (*unit_rng)(void)) {
     if (w <= 0 || h <= 0 || n <= 0) return;

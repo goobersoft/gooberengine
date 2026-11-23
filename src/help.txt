@@ -15,7 +15,7 @@
 ;
 @ contents manual docs help | Contents
 # GooberEngine manual
-Press F1 on a word in the code editor to open its page. In the manual, F1 shows {index|the index}: every page's names, A to Z. Type anywhere to search them. Tab picks a link, Enter follows it, Backspace goes back, Esc leaves.
+Press F1 on a word in the code editor to open its page. In the manual, F1 shows {index|the index}: every page's names, A to Z. Type anywhere to search them. Tab picks a link, Enter follows it, Alt+Left goes back, Esc leaves.
 
 The buttons along the top do it with the mouse: `< back` and `forward >` step through the pages you've seen (the index counts as one), `contents` comes here, `index` opens the index, and `close` leaves. Alt+Left and Alt+Right are back and forward too.
 
@@ -25,7 +25,7 @@ The buttons along the top do it with the mouse: `< back` and `forward >` step th
 - {code-editor|Code editor} - {tile-editor|Tile editor} - {map-editor|Map editor}
 - {sound-editor|Sound editor} - {music-editor|Music editor} - {font-editor|Font editor}
 - {file-tree|The file tree} - {settings|Settings}
-- {machine|The machine}: screen, colours, tiles, sound
+- {machine|The machine}: screen, colors, tiles, sound
 - {cartridges|Cartridges}: what's in a cart folder
 
 # GooberBASIC, the language
@@ -35,12 +35,12 @@ The buttons along the top do it with the mouse: `< back` and `forward >` step th
 - {operators|Operators}
 - {if|if} {while|while} {repeat|repeat} {for|for} {select|select}
 - {function|Functions}, {closures|function values}
-- {type|Types (records)}, {list|lists}, {arrays|arrays}
+- {type|Types (records)}, {list|lists}, {arrays|arrays}, {literals|array and list literals}
 - {defdata|Data blocks}, {include|files}
 
 # Commands
 - {api|The console API}: drawing, tiles, sound, input, saving
-- {core-commands|Core commands}: printing, maths, strings, time
+- {core-commands|Core commands}: printing, math, strings, time
 
 @ f1 function-keys hotkeys shortcuts | Function keys
 These keys work everywhere: in the shell, in every editor and here.
@@ -55,7 +55,7 @@ In every editor: Ctrl+S saves, Ctrl+R saves and runs, and Esc goes back to the {
 
 @ machine hardware screen palette | The machine
 - Screen: 400 x 240 pixels, 60 frames a second.
-- Colour: 64 fixed colours, 2 bits each of red, green and blue. A colour's number is r*16 + g*4 + b, with each channel 0 to 3: see {rgb} and {COL_BLACK|the named colours}.
+- Color: 64 fixed colors, 2 bits each of red, green and blue. A color's number is r*16 + g*4 + b, with each channel 0 to 3: see {rgb} and {COL_BLACK|the named colors}.
 - Tiles: a tileset is a 400 x 240 sheet of 960 tiles, 10 x 10 pixels each, 40 to a row: see {sprite}.
 - Maps: 1 to 10 screens each way, a screen being 40 x 24 cells: see {map_draw}.
 - Slots: 10 each for tilesets, maps, sound banks, songs and fonts: see {slots}.
@@ -101,7 +101,7 @@ The shell is where GooberEngine starts. Type a command and press Enter; Up and D
 - {:export|EXPORT}: zip the cart, or make a standalone game.
 - {:import|IMPORT file}: unpack a .zip into a cart folder.
 - `INFO`: the loaded cart's title, author, tiles and files.
-- {:theme|THEME [name]}: the editors' colours.
+- {:theme|THEME [name]}: the editors' colors.
 - `SETTINGS`: the {settings} screen (F10).
 - `FOLDER`: where carts are read from.
 - `HELP`: a list of the commands. `HELP word` (or `DOCS word`): that word's page here. `HELP index`: the {index}.
@@ -159,18 +159,18 @@ Shows the carts here as a list. Up/Down, PgUp/PgDn, Home/End or the mouse pick o
 
 @ :theme | THEME
     THEME [name]
-The colours of the shell, the editors and the file tree: `blue` (the default), `green`, `orange` or `grey`. It is remembered for next time. `THEME` alone shows the one in use. Carts, tiles and the code editor's syntax colours look the same in every theme. The {settings} screen changes it too.
+The colors of the shell, the editors and the file tree: `blue` (the default), `green`, `orange` or `grey`. It is remembered for next time. `THEME` alone shows the one in use. Carts, tiles and the code editor's syntax colors look the same in every theme. The {settings} screen changes it too.
 
 @ settings | Settings
 F10, `SETTINGS` in the shell, or the settings button at the bottom of the file tree opens the settings screen. Up and Down pick a line, Left and Right (or the mouse) change it. Esc, or F10 again, goes back.
 
-- theme: the shell's and editors' colours (see {:theme|THEME})
+- theme: the shell's and editors' colors (see {:theme|THEME})
 - volume: all sound, 0 to 10
 - music, sound fx: the music, and the sound effects, on top of the volume
 - fullscreen: on or off (F11 does the same)
 - window size: 1x to 8x
 - indent: how Enter indents in the {code-editor|code editor}: smart, auto or none
-- right click: the {tile-editor|tile editor}'s right button: eyedrop (pick a colour up) or colour B
+- right click: the {tile-editor|tile editor}'s right button: eyedrop (pick a color up) or color B
 - effects: opens the {effects|post-processing effects} page
 
 Every change takes effect at once and is kept in `settings.txt`.
@@ -179,8 +179,8 @@ Every change takes effect at once and is kept in `settings.txt`.
 The effects line of the {settings} screen opens this page. The effects change how the screen is shown in the window, never what is drawn: carts, `pget()` and F12 screenshots see the plain picture. Drag a slider, or pick a line with Up and Down and move it with Left and Right (Shift moves by 1; Home and End go to the ends). Esc goes back to the settings.
 
 - crt bend, 0 to 100%: the picture bulges like the glass of an old tube; the mouse still points at the pixel you see under it
-- tint, 0 to 359 degrees: every colour is turned around the colour wheel
-- saturation, 0 to 100%: 100 is the console's own colours, 0 is grey
+- tint, 0 to 359 degrees: every color is turned around the color wheel
+- saturation, 0 to 100%: 100 is the console's own colors, 0 is grey
 - scanlines, 0 to 100%: darkens the screen row under each row of console pixels; 100 makes it black. There is no such row at 1x, so it needs a window size of 2x or more
 - screen burn, 0 to 80%: a pixel that goes dark fades out over a few frames instead of snapping off
 - reset: every effect off
@@ -205,23 +205,23 @@ An exported game shows none of them.
 
 Enter keeps the indent of the line above, and adds one after a line that opens a block (`if`, `for`, `function` ...), unless the indent {settings|setting} says otherwise.
 
-The colours mark keywords, commands, type names, constants, numbers, strings and comments. See {language} for the language itself.
+The colors mark keywords, commands, type names, constants, numbers, strings and comments. See {language} for the language itself.
 
 @ tile-editor | Tile editor
 `TILES` edits a tileset: a 400 x 240 sheet of 960 tiles. A yellow box marks the tile being edited (or a 2x2 or 4x4 block, with Z); only it can be painted. Tile 0 is selected at first.
 
 The selection is also the {map-editor|map editor}'s brush: pick a tile (or a block) here, switch to the map, and it paints with it.
 
-- Left button: draw with colour A. Right button: pick up the colour under the mouse into A (or, with the right click {settings|setting} on colour B, draw with colour B, which is transparent at first, so it erases).
-- Middle click: pick up a colour. Middle drag, or Space + drag: pan. Wheel: zoom.
-- P F L R I: pencil, fill, line, rectangle (Shift: filled), pick a colour
+- Left button: draw with color A. Right button: pick up the color under the mouse into A (or, with the right click {settings|setting} on color B, draw with color B, which is transparent at first, so it erases).
+- Middle click: pick up a color. Middle drag, or Space + drag: pan. Wheel: zoom.
+- P F L R I: pencil, fill, line, rectangle (Shift: filled), pick a color
 - Z: edit 1x1, 2x2 or 4x4 tiles. H / V / T: flip across, flip up-down, turn.
 - arrows: move to another tile. Shift+arrows: nudge the pixels.
-- Del: clear. X: swap colours A and B. G: grid. Home: reset the view.
+- Del: clear. X: swap colors A and B. G: grid. Home: reset the view.
 - Ctrl+C / X / V: copy, cut, paste. Ctrl+Z / Y: undo, redo.
 - Ctrl+S: save `tiles/NAME.g64`. Ctrl+R: run. Esc: the shell.
 
-A cart draws tiles with {sprite} and changes them with {tile_pset}.
+A cart draws tiles with {sprite} and changes them with {tile_plot}.
 
 @ map-editor | Map editor
 `MAP` edits a map. The left button paints with the brush, the right button picks up the tile under the mouse.
@@ -318,8 +318,8 @@ GooberBASIC is a BASIC in the style of BlitzBasic, written in lowercase.
     forever
 - {basics|Basics}: one statement per line, `'` comments, case
 - {variables|Variables}: {local}, {global}, {const}, {dim}, {strict}
-- {types|Types}: {numbers}, {string|strings}, {type|records}, {arrays}, {list|lists}
-- {operators|Operators}: maths, comparisons, {and}, {or}, {not}
+- {types|Types}: {numbers}, {string|strings}, {type|records}, {arrays}, {list|lists}, {literals}
+- {operators|Operators}: math, comparisons, {and}, {or}, {not}
 - Control: {if}, {while}, {repeat}, {for}, {eachin}, {select}, {exit}, {end}
 - {function|Functions}: {return}, default arguments, {closures}
 - {include|Files}: {include}, `local function`
@@ -415,7 +415,7 @@ A variable's type is given by a suffix or a `:type` annotation. Without either, 
 - `:byte`, `:short`, `:long` and the sized ones (`:uint8` to `:sint64`): see {numbers}
 - `:t_name`: an object of one of your {type|types}
 - `:int[]`, `:float[,]`: an {arrays|array}
-- `:int list`, `:t_enemy list`: a {list}
+- `:list<int>`, `:list<t_enemy>`: a {list}; `:int<>` is short for `:list<int>`
 - `:int(int, string)`: a {closures|function value}
     local hp% = 3              ' suffix
     local hp:int = 3           ' annotation: the same
@@ -430,7 +430,7 @@ Literals: `255`, `3.14`, `1e6`, `$FF` (hex), `%1010` (binary). Numbers too big f
     b :+ 10            ' wraps: b is now 4
     local f:float = 7 / 2    ' 3: int / int stays an int
     local g:float = 7 / 2.0  ' 3.5
-- Maths uses the wider side: anything with a float gives a float, any double a double.
+- Math uses the wider side: anything with a float gives a float, any double a double.
 - float to integer drops the fraction (toward zero).
 - Every type name converts too: `int(x)`, `float(x)`, `byte(x)` ... and {str}.
 See also {operators}, {abs}, {floor}.
@@ -446,11 +446,11 @@ A string is text: `"like this"`. The `$` suffix or `:string` makes a string vari
 - Positions count from 1.
 Functions: {len}, {left}, {right}, {mid}, {upper}, {lower}, {trim}, {instr}, {replace}, {chr}, {asc}, {hex}, {bin}, {repeat_string}, {lset}, {rset}, {str}.
 
-@ operators and or not mod shl shr sar ^ + - * / = < > & | Operators
+@ operators and or not mod shl shr sar ^ + - * / \ = < > & | Operators
 Highest first:
 - `^`: power (always a float)
 - `-x`, `+x`, `~x`: minus, plus, bitwise NOT
-- `*` `/` `mod` `shl` `shr` `sar`: `int / int` stays an int (7 / 2 = 3). `mod` is the remainder. `shl` / `shr` shift bits left / right, `sar` keeps the sign.
+- `*` `/` `\` `mod` `shl` `shr` `sar`: `int / int` stays an int (7 / 2 = 3). `\` always divides to a whole int, floats too (7.5 \ 2 = 3). `mod` is the remainder. `shl` / `shr` shift bits left / right, `sar` keeps the sign.
 - `+` `-`: `+` joins strings too
 - `&`, `|`, `~`: bitwise AND, OR, XOR
 - `=` `<>` `<` `>` `<=` `>=`: 1 if true, 0 if false
@@ -638,10 +638,10 @@ A type is a record of fields: data only, no methods (write functions that take t
 
 @ new | new
     new t_type
-    new int list
+    new list<int>
 Makes a new object of a {type}, with every field at 0, "" or null, or a new empty {list}.
     local p:t_player = new t_player
-    global bullets:t_bullet list = new t_bullet list
+    global bullets:list<t_bullet> = new list<t_bullet>
 
 @ null | null
 `null` means "no object": the starting value of an object, list, array or function variable. Compare with `=`; setting a variable to `null` lets its object go (see {gc_collect|garbage collection}). Using a null object is a runtime error.
@@ -650,12 +650,31 @@ Makes a new object of a {type}, with every field at 0, "" or null, or a new empt
 
 @ delete after before | delete (removed)
 BlitzBasic's `delete`, `after`, `before` and `for ... = each` are not in GooberBASIC: types don't keep a hidden list of their objects. (`first` and `last` work on a {list}.)
-- To get rid of an object, stop referring to it: set its variable to {null} or remove it from its list.
+- To get rid of an object, stop referring to it: set its variable to {null} or remove it from its list. See {freeing-objects|freeing an object}.
 - To visit every object, keep them in a {list} and use {eachin}.
 
+@ freeing-objects del free destroy | Freeing an object
+There is no `del` or `free`: an object goes once nothing refers to it (see {gc_collect|garbage collection}). Drop each reference to it:
+- a variable or field: set it to {null}
+- a {list}: `remove(list, obj)`
+- an {arrays|array} element: set it to null
+    remove(enemies, e)
+    if player.target = e then player.target = null
+An object kept in several places (a list, a target, another object's field) stays alive while any one of them still holds it. If you can't easily find them all, mark it dead with a field instead, and have every place skip or drop dead ones:
+    type t_enemy
+      field x:float, y:float
+      field dead:int
+    endtype
+
+    e.dead = 1                    ' instead of deleting it
+    for local e:t_enemy = eachin enemies
+      if e.dead then remove(enemies, e)
+    next
+
 @ list add_last add_first insert first last remove_first remove_last remove contains count is_empty clear | Lists
-A list holds values of one type: `int list`, `string list`, `t_enemy list`. Make one with {new}.
-    local q:int list = new int list
+A list holds values of one type, written inside `list<...>`: `list<int>`, `list<string>`, `list<t_enemy>`, `list<int(int)>`. `int<>` is short for `list<int>`. Make one with {new}, or fill one straight away with a {literals|list literal}.
+    local q:list<int> = new list<int>
+    local p:int<> = <10, 20, 30>   ' already holds 3
     add_last(q, 20)
     add_first(q, 10)
     insert(q, 2, 15)    ' 15 becomes item 2
@@ -669,7 +688,7 @@ Items count from 1.
 - `remove_first(list)`, `remove_last(list)`: take the first / last item out and return it
 - `remove(list, value)`: take out the first item that matches; its position, or 0
 - `contains(list, value)`: the position of the first match, or 0
-- `count(list)`: how many items
+- `count(list)`: how many items; `count(list, value)`: how many match
 - `is_empty(list)`: 1 if there are none
 - `clear(list)`: remove them all
 `first`, `last`, `remove_first` and `remove_last` give the list's own type (`first(enemies).hp`) and stop with an error on an empty list. A variable named `count` or `first` still works. Numbers and strings are compared by value, objects by identity. Putting the wrong type in is a compile error (an int into a float list is converted). Lists can't hold null or other lists. See {eachin}.
@@ -681,7 +700,25 @@ Items count from 1.
     print(len(scores))          ' 10
     print(len(grid, 2))         ' 15: the second dimension
     local names:string[]        ' no array yet (null)
-Arrays count from 0 and are checked: an index outside them is an error. They hold any type, objects too. `local a:int[n]` makes a new array each time it runs. See {len}, {dim}.
+Arrays count from 0 and are checked: an index outside them is an error. They hold any type, objects too. `local a:int[n]` makes a new array each time it runs. To make one already filled, use a {literals|literal}: `local q:int[] = [1, 2, 3]`. See {len}, {dim}.
+
+@ literals array-literal list-literal [] <> | Array and list literals
+    local q:int[] = [1, 2, 3, 4, 5]      ' an array
+    local p:list<int> = <1, 2, 3, 4, 5>  ' a list
+    local w:int<> = <1, 2, 3, 4, 5>      ' a list too
+`[ ... ]` makes a new one-dimensional {arrays|array} holding the values in order, and `< ... >` a new {list}. Each time one runs it makes a new one.
+- Where the type is known (a declaration, an assignment, an argument, a return value) the values are converted to it: `local f:float[] = [1, 2, 3]` holds floats.
+- Otherwise the first value decides: `["a", "b"]` is a `string[]`. A float after whole numbers is an error there: write the first as `1.0`.
+- `[]` and `<>` are empty ones, where the type is known: `local e:int[] = []`.
+- The values can be any expressions. Inside `< >` put a comparison in brackets: `<(a > b), 2>`.
+- A literal can run over several lines, one row per line:
+    local level:int[] = [
+      1, 1, 1, 1,
+      1, 0, 0, 1
+    ]
+- Lists hold no null, lists or arrays; arrays hold no arrays. An array of lists is fine: `local g:int<>[] = [<1>, <2, 3>]`.
+- `=` asks whether two arrays or lists are the same one, and a literal is always a new one, so comparing with it is an error. Test for none with {is_empty} or `len(a) = 0`.
+- For bigger tables kept apart from the code, see {defdata|data blocks}.
 
 @ len | len
     len(text$)
@@ -728,7 +765,7 @@ A table of values written into the code. `restore(NAME)` points at a block, and 
 An object, string, array or list stays alive while anything refers to it: a variable, a field, an array element or a list. Once nothing does, it is freed on its own, even groups that only refer to each other.
 - `gc_collect()`: free everything unreachable now
 - `gc_mem_alloced()`: bytes used by live objects
-You rarely need either: set a variable to {null}, or {remove} the item, and the memory comes back.
+You rarely need either: set a variable to {null}, or {remove} the item, and the memory comes back. See {freeing-objects|freeing an object}.
 
 ; ---------------------------------------------------------------- core commands
 @ core-commands builtins | Core commands
@@ -736,20 +773,25 @@ These come with GooberBASIC itself.
 - Printing: {print}, {write}, {input}, {runtime_error}, {assert}
 - Time: {millisecs}, {delay}, {current_date}, {current_time}
 - Random numbers: {rnd}, {rand}, {seed_rnd}
-- Maths: {abs}, {sgn}, {min}, {max}, {sin}, {cos}, {atan2}, {sqr}, {exp}, {log}, {floor}, {ceil}, {round}, {distance}, {rects_overlap}
+- Math: {abs}, {sgn}, {min}, {max}, {sin}, {cos}, {atan2}, {sqr}, {exp}, {log}, {floor}, {ceil}, {round}, {distance}, {rects_overlap}
 - Strings: {len}, {left}, {mid}, {instr}, {replace}, {upper}, {trim}, {chr}, {asc}, {hex}, {str}
 - Data: {defdata}, {restore}, {read_int}
 - Lists: {list|add_last, first, remove and the rest}
 - Memory: {gc_collect}
 
 @ print write input | print, write, input
-    print([text])
+    print([text [, x, y [, c]]])
     write(text)
     input([prompt])
-`print` writes a line to the terminal GooberEngine was started from, and `write` writes without ending the line. They don't draw on the console's screen (use {text} for that), so they're handy for debugging.
+`print` draws a line of text on the screen like {text}, at a cursor that starts at the top-left. Each `print` goes on the line below the last one, and {cls} puts the cursor back at the top-left (so does running the cart). Give `x` and `y` to move the cursor first; the lines after carry on below from there, at that `x`. A new line in the string (`~n`) moves down a line too.
+
+`print` also writes the line to the terminal GooberEngine was started from. `write` writes only there, without ending the line: it doesn't draw on the screen, so it's handy for debugging.
 
 `input` reads a line typed in that terminal (it waits until one is), returning it as a string.
-    print("x is " + x)
+    cls()
+    print("SCORE " + score)          ' at (0, 0)
+    print("LIVES " + lives)          ' the line below
+    print("PAUSED", 160, 110, COL_YELLOW)
 
 @ runtime_error assert errors | runtime_error, assert
     runtime_error(message)
@@ -835,9 +877,9 @@ See also {len}, {str}, {string|strings}.
 
 ; ---------------------------------------------------------------- the console API
 @ API commands | The console API
-GooberEngine adds these to GooberBASIC. Arguments in brackets are optional. A colour is a number 0 to 63 ({rgb}); left out, the {pen} colour is used.
+GooberEngine adds these to GooberBASIC. Arguments in brackets are optional. A color is a number 0 to 63 ({rgb}); left out, the {pen} color is used.
 # Screen
-{cls} {pen} {pset} {line} {rect} {rect_fill_fast} {circle} {text} {text_width} {font_w} {rgb} {camera} {pal} {clip} {spray} {tex_quad} {set_depth} {set_blend}
+{cls} {pen} {plot} {line} {rect} {rect_fill_fast} {circle} {text} {print} {text_width} {font_w} {rgb} {camera} {pal} {clip} {spray} {tex_quad} {set_depth} {set_blend}
 # Tiles and maps
 {sprite} {tile_pget} {map_draw} {map_get} {map_w} {slots}
 # Limits
@@ -849,11 +891,11 @@ GooberEngine adds these to GooberBASIC. Arguments in brackets are optional. A co
 # Saving and network
 {save_data} {load_data} {network}
 # Constants
-{SCREEN_W|sizes} {COL_BLACK|colours} {BTN_A|buttons} {KEY_A|keys} {BLEND_NORMAL|blend modes} {FLIP_X|flips}
+{SCREEN_W|sizes} {COL_BLACK|colors} {BTN_A|buttons} {KEY_A|keys} {BLEND_NORMAL|blend modes} {FLIP_X|flips}
 
 @ cls | cls
     cls([c])
-Clears the screen to colour `c` (0, black, if left out), or just the {clip} rectangle if one is set. It doesn't count against the {dot_limit}. It also resets the depth buffer (see {set_depth}), and ignores {set_blend}.
+Clears the screen to color `c` (0, black, if left out), or just the {clip} rectangle if one is set. It doesn't count against the {dot_limit}. It also resets the depth buffer (see {set_depth}), ignores {set_blend}, and puts the {print} cursor back at the top-left.
     repeat
       cls()
       draw_everything()
@@ -862,16 +904,16 @@ Clears the screen to colour `c` (0, black, if left out), or just the {clip} rect
 
 @ pen | pen
     pen(c)
-Sets the colour used when a drawing command's colour is left out.
+Sets the color used when a drawing command's color is left out.
     pen(COL_GREEN)
     rect(10, 10, 50, 20)    ' green
     line(0, 0, 399, 239)    ' green too
 
-@ pset pget | pset, pget
-    pset(x, y [, c])
+@ plot pget | plot, pget
+    plot(x, y [, c])
     pget(x, y)
-`pset` draws one pixel; `pget` gives the colour of the pixel on screen at (x, y). Both go through the {camera}.
-    pset(mouse_x(), mouse_y(), COL_WHITE)
+`plot` draws one pixel; `pget` gives the color of the pixel on screen at (x, y). Both go through the {camera}.
+    plot(mouse_x(), mouse_y(), COL_WHITE)
     if pget(x, y + 10) <> 0 then on_ground = true
 
 @ line | line
@@ -903,7 +945,7 @@ Draws text with its top-left at (x, y), and gives back the x just after it. A ne
     text("SCORE " + score, 4, 4, COL_WHITE)
     local x = text("hp: ", 4, 14)
     text(str(hp), x, 14, COL_RED)
-See {text_width}, {font_w}.
+See {print}, which keeps a cursor so each line goes below the last, and {text_width}, {font_w}.
 
 @ text_width | text_width
     text_width(s)
@@ -918,10 +960,10 @@ The size of a character of the font in use: {text} steps this far across, and th
 
 @ rgb color | rgb
     rgb(r, g, b)
-The colour number for red, green and blue, each 0 to 3: r * 16 + g * 4 + b. There are 64 colours. The common ones have names: {COL_BLACK|COL_...}.
+The color number for red, green and blue, each 0 to 3: r * 16 + g * 4 + b. There are 64 colors. The common ones have names: {COL_BLACK|COL_...}.
     rect_fill(0, 0, 40, 40, rgb(3, 1, 0))   ' orange-red
 
-@ COL_* named-colors | Named colours
+@ COL_* named-colors | Named colors
     COL_BLACK  0    COL_ORANGE      56
     COL_NAVY   1    COL_BROWN       36
     COL_BLUE   3    COL_PINK        58
@@ -931,7 +973,7 @@ The colour number for red, green and blue, each 0 to 3: r * 16 + g * 4 + b. Ther
     COL_GREY  42    COL_LIME        44
     COL_WHITE 63    COL_MAGENTA     51
     COL_YELLOW 60   COL_DARK_GREY   21
-Any other colour is a number 0 to 63: see {rgb}.
+Any other color is a number 0 to 63: see {rgb}.
 
 @ camera | camera
     camera([x, y])
@@ -943,7 +985,7 @@ Moves everything drawn afterwards by (-x, -y), so (x, y) becomes the screen's to
 
 @ pal | pal
     pal([a, b])
-From now on, drawing in colour `a` puts colour `b` on screen: recolour a sprite, or flash an enemy white. `pal()` puts every colour back.
+From now on, drawing in color `a` puts color `b` on screen: recolor a sprite, or flash an enemy white. `pal()` puts every color back.
     pal(COL_RED, COL_WHITE)     ' a hit flash
     sprite(12, ex, ey)
     pal()
@@ -976,7 +1018,7 @@ See {tex_quad_3d}, {set_blend}.
 
 @ set_blend BLEND_* blend | set_blend
     set_blend([mode])
-How drawn colours mix with what's on screen, per red, green and blue channel (0 to 3):
+How drawn colors mix with what's on screen, per red, green and blue channel (0 to 3):
 - `BLEND_NORMAL`: replace (the default; `set_blend()`)
 - `BLEND_ADD`: add, up to 3: lights and glows
 - `BLEND_SUB`: take away from the screen, down to 0: shadows
@@ -995,11 +1037,11 @@ Draws tile `n` (0 to 959) from the tileset in use at (x, y), or a `w` x `h` bloc
     sprite(4, x, y, 2, 2, FLIP_X)         ' facing left
 Tiles are drawn in the {tile-editor|tile editor}; see also {slots}.
 
-@ tile_pget tile_pset | tile_pget, tile_pset
+@ tile_pget tile_plot | tile_pget, tile_plot
     tile_pget(n, x, y)
-    tile_pset(n, x, y, c)
+    tile_plot(n, x, y, c)
 Read / change pixel (x, y), 0 to 9, of tile `n` in the tileset in use. -1 is transparent. Changes last until the cart stops.
-    tile_pset(5, 4, 4, COL_RED)
+    tile_plot(5, 4, 4, COL_RED)
 
 @ map_draw | map_draw
     map_draw([mx, my, sx, sy, w, h])

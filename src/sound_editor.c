@@ -361,7 +361,7 @@ static void thumb(int w, int x, int y, bool on) {
     draw_rect(x, y, 23, 17, on ? UI_RGB(1, 2, 3) : UI_RGB(0, 0, 1), true);
     for (int i = 0; i < WAVE_LEN; i += 2) {
         int v = cur_snd->waves[w][i];
-        draw_pset(x + 3 + i / 2 + i / 4, y + 15 - v, on ? COL_BLACK : COL_YELLOW);
+        draw_plot(x + 3 + i / 2 + i / 4, y + 15 - v, on ? COL_BLACK : COL_YELLOW);
     }
 }
 
@@ -409,7 +409,7 @@ static void draw(void) {
             draw_rect(sx + 1, py, SW - 2, 2, live ? COL_WHITE : COL_GREY, true);
             int vh = st->vol * 4;
             draw_rect(sx + 1, VOL_Y + VOL_H - vh, SW - 2, vh, live ? UI_RGB(3, 1, 2) : UI_RGB(1, 1, 1), true);
-        } else draw_pset(sx + SW / 2, py, UI_RGB(1, 1, 2));
+        } else draw_plot(sx + SW / 2, py, UI_RGB(1, 1, 2));
         char wc = st->wave >= NWAVES ? 'n' : "0123456789abcdef"[st->wave];
         draw_char(wc, sx + 2, WAVE_ROW_Y, live ? COL_CYAN : UI_RGB(0, 1, 1));
         draw_char(fx_chars[st->fx % NFX], sx + 2, FX_ROW_Y, live ? COL_ORANGE : UI_RGB(1, 1, 0));
@@ -437,7 +437,7 @@ static void draw(void) {
         }
     } else {
         if (!narrow) draw_text("noise", 2, WE_Y + 16, COL_WHITE);
-        for (int i = 0; i < 400; i++) draw_pset(WE_X + rand() % (WAVE_LEN * 4), WE_Y + rand() % 64, UI_RGB(1, 1, 1));
+        for (int i = 0; i < 400; i++) draw_plot(WE_X + rand() % (WAVE_LEN * 4), WE_Y + rand() % 64, UI_RGB(1, 1, 1));
     }
     for (int w = 0; w < NWAVES; w++) thumb(w, THUMB_X + (w % 8) * 24, THUMB_Y + (w / 8) * 18, w == S.pen_wave);
     draw_rect(THUMB_X, THUMB_Y + 36, 46, 17, S.pen_wave == WAVE_NOISE ? UI_RGB(1, 2, 3) : UI_RGB(0, 0, 1), true);

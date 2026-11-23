@@ -9,13 +9,13 @@
  * The .g64 files are base-64 text. Each character of the alphabet
  *   0-9 a-z A-Z + *
  * stands for a number 0-63 (in that order: the same characters stand for the
- * same colours as in the old tiles.txt). Whitespace is ignored, so a file can
+ * same colors as in the old tiles.txt). Whitespace is ignored, so a file can
  * be broken into lines; GooberEngine writes one row per line.
  *
  *   tileset   X Y then X*10 x Y*10 pixel characters, row by row
  *             X, Y: width and height in pixels as (digit + 1) * 10, so 10-640;
  *             a tileset holds at most 400 x 240 (960 tiles, 40 per row).
- *             A pixel is a colour 0-63, or '.' for transparent.
+ *             A pixel is a color 0-63, or '.' for transparent.
  *   map       X Y then two characters per cell, row by row
  *             X, Y: width and height in screens as digit + 1, at most 10
  *             (a screen is 40 x 24 cells). A cell is a tile number hi*64 + lo,
@@ -110,7 +110,7 @@ static bool parse_tileset(const char *path, Tileset *ts, char *err, int errlen) 
                 char c = s[2 + y * w + x];
                 int v = c == '.' ? CLEAR : b64(c);
                 if (v < 0) {
-                    snprintf(err, (size_t)errlen, "%s: '%c' at x %d y %d is not a colour (0-9 a-z A-Z + *, or . for clear)", fn, c, x, y);
+                    snprintf(err, (size_t)errlen, "%s: '%c' at x %d y %d is not a color (0-9 a-z A-Z + *, or . for clear)", fn, c, x, y);
                     ok = false;
                     break;
                 }

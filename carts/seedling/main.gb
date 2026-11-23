@@ -26,7 +26,7 @@ endtype
 global px:float, py:float, facing:int
 global seeds_left:int, seeds_total:int
 global frames:int, hurt:int, won:int
-global beetles:t_beetle list = new t_beetle list
+global beetles:list<t_beetle> = new list<t_beetle>
 global seed_x:int[64], seed_y:int[64]
 
 function solid:int(x:float, y:float)

@@ -299,7 +299,7 @@ bool res_parse_legacy_tiles(const char *path, Tileset *ts, char *err, int errlen
             for (int i = 0; i < TILE; i++) {
                 int c = i < (int)strlen(s) ? key[(unsigned char)s[i]] : CLEAR;
                 if (c < 0) {
-                    snprintf(err, (size_t)errlen, "tiles.txt:%d: '%c' is not a colour (add a key line)", lineno, s[i]);
+                    snprintf(err, (size_t)errlen, "tiles.txt:%d: '%c' is not a color (add a key line)", lineno, s[i]);
                     ok = false;
                     break;
                 }
@@ -845,9 +845,10 @@ int cart_run(void) {
     view_w = SCREEN_W;
     draw_reset();
     draw_cls(0);
+    print_home();
     cart_flipped = cart_stopped = false;
     /* the cart runs on copies of its files in slots (slot 0: the default ones),
-     * so what it changes (map_set, tile_pset) lasts only for the run and the
+     * so what it changes (map_set, tile_plot) lasts only for the run and the
      * editors never save what the game did */
     rt_begin();
     dot_limit = DOT_LIMIT_DEFAULT;

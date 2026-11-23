@@ -1,6 +1,6 @@
 ' mouse - grab a ball, fling it, and watch it bounce.
 ' Left: grab and throw.  Right (hold): pull the ball to the pointer.
-' Middle: change colour.  Wheel: grow / shrink.
+' Middle: change color.  Wheel: grow / shrink.
 '
 ' The mouse commands:
 '   mouse_x(), mouse_y()    where the pointer is, in screen pixels
@@ -24,11 +24,11 @@ global vx:float = 2, vy:float
 global radius:int = 14
 global held:int                    ' 1 while the left button holds the ball
 global grab_x:float, grab_y:float  ' where on the ball it was grabbed
-global colour:int
+global color:int
 global middle_was:int              ' the middle button last frame
-global colours:int[6]
-colours[0] = COL_ORANGE : colours[1] = COL_CYAN : colours[2] = COL_LIME
-colours[3] = COL_PINK : colours[4] = COL_YELLOW : colours[5] = COL_PURPLE
+global colors:int[6]
+colors[0] = COL_ORANGE : colors[1] = COL_CYAN : colors[2] = COL_LIME
+colors[3] = COL_PINK : colors[4] = COL_YELLOW : colors[5] = COL_PURPLE
 
 ' keep the ball inside the play area, bouncing off whatever it touches
 function bounce_walls()
@@ -56,7 +56,7 @@ repeat
   ' middle: mouse_btn only says "held", so remember last frame's state to
   ' see the moment it goes down (mouse_hit(MOUSE_MIDDLE) does this for you)
   local middle:int = mouse_btn(2)
-  if middle and not middle_was then colour = (colour + 1) mod 6
+  if middle and not middle_was then color = (color + 1) mod 6
   middle_was = middle
 
   ' left: grab the ball, carry it, throw it
@@ -92,7 +92,7 @@ repeat
   if mouse_btn(1) and not held then line(mx, my, int(bx), int(by), COL_DARK_GREY)
 
   rect_fill(int(bx) - radius + 3, FLOOR_Y, radius * 2, 3, rgb(0, 0, 0))   ' shadow on the floor
-  circle_fill(int(bx), int(by), radius, colours[colour])
+  circle_fill(int(bx), int(by), radius, colors[color])
   circle_fill(int(bx - radius / 3), int(by - radius / 3), max(1, radius / 4), COL_WHITE)
   if held or over then circle(int(bx), int(by), radius + 2, COL_WHITE)
   ' the ball's speed, ten frames ahead
@@ -107,7 +107,7 @@ repeat
   rect_fill(0, 0, SCREEN_W, 12, COL_NAVY)
   local b:string = str(mouse_btn(0)) + str(mouse_btn(1)) + str(mouse_btn(2))
   text("x " + str(mx) + " y " + str(my) + "  dx " + str(dx) + " dy " + str(dy) + "  btn " + b + "  size " + str(radius), 4, 1, COL_YELLOW)
-  text("Left throw  Right pull  Middle colour  Wheel size", 4, SCREEN_H - 11, COL_GREY)
+  text("Left throw  Right pull  Middle color  Wheel size", 4, SCREEN_H - 11, COL_GREY)
 
   flip()
 forever

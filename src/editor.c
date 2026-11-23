@@ -2,7 +2,7 @@
  * the files it includes, picked in the file tree). Each open file keeps its
  * own buffer, cursor and undo history.
  *
- * The syntax colours come from the GooberBASIC compiler itself: keywords
+ * The syntax colors come from the GooberBASIC compiler itself: keywords
  * from the lexer's table, commands from the native tables (core + console
  * API), type names and intrinsics from the compiler, constants from the
  * console's constant table, so the editor never drifts from the language. */
@@ -26,8 +26,8 @@
 #define MAX_UNDO 100
 #define INDENT 2
 
-/* colours */
-/* the editor's chrome follows the theme (UI_RGB); the syntax colours below don't */
+/* colors */
+/* the editor's chrome follows the theme (UI_RGB); the syntax colors below don't */
 #define C_BG UI_RGB(0, 0, 0)
 #define C_CURLINE (ui_theme == THEME_GREY ? RGB6(1, 1, 1) : UI_RGB(0, 0, 1))   /* grey has no shade between black and dark grey */
 #define C_SEL UI_RGB(1, 1, 2)
@@ -549,7 +549,7 @@ void editor_show_error(int line, const char *msg) {
     E.status_until = LONG_MAX;     /* stays until the next edit */
 }
 
-/* ---------------------------------------------------------------- syntax colours */
+/* ---------------------------------------------------------------- syntax colors */
 
 static bool is_ident(int c) { return isalnum(c) || c == '_'; }
 
@@ -560,8 +560,10 @@ static bool is_const_name(const char *lower) {
     return false;
 }
 
-static int word_colour(const char *lower) {
+static int word_color(const char *lower) {
     if (lex_is_keyword(lower)) return C_KEYWORD;
+    /* `list<int>`, `new list<t_enemy>`: the lexer reads list as a name, the compiler knows it */
+    if (!strcmp(lower, "list")) return C_KEYWORD;
     int b = compiler_builtin_word(lower);
     if (b == 1) return C_TYPE;
     if (b == 2) return C_COMMAND;
@@ -577,8 +579,8 @@ static bool word_is(const char *s, int n, int i, const char *w) {
     return i + wl == n || !is_ident((unsigned char)s[i + wl]);
 }
 
-/* colours one line; col may be NULL to only track the rem-block state */
-static void colour_line(const char *s, int n, uint8_t *col, bool *rem) {
+/* colors one line; col may be NULL to only track the rem-block state */
+static void color_line(const char *s, int n, uint8_t *col, bool *rem) {
 #define PAINT(a, b, c) do { if (col) for (int k_ = (a); k_ < (b); k_++) col[k_] = (uint8_t)(c); } while (0)
     int i = 0;
     while (i < n) {
@@ -627,7 +629,7 @@ static void colour_line(const char *s, int n, uint8_t *col, bool *rem) {
                 }
                 if (col) {
                     if (j < n && (s[j] == '%' || s[j] == '#' || s[j] == '$')) j++;    /* type suffix */
-                    PAINT(i, j, word_colour(lower));
+                    PAINT(i, j, word_color(lower));
                 }
             }
             i = j;
@@ -639,9 +641,9 @@ static void colour_line(const char *s, int n, uint8_t *col, bool *rem) {
 #undef PAINT
 }
 
-void editor_colour_code(const char *s, int n, uint8_t *col) {
+void editor_color_code(const char *s, int n, uint8_t *col) {
     bool rem = false;
-    colour_line(s, n, col, &rem);
+    color_line(s, n, col, &rem);
 }
 
 static void update_rem_state(void);
@@ -661,7 +663,7 @@ bool editor_word_at_cursor(char *out, size_t n) {
     if (len > (int)sizeof cols) len = (int)sizeof cols;
     if (x > len) x = len;
     bool rem = E.rem_at[E.cy];
-    colour_line(s, len, cols, &rem);
+    color_line(s, len, cols, &rem);
     /* the character to look at: a name's character at or just before the cursor wins, then any non-space */
     #define IDENT_AT(i) ((i) >= 0 && (i) < len && (is_ident((unsigned char)s[i]) || \
                          (((s[i] == '%' || s[i] == '#' || s[i] == '$') && (i) > 0 && is_ident((unsigned char)s[(i) - 1])) && cols[i] != C_NUMBER)))
@@ -706,7 +708,7 @@ static void update_rem_state(void) {
     bool rem = false;
     for (int y = 0; y < E.n; y++) {
         E.rem_at[y] = rem;
-        colour_line(E.lines[y].s, E.lines[y].len, NULL, &rem);
+        color_line(E.lines[y].s, E.lines[y].len, NULL, &rem);
     }
     E.rem_dirty = false;
 }
@@ -1236,7 +1238,7 @@ static void draw(void) {
 
         bool rem = E.rem_at[y];
         int len = l->len < (int)sizeof cols ? l->len : (int)sizeof cols;
-        colour_line(l->s, len, cols, &rem);
+        color_line(l->s, len, cols, &rem);
         for (int c = 0; c < COLS; c++) {
             int x = E.left + c;
             if (x >= len) break;

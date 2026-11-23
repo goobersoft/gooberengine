@@ -1,11 +1,11 @@
 ' blend - the six blend modes side by side.
-' A: pause.  B: change the circles' colours.  Up / Down: circle size.
+' A: pause.  B: change the circles' colors.  Up / Down: circle size.
 '
 ' set_blend(mode) says how everything drawn after it combines with what is
-' already on screen. Each colour has three channels, red, green and blue,
+' already on screen. Each color has three channels, red, green and blue,
 ' each 0 to 3 (rgb(r, g, b)), and the blend works on each channel apart:
 '
-'   BLEND_NORMAL  the pen colour replaces the screen     (the usual)
+'   BLEND_NORMAL  the pen color replaces the screen     (the usual)
 '   BLEND_ADD     screen + pen, stopping at 3            (lights: brighter)
 '   BLEND_SUB     screen - pen, stopping at 0            (shadows: darker)
 '   BLEND_MAX     the brighter of the two, per channel
@@ -24,14 +24,14 @@ const TOP = 14                      ' below the title bar
 global paused:int
 global t:float
 global radius:int = 24
-global set:int                      ' which colours the circles are
+global set:int                      ' which colors the circles are
 global names:string[6]
 names[0] = "BLEND_NORMAL" : names[1] = "BLEND_ADD" : names[2] = "BLEND_SUB"
 names[3] = "BLEND_MAX" : names[4] = "BLEND_MIN" : names[5] = "BLEND_XOR"
 global cols:int[3]
 
-' the three circles' colours: full red/green/blue, then half-strength, then mixed
-function pick_colours()
+' the three circles' colors: full red/green/blue, then half-strength, then mixed
+function pick_colors()
   if set = 0
     cols[0] = rgb(3, 0, 0) : cols[1] = rgb(0, 3, 0) : cols[2] = rgb(0, 0, 3)
   elseif set = 1
@@ -67,22 +67,22 @@ function panel(mode:int, px:int, py:int)
 endfunction
 
 dot_limit(300000)                   ' six full panels plus the circles: about 210,000 dots
-pick_colours()
+pick_colors()
 
 repeat
   if btn_hit(BTN_A) then paused = not paused
-  if btn_hit(BTN_B) then set = (set + 1) mod 3 : pick_colours()
+  if btn_hit(BTN_B) then set = (set + 1) mod 3 : pick_colors()
   if btn(BTN_UP) then radius = min(40, radius + 1)
   if btn(BTN_DOWN) then radius = max(6, radius - 1)
   if not paused then t :+ 1.5
 
   cls(COL_NAVY)
-  text("set_blend(mode): how a colour combines with the screen", 4, 2, COL_WHITE)
+  text("set_blend(mode): how a color combines with the screen", 4, 2, COL_WHITE)
 
   for local m:int = 0 to 5
     panel(m, 2 + (m mod 3) * (PW + 1), TOP + int(m / 3) * (PH + 2))
   next
 
-  text("A pause  B colours  Up/Down size", 4, SCREEN_H - 11, COL_GREY)
+  text("A pause  B colors  Up/Down size", 4, SCREEN_H - 11, COL_GREY)
   flip()
 forever

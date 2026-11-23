@@ -13,7 +13,7 @@
  * editor has open (T switches to the next one).
  *
  * Zoom shows a cell as 20, 10, 5, 2 or 1 pixels; below 5, each tile is drawn
- * as its most common colour. Edits go straight into the open map file, so
+ * as its most common color. Edits go straight into the open map file, so
  * Ctrl+R runs them without saving. */
 #include "engine.h"
 #include <SDL2/SDL_scancode.h>
@@ -513,9 +513,9 @@ static void mouse(void) {
 
 /* ---------------------------------------------------------------- drawing */
 
-static int rep[NTILES];          /* each tile's most common colour, for the small zooms */
+static int rep[NTILES];          /* each tile's most common color, for the small zooms */
 
-static void find_rep_colours(void) {
+static void find_rep_colors(void) {
     for (int t = 0; t < NTILES; t++) {
         rep[t] = -1;
         if (!cur_tiles) continue;
@@ -539,7 +539,7 @@ static void draw_cell_tile(int t, int sx, int sy, int size) {
         case 5:
             for (int j = 0; j < 5; j++)
                 for (int i = 0; i < 5; i++)
-                    if (px[j * 2 * TILE + i * 2] != CLEAR) draw_pset(sx + i, sy + j, px[j * 2 * TILE + i * 2]);
+                    if (px[j * 2 * TILE + i * 2] != CLEAR) draw_plot(sx + i, sy + j, px[j * 2 * TILE + i * 2]);
             break;
         default:
             if (rep[t] >= 0) draw_rect(sx, sy, size, size, rep[t], true);
@@ -585,7 +585,7 @@ static void draw_picker(void) {
 static void draw(void) {
     draw_reset();
     draw_cls(COL_BLACK);
-    find_rep_colours();
+    find_rep_colors();
     int s = cs();
     draw_clip(0, VIEW_Y, UI_W, VIEW_H);
 
@@ -595,7 +595,7 @@ static void draw(void) {
     for (int y = 0; y < VIEW_H; y++)
         for (int x = (y % 4); x < UI_W; x += 4) {
             int cx = cell_x(x), cy = cell_y(VIEW_Y + y);
-            if (!on_map(cx, cy)) draw_pset(x, VIEW_Y + y, UI_RGB(0, 0, 1));
+            if (!on_map(cx, cy)) draw_plot(x, VIEW_Y + y, UI_RGB(0, 0, 1));
         }
     for (int j = 0; j < rows; j++)
         for (int i = 0; i < cols; i++) {

@@ -11,7 +11,7 @@
  *   fullscreen   off
  *   window size  < 3x >
  *   indent       smart  auto  none
- *   right click  eyedrop  colour B      (the tile editor's)
+ *   right click  eyedrop  color B      (the tile editor's)
  *   effects      post-processing >
  *
  * Up / Down pick a line, Left / Right (or clicks) change it, Esc or F10 goes
@@ -39,19 +39,19 @@
 #define CTRL_X 86
 #define CELL 8                  /* a volume step */
 
-static const char *const right_labels[NRIGHTS] = {"eyedrop", "colour B"};
+static const char *const right_labels[NRIGHTS] = {"eyedrop", "color B"};
 
 enum { S_THEME, S_VOLUME, S_MUSIC, S_SFX, S_FULLSCREEN, S_SCALE, S_INDENT, S_RIGHT, S_EFFECTS, NSET };
 static const char *const labels[NSET] = {"theme", "volume", "music", "sound fx", "fullscreen", "window size", "indent", "right click", "effects"};
 static const char *const hints[NSET] = {
-    "the colours of the shell and the editors",
+    "the colors of the shell and the editors",
     "all sound",
     "the music, on top of the volume",
     "sound effects and notes, on top of the volume",
     "the whole screen (F11 too)",
     "screen pixels for each console pixel",
     "Enter in the code editor: smart (after if, for ...), auto (keep it), none",
-    "the tile editor's right button: pick a colour up, or draw with colour B",
+    "the tile editor's right button: pick a color up, or draw with color B",
     "CRT bend, tint, saturation, scanlines, burn",
 };
 
@@ -61,8 +61,8 @@ enum { F_CRT, F_TINT, F_SAT, F_SCAN, F_BURN, F_RESET, NFXROWS };
 #define SLIDER_W 160
 static const struct { const char *label, *unit, *hint; int max, step; bool wrap; } fx[NSLIDERS] = {
     {"crt bend", "%", "bends the picture like an old tube's glass", 100, 5, false},
-    {"tint", " deg", "turns every colour around the colour wheel", 359, 15, true},
-    {"saturation", "%", "0 is grey, 100 the console's own colours", 100, 5, false},
+    {"tint", " deg", "turns every color around the color wheel", 359, 15, true},
+    {"saturation", "%", "0 is grey, 100 the console's own colors", 100, 5, false},
     {"scanlines", "%", "darkens the gap between rows (not at 1x)", 100, 5, false},
     {"screen burn", "%", "lit pixels fade out instead of snapping off", FX_BURN_MAX, 5, false},
 };

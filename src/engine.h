@@ -2,7 +2,7 @@
  *
  * Hardware (v1):
  *   screen   400 x 240 pixels, one byte per pixel
- *   colours  64 fixed colours, 6-bit RGB (2 bits each of red, green, blue)
+ *   colors  64 fixed colors, 6-bit RGB (2 bits each of red, green, blue)
  *   tiles    a tileset is a 400 x 240 sheet: 960 tiles of 10 x 10 pixels, 40 per row
  *   maps     1-10 screens (40 x 24 cells) each way, one tile number per cell
  *   slots    10 slots each for tilesets, maps, sound banks and songs (load_*, swap_*)
@@ -168,14 +168,14 @@ typedef struct {
     int cam_x, cam_y;
     int clip_x0, clip_y0, clip_x1, clip_y1;   /* clip_x1/y1 exclusive */
     uint8_t pen;
-    uint8_t pal[NCOLORS];        /* drawing colour c puts pal[c] on screen (pal(a, b)) */
+    uint8_t pal[NCOLORS];        /* drawing color c puts pal[c] on screen (pal(a, b)) */
     bool count_dots;             /* a cart is drawing: pixels count against the dot limit */
     const Font *font;            /* what draw_char uses; NULL = sys_font */
     int16_t depth;               /* set_depth(): lower is nearer; a pixel is drawn if depth <= zbuf there */
     uint8_t blend;               /* set_blend(): BLEND_NORMAL ... */
 } DrawState;
 
-/* blend modes: how a drawn colour combines with the one already on screen,
+/* blend modes: how a drawn color combines with the one already on screen,
  * per 2-bit RGB channel (ADD / SUB saturate at 3 / 0) */
 enum { BLEND_NORMAL, BLEND_ADD, BLEND_SUB, BLEND_MAX, BLEND_MIN, BLEND_XOR, NBLENDS };
 #define DEPTH_FAR INT16_MAX
@@ -189,7 +189,7 @@ extern int view_x, view_w;
 
 void draw_reset(void);
 void draw_cls(int c);
-void draw_pset(int x, int y, int c);
+void draw_plot(int x, int y, int c);
 int draw_pget(int x, int y);
 void draw_line(int x0, int y0, int x1, int y1, int c);
 void draw_rect(int x, int y, int w, int h, int c, bool fill);
@@ -197,6 +197,7 @@ void draw_rect_fill_fast(int x, int y, int w, int h, int c);
 void draw_checker(int x, int y, int w, int h);   /* editors' transparent backdrop */
 void draw_circle(int cx, int cy, int r, int c, bool fill);
 int draw_char(int ch, int x, int y, int c);
+void print_home(void);                    /* print() starts again at the top-left (cls does this too) */
 int draw_text(const char *s, int x, int y, int c);   /* returns end x; handles \n */
 int text_width(const char *s);       /* with ds.font, like draw_text */
 void draw_sprite(int n, int x, int y, int w, int h, int flags);
@@ -457,7 +458,7 @@ void editor_forget(void);
 void editor_show_error(int line, const char *msg);
 void editor_emergency_save(void);
 bool editor_word_at_cursor(char *out, size_t n);   /* the token under the cursor (for F1): a name, or a kind like "numbers" */
-void editor_colour_code(const char *s, int n, uint8_t *col);   /* syntax colours for one line of code (help's examples) */
+void editor_color_code(const char *s, int n, uint8_t *col);   /* syntax colors for one line of code (help's examples) */
 
 /* ---- help.c: the manual, in the console (F1) ---- */
 void help_frame(void);
@@ -468,7 +469,7 @@ void help_close(void);                    /* back to where F1 was pressed */
 void help_index(void);                    /* F1 in the help: every page's names, A to Z (F1 again: back to the page) */
 int help_check(void);                     /* --help-check: prints what has no page; returns how many */
 
-/* ---- named colours (indices into the 6-bit palette: r*16 + g*4 + b) ---- */
+/* ---- named colors (indices into the 6-bit palette: r*16 + g*4 + b) ---- */
 #define RGB6(r, g, b) ((r) * 16 + (g) * 4 + (b))
 enum {
     COL_BLACK = RGB6(0, 0, 0), COL_WHITE = RGB6(3, 3, 3), COL_GREY = RGB6(2, 2, 2),
@@ -479,12 +480,12 @@ enum {
     COL_DARK_GREEN = RGB6(0, 1, 0), COL_SKY = RGB6(1, 2, 3), COL_LIME = RGB6(2, 3, 0),
 };
 
-/* ---- settings.c: the console's settings (settings.txt) and the editors' colour theme ----
+/* ---- settings.c: the console's settings (settings.txt) and the editors' color theme ----
  * The shell and editors are drawn in one family of blues: RGB6(0, 0, 1) for
  * backgrounds, (0, 1, 2) for bars, (1, 2, 3) for highlights, (2, 3, 3) for text.
  * UI_RGB is RGB6 for that chrome: a theme turns each of those blues into its
- * own shade of another colour (swapping channels keeps every shade distinct).
- * Colours outside the family (yellow, red, the code editor's syntax colours)
+ * own shade of another color (swapping channels keeps every shade distinct).
+ * Colors outside the family (yellow, red, the code editor's syntax colors)
  * and everything a cart draws are left alone. */
 enum { THEME_BLUE, THEME_GREEN, THEME_ORANGE, THEME_GREY, NTHEMES };
 extern int ui_theme;
@@ -508,18 +509,18 @@ typedef struct {
     bool fullscreen;
     int scale;                              /* the window: 1-8 screen pixels per console pixel */
     int indent;                             /* the code editor's Enter: INDENT_SMART, _AUTO or _NONE */
-    int tile_right;                         /* the tile editor's right button: RIGHT_EYEDROP or RIGHT_COLOUR_B */
+    int tile_right;                         /* the tile editor's right button: RIGHT_EYEDROP or RIGHT_COLOR_B */
     /* post-processing effects (postfx.c): how the screen is shown, never what is drawn */
     int fx_crt;                             /* 0-100: CRT screen bending */
     int fx_tint;                            /* 0-359: hue shift, in degrees */
-    int fx_saturation;                      /* 0-100: 0 is grey, 100 the console's own colours */
+    int fx_saturation;                      /* 0-100: 0 is grey, 100 the console's own colors */
     int fx_scanlines;                       /* 0-100: 100 makes every scanline gap black (not at 1x) */
     int fx_burn;                            /* 0-FX_BURN_MAX: how slowly lit pixels fade out */
 } Settings;
 #define FX_BURN_MAX 80
 enum { INDENT_SMART, INDENT_AUTO, INDENT_NONE, NINDENTS };
 extern const char *const indent_names[NINDENTS];
-enum { RIGHT_EYEDROP, RIGHT_COLOUR_B, NRIGHTS };
+enum { RIGHT_EYEDROP, RIGHT_COLOR_B, NRIGHTS };
 extern const char *const tile_right_names[NRIGHTS];   /* as settings.txt writes them */
 extern Settings settings;
 void settings_load(void);                 /* read settings.txt (before the window opens), and use its sound levels */

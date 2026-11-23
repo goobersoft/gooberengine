@@ -7,8 +7,8 @@
  * so a cart sees the core language plus the console hardware below and
  * nothing else: no windows, no image files, no TTF fonts.
  *
- * Colour arguments are palette indices 0-63. Where a colour is optional,
- * leaving it out uses the pen colour (see pen()). */
+ * Color arguments are palette indices 0-63. Where a color is optional,
+ * leaving it out uses the pen color (see pen()). */
 #include "engine.h"
 #include "vm.h"
 #include <SDL2/SDL.h>
@@ -45,9 +45,9 @@ void gfx_shutdown(void) {}
 
 /* ---- screen ---- */
 
-static Value a_cls(VM *vm, int argc, Value *args) { UNUSED; draw_cls(OPT_I(0, 0)); RET_VOID; }
+static Value a_cls(VM *vm, int argc, Value *args) { UNUSED; draw_cls(OPT_I(0, 0)); print_home(); RET_VOID; }
 static Value a_pen(VM *vm, int argc, Value *args) { UNUSED; ds.pen = (uint8_t)(ARG_I(0) & 63); RET_VOID; }
-static Value a_pset(VM *vm, int argc, Value *args) { UNUSED; draw_pset(ARG_I(0), ARG_I(1), OPT_I(2, -1)); RET_VOID; }
+static Value a_plot(VM *vm, int argc, Value *args) { UNUSED; draw_plot(ARG_I(0), ARG_I(1), OPT_I(2, -1)); RET_VOID; }
 static Value a_pget(VM *vm, int argc, Value *args) { UNUSED; return v_int(draw_pget(ARG_I(0), ARG_I(1))); }
 static Value a_line(VM *vm, int argc, Value *args) {
     UNUSED;
@@ -89,6 +89,26 @@ static Value a_text(VM *vm, int argc, Value *args) {
     ds.font = NULL;
     return v_int(x);
 }
+/* print: text at a cursor that starts top-left and moves a line down each time.
+ * It still writes the line to stdout too, as GooberBASIC's own print does. */
+static int print_x, print_y;
+void print_home(void) { print_x = print_y = 0; }
+static Value a_print(VM *vm, int argc, Value *args) {
+    UNUSED;
+    const char *s = argc > 0 ? ARG_S(0) : "";
+    if (argc > 1) print_x = ARG_I(1);
+    if (argc > 2) print_y = ARG_I(2);
+    ds.font = cur_font;
+    draw_text(s, print_x, print_y, OPT_I(3, -1));
+    int lines = 1;
+    for (const char *p = s; *p; p++) lines += *p == '\n';
+    print_y += lines * (cur_font ? cur_font->h : sys_font.h);
+    ds.font = NULL;
+    if (argc > 0) fwrite(s, 1, (size_t)str_len(args[0].as.s), stdout);
+    fputc('\n', stdout);
+    fflush(stdout);
+    RET_VOID;
+}
 static Value a_text_width(VM *vm, int argc, Value *args) {
     UNUSED;
     ds.font = cur_font;
@@ -107,12 +127,12 @@ static Value a_rgb(VM *vm, int argc, Value *args) {
     return v_int(RGB6(r, g, b));
 }
 
-/* pal(a, b): from now on, drawing in colour a puts colour b. pal() puts every colour back */
+/* pal(a, b): from now on, drawing in color a puts color b. pal() puts every color back */
 static Value a_pal(VM *vm, int argc, Value *args) {
     UNUSED;
     if (argc < 2) { for (int i = 0; i < NCOLORS; i++) ds.pal[i] = (uint8_t)i; RET_VOID; }
     int a = ARG_I(0), b = ARG_I(1);
-    if (a < 0 || a >= NCOLORS || b < 0 || b >= NCOLORS) vm_error(vm, "pal: colours are 0-63, got %d, %d", a, b);
+    if (a < 0 || a >= NCOLORS || b < 0 || b >= NCOLORS) vm_error(vm, "pal: colors are 0-63, got %d, %d", a, b);
     ds.pal[a] = (uint8_t)b;
     RET_VOID;
 }
@@ -216,11 +236,11 @@ static Value a_tile_pget(VM *vm, int argc, Value *args) {
     return v_int(c == CLEAR ? -1 : c);
 }
 
-static Value a_tile_pset(VM *vm, int argc, Value *args) {
+static Value a_tile_plot(VM *vm, int argc, Value *args) {
     UNUSED;
     int n = ARG_I(0), x = ARG_I(1), y = ARG_I(2), c = ARG_I(3);
-    need_tile(vm, "tile_pset", n);
-    Tileset *ts = need_tileset(vm, "tile_pset");
+    need_tile(vm, "tile_plot", n);
+    Tileset *ts = need_tileset(vm, "tile_plot");
     if (x < 0 || y < 0 || x >= TILE || y >= TILE) RET_VOID;
     ts->t[n][y * TILE + x] = c < 0 ? CLEAR : (uint8_t)(c & 63);
     RET_VOID;
@@ -447,7 +467,7 @@ static Value a_cart_title(VM *vm, int argc, Value *args) { UNUSED; return v_str(
 NativeDef gb_gfx_natives[] = {
     {"cls", 'v', "|i", a_cls},
     {"pen", 'v', "i", a_pen},
-    {"pset", 'v', "ii|i", a_pset},
+    {"plot", 'v', "ii|i", a_plot},
     {"pget", 'i', "ii", a_pget},
     {"line", 'v', "iiii|i", a_line},
     {"rect", 'v', "iiii|i", a_rect},
@@ -457,6 +477,7 @@ NativeDef gb_gfx_natives[] = {
     {"circle_fill", 'v', "iii|i", a_circle_fill},
     {"text", 'i', "sii|i", a_text},
     {"text_width", 'i', "s", a_text_width},
+    {"print", 'v', "|siii", a_print},
     {"font_w", 'i', "", a_font_w},
     {"font_h", 'i', "", a_font_h},
     {"rgb", 'i', "iii", a_rgb},
@@ -471,7 +492,7 @@ NativeDef gb_gfx_natives[] = {
 
     {"sprite", 'v', "iii|iii", a_sprite},
     {"tile_pget", 'i', "iii", a_tile_pget},
-    {"tile_pset", 'v', "iiii", a_tile_pset},
+    {"tile_plot", 'v', "iiii", a_tile_plot},
     {"map_draw", 'v', "|iiiiii", a_map_draw},
     {"map_get", 'i', "ii", a_map_get},
     {"map_set", 'v', "iii", a_map_set},

@@ -3,7 +3,7 @@
  * picture; only the window shows the effects (settings.fx_*).
  *
  * The frame goes through two stages:
- *   1. colour, at the console's own size: each of the 64 palette colours is
+ *   1. color, at the console's own size: each of the 64 palette colors is
  *      tinted (a hue rotation) and desaturated once, into a lookup table; then
  *      screen burn lets each lit pixel fade out instead of going dark at once.
  *   2. shape, at s screen pixels per console pixel: the CRT bend and the
@@ -17,7 +17,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* ---------------------------------------------------------------- colour */
+/* ---------------------------------------------------------------- color */
 
 static uint32_t lut[NCOLORS];
 static int lut_tint = -1, lut_sat = -1;
@@ -45,13 +45,13 @@ static void build_lut(void) {
     }
 }
 
-/* the frame in colour, after tint, saturation and burn */
+/* the frame in color, after tint, saturation and burn */
 static uint32_t rgb[SCREEN_H * SCREEN_W];
 static bool burn_valid;
 
 void postfx_reset(void) { burn_valid = false; }
 
-static void colour_stage(void) {
+static void color_stage(void) {
     build_lut();
     int burn = settings.fx_burn;
     if (burn <= 0 || !burn_valid) {
@@ -122,9 +122,9 @@ static bool build_map(int s) {
 
 int postfx_scale(int k) {
     bool shape = settings.fx_crt > 0 || (settings.fx_scanlines > 0 && k >= 2);
-    bool colour = settings.fx_tint != 0 || settings.fx_saturation != 100 || settings.fx_burn > 0;
-    if (!colour) burn_valid = false;
-    if (!shape) return colour ? 1 : 0;
+    bool color = settings.fx_tint != 0 || settings.fx_saturation != 100 || settings.fx_burn > 0;
+    if (!color) burn_valid = false;
+    if (!shape) return color ? 1 : 0;
     if (k <= 4) return k < 1 ? 1 : k;
     /* big windows: a divisor of k keeps the renderer's last step a whole number
      * and saves work (8x is drawn at 4x, then doubled); a prime is drawn as it is */
@@ -133,8 +133,8 @@ int postfx_scale(int k) {
 }
 
 void postfx_render(uint32_t *out, int pitch, int s) {
-    colour_stage();
-    if (s == 1 && !settings.fx_crt) {           /* colour only: no map needed */
+    color_stage();
+    if (s == 1 && !settings.fx_crt) {           /* color only: no map needed */
         for (int y = 0; y < SCREEN_H; y++) {
             uint32_t *row = (uint32_t *)((uint8_t *)out + (size_t)y * pitch);
             for (int x = 0; x < SCREEN_W; x++) row[x] = 0xFF000000u | rgb[y * SCREEN_W + x];

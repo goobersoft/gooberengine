@@ -7,7 +7,7 @@
  * the other editors, that editor's page.
  *
  * The pages themselves are in help_pages.c, written in a small markup:
- *   a line starting with 4 spaces    code: shown as it is, in syntax colours
+ *   a line starting with 4 spaces    code: shown as it is, in syntax colors
  *   # Heading                        a heading
  *   - item                           a bullet (wrapped with a hanging indent)
  *   {name} or {name|text}            a link to the page for name
@@ -15,13 +15,13 @@
  *   anything else                    a paragraph, wrapped to the screen
  *
  * Keys: arrows / PgUp / PgDn / Home / End / the wheel scroll, Tab and
- * Shift+Tab pick a link, Enter (or a click) follows it, Backspace goes back,
+ * Shift+Tab pick a link, Enter (or a click) follows it, Alt+Left goes back,
  * typing searches every page's names, F1 shows the index (every page's
  * names, A to Z; F1 again goes back to the page), and Esc goes back to where
  * you were. {index} in a page links to the index too.
  *
  * The index is a place like any page: going from a page to the index, or from
- * the index to a page, can be gone back over (Backspace, Alt+Left) and forward
+ * the index to a page, can be gone back over (Alt+Left) and forward
  * again (Alt+Right). The buttons on the top bar do the same with the mouse:
  * back, forward, contents, index, close. */
 #include "engine.h"
@@ -98,7 +98,7 @@ static int find_page(const char *word) {
 
 /* ---------------------------------------------------------------- layout */
 
-/* a laid-out line: its characters, the colour of each, and which link each belongs to */
+/* a laid-out line: its characters, the color of each, and which link each belongs to */
 typedef struct { char t[WIDTH + 1]; uint8_t c[WIDTH]; int16_t link[WIDTH]; bool code; } DLine;
 typedef struct { char target[48]; } Link;
 
@@ -154,17 +154,17 @@ static int16_t pl[PARA_MAX];
 static bool pbreak[PARA_MAX];      /* a line may break at this space */
 static int plen;
 
-static void para_add(const char *s, int n, int colour, int link, bool breakable_spaces) {
+static void para_add(const char *s, int n, int color, int link, bool breakable_spaces) {
     for (int i = 0; i < n && plen < PARA_MAX; i++, plen++) {
         pt[plen] = s[i];
-        pc[plen] = (uint8_t)colour;
+        pc[plen] = (uint8_t)color;
         pl[plen] = (int16_t)link;
         pbreak[plen] = breakable_spaces && s[i] == ' ';
     }
 }
 
 /* the inline markup of one source line: {links}, `code`, plain text */
-static void para_parse(const char *s, int n, int colour) {
+static void para_parse(const char *s, int n, int color) {
     plen = 0;
     int i = 0;
     while (i < n) {
@@ -187,13 +187,13 @@ static void para_parse(const char *s, int n, int colour) {
             if (close) {
                 int start = plen, cl = (int)(close - (s + i + 1));
                 para_add(s + i + 1, cl, C_TEXT, -1, false);
-                editor_colour_code(pt + start, plen - start, pc + start);
+                editor_color_code(pt + start, plen - start, pc + start);
                 for (int k = start; k < plen; k++) if (pc[k] == C_TEXT) pc[k] = C_INLINE;
                 i = (int)(close - s) + 1;
                 continue;
             }
         }
-        para_add(s + i, 1, colour, -1, true);
+        para_add(s + i, 1, color, -1, true);
         i++;
     }
 }
@@ -234,13 +234,13 @@ static void layout(int p) {
     while (*s) {
         const char *e = strchr(s, '\n');
         int n = e ? (int)(e - s) : (int)strlen(s);
-        if (n >= 4 && !strncmp(s, "    ", 4)) {                  /* code: as it is, coloured like the editor */
+        if (n >= 4 && !strncmp(s, "    ", 4)) {                  /* code: as it is, colored like the editor */
             DLine *d = new_line();
             d->code = true;
             int cl = n - 4 > WIDTH - 2 ? WIDTH - 2 : n - 4;
             memset(d->t, ' ', 2);
             memcpy(d->t + 2, s + 4, (size_t)cl);
-            editor_colour_code(d->t + 2, cl, d->c + 2);
+            editor_color_code(d->t + 2, cl, d->c + 2);
         } else if (n >= 2 && s[0] == '#' && s[1] == ' ') {
             para_parse(s + 2, n - 2, C_HEAD);
             para_wrap(0, 0);
@@ -275,7 +275,7 @@ static int cmp_hit(const void *a, const void *b) {
     return strcasecmp(x->name, y->name);
 }
 
-/* a word of the language (keyword, type, command, constant), as the code editor colours them */
+/* a word of the language (keyword, type, command, constant), as the code editor colors them */
 static bool is_code_word(const char *name) {
     char lower[64];
     int k = 0;
@@ -614,7 +614,7 @@ static void search_key(int sc, int mod) {
         case SDL_SCANCODE_ESCAPE: go_back(); return;
         case SDL_SCANCODE_BACKSPACE: {
             size_t n = strlen(H.q);
-            if (!n) { go_back(); return; }
+            if (!n) return;                     /* an empty search: nothing to take back (Esc leaves it) */
             if (mod & MOD_CTRL) H.q[0] = 0;
             else H.q[n - 1] = 0;
             search_update();
@@ -641,7 +641,6 @@ static void key(const KeyEvent *ev) {
     if (H.search) { search_key(sc, mod); return; }
     switch (sc) {
         case SDL_SCANCODE_ESCAPE: help_close(); return;
-        case SDL_SCANCODE_BACKSPACE: go_back(); return;
         case SDL_SCANCODE_UP: H.top--; break;
         case SDL_SCANCODE_DOWN: H.top++; break;
         case SDL_SCANCODE_PAGEUP: H.top -= BODY_ROWS - 1; break;
@@ -695,7 +694,7 @@ static bool on_contents(void) { return !H.search && H.page == find_page("content
 
 static bool button_enabled(int b) {
     switch (b) {
-        case B_BACK: return true;           /* with nothing before, back leaves the help, like Backspace */
+        case B_BACK: return true;           /* with nothing before, back leaves the help */
         case B_FORWARD: return H.nfwd > 0;
         case B_CONTENTS: return !on_contents();
         case B_INDEX: return !(H.search && !H.q[0]);

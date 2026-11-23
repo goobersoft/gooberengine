@@ -1,8 +1,8 @@
-' pal(a, b) swaps colours for drawing; pal() puts them back
+' pal(a, b) swaps colors for drawing; pal() puts them back
 cls(COL_BLACK)
 pal(COL_RED, COL_BLUE)
-pset(1, 1, COL_RED)
+plot(1, 1, COL_RED)
 rect_fill(2, 2, 2, 2, COL_RED)
 pal()
-pset(5, 5, COL_RED)
+plot(5, 5, COL_RED)
 print("pal " + str(pget(1, 1)) + " " + str(pget(3, 3)) + " " + str(pget(5, 5)))

@@ -58,7 +58,7 @@ expect "cd top"         "--exec \"cd ..\"" "already at the top"
 expect "cd into a cart" "--exec \"cd examples/depth\"" "'depth' is a cart"
 expect "cd nowhere"     "--exec \"cd nope\"" "no folder 'nope'"
 
-# ---- THEME: the editors' colours, kept in settings.txt ----
+# ---- THEME: the editors' colors, kept in settings.txt ----
 expect "theme list"     "--exec theme" "theme: blue  (blue green orange grey)"
 expect "theme set"      "--exec \"theme green\"" "theme: green"
 grep -qxF 'theme = green' "$GOOBERENGINE_SETTINGS" && ok || bad "theme kept in settings.txt" "$(cat "$GOOBERENGINE_SETTINGS" 2>&1)"
@@ -191,7 +191,7 @@ edit "help: back from the first place leaves" '{ctrl+end}{enter}cls{f1}{click:10
 edit "help: follow a link"    '{ctrl+end}{enter}cls{f1}{tab}{enter}'; said "help: follow a link" '[help] clip'
 edit "help: back"             '{ctrl+end}{enter}cls{f1}{tab}{enter}{backspace}{backspace}y{ctrl+s}'; has "help: back" 'clsy'
 edit "help: search"           '{ctrl+end}{enter}{f1}circle_f{enter}'; said "help: search" '[help] circle, circle_fill'
-out=$($GE --headless --frames 30 --type '{f1}' 2>&1);     said "help: F1 in the shell is the index" '[help] Index: 343 names'
+out=$($GE --headless --frames 30 --type '{f1}' 2>&1);     said "help: F1 in the shell is the index" '[help] Index: 350 names'
 out=$($GE --headless --frames 30 --type 'load{f1}' 2>&1); said "help: F1 in the shell narrows to the command" 'first LOAD (shell)'
 out=$($GE --headless --frames 30 --type 'load{f1}{enter}' 2>&1); said "help: F1 in the shell, Enter" '[help] LOAD'
 out=$($GE --headless --frames 30 --type '{f1}{esc}cls{enter}help{enter}' 2>&1); said "help: Esc from the index, back to the prompt" 'RUN [name]'
@@ -206,8 +206,8 @@ out=$($GE --headless --frames 30 --exec settings --type '{up}{up}{up}{right}' 2>
 sethas "settings: indent kept" 'indent = auto'
 # the right click line (second from the bottom): the tile editor's right button, eyedrop at first
 sethas "settings: right click is eyedrop at first" 'tile_right = eyedrop'
-out=$($GE --headless --frames 30 --exec settings --type '{up}{up}{right}' 2>&1); said "settings: right click" '[settings] right click: colour B'
-sethas "settings: right click kept" 'tile_right = colour_b'
+out=$($GE --headless --frames 30 --exec settings --type '{up}{up}{right}' 2>&1); said "settings: right click" '[settings] right click: color B'
+sethas "settings: right click kept" 'tile_right = color_b'
 edit "auto indent: no block indent" '{ctrl+end}{enter}  if 1{enter}x = 1{ctrl+s}'; has "auto indent: no block indent" '  x = 1'
 edit "auto indent: backspace undoes Enter" '{ctrl+end}{enter}  abc{enter}{backspace}d{ctrl+s}'; has "auto indent: backspace undoes Enter" '  abcd'
 edit "auto indent: then backspace is one space" '{ctrl+end}{enter}    abc{enter}x{backspace}{backspace}y{ctrl+s}'; has "auto indent: then backspace is one space" '   y'
@@ -242,7 +242,7 @@ fi
 
 # ---- the tile editor. {f9} hides the file tree, so the editor has the whole width.
 # The tileset is the canvas, at 6x from (0,10), and tile 0 is selected: its pixel (x, y)
-# is clicked at (3 + 6x, 13 + 6y). In the tools window, palette colour i is at
+# is clicked at (3 + 6x, 13 + 6y). In the tools window, palette color i is at
 # (368 + (i mod 4) * 8, 72 + (i / 4) * 8); the preview window is at (276,12) ----
 TT=$TC/t/tiles/tileset.g64
 row() {     # row <name> <tile> <row> <expected 10 characters>: from the tileset's rows (one per line)
@@ -260,7 +260,7 @@ edit "stroke stops at the edge" '{click:125,5}{f9}{click:3,19}{drag:117,19}{mous
 row "stroke stops at the edge" 0 1 '**********'; row "stroke stops at the edge" 1 1 '..........'
 edit "tile undo" '{click:125,5}{f9}{click:3,13}{click:15,13}{ctrl+z}{ctrl+s}';   row "tile undo" 0 0 '*.........'
 edit "paste"     '{click:125,5}{f9}{click:3,13}{ctrl+c}{right}{ctrl+v}{ctrl+s}'; row "paste" 1 0 '*.........'
-edit "colour"    '{click:125,5}{f9}{click:368,104}{click:3,13}{ctrl+s}';         row "colour" 0 0 'g.........'
+edit "color"    '{click:125,5}{f9}{click:368,104}{click:3,13}{ctrl+s}';         row "color" 0 0 'g.........'
 edit "right click picks" '{click:125,5}{f9}{click:368,104}{click:3,13}{click:368,72}{rclick:3,13}{mouse:3,13}{click:9,13}{ctrl+s}'
 row "right click picks" 0 0 'gg........'
 edit "middle click picks" '{click:125,5}{f9}{click:3,13}{click:368,104}{mclick:3,13}{mouse:3,13}{click:9,13}{ctrl+s}'
@@ -275,9 +275,9 @@ edit "move window" '{click:125,5}{f9}{click:300,16}{drag:100,120}{mouse:100,120}
 row "move window: the sheet under it" 4 0 '...*......'
 edit "tiles unsaved" '{click:125,5}{f9}{click:3,13}{esc}new t2{enter}';       said "tiles unsaved" 'unsaved changes in the tiles'
 
-# a running cart's map_set / tile_pset last only for that run
+# a running cart's map_set / tile_plot last only for that run
 rm -rf "$TC" && mkdir -p "$TC/r"
-printf 'print("m " + str(map_get(1, 1)) + " " + str(tile_pget(3, 0, 0)))\nmap_set(1, 1, 9) : tile_pset(3, 0, 0, 5)\n' > "$TC/r/main.gb"
+printf 'print("m " + str(map_get(1, 1)) + " " + str(tile_pget(3, 0, 0)))\nmap_set(1, 1, 9) : tile_plot(3, 0, 0, 5)\n' > "$TC/r/main.gb"
 out=$(GOOBERENGINE_CARTS=$TC $GE --headless --frames 30 --exec "run r" --exec "run r" 2>&1)
 n=$(printf '%s\n' "$out" | grep -c '^m -1 -1$'); [ "$n" = 2 ] && ok || bad "runs start fresh" "$out"
 

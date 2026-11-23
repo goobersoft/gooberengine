@@ -1,7 +1,7 @@
 # GooberEngine
 
 An all-in-one fantasy console whose programming language is **GooberBASIC**.
-It's a fixed virtual machine with a 400×240 screen, 64 colours and 10×10 tiles.
+It's a fixed virtual machine with a 400×240 screen, 64 colors and 10×10 tiles.
 It boots into a shell and runs *folder cartridges*. The editors for code, tiles,
 maps and sound are built into the console. You can still use your own text
 editor on a cart folder at any time.
@@ -16,8 +16,8 @@ editor on a cart folder at any time.
 | Part | Spec |
 |---|---|
 | Screen | 400 × 240 pixels, 60 frames per second, scaled ×3 in a resizable window (F11 = fullscreen) |
-| Colour | 64 fixed colours: 6-bit RGB, 2 bits per channel. Index = `r*16 + g*4 + b`, each channel 0–3 |
-| Tiles | a tileset is a 400 × 240 sheet: 960 tiles of 10 × 10 pixels, 40 per row. A pixel is a colour or transparent |
+| Color | 64 fixed colors: 6-bit RGB, 2 bits per channel. Index = `r*16 + g*4 + b`, each channel 0–3 |
+| Tiles | a tileset is a 400 × 240 sheet: 960 tiles of 10 × 10 pixels, 40 per row. A pixel is a color or transparent |
 | Map | 1 to 10 screens each way (a screen is 40 × 24 cells), so up to 400 × 240 cells. A cell holds a tile number 0–959 or nothing; tile 0 is a tile like any other |
 | Slots | 10 slots each for tilesets, maps, sound banks and songs. A cart loads files into slots and swaps between them while it runs |
 | Dots | a cart may draw 100,000 pixels a frame (`dot_limit` changes it, up to 1,000,000). The screen alone is 96,000, so redrawing only what changed pays off |
@@ -63,7 +63,7 @@ GooberEngine is not a fork of the language. The Makefile compiles GooberBASIC's 
 
 GooberBASIC finds native commands in three tables:
 
-- `gb_core_natives`: print, maths, strings, lists and so on.
+- `gb_core_natives`: print, math, strings, lists and so on.
 - `gb_gfx_natives` / `gb_gfx_consts`: the standalone `goober` binary gets these from its SDL layer, `gfx.c`.
 - `gb_net_natives` / `gb_net_consts`: networking (`net.c`), the same in both programs. GooberEngine polls it from `flip()`, and closes the game when a cart stops.
 
@@ -76,7 +76,7 @@ One change was made to the shared code. It adds a small embedding hook in `commo
 
 Both are NULL by default, so `goober` behaves exactly as before. This is how a cart with a syntax error drops you back at the shell prompt, error shown in red, instead of killing the console.
 
-For the code editor, GooberBASIC also exports two read-only lookups: `lex_is_keyword()` in `lexer.c` and `compiler_builtin_word()` in `compiler.c`. With `native_find()` and the console's constant table, these give the editor its syntax colours straight from the language's own tables, so they can't drift apart.
+For the code editor, GooberBASIC also exports two read-only lookups: `lex_is_keyword()` in `lexer.c` and `compiler_builtin_word()` in `compiler.c`. With `native_find()` and the console's constant table, these give the editor its syntax colors straight from the language's own tables, so they can't drift apart.
 
 ## Shell
 
@@ -100,7 +100,7 @@ For the code editor, GooberBASIC also exports two read-only lookups: `lex_is_key
 | `UPLOAD` / `DOWNLOAD` | web version only: open a cart `.zip` from your computer / save the cart to it as a `.zip` |
 | `IMPORT file [name]` | unpack a `.zip` (or `.tar.gz`, `.tgz`, `.tar`) into a new cart folder and load it. `LOAD file.zip` does the same, named after the file |
 | `INFO` | title, author, tiles used, folder |
-| `THEME [name]` | the editors' colours: `blue` (the default), `green`, `orange` or `grey` (`white` works too). Remembered for next time. `THEME` alone shows the one in use |
+| `THEME [name]` | the editors' colors: `blue` (the default), `green`, `orange` or `grey` (`white` works too). Remembered for next time. `THEME` alone shows the one in use |
 | `SETTINGS` | open the [settings](#settings) screen (F10): theme, volume, fullscreen, window size, indent, right click, effects |
 | `HELP [word]` | list the commands; with a word, open its page in the [manual](#help) (`DOCS` alone opens the contents) |
 | `FOLDER` | where carts are read from |
@@ -109,7 +109,7 @@ For the code editor, GooberBASIC also exports two read-only lookups: `lex_is_key
 
 GooberEngine boots into a new **untitled cart**, so you can start typing code (`EDIT`) right away. Nothing is written to the carts folder until you save it with `SAVE name` (or `SAVE` alone, which names it `untitled`). Until then Ctrl+S in the editors only reminds you to, `RUN` works as usual, and `EXPORT` asks for a name first. Closing the window with unsaved untitled work keeps it in a scratch folder in `$TMPDIR` and prints where.
 
-**Themes** recolour the shell, the editors and the file tree: their bars, highlights and backgrounds. Carts, the tileset and map you're editing, and the code editor's syntax colours look the same in every theme. Pick one with `THEME` or on the [settings](#settings) screen.
+**Themes** recolor the shell, the editors and the file tree: their bars, highlights and backgrounds. Carts, the tileset and map you're editing, and the code editor's syntax colors look the same in every theme. Pick one with `THEME` or on the [settings](#settings) screen.
 
 Up/Down recalls history. If anything being edited has unsaved changes, `LOAD`, `NEW` and `RUN name` ask `discard them? (Y/N)` first. Press Y to discard the changes and go ahead, or N (or Esc) to keep them. `QUIT` asks `save changes? (Y/N)` instead: Y saves everything and quits, N quits without saving, and Esc stays in the shell. If the window is closed with unsaved work, it is kept next to each file as `NAME.unsaved` (`main.gb.unsaved`, `tiles/tileset.g64.unsaved` …).
 
@@ -141,14 +141,14 @@ F10, `SETTINGS` in the shell, or the **settings** button at the bottom left of t
 
 | Setting | |
 |---|---|
-| theme | the shell's and editors' colours: blue, green, orange or grey (click one) |
+| theme | the shell's and editors' colors: blue, green, orange or grey (click one) |
 | volume | all sound, 0–10. Changing it plays a short note at the new level |
 | music | the music, 0–10, on top of the volume |
 | sound fx | sound effects and `note()`s, 0–10, on top of the volume |
 | fullscreen | on or off (F11, or Alt+Enter, does the same) |
 | window size | 1× to 8× (`--scale` on the command line wins for that run) |
 | indent | how Enter indents in the code editor: **smart** (keep the indent, and add one after `if`, `for` …), **auto** (just keep the indent; Backspace straight after Enter takes the whole newline back), **none** |
-| right click | the tile editor's right button: **eyedrop** (pick a colour up into A, the default) or **colour B** (draw with colour B) |
+| right click | the tile editor's right button: **eyedrop** (pick a color up into A, the default) or **color B** (draw with color B) |
 | effects | opens the post-processing effects page (below) |
 
 ### Post-processing effects
@@ -158,8 +158,8 @@ The **effects** line opens a second page of sliders that change how the screen i
 | Effect | |
 |---|---|
 | crt bend | 0–100%: the picture bulges like the glass of a tube. The mouse is bent the same way, so it still points at the pixel you see under it |
-| tint | 0–359°: a hue shift; every colour turns around the colour wheel, brightness kept |
-| saturation | 0–100%: 100 is the console's own colours, 0 is grey |
+| tint | 0–359°: a hue shift; every color turns around the color wheel, brightness kept |
+| saturation | 0–100%: 100 is the console's own colors, 0 is grey |
 | scanlines | 0–100%: darkens the screen row under each row of console pixels (100 makes it black). There's no such row at 1×, so it needs 2× or more |
 | screen burn | 0–80%: a pixel that goes dark fades out over a few frames instead of snapping off, like phosphor |
 | reset | every effect off |
@@ -222,8 +222,8 @@ Dropping a cart `.zip` or a cart folder on the window loads it, like `LOAD`.
 
 ## Code editor
 
-`EDIT` opens the loaded cart's `main.gb`, with line numbers and syntax colours. Other `.gb` files of the cart (the ones `main.gb` includes, for example) open from the file tree. Each keeps its own cursor and undo history, and the bottom bar shows which file you're in. Variables and functions are shared by every file unless declared `local` (`local x`, `local function f()`), which keeps them to their own file. See GooberBASIC's README, under Files.
-The colours mark keywords, console and core commands, type names, constants, numbers, strings and comments.
+`EDIT` opens the loaded cart's `main.gb`, with line numbers and syntax colors. Other `.gb` files of the cart (the ones `main.gb` includes, for example) open from the file tree. Each keeps its own cursor and undo history, and the bottom bar shows which file you're in. Variables and functions are shared by every file unless declared `local` (`local x`, `local function f()`), which keeps them to their own file. See GooberBASIC's README, under Files.
+The colors mark keywords, console and core commands, type names, constants, numbers, strings and comments.
 
 | Keys | |
 |---|---|
@@ -253,14 +253,14 @@ The colours mark keywords, console and core commands, type names, constants, num
 - **The selection:** a yellow box marks the tile being edited, or a 2×2 or 4×4 block of tiles with **Z**, for sprites bigger than one tile. Only the selection can be painted: a stroke, line, rectangle or fill stops at its edge, so the tiles around it are safe. Click outside it to select another tile; tile 0 is selected when the editor opens and when it opens another tileset. The lines between tiles aren't drawn across it, so a block reads as one picture; at 6× and above a faint pixel grid shows inside it instead.
 - **The map's brush:** the selection is what the map editor paints with. Select a tile, switch to the map (the `map` tab or the file tree), and the pen draws that tile; select a 2×2 or 4×4 block and one click stamps the whole block.
 - **The preview window** shows the selection by itself, at the biggest size that fits. It's only for looking. Drag it by its title bar, and drag its bottom-right corner to make it bigger or smaller.
-- **The tools window** holds the tools (P F L R I), the block actions (Z H V T X), the 64 colours, transparent, and colours A and B. Drag it by its title bar too. The bottom bar names what's under the mouse.
-- **Transparent** pixels show as a pink checkerboard (colours 50 and 34).
-- **Mouse:** in the selection the left button draws with colour **A**. The right button is an eyedropper: it picks the colour under the mouse up into A, from anywhere on the tileset. With the **right click** [setting](#settings) on **colour B**, the right button draws with colour **B** instead; B starts as transparent, so it erases. Clicking a colour in the palette (4 colours to a row) sets A (left) or B (right); X swaps them. A middle click (without dragging) picks a colour up into A, from anywhere on the tileset, and so does the pick tool (I): left into A, right into B.
-- **Running:** edits go straight into the open tileset, so Ctrl+R runs them without saving. A running cart's own `tile_pset` / `map_set` changes are undone when it stops, so every run starts from the edited files.
+- **The tools window** holds the tools (P F L R I), the block actions (Z H V T X), the 64 colors, transparent, and colors A and B. Drag it by its title bar too. The bottom bar names what's under the mouse.
+- **Transparent** pixels show as a pink checkerboard (colors 50 and 34).
+- **Mouse:** in the selection the left button draws with color **A**. The right button is an eyedropper: it picks the color under the mouse up into A, from anywhere on the tileset. With the **right click** [setting](#settings) on **color B**, the right button draws with color **B** instead; B starts as transparent, so it erases. Clicking a color in the palette (4 colors to a row) sets A (left) or B (right); X swaps them. A middle click (without dragging) picks a color up into A, from anywhere on the tileset, and so does the pick tool (I): left into A, right into B.
+- **Running:** edits go straight into the open tileset, so Ctrl+R runs them without saving. A running cart's own `tile_plot` / `map_set` changes are undone when it stops, so every run starts from the edited files.
 
 | Keys | |
 |---|---|
-| P / F / L / R / I | pencil, flood fill, line, rectangle (hold Shift for a filled one), pick a colour |
+| P / F / L / R / I | pencil, flood fill, line, rectangle (hold Shift for a filled one), pick a color |
 | Z | edit size: 1×1, 2×2 or 4×4 tiles |
 | H / V / T | flip across, flip up-down, turn a quarter clockwise (the whole block) |
 | Del | clear the block |
@@ -268,7 +268,7 @@ The colours mark keywords, console and core commands, type names, constants, num
 | Shift+arrows | nudge the pixels one step (they wrap around) |
 | = / -, mouse wheel | zoom the tileset in / out |
 | Home | zoom, view and windows back to where they started |
-| X | swap colours A and B |
+| X | swap colors A and B |
 | G | grid on/off |
 | Ctrl+C / X / V | copy, cut, paste the block |
 | Ctrl+Z / Ctrl+Y | undo / redo (64 steps) |
@@ -285,7 +285,7 @@ Saving writes only as much of the sheet as is used, so a tileset with ten tiles 
 - **Blocks:** a block brush is laid in step with where you started, so dragging tiles it neatly without overlapping. Rectangles and fills repeat it as a pattern.
 - **Size:** a map is 1–10 screens wide and 1–10 high. Ctrl+→ / Ctrl+← add or remove a column of screens on the right, and Ctrl+↓ / Ctrl+↑ add or remove a row at the bottom. A new map is 4 × 4 screens.
 - **Tiles:** the map is drawn with the tileset the tile editor has open. **T** switches to the next tileset.
-- **Zoom:** 20, 10, 5, 2 or 1 pixels per cell. Below 5, each tile is drawn as its most common colour.
+- **Zoom:** 20, 10, 5, 2 or 1 pixels per cell. Below 5, each tile is drawn as its most common color.
 - **Guides:** blue lines mark screen-sized areas (40×24 cells), and the map's edge is outlined. Outside the map is striped.
 - **Running:** edits go straight into the open map, so Ctrl+R runs them without saving.
 
@@ -412,9 +412,9 @@ mycart/
 
 A cart can have any number of each. Each file can have a slot it loads into by itself when the cart runs: the file tree sets them, and `cart.txt` keeps them as `slot tiles 0 = tileset`, `slot code 1 = enemies` and so on. A cart that hasn't set any gets the files named `tileset`, `map`, `sfx`, `music` and `font` in slot 0 (see [Slots](#slots)). Every file is text, so carts can be diffed and edited outside the console.
 
-**The .g64 files** are base-64 text. Each character of `0-9 a-z A-Z + *` stands for a number 0–63, in that order: `0` is 0, `a` is 10, `A` is 36, `*` is 63. A colour is its palette index, so `a` is colour 10 everywhere. Spaces and line breaks are ignored. GooberEngine writes one row per line.
+**The .g64 files** are base-64 text. Each character of `0-9 a-z A-Z + *` stands for a number 0–63, in that order: `0` is 0, `a` is 10, `A` is 36, `*` is 63. A color is its palette index, so `a` is color 10 everywhere. Spaces and line breaks are ignored. GooberEngine writes one row per line.
 
-**tiles/NAME.g64**: `XY` then the pixels, row by row. `X` and `Y` give the width and height as (digit + 1) × 10 pixels, so `00` is 10 × 10 and `jn` is 200 × 240. A tileset holds at most 400 × 240 (`dn`). A pixel is a colour character, or `.` for transparent. Tile *n* is at column *n* mod 40, row *n* / 40 of the sheet.
+**tiles/NAME.g64**: `XY` then the pixels, row by row. `X` and `Y` give the width and height as (digit + 1) × 10 pixels, so `00` is 10 × 10 and `jn` is 200 × 240. A tileset holds at most 400 × 240 (`dn`). A pixel is a color character, or `.` for transparent. Tile *n* is at column *n* mod 40, row *n* / 40 of the sheet.
 
 ```
 10                       20 x 10 pixels: tiles 0 and 1
@@ -471,18 +471,18 @@ A140c365                   C-5 on wave 1 and C-3 on wave 3 fading out
 
 ## Console API
 
-These are added on top of the GooberBASIC core: `print`, maths, strings, lists, `rnd`, `millisecs` and the rest.
+These are added on top of the GooberBASIC core: `print`, math, strings, lists, `rnd`, `millisecs` and the rest.
 Arguments in `[brackets]` are optional.
-A colour is a palette index 0–63. If you leave a colour out, the pen colour is used.
+A color is a palette index 0–63. If you leave a color out, the pen color is used.
 All drawing goes through `camera` and `clip`.
 
 ### Screen
 
 | Command | |
 |---|---|
-| `cls([c])` | clear the screen, or the clip rectangle if one is set (default colour 0) |
-| `pen(c)` | set the default colour |
-| `pset(x, y [, c])` / `pget(x, y)` | write / read one pixel |
+| `cls([c])` | clear the screen, or the clip rectangle if one is set (default color 0) |
+| `pen(c)` | set the default color |
+| `plot(x, y [, c])` / `pget(x, y)` | write / read one pixel |
 | `line(x1, y1, x2, y2 [, c])` | draw a line |
 | `rect(x, y, w, h [, c])` / `rect_fill(...)` | outline / filled rectangle |
 | `rect_fill_fast(x, y, w, h [, c])` | filled rectangle drawn the way `cls` clears: free of the dot limit, but no blending or depth test, and its depth goes back to the far plane |
@@ -490,9 +490,9 @@ All drawing goes through `camera` and `clip`.
 | `text(s, x, y [, c])` | draw text (`\n` breaks lines). Returns the x after the text |
 | `text_width(s)` | width of a string in pixels, in the font in use (6 per character in the built-in one) |
 | `font_w()` / `font_h()` | the size of a character of the font in use: `text` steps this far across, and down at a line break |
-| `rgb(r, g, b)` | colour index from channels 0–3 |
+| `rgb(r, g, b)` | color index from channels 0–3 |
 | `camera([x, y])` | offset all drawing by (−x, −y). With no arguments, resets |
-| `pal([a, b])` | from now on, drawing in colour `a` puts colour `b`: recolour sprites, flash a hit enemy white. `pal()` puts every colour back |
+| `pal([a, b])` | from now on, drawing in color `a` puts color `b`: recolor sprites, flash a hit enemy white. `pal()` puts every color back |
 | `clip([x, y, w, h])` | limit drawing to a rectangle. With no arguments, resets |
 | `spray(x, y, w, h, n [, c])` | `n` dots at random places in a rectangle. It uses `rnd()`'s numbers, so `seed_rnd()` repeats a spray |
 | `tex_quad(x0, y0, x1, y1, x2, y2, x3, y3, spr, sw, sh)` | stretch the `sw` × `sh` block of tiles at tile `spr` over any four-cornered shape: top-left, top-right, bottom-right, bottom-left. The edges don't have to be parallel. Order the corners differently to flip or turn it |
@@ -507,7 +507,7 @@ Every pixel has a depth (−32768 to 32767). **Lower numbers are nearer.** A pix
 | Command | |
 |---|---|
 | `set_depth([z])` | draw at depth `z` from now on. `set_depth()` is 0 |
-| `set_blend([b])` | how drawn colours mix with the screen, per red / green / blue channel (0–3): `BLEND_NORMAL` replaces, `BLEND_ADD` adds (up to 3), `BLEND_SUB` subtracts from the screen (down to 0), `BLEND_MAX` / `BLEND_MIN` keep the higher / lower, `BLEND_XOR` XORs. `set_blend()` is `BLEND_NORMAL`. `cls()` ignores it |
+| `set_blend([b])` | how drawn colors mix with the screen, per red / green / blue channel (0–3): `BLEND_NORMAL` replaces, `BLEND_ADD` adds (up to 3), `BLEND_SUB` subtracts from the screen (down to 0), `BLEND_MAX` / `BLEND_MIN` keep the higher / lower, `BLEND_XOR` XORs. `set_blend()` is `BLEND_NORMAL`. `cls()` ignores it |
 
 ### The font
 
@@ -522,12 +522,12 @@ These use the tileset and map in use: the one swapped in last (slot 0 to start w
 | Command | |
 |---|---|
 | `sprite(n, x, y [, w, h, flags])` | draw tile `n` (0–959), or a w×h block of tiles from the sheet (40 per row). Flags: `FLIP_X`, `FLIP_Y` |
-| `tile_pget(n, x, y)` / `tile_pset(n, x, y, c)` | read / write a tile pixel (−1 = transparent) |
+| `tile_pget(n, x, y)` / `tile_plot(n, x, y, c)` | read / write a tile pixel (−1 = transparent) |
 | `map_draw([mx, my, sx, sy, w, h])` | draw map cells `mx,my` .. `+w,+h` at screen `sx,sy`. Empty cells are not drawn |
 | `map_get(x, y)` / `map_set(x, y, t)` | read / change a map cell. An empty cell, or one outside the map, reads as −1; `map_set(x, y, -1)` empties a cell |
 | `map_w()` / `map_h()` | the map's size in cells |
 
-Changes a cart makes with `tile_pset` and `map_set` last until it stops. The next run starts from the cart's files again.
+Changes a cart makes with `tile_plot` and `map_set` last until it stops. The next run starts from the cart's files again.
 
 ### Slots
 
@@ -543,7 +543,7 @@ Each kind of data has 10 slots (0–9). Load files into them, then swap between 
 | `load_music` / `swap_music` | the same for songs, `music/name.g64`. Swapping stops the song; `music()` starts the new one |
 | `load_font` / `swap_font` | the same for fonts, `fonts/name.g64`: what `text()` and `text_width()` use. With the font slot in use empty, `text()` uses the built-in font |
 
-When a cart starts, every slot holds the file the file tree put in it (a slotted file that's missing is reported in the shell and skipped). In a cart that hasn't set any slots, slot 0 of each kind holds the file with the default name (`tileset`, `map`, `sfx`, `music`, `font`). An empty slot 0 gets an empty file (for a font, the built-in one). Slot 0 is in use. A file open in an editor is loaded with its unsaved changes, so Ctrl+R runs what you see. Swapping to an empty slot is an error. Emptying the slot in use leaves nothing to draw: `map_get` reads −1, and `tile_pset` / `map_set` are errors.
+When a cart starts, every slot holds the file the file tree put in it (a slotted file that's missing is reported in the shell and skipped). In a cart that hasn't set any slots, slot 0 of each kind holds the file with the default name (`tileset`, `map`, `sfx`, `music`, `font`). An empty slot 0 gets an empty file (for a font, the built-in one). Slot 0 is in use. A file open in an editor is loaded with its unsaved changes, so Ctrl+R runs what you see. Swapping to an empty slot is an error. Emptying the slot in use leaves nothing to draw: `map_get` reads −1, and `tile_plot` / `map_set` are errors.
 
 ```
 load_map(1, "cave") : load_tileset(1, "cave-tiles")
@@ -591,7 +591,7 @@ The screen is 96,000 pixels, so filling it with a map or a full-screen `rect_fil
 | `cpu()` | how much of this frame's time (1/60 s) has been used so far, as a percentage. Call it just before `flip()` to see the whole frame; over 100 means frames are being dropped |
 | `cart_title()` | the cart's title |
 
-Constants: `SCREEN_W` `SCREEN_H` `TILE_SIZE` `SHEET_COLS` (40) `NTILES` (960) `SLOTS` (10) `MAP_SCREEN_W` (40) `MAP_SCREEN_H` (24) `FONT_W` (6) `FONT_H` (10). (`MAP_W` and `MAP_H` are gone: maps vary in size, so use `map_w()` and `map_h()`.) Named colours:
+Constants: `SCREEN_W` `SCREEN_H` `TILE_SIZE` `SHEET_COLS` (40) `NTILES` (960) `SLOTS` (10) `MAP_SCREEN_W` (40) `MAP_SCREEN_H` (24) `FONT_W` (6) `FONT_H` (10). (`MAP_W` and `MAP_H` are gone: maps vary in size, so use `map_w()` and `map_h()`.) Named colors:
 
 | Constant | Index | Constant | Index |
 |---|---|---|---|
@@ -658,7 +658,7 @@ The examples are in their own folder: `CD examples`, then `DIR`, `RUN depth` and
 | [carts/hello](carts/hello/main.gb) | the palette, shapes, text, pad input |
 | [carts/examples/depth](carts/examples/depth/main.gb) | the depth buffer: circles and squares orbiting a planet, drawn in a shuffled order and still sorted by `set_depth`. A turns depth off to compare with plain draw order |
 | [carts/examples/rotate](carts/examples/rotate/main.gb) | sprites of 1×1, 2×2 and 4×4 tiles turning around their centres with `tex_quad`, big and at their real size |
-| [carts/examples/mouse](carts/examples/mouse/main.gb) | grab a bouncing ball and throw it: `mouse_dx` / `mouse_dy` become its speed, the right button pulls it to the pointer, the middle one changes its colour and the wheel its size |
+| [carts/examples/mouse](carts/examples/mouse/main.gb) | grab a bouncing ball and throw it: `mouse_dx` / `mouse_dy` become its speed, the right button pulls it to the pointer, the middle one changes its color and the wheel its size |
 | [carts/examples/cube](carts/examples/cube/main.gb) | a dice cube (a 2×2-tile texture per face) spinning in perspective with `tex_quad_3d`: back-face culling, and a second cube cutting through the first |
 | [carts/examples/net](carts/examples/net/main.gb) | a network game for up to 8: host or join (TCP or UDP), move a square around while the host bounces a ball everyone sees, B waves. Two GooberEngines on one machine can play with `127.0.0.1` |
 | [carts/seedling](carts/seedling/main.gb) | a small game with a tileset, map, sound bank and song. Collisions with `map_get`, `map_set`, sound effects over a looping tune, sprite flipping, a following camera, a HUD, and staying inside the dot limit |
@@ -731,15 +731,15 @@ GooberEngine finds the runtimes in `$GOOBERENGINE_RUNTIMES`, then in `runtimes/`
    - Two example carts.
    - A headless test runner.
 2. **Code editor** ✅
-   - A full-screen GooberBASIC editor inside the console: syntax colours from the compiler's own tables, scrolling, mouse and keyboard selection, and the system clipboard.
+   - A full-screen GooberBASIC editor inside the console: syntax colors from the compiler's own tables, scrolling, mouse and keyboard selection, and the system clipboard.
    - Undo/redo, find, go to line, comment toggling, and block indenting.
    - Ctrl+R to save and run, and jump-to-line on errors.
    - `NEW name` creates a cart and `SAVE` writes `main.gb`.
    - Scripted-input tests (`--type`).
    - Still to do: editing the `include`d files, find-and-replace, a scrollbar.
 3. **Tile editor** ✅
-   - A pixel editor for 1×1, 2×2 or 4×4 tile blocks, with a 64-colour palette (A/B colours) and the whole sheet beside it.
-   - Pencil, fill, line, rectangle, colour pick, flip/turn, nudge, copy/paste of blocks, and 64-step undo.
+   - A pixel editor for 1×1, 2×2 or 4×4 tile blocks, with a 64-color palette (A/B colors) and the whole sheet beside it.
+   - Pencil, fill, line, rectangle, color pick, flip/turn, nudge, copy/paste of blocks, and 64-step undo.
    - Writes `tiles.txt`, keeping its legend and comments.
    - Each run of a cart now starts from the cart's own tiles and map.
    - F1/F2 tabs switch between the editors.
@@ -779,7 +779,7 @@ GooberEngine finds the runtimes in `$GOOBERENGINE_RUNTIMES`, then in `runtimes/`
    - The whole engine in the browser (`make web`): Emscripten with ASYNCIFY, carts kept in IndexedDB, upload, download and drag-and-drop of `.gbcart` files, sound unlocked on the first gesture, and game controllers through SDL.
    - `EXPORT LINUX / WINDOWS / WEB / ALL` and `--export`: prebuilt player runtimes with the cart packed in (appended plus a trailer for executables, embedded in `index.html` for the web).
    - `make runtimes`: SDL2 built from source for a self-contained Linux binary and a static mingw-w64 `.exe`.
-   - The engine writes its own indexed-colour PNGs, so SDL2_image is no longer used. Dropping a cart on the desktop window loads it.
+   - The engine writes its own indexed-color PNGs, so SDL2_image is no longer used. Dropping a cart on the desktop window loads it.
    - Still to do: a Linux runtime built against an older glibc for older distributions; macOS; a game icon and version info in the `.exe`; touch controls for phones.
 9. **Many files** ✅
    - Tilesets of 960 tiles (400 × 240) and maps of 1–10 screens each way, in compact base-64 `.g64` files under `tiles/` and `maps/`. Sound banks and songs live under `sfx/` and `music/`.

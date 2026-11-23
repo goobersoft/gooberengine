@@ -12,14 +12,14 @@
  *     paints with that tile, or stamps the whole 2x2 / 4x4 block.
  *   - the preview window shows the selection by itself, at a size that fits.
  *     Drag it by its title bar; drag its bottom-right corner to resize it.
- *   - the tools, actions and the 64 colours (4 to a row) are in another,
+ *   - the tools, actions and the 64 colors (4 to a row) are in another,
  *     narrow window, which can also be dragged around.
  *
- * Transparent pixels show as a pink checkerboard (colours 50 and 34). The
- * left button draws with colour A. The right button picks the colour under
+ * Transparent pixels show as a pink checkerboard (colors 50 and 34). The
+ * left button draws with color A. The right button picks the color under
  * the mouse up into A (an eyedropper), or, with the "right click" setting on
- * "colour B", draws with colour B (transparent at first, so it erases). A
- * middle click (without dragging) picks a colour up too. Edits go straight into the open tileset, so Ctrl+R runs
+ * "color B", draws with color B (transparent at first, so it erases). A
+ * middle click (without dragging) picks a color up too. Edits go straight into the open tileset, so Ctrl+R runs
  * them without saving; Ctrl+S writes tiles/NAME.g64. */
 #include "engine.h"
 #include <SDL2/SDL_scancode.h>
@@ -38,7 +38,7 @@
 
 enum { T_PENCIL, T_FILL, T_LINE, T_RECT, T_PICK, NTOOLS };
 static const char tool_keys[NTOOLS] = {'P', 'F', 'L', 'R', 'I'};
-static const char *const tool_names[NTOOLS] = {"pencil (P)", "fill (F)", "line (L)", "rect (R), Shift: filled", "pick a colour (I)"};
+static const char *const tool_names[NTOOLS] = {"pencil (P)", "fill (F)", "line (L)", "rect (R), Shift: filled", "pick a color (I)"};
 enum { A_SIZE, A_FLIPX, A_FLIPY, A_TURN, A_CLEAR, NACTS };
 static const char act_keys[NACTS] = {'Z', 'H', 'V', 'T', 'X'};
 static const char *const act_names[NACTS] = {"block size 1x1 / 2x2 / 4x4 (Z)", "flip across (H)", "flip up-down (V)", "turn clockwise (T)", "clear the block (Del)"};
@@ -66,7 +66,7 @@ static struct {
     int drag;                /* 0 none, 1 window move, 2 window resize, 3 pan, 4 paint */
     int drag_win, drag_dx, drag_dy, pan_x, pan_y;
     int pan_btn, pan_sx, pan_sy;   /* the button panning, where it went down */
-    bool pan_moved;          /* a middle click that didn't move picks a colour instead */
+    bool pan_moved;          /* a middle click that didn't move picks a color instead */
     int stroke_btn, x0, y0, lastx, lasty;
     Tileset *base;           /* the tileset when a line/rect drag started */
     Tileset *undo[MAX_UNDO], *redo[MAX_UNDO];
@@ -421,7 +421,7 @@ static void preview_origin(int *cx, int *cy) {
 }
 
 /* the tools window's parts, top to bottom: tool buttons and action buttons
- * (3 to a row, 2 rows each), the palette (4 colours to a row), the transparent
+ * (3 to a row, 2 rows each), the palette (4 colors to a row), the transparent
  * swatch, then A and B with their indices */
 #define BTN_COLS 3
 #define BTN_STEP 11
@@ -457,8 +457,8 @@ static int sheet_tile_at(int mx, int my) {     /* -1 if not on the sheet */
     return (py / z / TILE) * SHEET_COLS + px / z / TILE;
 }
 
-/* pick up the colour under the mouse, from anywhere on the sheet: reading can't hurt */
-static void pick_colour(bool into_b) {
+/* pick up the color under the mouse, from anywhere on the sheet: reading can't hurt */
+static void pick_color(bool into_b) {
     int z = zooms[T.zoom], px = in.mouse_x - T.ox, py = in.mouse_y - T.oy;
     if (px < 0 || py < 0 || px >= SHEET_W * z || py >= SHEET_H * z) return;
     px /= z;
@@ -468,10 +468,10 @@ static void pick_colour(bool into_b) {
 }
 
 /* a left or right press on the sheet: paint inside the selection, select outside it.
- * With the eyedrop setting the right button picks a colour up into A instead. */
+ * With the eyedrop setting the right button picks a color up into A instead. */
 static void sheet_press(int btn) {
-    if (T.tool == T_PICK) { pick_colour(btn == 2); T.tool = T.prev_tool; return; }
-    if (btn == 2 && settings.tile_right == RIGHT_EYEDROP) { pick_colour(false); return; }
+    if (T.tool == T_PICK) { pick_color(btn == 2); T.tool = T.prev_tool; return; }
+    if (btn == 2 && settings.tile_right == RIGHT_EYEDROP) { pick_color(false); return; }
     int x, y;
     if (!block_px_at(in.mouse_x, in.mouse_y, &x, &y)) {
         int t = sheet_tile_at(in.mouse_x, in.mouse_y);
@@ -550,9 +550,9 @@ static void mouse(void) {
             }
             return;
         }
-        if (T.drag == 3 && T.pan_btn == 3 && !T.pan_moved) {     /* a middle click: pick the colour */
+        if (T.drag == 3 && T.pan_btn == 3 && !T.pan_moved) {     /* a middle click: pick the color */
             T.ox = in.mouse_x - T.pan_x; T.oy = in.mouse_y - T.pan_y;
-            pick_colour(false);
+            pick_color(false);
         }
         T.drag = 0;
     }
@@ -605,7 +605,7 @@ static void swatch(int x, int y, int w, int h, int c) {
     else draw_rect(x, y, w, h, c, true);
 }
 
-static void colour_name(int c, char *buf, size_t n) {
+static void color_name(int c, char *buf, size_t n) {
     if (c == CLEAR) snprintf(buf, n, "clear");
     else snprintf(buf, n, "%d (r%d g%d b%d)", c, c >> 4, (c >> 2) & 3, c & 3);
 }
@@ -628,7 +628,7 @@ static void draw_background(int *hx, int *hy) {
             uint8_t c = TS->t[(py / TILE) * SHEET_COLS + px / TILE][(py % TILE) * TILE + px % TILE];
             int sx = T.ox + px * z, sy = T.oy + py * z;
             if (c == CLEAR) checker(sx, sy, z, z);
-            else if (z == 1) draw_pset(sx, sy, c);
+            else if (z == 1) draw_plot(sx, sy, c);
             else draw_rect(sx, sy, z, z, c, true);
         }
     int scol = T.sel % SHEET_COLS, srow = T.sel / SHEET_COLS, n = bpx(), bt = n * z;
@@ -745,7 +745,7 @@ static void draw_tools_window(void) {
         int bx = px + (k ? 18 : 0);
         draw_text(num, bx + (15 - text_width(num)) / 2, ay + 10, k ? COL_GREY : COL_WHITE);
     }
-    if (live && inside(px, py, PAL_W, PAL_H)) T.hint = "left: colour A  right: colour B";
+    if (live && inside(px, py, PAL_W, PAL_H)) T.hint = "left: color A  right: color B";
 }
 
 static void draw(void) {
@@ -772,7 +772,7 @@ static void draw(void) {
         if (ui_status_close(by)) T.status[0] = 0;
     } else if (hx >= 0) {
         char c[32];
-        colour_name(bget(hx, hy), c, sizeof c);
+        color_name(bget(hx, hy), c, sizeof c);
         snprintf(line, sizeof line, "tile %d x%d y%d %s", T.sel + (hy / TILE) * SHEET_COLS + hx / TILE, hx % TILE, hy % TILE, c);
         draw_text(line, x, by, UI_RGB(2, 3, 3));
     } else if (T.hint) draw_text(T.hint, x, by, UI_RGB(2, 3, 3));

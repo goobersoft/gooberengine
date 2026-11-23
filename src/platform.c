@@ -125,7 +125,7 @@ void platform_shutdown(void) {
     SDL_Quit();
 }
 
-/* ---- screenshots: an indexed PNG (the 64 colours are its palette), written
+/* ---- screenshots: an indexed PNG (the 64 colors are its palette), written
  * without a library: zlib "stored" blocks need no compressor ---- */
 static uint32_t crc_table[256];
 
@@ -180,7 +180,7 @@ bool save_screenshot(const char *path) {
     be32(ihdr, SCREEN_W);
     be32(ihdr + 4, SCREEN_H);
     ihdr[8] = 8;                                           /* 8 bits per index */
-    ihdr[9] = 3;                                           /* palette colour */
+    ihdr[9] = 3;                                           /* palette color */
     for (int i = 0; i < NCOLORS; i++) {
         plte[i * 3] = (uint8_t)(palette[i] >> 16);
         plte[i * 3 + 1] = (uint8_t)(palette[i] >> 8);

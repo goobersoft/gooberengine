@@ -1,4 +1,4 @@
-/* The console's settings: the editors' colour theme, the sound levels,
+/* The console's settings: the editors' color theme, the sound levels,
  * fullscreen and the window's size. The settings screen (settings_screen.c)
  * changes them; the THEME command changes the theme.
  *
@@ -14,11 +14,11 @@
  *   scale = 1-8            the window: pixels per console pixel
  *   indent = smart | auto | none   the code editor's Enter: smart indents after
  *                          if, for ...; auto keeps the line's indentation; none adds none
- *   tile_right = eyedrop | colour_b   the tile editor's right button: picks a
- *                          colour up into A, or draws with colour B
+ *   tile_right = eyedrop | color_b   the tile editor's right button: picks a
+ *                          color up into A, or draws with color B
  *   fx_crt = 0-100         post-processing (postfx.c): CRT screen bending
  *   fx_tint = 0-359        hue shift, in degrees
- *   fx_saturation = 0-100  100 is the console's own colours, 0 grey
+ *   fx_saturation = 0-100  100 is the console's own colors, 0 grey
  *   fx_scanlines = 0-100   100 makes the gaps between lines black (not at 1x)
  *   fx_burn = 0-80         screen burn: lit pixels fade out instead of snapping off
  * Lines it doesn't know are kept when it's written. An exported game doesn't
@@ -35,7 +35,7 @@
 int ui_theme = THEME_BLUE;
 const char *const theme_names[NTHEMES] = {"blue", "green", "orange", "grey"};
 const char *const indent_names[NINDENTS] = {"smart", "auto", "none"};
-const char *const tile_right_names[NRIGHTS] = {"eyedrop", "colour_b"};
+const char *const tile_right_names[NRIGHTS] = {"eyedrop", "color_b"};
 Settings settings = {VOLUME_MAX, VOLUME_MAX, VOLUME_MAX, false, 3, INDENT_SMART, .fx_saturation = 100};
 
 static const char *const keys[] = {"theme", "volume", "music_volume", "sfx_volume", "fullscreen", "scale", "indent", "tile_right",
@@ -95,6 +95,7 @@ void settings_load(void) {
         }
         else if (!strcasecmp(k, "tile_right")) {
             for (int i = 0; i < NRIGHTS; i++) if (!strcasecmp(v, tile_right_names[i])) settings.tile_right = i;
+            if (!strcasecmp(v, "colour_b")) settings.tile_right = RIGHT_COLOR_B;   /* the old spelling */
         }
         else if (!strcasecmp(k, "fx_crt")) settings.fx_crt = clampi(n, 0, 100);
         else if (!strcasecmp(k, "fx_tint")) settings.fx_tint = ((n % 360) + 360) % 360;

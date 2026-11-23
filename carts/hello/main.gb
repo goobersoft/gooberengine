@@ -1,5 +1,5 @@
 ' hello - the smallest tour of the console.
-' Arrow keys (or a game pad) move the blob. Z / Space changes its colour.
+' Arrow keys (or a game pad) move the blob. Z / Space changes its color.
 strict
 
 local x:float = SCREEN_W / 2, y:float = 150
@@ -19,25 +19,25 @@ repeat
 
     cls(COL_NAVY)
 
-    ' all 64 colours: index = red * 16 + green * 4 + blue, each channel 0..3
+    ' all 64 colors: index = red * 16 + green * 4 + blue, each channel 0..3
     for local i:int = 0 to 63
         rect_fill(8 + (i mod 32) * 12, 8 + (i / 32) * 12, 11, 11, i)
     next
 
     text("Hello from GooberEngine!", 8, 36, COL_WHITE)
-    text("arrows: move   Z: new colour   Esc: back to the shell", 8, SCREEN_H - 12, COL_SKY)
+    text("arrows: move   Z: new color   Esc: back to the shell", 8, SCREEN_H - 12, COL_SKY)
 
     ' a wobbly ring of dots
     for local a:int = 0 to 359 step 15
         local r:float = 40 + sin(a * 3 + t * 4) * 6
-        pset(300 + cos(a + t) * r, 140 + sin(a + t) * r, rgb(3, (a / 90) mod 4, 2))
+        plot(300 + cos(a + t) * r, 140 + sin(a + t) * r, rgb(3, (a / 90) mod 4, 2))
     next
 
     ' the blob
     circle_fill(x, y + 3, 10, COL_DARK_GREY)
     circle_fill(x, y, 10, col)
     circle(x, y, 10, COL_WHITE)
-    pset(x - 3, y - 2, COL_BLACK) : pset(x + 3, y - 2, COL_BLACK)
+    plot(x - 3, y - 2, COL_BLACK) : plot(x + 3, y - 2, COL_BLACK)
     line(x - 3, y + 3, x + 3, y + 3, COL_BLACK)
 
     flip()
