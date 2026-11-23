@@ -156,8 +156,10 @@ web-build: web
 # The desktop engines find carts/ and runtimes/ beside themselves (cart.c, export.c).
 DIST_LINUX := build/dist/linux/gooberengine
 DIST_WIN   := build/dist/windows/gooberengine
-DIST_SKIP  ?= test untitled
-DIST_CARTS := $(filter-out %.unsaved %.saving %.old $(DIST_SKIP:%=carts/%/%),$(CARTS))
+# Only these folders of carts/ ship; anything else in carts/ (your own games, test carts)
+# stays out of the release. Add a folder here to ship it: make dist DIST_SHIP="examples hello mygame"
+DIST_SHIP  ?= examples hello seedling
+DIST_CARTS := $(filter-out %.unsaved %.saving %.old,$(filter $(DIST_SHIP:%=carts/%/%),$(CARTS)))
 
 $(DIST_LINUX)/gooberengine: $(ALL_SRC) $(HDRS) $(SDL_LINUX)/lib/libSDL2.a
 	mkdir -p $(@D)
