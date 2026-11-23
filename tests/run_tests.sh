@@ -574,6 +574,50 @@ head -c 2000 "$TC/seedling.zip" > "$TC/cut.zip"
 out=$(GOOBERENGINE_CARTS=$TC $GE --headless --frames 5 --exec "import $TC/cut.zip" 2>&1)
 said "cut-short zip" 'not a zip file'; [ ! -e "$TC/cut" ] && ok || bad "a bad zip leaves no folder behind"
 
+# ---- IMPORT file.png: a picture into a tileset ----
+PC=$PWD/build/pngcarts; rm -rf "$PC" && mkdir -p "$PC" && cp -r carts/examples/seedling "$PC/"
+python3 -I - "$PC" <<'PY'
+import sys, zlib, struct
+d = sys.argv[1]
+def png(path, w, h, ctype, depth, rows, extra=b""):   # rows: bytes per row; the filters cycle 0-4
+    bpp = max(1, {0: 1, 2: 3, 3: 1, 4: 2, 6: 4}[ctype] * depth // 8)
+    out, prev = b"", bytes(len(rows[0]))
+    for y, r in enumerate(rows):
+        f = y % 5; enc = bytearray()
+        for i, x in enumerate(r):
+            a = r[i - bpp] if i >= bpp else 0; b = prev[i]; c = prev[i - bpp] if i >= bpp else 0
+            p = a + b - c; pr = a if abs(p - a) <= abs(p - b) and abs(p - a) <= abs(p - c) else b if abs(p - b) <= abs(p - c) else c
+            enc.append((x - [0, a, b, (a + b) // 2, pr][f]) & 255)
+        out += bytes([f]) + enc; prev = r
+    ck = lambda t, b: struct.pack(">I", len(b)) + t + b + struct.pack(">I", zlib.crc32(t + b))
+    open(path, "wb").write(b"\x89PNG\r\n\x1a\n" + ck(b"IHDR", struct.pack(">IIBBBBB", w, h, depth, ctype, 0, 0, 0))
+                           + extra + ck(b"IDAT", zlib.compress(out)) + ck(b"IEND", b""))
+    return ck
+W, H = 400, 240
+v = lambda x, y: (x * 7 + y * 3) // 10 % 5          # 0-3 gray levels, 4 = transparent
+ck = png(d + "/rgba.png", W, H, 6, 8, [bytes(sum(([0, 0, 0, 0] if v(x, y) == 4 else [v(x, y) * 85] * 3 + [255] for x in range(W)), [])) for y in range(H)])
+pal = ck(b"PLTE", bytes(sum(([l] * 3 for l in (0, 85, 170, 255, 0)), []))) + ck(b"tRNS", bytes([255] * 4 + [0]))
+png(d + "/Grey Tiles.png", W, H, 3, 4, [bytes(v(x, y) << 4 | v(x + 1, y) for x in range(0, W, 2)) for y in range(H)], pal)
+png(d + "/off.png", 20, 10, 2, 8, [bytes([100, 100, 100] * 20)] * 10)
+PY
+want=$(python3 -I -c 'print("Dn" + "".join("0lG*."[(x * 7 + y * 3) // 10 % 5] for y in range(240) for x in range(400)))')
+g64() { tr -d ' \n' < "$1"; }
+out=$(GOOBERENGINE_CARTS=$PC $GE --headless --frames 5 --exec "load seedling" --exec "import $PC/rgba.png" --exec "import Grey Tiles.png" --exec "import $PC/off.png" --exec save 2>&1)
+said "import a png" "imported into a new tiles/rgba: 4 colors"
+said "import a png by a name with a space" "imported into a new tiles/Grey-Tiles: 4 colors"
+said "import: colors off the palette" "200 pixels not in the palette (matched to the nearest)"
+[ "$(g64 "$PC/seedling/tiles/rgba.g64")" = "$want" ] && ok || bad "an RGBA png comes in pixel for pixel"
+[ "$(g64 "$PC/seedling/tiles/Grey-Tiles.g64")" = "$want" ] && ok || bad "an indexed png with tRNS comes in pixel for pixel"
+[ "$(g64 "$PC/seedling/tiles/off.g64")" = "10$(printf 'l%.0s' $(seq 200))" ] && ok || bad "off-palette pixels take the nearest color" "$(cat "$PC/seedling/tiles/off.g64")"
+out=$(GOOBERENGINE_CARTS=$PC $GE --headless --frames 20 --exec "load seedling" --exec "import $PC/off.png rgba" --type '{ctrl+z}{ctrl+s}' 2>&1)
+said "import over a tileset" "imported into tiles/rgba"
+[ "$(g64 "$PC/seedling/tiles/rgba.g64")" = "$want" ] && ok || bad "Ctrl+Z undoes an import"
+printf 'not a png' > "$PC/bad.png"
+out=$(GOOBERENGINE_CARTS=$PC $GE --headless --frames 5 --exec "load seedling" --exec "import $PC/bad.png" --exec "import nope.png" 2>&1)
+said "import: not a png" "bad.png is not a PNG"; said "import: no such png" "no file 'nope.png'"
+out=$(GOOBERENGINE_CARTS=$PC $GE --headless --frames 5 --exec "import $PC/rgba.png" 2>&1)
+said "import a png into the untitled cart" "imported into a new tiles/rgba"
+
 # ---- zipped carts: .zip / .tar.gz / .tar, unpacked into a folder on LOAD ----
 ZC=$PWD/build/zcarts; rm -rf "$ZC" && mkdir -p "$ZC" && cp -r carts/examples/seedling "$ZC/"
 out=$(GOOBERENGINE_CARTS=$ZC $GE --headless --frames 5 --exec "load seedling" --exec export --exec "export $ZC/seed2.tar.gz" 2>&1)

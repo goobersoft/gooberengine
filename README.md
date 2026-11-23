@@ -99,6 +99,7 @@ For the code editor, GooberBASIC also exports two read-only lookups: `lex_is_key
 | `EXPORT target [folder]` | make a standalone game: `LINUX`, `WINDOWS`, `WEB` or `ALL` (several may be given). Written to `exports/<name>/` unless a folder is given. See [Exporting games](#exporting-games) |
 | `UPLOAD` / `DOWNLOAD` | web version only: open a cart `.zip` from your computer / save the cart to it as a `.zip` |
 | `IMPORT file [name]` | unpack a `.zip` (or `.tar.gz`, `.tgz`, `.tar`) into a new cart folder and load it. `LOAD file.zip` does the same, named after the file |
+| `IMPORT file.png [name]` | turn a picture into the loaded cart's tileset `tiles/name.g64` (named after the file if no name is given). See [Importing pictures](#importing-pictures) |
 | `INFO` | title, author, tiles used, folder |
 | `THEME [name]` | the editors' colors: `blue` (the default), `green`, `orange` or `grey` (`white` works too). Remembered for next time. `THEME` alone shows the one in use |
 | `SETTINGS` | open the [settings](#settings) screen (F10): theme, volume, fullscreen, window size, indent, right click, effects |
@@ -218,7 +219,7 @@ Command-line options, mostly for scripting and tests:
 | `--scale N` | window scale |
 | `--export targets cart [folder]` | export a game without opening a window: `linux`, `windows`, `web`, `all`, or a comma-separated list |
 
-Dropping a cart `.zip` or a cart folder on the window loads it, like `LOAD`.
+Dropping a cart `.zip` or a cart folder on the window loads it, like `LOAD`. Dropping a `.png` imports it as a tileset, like `IMPORT file.png`.
 
 ## Code editor
 
@@ -275,6 +276,18 @@ The colors mark keywords, console and core commands, type names, constants, numb
 | Ctrl+S, Ctrl+R, Esc | save `tiles/NAME.g64`, run, back to the shell |
 
 Saving writes only as much of the sheet as is used, so a tileset with ten tiles in its top row is a small file.
+
+### Importing pictures
+
+A tileset drawn in another program (Aseprite, GIMP …) comes in as a PNG: `IMPORT forest.png`, or drop the file on the window. It becomes `tiles/forest.g64` (`IMPORT forest.png trees` names it `trees`), opens in the tile editor, and is kept once you save it with Ctrl+S.
+
+- **Size:** a 400 × 240 picture fills the sheet. A smaller one fills its top-left corner and leaves the rest transparent. A bigger one is cut to 400 × 240.
+- **Colors:** each pixel takes the nearest of the 64 colors (each channel is 0, 85, 170 or 255). A picture drawn with the palette comes in exactly; otherwise the message says how many pixels were matched to a nearby color. The four grays are `#000000`, `#555555`, `#aaaaaa` and `#ffffff`.
+- **Transparency:** a pixel less than half opaque becomes transparent.
+- **Again:** importing onto a tileset that exists replaces its pixels, as one change: Ctrl+Z puts them back, and nothing on disk changes until you save. So you can keep drawing in the other program and import again.
+- **Kinds of PNG:** RGB, RGBA, gray, gray + alpha and indexed, at any bit depth. Not interlaced ones: save them again without interlacing.
+
+The file is looked for as given, then in the carts folder, then in the cart's folder.
 
 ## Map editor
 
@@ -426,7 +439,7 @@ A cart can have any number of each. Each file can have a slot it loads into by i
 
 **The .g64 files** are base-64 text. Each character of `0-9 a-z A-Z + *` stands for a number 0–63, in that order: `0` is 0, `a` is 10, `A` is 36, `*` is 63. A color is its palette index, so `a` is color 10 everywhere. Spaces and line breaks are ignored. GooberEngine writes one row per line.
 
-**tiles/NAME.g64**: `XY` then the pixels, row by row. `X` and `Y` give the width and height as (digit + 1) × 10 pixels, so `00` is 10 × 10 and `jn` is 200 × 240. A tileset holds at most 400 × 240 (`dn`). A pixel is a color character, or `.` for transparent. Tile *n* is at column *n* mod 40, row *n* / 40 of the sheet.
+**tiles/NAME.g64**: `XY` then the pixels, row by row. `X` and `Y` give the width and height as (digit + 1) × 10 pixels, so `00` is 10 × 10 and `jn` is 200 × 240. A tileset holds at most 400 × 240 (`Dn`). A pixel is a color character, or `.` for transparent. Tile *n* is at column *n* mod 40, row *n* / 40 of the sheet.
 
 ```
 10                       20 x 10 pixels: tiles 0 and 1

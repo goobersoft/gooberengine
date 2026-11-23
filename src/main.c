@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 
 static void usage(void) {
     fprintf(stderr,
@@ -101,7 +102,11 @@ int main(int argc, char **argv) {
         else shell_frame();
         platform_frame();
         char dropped[1024];
-        if (platform_take_dropped(dropped, sizeof dropped)) {   /* a zipped cart or cart folder: load it */
+        bool got = platform_take_dropped(dropped, sizeof dropped);
+        size_t dn = got ? strlen(dropped) : 0;
+        if (got && dn > 4 && !strcasecmp(dropped + dn - 4, ".png"))
+            shell_import_png(dropped, NULL);              /* a picture: into a tileset, in the tile editor */
+        else if (got) {                                   /* a zipped cart or cart folder: load it */
             char cmd[1100];
             snprintf(cmd, sizeof cmd, "load %s", dropped);
             ui_mode = MODE_SHELL;

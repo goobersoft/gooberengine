@@ -23,10 +23,12 @@
  * them without saving; Ctrl+S writes tiles/NAME.g64. */
 #include "engine.h"
 #include <SDL2/SDL_scancode.h>
+#include <ctype.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 
 #define TOP FONT_H                  /* the background: between the bars */
 #define BOT (SCREEN_H - FONT_H)
@@ -270,6 +272,45 @@ void tiles_doc_changed(void) {
     clear_stack(T.undo, &T.nundo);
     clear_stack(T.redo, &T.nredo);
     if (T.drag == 4) T.drag = 0;
+}
+
+/* IMPORT file.png [name]: the picture becomes tiles/NAME, a new tileset or the
+ * pixels of the one with that name. Either way it's an unsaved change the editor
+ * shows (Ctrl+Z puts an existing tileset back, Ctrl+S keeps it). */
+bool tiles_import(const char *path, const char *name, char *msg, int msglen) {
+    char nm[64], info[256];
+    if (name && *name) snprintf(nm, sizeof nm, "%s", name);
+    else {                                        /* the file's name, made a file name: "Forest Tiles.png" -> Forest-Tiles */
+        const char *b = path;
+        for (const char *p = path; *p; p++) if (*p == '/' || *p == '\\') b = p + 1;
+        size_t j = 0;
+        for (; *b && j < sizeof nm - 1; b++) {
+            if (!strcasecmp(b, ".png")) break;
+            nm[j++] = isalnum((unsigned char)*b) || *b == '_' ? *b : '-';
+        }
+        nm[j] = 0;
+    }
+    if (!res_name_ok(nm)) { snprintf(msg, (size_t)msglen, "'%s' is not a file name (letters, digits, - and _): IMPORT %s name", nm, path); return false; }
+    Tileset *img = malloc(sizeof *img);
+    if (!img) { snprintf(msg, (size_t)msglen, "out of memory"); return false; }
+    if (!png_to_tileset(path, img, info, sizeof info)) { snprintf(msg, (size_t)msglen, "%s", info); free(img); return false; }
+    char err[512];
+    char path_g64[PATH_MAX + 128];
+    res_path(RES_TILES, nm, path_g64, sizeof path_g64);
+    FILE *f = fopen(path_g64, "r");
+    if (f) fclose(f);
+    Doc *d = doc_find(RES_TILES, nm);
+    bool fresh = !d && !f;
+    if (!d) d = fresh ? doc_create(RES_TILES, nm, err, sizeof err) : doc_open(RES_TILES, nm, err, sizeof err);
+    if (!d) { snprintf(msg, (size_t)msglen, "%s", err); free(img); return false; }
+    if (cart.active[RES_TILES] != d) { doc_set_active(d); docs_bind(); tiles_doc_changed(); }
+    before_change();                              /* Ctrl+Z gets the old pixels back */
+    memcpy(TS, img, sizeof *TS);
+    free(img);
+    ui_switch(MODE_TILES);
+    snprintf(msg, (size_t)msglen, "imported %s tiles/%s: %s (Ctrl+S saves it)", fresh ? "into a new" : "into", nm, info);
+    status(COL_GREEN, "imported tiles/%s: Ctrl+S saves it", nm);
+    return true;
 }
 
 /* ---------------------------------------------------------------- commands */

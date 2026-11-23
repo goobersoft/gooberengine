@@ -418,6 +418,7 @@ void shell_init(void);
 void shell_print(const char *s, int color);
 void shell_exec(const char *line);
 void shell_exec_discarding(const char *line);  /* shell_exec, answering Y to "discard them?" */
+void shell_import_png(const char *file, const char *name);   /* IMPORT file.png [name], or a dropped PNG */
 void shell_frame(void);
 void ui_run_from_editor(void);   /* save, run, then come back to the editor (on the error line) */
 extern bool shell_quit;
@@ -443,6 +444,10 @@ void font_doc_changed(void);
 void tiles_frame(void);
 void tiles_selection(int *tile, int *size); /* the tile editor's selected tile and block size (1/2/4) */
 void tiles_select(int tile, int w, int h);  /* select a picked w x h block (2x2, 4x4 kept, else its top-left) */
+bool tiles_import(const char *path, const char *name, char *msg, int msglen);   /* IMPORT file.png: a PNG into tiles/NAME */
+/* ---- png.c: reading PNGs ---- */
+uint8_t *png_read_rgba(const char *path, int *w, int *h, char *err, int errlen);   /* malloc'd w*h*4 RGBA, NULL on error */
+bool png_to_tileset(const char *path, Tileset *ts, char *msg, int msglen);  /* msg: what came in, or the error */
 void map_frame(void);
 void sound_frame(void);
 void music_frame(void);

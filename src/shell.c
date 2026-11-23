@@ -93,6 +93,7 @@ static void cmd_help(void) {
         {"EXPORT [file]", "zip the cart: carts/<name>.zip, or file"},
         {"EXPORT target", "make a standalone game: LINUX WINDOWS WEB ALL"},
         {"IMPORT file", "unpack a .zip (or .tar.gz) into the carts folder"},
+        {"IMPORT file.png", "turn a picture into a tileset (or drop one)"},
 #ifdef __EMSCRIPTEN__
         {"UPLOAD", "open a .zip cart from your computer (or drop one)"},
         {"DOWNLOAD", "save the cart to your computer as a .zip"},
@@ -301,6 +302,24 @@ void ui_switch(int mode) {
 
 static void open_editor(void) { ui_switch(MODE_EDITOR); }
 
+/* ends in .png */
+static bool png_name(const char *f) { size_t n = strlen(f); return n > 4 && !strcasecmp(f + n - 4, ".png"); }
+
+/* IMPORT file.png [name], or a PNG dropped on the window: it becomes a tileset.
+ * The file is looked for as given, then in the carts folder, then in the cart. */
+void shell_import_png(const char *file, const char *name) {
+    if (!cart.loaded) { shell_print("no cart loaded: LOAD or NEW one first", COL_RED); return; }
+    char path[PATH_MAX + 300], msg[640];
+    snprintf(path, sizeof path, "%s", file);
+    FILE *f = fopen(path, "rb");
+    if (!f && file[0] != '/') { snprintf(path, sizeof path, "%s/%s", carts_root(), file); f = fopen(path, "rb"); }
+    if (!f && file[0] != '/') { snprintf(path, sizeof path, "%s/%s", cart.dir, file); f = fopen(path, "rb"); }
+    if (!f) { printf_line(COL_RED, "no file '%s'", file); return; }
+    fclose(f);
+    if (tiles_import(path, name, msg, sizeof msg)) shell_print(msg, COL_GREEN);
+    else { shell_print(msg, COL_RED); ui_mode = MODE_SHELL; }
+}
+
 bool ui_global_key(const KeyEvent *ev) {
     if (ev->type != EV_KEY) return false;
     if (ev->sc == SDL_SCANCODE_F1) {            /* help: the page for what's under the cursor; in the help, the index */
@@ -466,9 +485,12 @@ void shell_exec(const char *raw) {
 #else
         shell_print("UPLOAD is for the web version: drop a .zip cart or cart folder on the window", COL_GREY);
 #endif
+    } else if (!strcasecmp(cmd, "import") && png_name(arg)) {   /* a picture: into a tileset */
+        shell_import_png(arg, NULL);
     } else if (!strcasecmp(cmd, "import")) {
         char err[512], dir[4096], file[256], name[128] = "";
-        if (sscanf(arg, "%255s %127s", file, name) < 1) shell_print("usage: IMPORT file.zip [name]", COL_RED);
+        if (sscanf(arg, "%255s %127s", file, name) == 2 && png_name(file)) { shell_import_png(file, name); return; }
+        if (sscanf(arg, "%255s %127s", file, name) < 1) shell_print("usage: IMPORT file.zip [name] or IMPORT file.png [name]", COL_RED);
         else if (!confirm_discard(again)) return;
         else if (!archive_name(file)) shell_print("IMPORT takes a .zip, .tar.gz, .tgz or .tar", COL_RED);
         else {                                     /* unpack under the given name */
