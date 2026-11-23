@@ -243,7 +243,7 @@ fi
 # ---- the tile editor. {f9} hides the file tree, so the editor has the whole width.
 # The tileset is the canvas, at 6x from (0,10), and tile 0 is selected: its pixel (x, y)
 # is clicked at (3 + 6x, 13 + 6y). In the tools window, palette color i is at
-# (368 + (i mod 4) * 8, 72 + (i / 4) * 8); the preview window is at (276,12) ----
+# (368 + (i mod 4) * 8, 61 + (i / 4) * 8); the preview window is at (276,12) ----
 TT=$TC/t/tiles/tileset.g64
 row() {     # row <name> <tile> <row> <expected 10 characters>: from the tileset's rows (one per line)
     got=$(awk -v l=$(( ($2 / 40) * 10 + $3 + 2 )) -v c=$(( ($2 % 40) * 10 + 1 )) 'NR == l { s = substr($0, c, 10); while (length(s) < 10) s = s "."; print s }' "$TT" 2>/dev/null)
@@ -260,8 +260,8 @@ edit "stroke stops at the edge" '{click:125,5}{f9}{click:3,19}{drag:117,19}{mous
 row "stroke stops at the edge" 0 1 '**********'; row "stroke stops at the edge" 1 1 '..........'
 edit "tile undo" '{click:125,5}{f9}{click:3,13}{click:15,13}{ctrl+z}{ctrl+s}';   row "tile undo" 0 0 '*.........'
 edit "paste"     '{click:125,5}{f9}{click:3,13}{ctrl+c}{right}{ctrl+v}{ctrl+s}'; row "paste" 1 0 '*.........'
-edit "color"    '{click:125,5}{f9}{click:368,104}{click:3,13}{ctrl+s}';         row "color" 0 0 'g.........'
-edit "right click picks" '{click:125,5}{f9}{click:368,104}{click:3,13}{click:368,72}{rclick:3,13}{mouse:3,13}{click:9,13}{ctrl+s}'
+edit "color"    '{click:125,5}{f9}{click:368,93}{click:3,13}{ctrl+s}';         row "color" 0 0 'g.........'
+edit "right click picks" '{click:125,5}{f9}{click:368,93}{click:3,13}{click:368,61}{rclick:3,13}{mouse:3,13}{click:9,13}{ctrl+s}'
 row "right click picks" 0 0 'gg........'
 edit "middle click picks" '{click:125,5}{f9}{click:3,13}{click:368,104}{mclick:3,13}{mouse:3,13}{click:9,13}{ctrl+s}'
 row "middle click picks" 0 0 '**........'

@@ -209,7 +209,7 @@ const HelpPage help_pages[] = {
     "- Click a tile to edit it. Alt + drag: edit every tile from where the drag starts to where it ends, as one block (an Alt+click on one tile changes nothing).\n"
     "- H / V / T: flip across, flip up-down, turn (a square block only).\n"
     "- arrows: move to another tile. Shift+arrows: nudge the pixels.\n"
-    "- Del: clear. X: swap colors A and B. G: grid. Home: reset the view.\n"
+    "- Del: clear the block. X: swap colors A and B. G: grid. Home: reset the view.\n"
     "- Ctrl+C / X / V: copy, cut, paste. Ctrl+Z / Y: undo, redo.\n"
     "- Ctrl+S: save `tiles/NAME.g64`. Ctrl+R: run. Esc: the shell.\n"
     "\n"

@@ -36,16 +36,16 @@
 #define TITLE_H 9
 #define MAX_UNDO 64
 #define TOOLS_W 36
-#define TOOLS_H 208
+#define TOOLS_H 197
 #define GRIP 6
 
 enum { T_PENCIL, T_FILL, T_LINE, T_RECT, T_OVAL, T_PICK, NTOOLS };
 static const char tool_keys[NTOOLS] = {'P', 'F', 'L', 'R', 'O', 'I'};
 static bool has_alt(int t) { return t == T_FILL || t == T_RECT || t == T_OVAL; }
 static const char *const tool_names[NTOOLS] = {"pencil (P)", "fill (F)", "line (L), Shift: snap to 45", "rect (R)", "oval (O)", "pick a color (I)"};
-enum { A_FLIPX, A_FLIPY, A_TURN, A_CLEAR, NACTS };
-static const char act_keys[NACTS] = {'H', 'V', 'T', 'X'};
-static const char *const act_names[NACTS] = {"flip across (H)", "flip up-down (V)", "turn clockwise (T)", "clear the block (Del)"};
+enum { A_FLIPX, A_FLIPY, A_TURN, NACTS, A_CLEAR = NACTS };   /* clearing has a key (Del), not a button */
+static const char act_keys[NACTS] = {'H', 'V', 'T'};
+static const char *const act_names[NACTS] = {"flip across (H)", "flip up-down (V)", "turn clockwise (T)"};
 static const int zooms[] = {1, 2, 3, 4, 6, 8, 12, 16};
 #define NZOOM 8
 #define START_ZOOM 4                /* 6x: a tile is 60 screen pixels */
@@ -516,7 +516,7 @@ static void preview_origin(int *cx, int *cy) {
 }
 
 /* the tools window's parts, top to bottom: tool buttons and action buttons
- * (3 to a row, 2 rows each), the palette (4 colors to a row), the transparent
+ * (3 to a row: 2 rows of tools, 1 of actions), the palette (4 colors to a row), the transparent
  * swatch, then A and B with their indices */
 #define BTN_COLS 3
 #define BTN_STEP 11
@@ -532,7 +532,7 @@ static int act_btn(int i, int *x, int *y) { return btn_at(i, 2, x, y); }
 #define PAL_ROWS (NCOLORS / PAL_COLS)
 #define PAL_W (PAL_COLS * PAL_CELL)
 #define PAL_H (PAL_ROWS * PAL_CELL)
-static void pal_origin(int *x, int *y) { *x = T.win[W_TOOLS].x + 2; *y = T.win[W_TOOLS].y + TITLE_H + 3 + 4 * BTN_STEP; }
+static void pal_origin(int *x, int *y) { *x = T.win[W_TOOLS].x + 2; *y = T.win[W_TOOLS].y + TITLE_H + 3 + 3 * BTN_STEP; }
 
 static int floor_div(int a, int b) { return a >= 0 ? a / b : -((-a + b - 1) / b); }
 

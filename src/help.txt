@@ -223,7 +223,7 @@ The selection is also the {map-editor|map editor}'s brush: pick a tile (or a blo
 - Click a tile to edit it. Alt + drag: edit every tile from where the drag starts to where it ends, as one block (an Alt+click on one tile changes nothing).
 - H / V / T: flip across, flip up-down, turn (a square block only).
 - arrows: move to another tile. Shift+arrows: nudge the pixels.
-- Del: clear. X: swap colors A and B. G: grid. Home: reset the view.
+- Del: clear the block. X: swap colors A and B. G: grid. Home: reset the view.
 - Ctrl+C / X / V: copy, cut, paste. Ctrl+Z / Y: undo, redo.
 - Ctrl+S: save `tiles/NAME.g64`. Ctrl+R: run. Esc: the shell.
 
