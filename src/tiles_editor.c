@@ -40,7 +40,8 @@
 
 enum { T_PENCIL, T_FILL, T_LINE, T_RECT, T_OVAL, T_PICK, NTOOLS };
 static const char tool_keys[NTOOLS] = {'P', 'F', 'L', 'R', 'O', 'I'};
-static const char *const tool_names[NTOOLS] = {"pencil (P)", "fill (F)", "line (L), Shift: snap to 45", "rect (R), Ctrl: filled, Shift: square", "oval (O), Ctrl: filled, Shift: circle", "pick a color (I)"};
+static bool fillable(int t) { return t == T_RECT || t == T_OVAL; }
+static const char *const tool_names[NTOOLS] = {"pencil (P)", "fill (F)", "line (L), Shift: snap to 45", "rect (R)", "oval (O)", "pick a color (I)"};
 enum { A_SIZE, A_FLIPX, A_FLIPY, A_TURN, A_CLEAR, NACTS };
 static const char act_keys[NACTS] = {'Z', 'H', 'V', 'T', 'X'};
 static const char *const act_names[NACTS] = {"block size 1x1 / 2x2 / 4x4 (Z)", "flip across (H)", "flip up-down (V)", "turn clockwise (T)", "clear the block (Del)"};
@@ -58,6 +59,7 @@ static struct {
     int sel;                 /* top-left tile of the block being edited */
     int bsize;               /* block size in tiles: 1, 2 or 4 */
     int tool, prev_tool;
+    bool filled[NTOOLS];     /* rect / oval: filled unless Ctrl is held (a right click on the button swaps) */
     int col_a, col_b;        /* 0..63 or CLEAR */
     bool grid;
     int zoom, ox, oy;        /* the background: zoom index, where the sheet's top-left is */
@@ -589,7 +591,7 @@ static void sheet_drag(void) {
         bline(T.lastx, T.lasty, x, y, c);
     } else {
         memcpy(TS, T.base, sizeof *TS);
-        bool fill = in.key[SDL_SCANCODE_LCTRL] || in.key[SDL_SCANCODE_RCTRL];
+        bool fill = T.filled[T.tool] != (in.key[SDL_SCANCODE_LCTRL] || in.key[SDL_SCANCODE_RCTRL]);
         if (in.key[SDL_SCANCODE_LSHIFT] || in.key[SDL_SCANCODE_RSHIFT]) snap(&x, &y);
         if (T.tool == T_LINE) bline(T.x0, T.y0, x, y, c);
         else if (T.tool == T_OVAL) boval(T.x0, T.y0, x, y, c, fill);
@@ -601,7 +603,13 @@ static void sheet_drag(void) {
 
 static void tools_press(int btn) {
     int x, y, w;
-    for (int i = 0; i < NTOOLS; i++) { w = tool_btn(i, &x, &y); if (inside(x, y, w, 10)) { set_tool(i); return; } }
+    for (int i = 0; i < NTOOLS; i++) {
+        w = tool_btn(i, &x, &y);
+        if (!inside(x, y, w, 10)) continue;
+        if (btn == 2 && fillable(i)) T.filled[i] = !T.filled[i];   /* a right click: filled <-> outline */
+        set_tool(i);
+        return;
+    }
     for (int i = 0; i < NACTS; i++) { w = act_btn(i, &x, &y); if (inside(x, y, w, 10)) { act(i); return; } }
     pal_origin(&x, &y);
     if (inside(x, y, PAL_W, PAL_H)) {
@@ -797,7 +805,14 @@ static void draw_tools_window(void) {
         w = tool_btn(i, &x, &y);
         bool hover = live && inside(x, y, w, 10);
         button(x, y, w, tool_keys[i], T.tool == i, hover);
-        if (hover) T.hint = tool_names[i];
+        if (T.filled[i]) draw_rect(x + w - 2, y + 8, 2, 2, T.tool == i ? COL_BLACK : UI_RGB(2, 3, 3), true);
+        if (hover && fillable(i)) {
+            static char hint[80];
+            bool f = T.filled[i];
+            snprintf(hint, sizeof hint, "%s%s  Ctrl: %s  Shift: %s  right: swap", f ? "filled " : "", i == T_RECT ? "rect" : "oval",
+                     f ? "outline" : "filled", i == T_RECT ? "square" : "circle");
+            T.hint = hint;
+        } else if (hover) T.hint = tool_names[i];
     }
     for (int i = 0; i < NACTS; i++) {
         w = act_btn(i, &x, &y);
