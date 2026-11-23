@@ -9,7 +9,8 @@
  *     part that can be painted: a stroke stops at its edge. Clicking outside
  *     it selects the tile clicked instead; Shift+click there grows the
  *     selection to take that tile in too (and keeps growing while dragged).
- *     Inside it, Shift is the shapes' 1:1 key, as before. Tile 0 is selected at first.
+ *     Inside it, Shift is the shapes' 1:1 key, as before. Ctrl + right click
+ *     anywhere selects just the tile clicked. Tile 0 is selected at first.
  *   - the selection is also the map editor's pen: switch to the map and it
  *     paints with that tile, or stamps the whole block.
  *   - the preview window shows the selection by itself, at a size that fits.
@@ -742,6 +743,11 @@ static void mouse(void) {
         T.pan_sx = in.mouse_x;
         T.pan_sy = in.mouse_y;
         T.pan_moved = false;
+        return;
+    }
+    if (btn == 2 && ctrl_held()) {    /* Ctrl + right click, in the selection or not: back to one tile */
+        int t = sheet_tile_at(in.mouse_x, in.mouse_y);
+        if (t >= 0) { T.sel = t; T.bw = T.bh = 1; }
         return;
     }
     int bx, by;                       /* inside the selection, Shift is for the shapes */
