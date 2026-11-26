@@ -32,14 +32,14 @@ colors[3] = COL_PINK : colors[4] = COL_YELLOW : colors[5] = COL_PURPLE
 
 ' keep the ball inside the play area, bouncing off whatever it touches
 function bounce_walls()
-  if bx < radius then bx = radius : vx = -vx * BOUNCE
-  if bx > SCREEN_W - radius then bx = SCREEN_W - radius : vx = -vx * BOUNCE
-  if by < 12 + radius then by = 12 + radius : vy = -vy * BOUNCE
+  if bx < radius then bx = radius : vx = -vx * BOUNCE endif
+  if bx > SCREEN_W - radius then bx = SCREEN_W - radius : vx = -vx * BOUNCE endif
+  if by < 12 + radius then by = 12 + radius : vy = -vy * BOUNCE endif
   if by > FLOOR_Y - radius
     by = FLOOR_Y - radius
     vy = -vy * BOUNCE
     vx = vx * 0.98                 ' a little friction on the floor
-    if abs(vy) < 1 then vy = 0     ' stop bouncing once it's tiny
+    if abs(vy) < 1 then vy = 0 endif     ' stop bouncing once it's tiny
   endif
 endfunction
 
@@ -56,7 +56,7 @@ repeat
   ' middle: mouse_btn only says "held", so remember last frame's state to
   ' see the moment it goes down (mouse_hit(MOUSE_MIDDLE) does this for you)
   local middle:int = mouse_btn(2)
-  if middle and not middle_was then color = (color + 1) mod 6
+  if middle and not middle_was then color = (color + 1) mod 6 endif
   middle_was = middle
 
   ' left: grab the ball, carry it, throw it
@@ -89,12 +89,12 @@ repeat
   ' ---- draw ----
   cls(rgb(0, 0, 1))
   rect_fill(0, FLOOR_Y, SCREEN_W, SCREEN_H - FLOOR_Y, rgb(0, 1, 1))
-  if mouse_btn(1) and not held then line(mx, my, int(bx), int(by), COL_DARK_GREY)
+  if mouse_btn(1) and not held then line(mx, my, int(bx), int(by), COL_DARK_GREY) endif
 
   rect_fill(int(bx) - radius + 3, FLOOR_Y, radius * 2, 3, rgb(0, 0, 0))   ' shadow on the floor
   circle_fill(int(bx), int(by), radius, colors[color])
   circle_fill(int(bx - radius / 3), int(by - radius / 3), max(1, radius / 4), COL_WHITE)
-  if held or over then circle(int(bx), int(by), radius + 2, COL_WHITE)
+  if held or over then circle(int(bx), int(by), radius + 2, COL_WHITE) endif
   ' the ball's speed, ten frames ahead
   line(int(bx), int(by), int(bx + vx * 10), int(by + vy * 10), COL_RED)
 

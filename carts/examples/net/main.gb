@@ -31,23 +31,23 @@ colors[0] = COL_ORANGE : colors[1] = COL_CYAN : colors[2] = COL_LIME : colors[3]
 colors[4] = COL_YELLOW : colors[5] = COL_PURPLE : colors[6] = COL_RED : colors[7] = COL_SKY
 
 function mode_name:string()
-  if mode = NET_UDP then return "UDP"
+  if mode = NET_UDP then return "UDP" endif
   return "TCP"
 endfunction
 
 ' ---- the lobby: pick TCP or UDP, then host or join ----
 function lobby()
   repeat
-    if key_hit(KEY_T) then mode = NET_TCP + NET_UDP - mode
+    if key_hit(KEY_T) then mode = NET_TCP + NET_UDP - mode endif
     ' the address: digits, and C (or space) for a dot
     for local d:int = 0 to 9
-      if key_hit(KEY_0 + d) and len(address) < 40 then address = address + d
+      if key_hit(KEY_0 + d) and len(address) < 40 then address = address + d endif
     next
-    if (key_hit(KEY_C) or key_hit(KEY_SPACE)) and len(address) < 40 then address = address + "."
-    if key_hit(KEY_BACKSPACE) and len(address) > 0 then address = left(address, len(address) - 1)
+    if (key_hit(KEY_C) or key_hit(KEY_SPACE)) and len(address) < 40 then address = address + "." endif
+    if key_hit(KEY_BACKSPACE) and len(address) > 0 then address = left(address, len(address) - 1) endif
 
     if key_hit(KEY_H)
-      if net_host(PORT, mode) then return
+      if net_host(PORT, mode) then return endif
     endif
     if key_hit(KEY_J)
       save_data("address", address)
@@ -57,7 +57,7 @@ function lobby()
           text("Joining " + address + " (" + mode_name() + ")...", 20, 110, COL_WHITE)
           flip()
         wend
-        if net_status() = NET_CONNECTED then return
+        if net_status() = NET_CONNECTED then return endif
       endif
     endif
 
@@ -67,7 +67,7 @@ function lobby()
     text("H     host a game on port " + PORT, 20, 66, COL_WHITE)
     text("J     join " + address, 20, 82, COL_WHITE)
     text("0-9, C for '.', Backspace: edit the address", 20, 98, COL_GREY)
-    if net_error() <> "" then text(net_error(), 20, 130, COL_RED)
+    if net_error() <> "" then text(net_error(), 20, 130, COL_RED) endif
     flip()
   forever
 endfunction
@@ -76,24 +76,24 @@ endfunction
 function play()
   local me:int = net_id()
   x = 40 + me * 40 : y = SCREEN_H / 2
-  if me = 0 then bx = SCREEN_W / 2 : by = SCREEN_H / 2
+  if me = 0 then bx = SCREEN_W / 2 : by = SCREEN_H / 2 endif
 
   while net_status() = NET_CONNECTED
     ' move my square, and share where it is
-    if btn(BTN_LEFT) then x :- 2
-    if btn(BTN_RIGHT) then x :+ 2
-    if btn(BTN_UP) then y :- 2
-    if btn(BTN_DOWN) then y :+ 2
+    if btn(BTN_LEFT) then x :- 2 endif
+    if btn(BTN_RIGHT) then x :+ 2 endif
+    if btn(BTN_UP) then y :- 2 endif
+    if btn(BTN_DOWN) then y :+ 2 endif
     x = max(0, min(SCREEN_W - SIZE, x)) : y = max(12, min(SCREEN_H - SIZE, y))
     net_set(me * 4, x)
     net_set(me * 4 + 1, y)
-    if btn_hit(BTN_B) then net_send("hi from P" + me) : said[me] = "hi!" : said_at[me] = frame_count()
+    if btn_hit(BTN_B) then net_send("hi from P" + me) : said[me] = "hi!" : said_at[me] = frame_count() endif
 
     ' the host moves the ball; everyone else only reads it
     if net_is_host()
       bx :+ bvx : by :+ bvy
-      if bx < 4 or bx > SCREEN_W - 4 then bvx = -bvx
-      if by < 16 or by > SCREEN_H - 4 then bvy = -bvy
+      if bx < 4 or bx > SCREEN_W - 4 then bvx = -bvx endif
+      if by < 16 or by > SCREEN_H - 4 then bvy = -bvy endif
       net_set(BALL, bx) : net_set(BALL + 1, by)
     endif
 
@@ -105,16 +105,16 @@ function play()
     cls(rgb(0, 0, 1))
     circle_fill(int(net_get(BALL)), int(net_get(BALL + 1)), 4, COL_WHITE)
     for local p:int = 0 to NET_MAX_PLAYERS - 1
-      if not net_peer(p) then continue
+      if not net_peer(p) then continue endif
       local px:int = int(net_get(p * 4)), py:int = int(net_get(p * 4 + 1))
-      if p = me then px = int(x) : py = int(y)   ' mine: no need to wait for the network
+      if p = me then px = int(x) : py = int(y) endif   ' mine: no need to wait for the network
       rect_fill(px, py, SIZE, SIZE, colors[p])
       text("P" + p, px, py - 10, colors[p])
-      if said[p] <> "" and frame_count() - said_at[p] < 120 then text(said[p], px + SIZE + 2, py, COL_WHITE)
+      if said[p] <> "" and frame_count() - said_at[p] < 120 then text(said[p], px + SIZE + 2, py, COL_WHITE) endif
     next
     rect_fill(0, 0, SCREEN_W, 12, COL_NAVY)
     local who:string = "you are P" + me
-    if net_is_host() then who = who + " (host)"
+    if net_is_host() then who = who + " (host)" endif
     text(mode_name() + "  " + who + "  players " + net_peers() + "   arrows move  B wave", 4, 1, COL_YELLOW)
     flip()
   wend

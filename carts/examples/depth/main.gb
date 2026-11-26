@@ -33,15 +33,15 @@ endfunction
 function draw_shape(k:int, t:float)
   local outer:int = k >= MOONS
   local i:int = k mod MOONS
-  local r:float = 70 : if outer then r = 150
+  local r:float = 70 : if outer then r = 150 endif
   local a:float = i * 360.0 / MOONS + t
-  if outer then a = -a * 0.6 + 10
+  if outer then a = -a * 0.6 + 10 endif
   local x:float = CX + cos(a) * r
   local y:float = CY - sin(a) * r * tilt  ' far side higher up: we look down on the rings
   local z:float = sin(a) * r            ' > 0 behind the planet, < 0 in front of it
   local size:float = 1 + (-z / 400.0)   ' a little bigger when nearer
 
-  if depth_on then set_depth(int(z)) else set_depth(0)
+  if depth_on then set_depth(int(z)) else set_depth(0) endif
   if outer
     local s:int = int(9 * size)
     rect_fill(int(x) - s, int(y) - s, s * 2, s * 2, rgb(3, 1 + i mod 3, 0))
@@ -59,10 +59,10 @@ shuffle()
 repeat
   local t:float = frame_count() * 0.8
 
-  if btn_hit(BTN_A) then depth_on = not depth_on
-  if btn_hit(BTN_B) then shuffle()
-  if btn(BTN_UP) then tilt = min(0.9, tilt + 0.01)
-  if btn(BTN_DOWN) then tilt = max(-0.9, tilt - 0.01)
+  if btn_hit(BTN_A) then depth_on = not depth_on endif
+  if btn_hit(BTN_B) then shuffle() endif
+  if btn(BTN_UP) then tilt = min(0.9, tilt + 0.01) endif
+  if btn(BTN_DOWN) then tilt = max(-0.9, tilt - 0.01) endif
 
   cls(COL_BLACK)                       ' cls also puts every pixel's depth back to the far plane
 
@@ -81,7 +81,7 @@ repeat
   set_depth(-32768)
   rect_fill(0, 0, SCREEN_W, 12, COL_NAVY)
   local mode:string = "depth ON: lower z is nearer, draw order doesn't matter"
-  if not depth_on then mode = "depth OFF: last drawn wins (the planet covers all)"
+  if not depth_on then mode = "depth OFF: last drawn wins (the planet covers all)" endif
   text(mode, 4, 1, COL_YELLOW)
   text("A depth  B shuffle order  Up/Down tilt", 4, SCREEN_H - 11, COL_GREY)
 

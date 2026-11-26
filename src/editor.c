@@ -732,8 +732,25 @@ static bool opens_block(const Line *l) {
     while (i < l->len && is_ident((unsigned char)l->s[i]) && k < 15) first[k++] = (char)tolower((unsigned char)l->s[i++]);
     static const char *const openers[] = {"function", "while", "for", "repeat", "select", "type",
                                           "else", "elseif", "case", "default", NULL};
-    for (int j = 0; openers[j]; j++) if (!strcmp(first, openers[j])) return true;
-    if (strcmp(first, "if")) return false;
+    bool opener = false;
+    for (int j = 0; openers[j]; j++) if (!strcmp(first, openers[j])) opener = true;
+    if (!opener && strcmp(first, "if")) return false;
+    /* line ends are only spaces in GooberBASIC, so a whole block can sit on
+     * one line (for ... next, if ... endif): one that ends with its closer opens nothing */
+    int end = l->len, q = 0;
+    for (int j = 0; j < l->len; j++) {
+        if (l->s[j] == '"') q = !q;
+        else if (l->s[j] == '\'' && !q) { end = j; break; }
+    }
+    while (end > 0 && (l->s[end - 1] == ' ' || l->s[end - 1] == ':' || l->s[end - 1] == ';')) end--;
+    int w = end;
+    while (w > 0 && is_ident((unsigned char)l->s[w - 1])) w--;
+    if (w > indent_of(l)) {
+        static const char *const closers[] = {"endif", "next", "wend", "endwhile", "forever", "endfunction",
+                                              "endselect", "endtype", NULL};
+        for (int j = 0; closers[j]; j++) if (word_is(l->s, end, w, closers[j])) return false;
+    }
+    if (opener) return true;
     /* an if opens a block unless something follows its then */
     for (int j = 0; j + 4 <= l->len; j++)
         if (word_is(l->s, l->len, j, "then")) {

@@ -73,26 +73,26 @@ endfunction
 
 function update_player()
   local dx:float, dy:float
-  if btn(BTN_LEFT) then dx = -1.5 : facing = FLIP_X
-  if btn(BTN_RIGHT) then dx = 1.5 : facing = 0
-  if btn(BTN_UP) then dy = -1.5
-  if btn(BTN_DOWN) then dy = 1.5
-  if not blocked(px + dx, py) then px :+ dx
-  if not blocked(px, py + dy) then py :+ dy
+  if btn(BTN_LEFT) then dx = -1.5 : facing = FLIP_X endif
+  if btn(BTN_RIGHT) then dx = 1.5 : facing = 0 endif
+  if btn(BTN_UP) then dy = -1.5 endif
+  if btn(BTN_DOWN) then dy = 1.5 endif
+  if not blocked(px + dx, py) then px :+ dx endif
+  if not blocked(px, py + dy) then py :+ dy endif
 
   local cx:int = int(px + 4) / TILE_SIZE, cy:int = int(py + 4) / TILE_SIZE
   if map_get(cx, cy) = T_SEED
     map_set(cx, cy, T_GRASS)
     seeds_left :- 1
     sfx(0)
-    if seeds_left = 0 then won = true : music_stop() : sfx(2)
+    if seeds_left = 0 then won = true : music_stop() : sfx(2) endif
   endif
 endfunction
 
 function update_beetles()
   for local b:t_beetle = eachin beetles
-    if blocked(b.x + b.dx, b.y) then b.dx = -b.dx
-    if blocked(b.x, b.y + b.dy) then b.dy = -b.dy
+    if blocked(b.x + b.dx, b.y) then b.dx = -b.dx endif
+    if blocked(b.x, b.y + b.dy) then b.dy = -b.dy endif
     b.x :+ b.dx : b.y :+ b.dy
     if hurt = 0 and abs(b.x - px) < 7 and abs(b.y - py) < 7
       hurt = 60                    ' a second of flashing, then back to the start
@@ -112,12 +112,12 @@ function draw_world()
   local anim:int = (frame_count() / 12) mod 2
   for local b:t_beetle = eachin beetles
     local f:int = 0
-    if b.dx < 0 then f = FLIP_X
+    if b.dx < 0 then f = FLIP_X endif
     sprite(SPR_BEETLE + anim, b.x - 1, b.y - 1, 1, 1, f)
   next
   if hurt = 0 or (hurt / 4) mod 2 = 0
     local frame:int = 0
-    if btn(BTN_LEFT) or btn(BTN_RIGHT) or btn(BTN_UP) or btn(BTN_DOWN) then frame = anim
+    if btn(BTN_LEFT) or btn(BTN_RIGHT) or btn(BTN_UP) or btn(BTN_DOWN) then frame = anim endif
     sprite(SPR_PLAYER + frame, px - 1, py - 1, 1, 1, facing)
   endif
   camera()
@@ -145,10 +145,10 @@ dot_limit(110000)
 
 repeat
   if won
-    if btn_hit(BTN_A) then new_round() : music()
+    if btn_hit(BTN_A) then new_round() : music() endif
   elseif hurt > 0
     hurt :- 1
-    if hurt = 0 then px = START_X : py = START_Y
+    if hurt = 0 then px = START_X : py = START_Y endif
     update_beetles()
     frames :+ 1
   else

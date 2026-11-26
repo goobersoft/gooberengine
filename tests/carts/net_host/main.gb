@@ -1,6 +1,6 @@
 ' hosts a game over TCP, then over UDP; tests/carts/net_join joins each
 for m = NET_TCP to NET_UDP
-    if not net_host(29200 + m, m) then print("net host failed: " + net_error()) : end
+    if not net_host(29200 + m, m) then print("net host failed: " + net_error()) : stop() endif
     net_set(0, 1234.5)
     t = 0
     while net_get(1) <> 777 and t < 800 : delay(10) : t = t + 1 : wend

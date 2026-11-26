@@ -9,11 +9,11 @@ local t:int
 repeat
     t = frame_count()
 
-    if btn(BTN_LEFT) then x :- 2
-    if btn(BTN_RIGHT) then x :+ 2
-    if btn(BTN_UP) then y :- 2
-    if btn(BTN_DOWN) then y :+ 2
-    if btn_hit(BTN_A) then col = rand(1, 63)
+    if btn(BTN_LEFT) then x :- 2 endif
+    if btn(BTN_RIGHT) then x :+ 2 endif
+    if btn(BTN_UP) then y :- 2 endif
+    if btn(BTN_DOWN) then y :+ 2 endif
+    if btn_hit(BTN_A) then col = rand(1, 63) endif
     x = max(12, min(x, SCREEN_W - 12))
     y = max(60, min(y, SCREEN_H - 12))
 

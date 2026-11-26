@@ -36,9 +36,9 @@ global faces_drawn:int
 
 function setup()
   for local i:int = 0 to 7
-    cx[i] = -1 : if i = 1 or i = 2 or i = 5 or i = 6 then cx[i] = 1
-    cy[i] = -1 : if i = 2 or i = 3 or i = 6 or i = 7 then cy[i] = 1
-    cz[i] = -1 : if i >= 4 then cz[i] = 1
+    cx[i] = -1 : if i = 1 or i = 2 or i = 5 or i = 6 then cx[i] = 1 endif
+    cy[i] = -1 : if i = 2 or i = 3 or i = 6 or i = 7 then cy[i] = 1 endif
+    cz[i] = -1 : if i >= 4 then cz[i] = 1 endif
   next
   set_face(0, 0, 1, 2, 3)      ' front  (z = -1): 1 pip
   set_face(1, 1, 5, 6, 2)      ' right  (x = +1): 2
@@ -79,7 +79,7 @@ function draw_cube()
     local a:int = face[f, 0], b:int = face[f, 1], c:int = face[f, 2], d:int = face[f, 3]
     ' facing us? the corners go clockwise on screen (the cross product is positive)
     local cross:int = (sx[b] - sx[a]) * (sy[d] - sy[a]) - (sy[b] - sy[a]) * (sx[d] - sx[a])
-    if cull and cross <= 0 then continue
+    if cull and cross <= 0 then continue endif
     tex_quad_3d(sx[a], sy[a], sz[a], sx[b], sy[b], sz[b], sx[c], sy[c], sz[c], sx[d], sy[d], sz[d], f * 2, 2, 2)
     faces_drawn :+ 1
   next
@@ -89,14 +89,14 @@ setup()
 dot_limit(300000)                     ' a full cls alone is 96,000 of the usual 100,000
 
 repeat
-  if btn(BTN_LEFT) then vy :- 0.05
-  if btn(BTN_RIGHT) then vy :+ 0.05
-  if btn(BTN_UP) then vx :- 0.05
-  if btn(BTN_DOWN) then vx :+ 0.05
-  if btn_hit(BTN_A) then paused = not paused
-  if btn_hit(BTN_B) then cull = not cull
-  if btn_hit(BTN_C) then two = not two
-  if not paused then ax :+ vx : ay :+ vy
+  if btn(BTN_LEFT) then vy :- 0.05 endif
+  if btn(BTN_RIGHT) then vy :+ 0.05 endif
+  if btn(BTN_UP) then vx :- 0.05 endif
+  if btn(BTN_DOWN) then vx :+ 0.05 endif
+  if btn_hit(BTN_A) then paused = not paused endif
+  if btn_hit(BTN_B) then cull = not cull endif
+  if btn_hit(BTN_C) then two = not two endif
+  if not paused then ax :+ vx : ay :+ vy endif
 
   cls(rgb(0, 0, 1))                   ' also resets the depth buffer to "far"
   faces_drawn = 0
@@ -111,7 +111,7 @@ repeat
 
   set_depth(-32768)                   ' the HUD in front of everything
   rect_fill(0, 0, SCREEN_W, 12, COL_NAVY)
-  local c:string = "on" : if not cull then c = "off"
+  local c:string = "on" : if not cull then c = "off" endif
   text("tex_quad_3d cube   culling " + c + "   faces " + str(faces_drawn), 4, 1, COL_YELLOW)
   rect_fill(0, SCREEN_H - 12, SCREEN_W, 12, COL_NAVY)
   text("arrows spin  A pause  B culling  C second cube", 4, SCREEN_H - 11, COL_GREY)

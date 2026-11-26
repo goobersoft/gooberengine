@@ -70,11 +70,11 @@ dot_limit(300000)                   ' six full panels plus the circles: about 21
 pick_colors()
 
 repeat
-  if btn_hit(BTN_A) then paused = not paused
-  if btn_hit(BTN_B) then set = (set + 1) mod 3 : pick_colors()
-  if btn(BTN_UP) then radius = min(40, radius + 1)
-  if btn(BTN_DOWN) then radius = max(6, radius - 1)
-  if not paused then t :+ 1.5
+  if btn_hit(BTN_A) then paused = not paused endif
+  if btn_hit(BTN_B) then set = (set + 1) mod 3 : pick_colors() endif
+  if btn(BTN_UP) then radius = min(40, radius + 1) endif
+  if btn(BTN_DOWN) then radius = max(6, radius - 1) endif
+  if not paused then t :+ 1.5 endif
 
   cls(COL_NAVY)
   text("set_blend(mode): how a color combines with the screen", 4, 2, COL_WHITE)

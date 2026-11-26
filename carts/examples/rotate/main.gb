@@ -48,13 +48,13 @@ endfunction
 dot_limit(200000)                      ' a full cls alone is 96,000 of the usual 100,000
 
 repeat
-  if btn(BTN_LEFT) then speed :- 0.05
-  if btn(BTN_RIGHT) then speed :+ 0.05
-  if btn(BTN_UP) then zoom = min(1.6, zoom + 0.02)
-  if btn(BTN_DOWN) then zoom = max(0.3, zoom - 0.02)
-  if btn_hit(BTN_A) then paused = not paused
-  if btn_hit(BTN_B) then corners = not corners
-  if not paused then angle :+ speed
+  if btn(BTN_LEFT) then speed :- 0.05 endif
+  if btn(BTN_RIGHT) then speed :+ 0.05 endif
+  if btn(BTN_UP) then zoom = min(1.6, zoom + 0.02) endif
+  if btn(BTN_DOWN) then zoom = max(0.3, zoom - 0.02) endif
+  if btn_hit(BTN_A) then paused = not paused endif
+  if btn_hit(BTN_B) then corners = not corners endif
+  if not paused then angle :+ speed endif
 
   cls(rgb(0, 0, 1))
   ' a faint grid, so the transparent pixels show

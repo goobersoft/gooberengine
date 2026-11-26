@@ -74,7 +74,7 @@ spray(10, 10, 20, 20, 300, COL_RED)
 again = 0
 for yy = 10 to 29
     for xx = 10 to 29
-        if pget(xx, yy) = COL_RED then again = again + 1
+        if pget(xx, yy) = COL_RED then again = again + 1 endif
     next
 next
 print("spray " + str(inside > 100) + " " + str(outside) + " " + str(again = inside))
@@ -91,7 +91,7 @@ tex_quad(20, 20, 36, 20, 36, 36, 20, 36, 0, 1, 1)
 n = 0
 for yy = 16 to 40
     for xx = 16 to 40
-        if pget(xx, yy) = 5 then n = n + 1
+        if pget(xx, yy) = 5 then n = n + 1 endif
     next
 next
 ' a trapezoid, no two edges parallel

@@ -4,10 +4,10 @@ for m = NET_TCP to NET_UDP
     repeat
         net_join("127.0.0.1", 29200 + m, m)
         while net_status() = NET_CONNECTING : delay(10) : wend
-        if net_status() <> NET_CONNECTED then delay(100)
+        if net_status() <> NET_CONNECTED then delay(100) endif
         tries = tries + 1
     until net_status() = NET_CONNECTED or tries > 30
-    if net_status() <> NET_CONNECTED then print("net join failed: " + net_error()) : end
+    if net_status() <> NET_CONNECTED then print("net join failed: " + net_error()) : stop() endif
     t = 0
     while net_get(0) <> 1234.5 and t < 500 : delay(10) : t = t + 1 : wend
     net_set(1, 777)

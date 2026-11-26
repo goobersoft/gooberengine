@@ -121,6 +121,9 @@ said() { printf '%s' "$out" | grep -qF -- "$2" && ok || bad "$1: wanted '$2'" "$
 
 edit "type, save"   '{ctrl+end}{enter}print("added"){ctrl+s}';          has "type, save" 'print("added")'
 edit "auto indent"  '{ctrl+end}{enter}if 1{enter}x = 1{ctrl+s}';         has "auto indent" '  x = 1'
+# a whole block on one line (line ends are only spaces) opens nothing, even before a comment
+edit "one-line block: no indent" "{ctrl+end}{enter}for local i:int = 1 to 3 print(i) next 'x{enter}if 1 x = 1 endif{enter}y = 1{ctrl+s}"
+has "one-line block: no indent" 'if 1 x = 1 endif'; has "one-line block: no indent 2" 'y = 1'
 edit "undo"         '{ctrl+end}{enter}abc{ctrl+z}{ctrl+s}';             hasnt "undo" 'abc'
 edit "redo"         '{ctrl+end}{enter}abc{ctrl+z}{ctrl+y}{ctrl+s}';     has "redo" 'abc'
 edit "copy line"    '{ctrl+home}{ctrl+c}{ctrl+end}{enter}{ctrl+v}{ctrl+s}'
@@ -128,7 +131,7 @@ n=$(grep -c "^' t - a new" "$TC/t/main.gb"); [ "$n" = 2 ] && ok || bad "copy lin
 edit "find"         '{ctrl+f}COL_YELLOW{enter}COL_RED{ctrl+s}';         has "find" '  circle_fill(x, y, 8, COL_RED)'
 edit "comment"      '{ctrl+g}2{enter}{ctrl+/}{ctrl+s}';                  has "comment" "' strict"
 edit "select"       '{ctrl+home}{shift+down}{shift+down}{del}{ctrl+s}'; hasnt "select" 'strict'
-edit "unindent"     '{ctrl+g}7{enter}{shift+tab}{ctrl+s}';              has "unindent" 'if btn(BTN_LEFT) then x :- 2'
+edit "unindent"     '{ctrl+g}7{enter}{shift+tab}{ctrl+s}';              has "unindent" 'if btn(BTN_LEFT) then x :- 2 endif'
 edit "error line"   '{ctrl+g}3{enter}local a:int[2] : a[5] = 1{ctrl+r}'; said "error line" '[editor] line 3: Array index 5'
 edit "run, esc"     '{ctrl+r}{esc}{ctrl+end}{enter}zzz{ctrl+s}';         has "run, esc" 'zzz'
 edit "unsaved"      '{ctrl+end}{enter}q{esc}new t2{enter}';              said "unsaved" 'unsaved changes'
@@ -191,7 +194,7 @@ edit "help: back from the first place leaves" '{ctrl+end}{enter}cls{f1}{click:10
 edit "help: follow a link"    '{ctrl+end}{enter}cls{f1}{tab}{enter}'; said "help: follow a link" '[help] clip'
 edit "help: back"             '{ctrl+end}{enter}cls{f1}{tab}{enter}{backspace}{backspace}y{ctrl+s}'; has "help: back" 'clsy'
 edit "help: search"           '{ctrl+end}{enter}{f1}circle_f{enter}'; said "help: search" '[help] circle, circle_fill'
-out=$($GE --headless --frames 30 --type '{f1}' 2>&1);     said "help: F1 in the shell is the index" '[help] Index: 359 names'
+out=$($GE --headless --frames 30 --type '{f1}' 2>&1);     said "help: F1 in the shell is the index" '[help] Index: 360 names'
 out=$($GE --headless --frames 30 --type 'load{f1}' 2>&1); said "help: F1 in the shell narrows to the command" 'first LOAD (shell)'
 out=$($GE --headless --frames 30 --type 'load{f1}{enter}' 2>&1); said "help: F1 in the shell, Enter" '[help] LOAD'
 out=$($GE --headless --frames 30 --type '{f1}{esc}cls{enter}help{enter}' 2>&1); said "help: Esc from the index, back to the prompt" 'RUN [name]'

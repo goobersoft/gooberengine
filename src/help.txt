@@ -334,8 +334,8 @@ GooberBASIC is a BASIC in the style of BlitzBasic, written in lowercase.
     global x:int = 200, y:int = 120
 
     function move_player()
-      if btn(BTN_LEFT) then x :- SPEED
-      if btn(BTN_RIGHT) then x :+ SPEED
+      if btn(BTN_LEFT) then x :- SPEED endif
+      if btn(BTN_RIGHT) then x :+ SPEED endif
     endfunction
 
     repeat
@@ -344,26 +344,25 @@ GooberBASIC is a BASIC in the style of BlitzBasic, written in lowercase.
       circle_fill(x, y, 8, COL_YELLOW)
       flip()
     forever
-- {basics|Basics}: one statement per line, `'` comments, case
+- {basics|Basics}: statements and lines, `'` comments, case
 - {variables|Variables}: {local}, {global}, {const}, {dim}, {strict}
 - {types|Types}: {numbers}, {string|strings}, {type|records}, {arrays}, {list|lists}, {literals}
 - {operators|Operators}: math, comparisons, {and}, {or}, {not}
-- Control: {if}, {while}, {repeat}, {for}, {eachin}, {select}, {exit}, {end}
+- Control: {if}, {while}, {repeat}, {for}, {eachin}, {select}, {exit}, {stop}
 - {function|Functions}: {return}, default arguments, {closures}
 - {include|Files}: {include}, `local function`
 - {defdata|Data blocks}: {defdata}, {restore}, {read_int}
 
 @ basics syntax statements .. | Basics
 - Keywords and names don't care about case: `print`, `Print` and `PRINT` are the same. Underscores count: `draw_rect` and `drawrect` are different.
-- One statement per line, or several separated by `:` (or `;`).
+- Line ends are only spaces: a statement ends where its grammar says, so one can run over several lines and several can share a line (`x = 1 y = 2`). A `:` (or `;`) between them is allowed but never needed.
 - {comments|Comments} start with `'`. Longer ones go between `rem` and `endrem`.
-- End a line with `..` to carry on on the next line.
 - Calls always take parentheses, even with no arguments: `cls()`, `flip()`.
 - `include "other.gb"` pastes in another file: see {include}.
 - Code is written in lowercase with snake_case names. Types are named `t_something`, constants `UPPER_CASE`.
-    x = 10 : y = 20           ' two statements on a line
-    total = x + y + ..
-            z                 ' carried on
+    x = 10 y = 20             ' two statements on a line
+    total = x + y +
+            z                 ' one statement over two lines
 
 @ comments rem endrem | Comments
 A comment starts with `'` and runs to the end of the line. `rem` ... `endrem` makes a block comment over several lines.
@@ -486,13 +485,13 @@ Highest first:
 - `and`: stops early if the left side is false
 - `or`: stops early if the left side is true
     x :+ 1         ' x = x + 1   (also :-  :*  :/)
-    if a > 0 and not done then go()
+    if a > 0 and not done then go() endif
     even = (n mod 2 = 0)
     flags = flags | 4
 
 ; ---------------------------------------------------------------- control flow
 @ if then else elseif endif | if
-    if condition then statement [else statement]
+    if condition then statement [else statement] endif
 
     if condition
       ...
@@ -501,8 +500,8 @@ Highest first:
     else
       ...
     endif
-The one-line form puts everything after `then`. The block form ends with `endif` (or `end if`), and `else if` works as `elseif`. A condition is true when it isn't 0.
-    if lives = 0 then end
+Every `if` ends with `endif`, even on one line, and `then` is optional. `elseif` is one word: `else if` is an `else` whose block starts a new `if`, which needs an `endif` of its own. A condition is true when it isn't 0.
+    if lives = 0 then stop() endif
     if x < 0
       x = 0
     elseif x > SCREEN_W
@@ -539,7 +538,7 @@ See {exit} to leave a loop early.
     for name = first to last [step n]
       ...
     next
-Counts from `first` to `last` (both included), by 1 or by `step`. `step` must be a constant and may be negative. `for local i = ...` declares the loop variable too.
+Counts from `first` to `last` (both included), by 1 or by `step`. `step` must be a constant and may be negative. `next` takes no name (`next i` is an error). `for local i = ...` declares the loop variable too.
     for local i:int = 0 to 9
       sprite(i, i * 10, 0)
     next
@@ -552,7 +551,7 @@ For lists use {eachin}. {exit} leaves the loop, {continue} goes on to the next n
     next
 Visits every item of a {list}, first to last. The loop variable must have the list's type; without {strict} it gets it on its own. Removing items (this one or others) inside the loop is safe.
     for local e:t_enemy = eachin enemies
-      if e.hp <= 0 then remove(enemies, e)
+      if e.hp <= 0 then remove(enemies, e) endif
     next
 `for ... = each t_type`, from BlitzBasic, was removed: keep your objects in a list.
 
@@ -572,15 +571,17 @@ Compares one value against each `case` in turn and runs the first that matches (
 @ exit continue break | exit and continue
 `exit` leaves the innermost loop ({for}, {while}, {repeat}) at once. `continue` skips the rest of this time round and goes on with the next.
     for local i:int = 1 to 100
-      if i mod 3 = 0 then continue
-      if i > 50 then exit
+      if i mod 3 = 0 then continue endif
+      if i > 50 then exit endif
       print(i)
     next
 
-@ end stop | end
-`end` stops the program. In a cart, it ends the cart and goes back to where it was run from.
+@ stop end | stop
+    stop()
+Ends the cart at once, from anywhere (inside a function too), and goes back to where it was run from. A {return} in the main program, outside any function, does the same. To stop with an error message, use {error}.
+    if lives = 0 then stop() endif
 
-`end` also closes blocks when written as two words: `end if`, `end function`, `end type`, `end select`, `end while` and `end data` mean `endif`, `endfunction` and so on.
+`end` is not a word on its own: blocks close with one word, `endif`, `endfunction`, `endtype`, `endselect`, `endwhile` (or `wend`), `enddata` and `endrem`.
 
 ; ---------------------------------------------------------------- functions
 @ function endfunction return ( ) , | Functions
@@ -588,7 +589,7 @@ Compares one value against each `case` in turn and runs the first that matches (
       ...
       return value
     endfunction
-A function's return type goes after its name; its parameters are like {local} declarations, and may have default values. `return` leaves the function, giving back a value.
+A function's return type goes after its name; its parameters are like {local} declarations, and may have default values. `return` leaves the function, giving back a value. A `return` with no value has to come last in its block, since anything after it that can be a value is taken as the value to return.
     function hypot:float(a:float, b:float)
       return sqr(a * a + b * b)
     endfunction
@@ -673,7 +674,7 @@ Makes a new object of a {type}, with every field at 0, "" or null, or a new empt
 
 @ null | null
 `null` means "no object": the starting value of an object, list, array or function variable. Compare with `=`; setting a variable to `null` lets its object go (see {gc_collect|garbage collection}). Using a null object is a runtime error.
-    if target = null then target = find_target()
+    if target = null then target = find_target() endif
     boss = null
 
 @ delete after before | delete (removed)
@@ -687,7 +688,7 @@ There is no `del` or `free`: an object goes once nothing refers to it (see {gc_c
 - a {list}: `remove(list, obj)`
 - an {arrays|array} element: set it to null
     remove(enemies, e)
-    if player.target = e then player.target = null
+    if player.target = e then player.target = null endif
 An object kept in several places (a list, a target, another object's field) stays alive while any one of them still holds it. If you can't easily find them all, mark it dead with a field instead, and have every place skip or drop dead ones:
     type t_enemy
       field x:float, y:float
@@ -696,7 +697,7 @@ An object kept in several places (a list, a target, another object's field) stay
 
     e.dead = 1                    ' instead of deleting it
     for local e:t_enemy = eachin enemies
-      if e.dead then remove(enemies, e)
+      if e.dead then remove(enemies, e) endif
     next
 
 @ list add_last add_first insert first last remove_first remove_last remove contains count is_empty clear | Lists
@@ -767,7 +768,7 @@ Most of the time this happens on its own: assigning a number to a string variabl
 - `true` is 1 and `false` is 0. Conditions treat anything that isn't 0 as true.
 - `pi` is 3.14159... Angles in GooberBASIC are in degrees, so `sin(90)` is 1.
     local done = false
-    if not done then ...
+    if not done then ... endif
     circumference = 2 * pi * r
 
 @ defdata enddata restore read_int read_float read_string data_count data | Data blocks
@@ -779,11 +780,11 @@ A table of values written into the code. `restore(NAME)` points at a block, and 
     local w:int = read_int(), h:int = read_int()
 
     defdata LEVEL_1
-      4, 2              ' width, height
-      1, 1, 1, 1
+      4, 2,             ' width, height
+      1, 1, 1, 1,
       1, 0, 0, 1
     enddata
-- Items are numbers, strings or constant expressions, separated by commas or new lines.
+- Items are numbers, strings or constant expressions, separated by commas, across lines too: every row but the last ends with one (otherwise `2` then `-1` on the next line would be `2 - 1`).
 - A block may be anywhere at the top level.
 - `NAME` is the block's number, so `restore(LEVEL_1 + n)` picks a later block.
 - Reading past a block's end carries on into the next. `restore()` alone goes back to the first item.
@@ -798,7 +799,7 @@ You rarely need either: set a variable to {null}, or {remove} the item, and the 
 ; ---------------------------------------------------------------- core commands
 @ core-commands builtins | Core commands
 These come with GooberBASIC itself.
-- Printing: {print}, {write}, {input}, {runtime_error}, {assert}
+- Printing: {print}, {write}, {input}, {stop}, {error}, {assert}
 - Time: {millisecs}, {delay}, {current_date}, {current_time}
 - Random numbers: {rnd}, {rand}, {seed_rnd}
 - Math: {abs}, {sgn}, {min}, {max}, {sin}, {cos}, {atan2}, {sqr}, {exp}, {log}, {floor}, {ceil}, {round}, {distance}
@@ -822,10 +823,10 @@ These come with GooberBASIC itself.
     print("LIVES " + lives)          ' the line below
     print("PAUSED", 160, 110, COL_YELLOW)
 
-@ runtime_error assert errors | runtime_error, assert
-    runtime_error(message)
+@ error runtime_error assert errors | error, assert
+    error(message)
     assert(condition [, message])
-`runtime_error` stops the cart with an error, as if something had gone wrong: the editor opens at the line and shows the message.
+`error` stops the cart with an error, as if something had gone wrong: the editor opens at the line and shows the message.
 
 `assert` does the same, with "assertion failed" (and the message), when the condition is 0. The message is built every time the line runs, even when the condition holds.
     assert(lives >= 0, "lives went below 0")
@@ -884,7 +885,7 @@ They give floats; assign to an int, or use `int()`, to make it one.
 @ distance | distance
     distance(x1, y1, x2, y2)
 How far apart two points are, as a float.
-    if distance(px, py, cx, cy) < 8 then collect()
+    if distance(px, py, cx, cy) < 8 then collect() endif
 For a yes/no test, {in_circle} skips the square root.
 
 @ in_range in_rect rect_in_rect in_circle circle_in_circle collision overlap rects_overlap | Collision
@@ -900,10 +901,10 @@ Each gives 1 or 0.
 - `in_circle`: the point is inside the circle.
 - `circle_in_circle`: two circles overlap.
 A rect covers the same pixels as {rect_fill}: a 10 wide rect at x = 0 covers 0 to 9, so x = 10 is outside, and rects that only share an edge don't overlap. A point on a circle's edge is inside; circles that only touch don't overlap.
-    if rect_in_rect(px, py, 8, 8, ex, ey, 8, 8) then hurt()
-    if in_rect(mouse_x(), mouse_y(), bx, by, 40, 12) then hot = 1
-    if circle_in_circle(bx, by, 2, ax, ay, 6) then explode()
-    if not in_range(x, 0, SCREEN_W - 1) then wrap()
+    if rect_in_rect(px, py, 8, 8, ex, ey, 8, 8) then hurt() endif
+    hot = in_rect(mouse_x(), mouse_y(), bx, by, 40, 12)
+    if circle_in_circle(bx, by, 2, ax, ay, 6) then explode() endif
+    if not in_range(x, 0, SCREEN_W - 1) then wrap() endif
 
 @ left right mid upper lower trim instr replace chr asc hex bin repeat_string lset rset string-functions | String functions
 Positions count from 1.
@@ -960,7 +961,7 @@ Sets the color used when a drawing command's color is left out.
     pget(x, y)
 `plot` draws one pixel; `pget` gives the color of the pixel on screen at (x, y). Both go through the {camera}.
     plot(mouse_x(), mouse_y(), COL_WHITE)
-    if pget(x, y + 10) <> 0 then on_ground = true
+    if pget(x, y + 10) <> 0 then on_ground = true endif
 
 @ line | line
     line(x1, y1, x2, y2 [, c])
@@ -1101,7 +1102,9 @@ See {map_get}, {camera}, {map-editor|the map editor}.
     map_get(x, y)
     map_set(x, y, tile)
 Read / change the tile in cell (x, y) of the map in use. An empty cell, or one outside the map, reads as -1, and `map_set(x, y, -1)` empties a cell. Changes last until the cart stops.
-    if map_get(px / 10, (py + 10) / 10) >= 0 then on_ground = true
+    if map_get(px / 10, (py + 10) / 10) >= 0
+      on_ground = true
+    endif
     map_set(cx, cy, -1)          ' pick up a coin
 See {map_w}.
 
@@ -1134,7 +1137,7 @@ The screen is 96,000 pixels, so draw only what changes: {cls} and {rect_fill_fas
 @ sfx | sfx
     sfx(n [, voice])
 Plays sound effect `n` (0 to 63) of the sound bank in use, on voice 0 to 7, or on any free voice. Gives back the voice it used. A voice the music is playing is borrowed and given back after.
-    if btn_hit(BTN_A) then sfx(0)
+    if btn_hit(BTN_A) then sfx(0) endif
 Effects are made in the {sound-editor|sound editor}. See {voice_stop}, {note}.
 
 @ note NOISE VOICES | note
@@ -1147,7 +1150,7 @@ Plays one note on a voice: pitch 0 to 63 (24 is C-4, 33 is A-4 at 440 Hz), wave 
     voice_stop([voice])
     voice_sfx(voice)
 `voice_stop` stops one voice, or all of them. `voice_sfx` tells what a voice plays: the sound effect's number, -1 for nothing, -2 for a {note}, -3 for the music.
-    if voice_sfx(3) = -1 then sfx(5, 3)
+    if voice_sfx(3) = -1 then sfx(5, 3) endif
 
 @ music music_stop music_pos music_row | music
     music([n])
@@ -1164,8 +1167,8 @@ Songs are made in the {music-editor|music editor}; {load_music} switches songs.
 `btn` is 1 while a pad button is held, `btn_hit` only in the frame it was pressed. Buttons: `BTN_LEFT`, `BTN_RIGHT`, `BTN_UP`, `BTN_DOWN`, `BTN_A`, `BTN_B`, `BTN_C`, `BTN_START`.
 
 On the keyboard: arrows, A = Z or Space, B = X, C = C, Start = Enter. A game controller works too.
-    if btn(BTN_LEFT) then x :- 1
-    if btn_hit(BTN_A) then jump()
+    if btn(BTN_LEFT) then x :- 1 endif
+    if btn_hit(BTN_A) then jump() endif
 See {key_down} for the raw keyboard.
 
 @ key_down key_hit KEY_* keyboard | key_down, key_hit
@@ -1174,7 +1177,7 @@ See {key_down} for the raw keyboard.
 The raw keyboard: `key_down` is 1 while a key is held, `key_hit` when it was pressed this frame.
 
 Keys: `KEY_A` to `KEY_Z`, `KEY_0` to `KEY_9`, `KEY_SPACE`, `KEY_ENTER`, `KEY_TAB`, `KEY_BACKSPACE`, `KEY_LEFT`, `KEY_RIGHT`, `KEY_UP`, `KEY_DOWN`, `KEY_LSHIFT`, `KEY_RSHIFT`, `KEY_LCONTROL`, `KEY_RCONTROL`.
-    if key_hit(KEY_P) then paused = not paused
+    if key_hit(KEY_P) then paused = not paused endif
 Esc always stops the cart. For games, {btn} works with controllers too.
 
 @ mouse mouse_x mouse_y mouse_down mouse_hit mouse_btn mouse_wheel mouse_dx mouse_dy MOUSE_* | Mouse
@@ -1183,7 +1186,9 @@ Esc always stops the cart. For games, {btn} works with controllers too.
 - `mouse_btn(b)`: 1 while button b is held, counting 0 left, 1 right, 2 middle
 - `mouse_wheel()`: wheel steps since the last {flip}: positive scrolls down
 - `mouse_dx()`, `mouse_dy()`: how far it moved since the last flip
-    if mouse_hit(MOUSE_LEFT) then shoot_at(mouse_x(), mouse_y())
+    if mouse_hit(MOUSE_LEFT)
+      shoot_at(mouse_x(), mouse_y())
+    endif
 
 @ flip vsync | flip
     flip()
@@ -1216,7 +1221,7 @@ Keeps a value for next time: a high score, settings, progress. `load_data` gives
 - Values: text up to 1024 characters. Numbers convert on their own.
 - The data is kept outside the cart, so playing never changes the cart.
     best = load_data("best", "0")
-    if score > best then save_data("best", score)
+    if score > best then save_data("best", score) endif
 
 @ SCREEN_W SCREEN_H TILE_SIZE SHEET_COLS NTILES SLOTS MAP_SCREEN_W MAP_SCREEN_H FONT_W FONT_H sizes | Size constants
 - `SCREEN_W` 400, `SCREEN_H` 240: the screen
@@ -1239,6 +1244,6 @@ Up to 8 players share a game: one hosts (player 0), the others join (1 to 7). Th
 - `net_messages()`, `net_recv()`, `net_from()`: how many are waiting, the next one, who sent it
 - `net_update()`: send and receive now ({flip} already does)
 `mode` is `NET_TCP` (the default) or `NET_UDP`. Constants: `NET_SLOTS` 256, `NET_MAX_PLAYERS` 8. The host owns the slots: give each player slots of their own (`net_id() * 4` and up). There's no networking in the browser.
-    if not net_host(4040) then print(net_error())
+    if not net_host(4040) then print(net_error()) endif
     net_set(net_id(), x)
     while net_messages() > 0 : print(net_recv()) : wend
