@@ -3,9 +3,10 @@ strict
 global running:int = true
 
 while running
-  cls()
+  cls(1)
   if btn(BTN_A)
     running = false
   endif
+  map_draw()
   flip()
 wend

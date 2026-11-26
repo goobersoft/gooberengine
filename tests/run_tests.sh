@@ -26,6 +26,7 @@ expect "shell survives" "--exec help tests/carts/compile_error" "RUN [name]"
 expect "draw once"      tests/carts/draw_once "map 7 -1"
 expect "tile pixels"    tests/carts/draw_once "tile 48 -1"
 expect "pixel read"     tests/carts/draw_once "pixel 1"
+expect "sprite_ex scales and flips" tests/carts/sprite_ex "sprite_ex 1111"
 expect "esc stops a loop with no flip" "--type '{esc}' tests/carts/spin" "spin stopped"
 expect "esc leaves the shell running" "--type '{esc}help{enter}' tests/carts/spin" "RUN [name]"   # --frames quits instead
 expect "--frames ends a loop with no flip" tests/carts/spin "spin stopped"
@@ -194,7 +195,7 @@ edit "help: back from the first place leaves" '{ctrl+end}{enter}cls{f1}{click:10
 edit "help: follow a link"    '{ctrl+end}{enter}cls{f1}{tab}{enter}'; said "help: follow a link" '[help] clip'
 edit "help: back"             '{ctrl+end}{enter}cls{f1}{tab}{enter}{backspace}{backspace}y{ctrl+s}'; has "help: back" 'clsy'
 edit "help: search"           '{ctrl+end}{enter}{f1}circle_f{enter}'; said "help: search" '[help] circle, circle_fill'
-out=$($GE --headless --frames 30 --type '{f1}' 2>&1);     said "help: F1 in the shell is the index" '[help] Index: 360 names'
+out=$($GE --headless --frames 30 --type '{f1}' 2>&1);     said "help: F1 in the shell is the index" '[help] Index: 361 names'
 out=$($GE --headless --frames 30 --type 'load{f1}' 2>&1); said "help: F1 in the shell narrows to the command" 'first LOAD (shell)'
 out=$($GE --headless --frames 30 --type 'load{f1}{enter}' 2>&1); said "help: F1 in the shell, Enter" '[help] LOAD'
 out=$($GE --headless --frames 30 --type '{f1}{esc}cls{enter}help{enter}' 2>&1); said "help: Esc from the index, back to the prompt" 'RUN [name]'
@@ -260,6 +261,8 @@ row() {     # row <name> <tile> <row> <expected 10 characters>: from the tileset
 }
 edit "draw"      '{click:125,5}{f9}{click:3,13}{ctrl+s}';                       row "draw: tile 0 is selected at first" 0 0 '*.........'
 edit "flip"      '{click:125,5}{f9}{click:3,13}{h}{ctrl+s}';                    row "flip" 0 0 '.........*'
+edit "select all" '{click:125,5}{f9}{click:3,13}{ctrl+a}{h}{ctrl+s}';         row "select all: H flips the whole sheet" 39 0 '.........*'
+row "select all" 0 0 '..........'; said "select all" 'selected all 960 tiles'
 edit "turn"      '{click:125,5}{f9}{click:3,13}{t}{ctrl+s}';                    row "turn" 0 0 '.........*'
 edit "fill"      '{click:125,5}{f9}{f}{click:3,13}{ctrl+s}';                    row "fill" 0 9 '**********'
 row "fill stays in the tile" 1 0 '..........'
@@ -269,6 +272,12 @@ edit "stroke stops at the edge" '{click:125,5}{f9}{click:3,19}{drag:117,19}{mous
 row "stroke stops at the edge" 0 1 '**********'; row "stroke stops at the edge" 1 1 '..........'
 edit "tile undo" '{click:125,5}{f9}{click:3,13}{click:15,13}{ctrl+z}{ctrl+s}';   row "tile undo" 0 0 '*.........'
 edit "paste"     '{click:125,5}{f9}{click:3,13}{ctrl+c}{right}{ctrl+v}{ctrl+s}'; row "paste" 1 0 '*.........'
+# a picture another program copied (tests/clip.png, 12x3: white, white / a grey not in the palette / red at (11,2))
+export GOOBERENGINE_CLIPBOARD_PNG=$PWD/tests/clip.png
+edit "paste picture" '{click:125,5}{f9}{right}{ctrl+v}{ctrl+s}';   row "paste picture" 1 0 '**........'; row "paste picture" 1 1 'l.........'
+row "paste picture: on into the next tile" 2 2 '.M........'; said "paste picture" 'pasted a 12x3 picture: 1 pixel matched to the nearest color'
+edit "copy here wins" '{click:125,5}{f9}{click:3,13}{ctrl+c}{right}{ctrl+v}{ctrl+s}'; row "copy here wins over a picture" 1 0 '*.........'
+unset GOOBERENGINE_CLIPBOARD_PNG
 edit "color"    '{click:125,5}{f9}{click:368,93}{click:3,13}{ctrl+s}';         row "color" 0 0 'g.........'
 edit "right click picks" '{click:125,5}{f9}{click:368,93}{click:3,13}{click:368,61}{rclick:3,13}{mouse:3,13}{click:9,13}{ctrl+s}'
 row "right click picks" 0 0 'gg........'
@@ -332,6 +341,8 @@ edit "tiles off sheet shift" '{click:125,5}{f9}{click:185,15}{mouse:185,15}{down
 maprow "tiles off sheet shift: tile 0, 1x1" 0 "00"
 edit "tiles off sheet plain" '{click:125,5}{f9}{click:185,15}{mouse:185,15}{down:left shift}{click:245,75}{mouse:245,75}{up:left shift}{-}{-}{click:20,30}{mouse:20,30}{click:89,5}{click:5,15}{ctrl+s}'
 maprow "tiles off sheet plain: still 2x2" 0 "03 04"; maprow "tiles off sheet plain: still 2x2" 1 "0H 0I"
+GOOBERENGINE_CLIPBOARD_PNG=$PWD/tests/clip.png edit "paste picture: it selects" '{click:125,5}{f9}{ctrl+v}{click:89,5}{click:5,15}{ctrl+s}'
+maprow "paste picture: the 2x1 it covers is the pen" 0 "00 01"
 edit "tiles shift inside" '{click:125,5}{f9}{down:left shift}{click:65,75}{mouse:65,75}{click:3,13}{mouse:3,13}{up:left shift}{ctrl+s}{click:89,5}{click:5,15}{ctrl+s}'
 maprow "tiles shift inside: still 2x2" 0 "00 01"; maprow "tiles shift inside: still 2x2" 1 "0E 0F"; row "tiles shift inside: it paints" 0 0 '*.........'
 edit "map picks for tiles" '{click:161,5}{f9}{tab}{click:15,35}{mouse:15,35}{click:53,5}{click:63,73}{ctrl+s}';    row "map picks for tiles: tile 41 is selected" 41 0 '*.........'

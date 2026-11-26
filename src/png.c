@@ -20,17 +20,25 @@ static uint8_t paeth(int a, int b, int c) {
 #define FAIL(...) do { snprintf(err, (size_t)errlen, __VA_ARGS__); goto out; } while (0)
 
 uint8_t *png_read_rgba(const char *path, int *w_out, int *h_out, char *err, int errlen) {
-    uint8_t *file = NULL, *z = NULL, *raw = NULL, *rgba = NULL;
-    err[0] = 0;
     FILE *f = fopen(path, "rb");
     if (!f) { snprintf(err, (size_t)errlen, "can't open %s", path); return NULL; }
     fseek(f, 0, SEEK_END);
     long n = ftell(f);
     fseek(f, 0, SEEK_SET);
-    if (n > 0 && n < 64L << 20) file = malloc((size_t)n);
+    uint8_t *file = n > 0 && n < 64L << 20 ? malloc((size_t)n) : NULL;
     size_t got = file ? fread(file, 1, (size_t)n, f) : 0;
     fclose(f);
-    if (!file || got != (size_t)n) FAIL("can't read %s", path);
+    uint8_t *rgba = NULL;
+    if (!file || got != (size_t)n) snprintf(err, (size_t)errlen, "can't read %s", path);
+    else rgba = png_decode_rgba(file, (size_t)n, path, w_out, h_out, err, errlen);
+    free(file);
+    return rgba;
+}
+
+/* path is what the messages call it: the file, or "the copied picture" */
+uint8_t *png_decode_rgba(const uint8_t *file, size_t n, const char *path, int *w_out, int *h_out, char *err, int errlen) {
+    uint8_t *z = NULL, *raw = NULL, *rgba = NULL;
+    err[0] = 0;
     if (n < 8 || memcmp(file, "\x89PNG\r\n\x1a\n", 8)) FAIL("%s is not a PNG", path);
 
     uint32_t w = 0, h = 0;
@@ -40,10 +48,10 @@ uint8_t *png_read_rgba(const char *path, int *w_out, int *h_out, char *err, int 
     memset(plte, 255, sizeof plte);
     int trns_gray = -1, trns_r = -1, trns_g = -1, trns_b = -1;
     size_t zn = 0, zcap = 0;
-    for (size_t p = 8; p + 12 <= (size_t)n;) {
+    for (size_t p = 8; p + 12 <= n;) {
         uint32_t len = be32(file + p);
         const uint8_t *t = file + p + 4, *d = file + p + 8;
-        if (len > (size_t)n - p - 12) FAIL("%s is cut short", path);
+        if (len > n - p - 12) FAIL("%s is cut short", path);
         if (!memcmp(t, "IHDR", 4) && len >= 13) {
             w = be32(d); h = be32(d + 4); depth = d[8]; type = d[9]; interlace = d[12];
         } else if (!memcmp(t, "PLTE", 4)) {
@@ -128,15 +136,16 @@ uint8_t *png_read_rgba(const char *path, int *w_out, int *h_out, char *err, int 
     *w_out = (int)w;
     *h_out = (int)h;
 out:
-    free(file);
     free(z);
     free(raw);
     if (err[0] && rgba) { free(rgba); rgba = NULL; }
     return rgba;
 }
 
-/* the palette color nearest an RGB value (each channel's levels are 0, 85, 170, 255) */
-static int nearest(const uint8_t *p, bool *exact) {
+/* the palette color nearest an RGBA pixel (each channel's levels are 0, 85, 170, 255) */
+int png_color(const uint8_t *p, bool *exact) {
+    *exact = true;
+    if (p[3] < 128) return CLEAR;                        /* mostly see-through: transparent */
     int c = 0;
     for (int k = 0; k < 3; k++) c = c * 4 + (p[k] + 42) / 85;
     *exact = palette[c] == ((uint32_t)p[0] << 16 | (uint32_t)p[1] << 8 | p[2]);
@@ -154,9 +163,9 @@ bool png_to_tileset(const char *path, Tileset *ts, char *msg, int msglen) {
     for (int y = 0; y < h && y < SHEET_H; y++)
         for (int x = 0; x < w && x < SHEET_W; x++) {
             const uint8_t *p = px + ((size_t)y * w + x) * 4;
-            if (p[3] < 128) continue;                        /* mostly see-through: transparent */
             bool exact;
-            int c = nearest(p, &exact);
+            int c = png_color(p, &exact);
+            if (c == CLEAR) continue;
             if (!exact) inexact++;
             if (!used[c]) { used[c] = true; ncolors++; }
             ts->t[(y / TILE) * SHEET_COLS + x / TILE][(y % TILE) * TILE + x % TILE] = (uint8_t)c;

@@ -225,7 +225,8 @@ The selection is also the {map-editor|map editor}'s brush: pick a tile (or a blo
 - H / V / T: flip across, flip up-down, turn (a square block only).
 - arrows: move to another tile. Shift+arrows: nudge the pixels.
 - Del: clear the block. X: swap colors A and B. G: grid. Home: reset the view.
-- Ctrl+C / X / V: copy, cut, paste. Ctrl+Z / Y: undo, redo.
+- Ctrl+C / X / V: copy, cut, paste. Ctrl+A: select the whole tileset. Ctrl+Z / Y: undo, redo.
+- Ctrl+V after copying a picture in another program (Aseprite, GIMP, a browser): it goes in pixel for pixel at the yellow box's top-left corner, its colors matched to the nearest of the 64, and the tiles it covers become the selection.
 - Ctrl+S: save `tiles/NAME.g64`. Ctrl+R: run. Esc: the shell.
 
 A tileset drawn in another program comes in with {:import|IMPORT file.png}, or by dropping the .png on the window.
@@ -928,7 +929,7 @@ GooberEngine adds these to GooberBASIC. Arguments in brackets are optional. A co
 # Screen
 {cls} {pen} {plot} {line} {rect} {rect_fill_fast} {circle} {text} {print} {text_width} {font_w} {rgb} {camera} {pal} {clip} {spray} {tex_quad} {set_depth} {set_blend}
 # Tiles and maps
-{sprite} {tile_pget} {map_draw} {map_get} {map_w} {slots}
+{sprite} {sprite_ex} {tile_pget} {map_draw} {map_get} {map_w} {slots}
 # Limits
 {dot_limit} {dots_used}
 # Sound
@@ -1082,7 +1083,15 @@ Draws tile `n` (0 to 959) from the tileset in use at (x, y), or a `w` x `h` bloc
     sprite(0, x, y)                       ' one tile
     sprite(4, x, y, 2, 2)                 ' a 20 x 20 sprite
     sprite(4, x, y, 2, 2, FLIP_X)         ' facing left
-Tiles are drawn in the {tile-editor|tile editor}; see also {slots}.
+Tiles are drawn in the {tile-editor|tile editor}; see also {slots}. To draw one bigger or smaller, use {sprite_ex}.
+
+@ sprite_ex | sprite_ex
+    sprite_ex(n, x, y, tw, th, dw, dh [, flags])
+Draws a `tw` x `th` block of tiles starting at tile `n`, like {sprite}, but stretched or squashed to `dw` x `dh` pixels on screen. Each screen pixel takes the nearest pixel of the tiles, so whole-number scales stay sharp. Flags: `FLIP_X`, `FLIP_Y`, as for {sprite}. Every pixel drawn counts against the {dot_limit}, so a big sprite costs more.
+    sprite_ex(0, x, y, 1, 1, 20, 20)           ' one tile at 2x
+    sprite_ex(4, x, y, 2, 2, 60, 60, FLIP_X)   ' 3x, facing left
+    sprite_ex(4, x, y, 2, 2, 20, 10)           ' squashed flat
+For turning a sprite, see {tex_quad}.
 
 @ tile_pget tile_plot | tile_pget, tile_plot
     tile_pget(n, x, y)

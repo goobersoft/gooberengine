@@ -1,0 +1,18 @@
+' sprite_ex: scaled, flipped and squashed tiles land on the right pixels
+for t = 5 to 6
+    for y = 0 to 9
+        for x = 0 to 9
+            tile_plot(t, x, y, -1)
+        next
+    next
+next
+tile_plot(5, 0, 0, COL_RED) : tile_plot(5, 9, 9, COL_BLUE) : tile_plot(6, 0, 0, COL_GREEN)
+cls(COL_BLACK)
+sprite_ex(5, 0, 0, 1, 1, 20, 20)
+sprite_ex(5, 100, 0, 1, 1, 20, 20, FLIP_X)
+sprite_ex(5, 300, 0, 2, 1, 10, 5)
+r = pget(0, 0) = COL_RED and pget(1, 1) = COL_RED and pget(2, 2) = COL_BLACK
+b = pget(18, 18) = COL_BLUE and pget(19, 19) = COL_BLUE and pget(17, 17) = COL_BLACK
+f = pget(118, 0) = COL_RED and pget(119, 1) = COL_RED and pget(100, 0) = COL_BLACK
+s = pget(305, 0) = COL_GREEN and pget(300, 0) = COL_RED and pget(306, 0) = COL_BLACK
+print("sprite_ex " + str(r) + str(b) + str(f) + str(s))

@@ -297,6 +297,37 @@ void draw_sprite(int n, int x, int y, int w, int h, int flags) {
         }
 }
 
+/* a tw x th block of tiles from the sheet, starting at tile n, stretched to
+ * dw x dh screen pixels (nearest pixel). Each screen pixel is mapped back to
+ * one source pixel, so any scale works, up or down, and flips are free. */
+void draw_sprite_ex(int n, int x, int y, int tw, int th, int dw, int dh, int flags) {
+    if (!cur_tiles || dw <= 0 || dh <= 0) return;
+    if (tw < 1) tw = 1;
+    if (th < 1) th = 1;
+    x -= ds.cam_x;
+    y -= ds.cam_y;
+    int sw = tw * TILE, sh = th * TILE;          /* source size in pixels */
+    int i0 = ds.clip_x0 - x, i1 = ds.clip_x1 - x; /* the columns / rows the clip leaves */
+    int j0 = ds.clip_y0 - y, j1 = ds.clip_y1 - y;
+    if (i0 < 0) i0 = 0;
+    if (j0 < 0) j0 = 0;
+    if (i1 > dw) i1 = dw;
+    if (j1 > dh) j1 = dh;
+    for (int j = j0; j < j1; j++) {
+        int v = (int)((long long)j * sh / dh);
+        if (flags & 2) v = sh - 1 - v;
+        int row = n + (v / TILE) * SHEET_COLS, py = (v % TILE) * TILE;
+        for (int i = i0; i < i1; i++) {
+            int u = (int)((long long)i * sw / dw);
+            if (flags & 1) u = sw - 1 - u;
+            int tile = row + u / TILE;
+            if (tile < 0 || tile >= NTILES) continue;
+            uint8_t c = cur_tiles->t[tile][py + u % TILE];
+            if (c != CLEAR) put(x + i, y + j, c);
+        }
+    }
+}
+
 /* map cells (mx, my) .. (mx + w, my + h) of the current map drawn with their
  * top-left at (sx, sy). Empty cells are not drawn. */
 void draw_map(int mx, int my, int sx, int sy, int w, int h) {

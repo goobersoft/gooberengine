@@ -211,6 +211,7 @@ void print_home(void);                    /* print() starts again at the top-lef
 int draw_text(const char *s, int x, int y, int c);   /* returns end x; handles \n */
 int text_width(const char *s);       /* with ds.font, like draw_text */
 void draw_sprite(int n, int x, int y, int w, int h, int flags);
+void draw_sprite_ex(int n, int x, int y, int tw, int th, int dw, int dh, int flags);
 void draw_map(int mx, int my, int sx, int sy, int w, int h);
 void draw_clip(int x, int y, int w, int h);
 void draw_clip_reset(void);
@@ -278,6 +279,7 @@ void platform_queue_key(int sc, int mod);           /* deliver a key press next 
 uint32_t ge_crc32(const void *p, size_t n);
 char *clipboard_get(void);            /* malloc'd, never NULL */
 void clipboard_set(const char *text);
+uint8_t *clipboard_get_png(size_t *n);   /* a picture another program copied: malloc'd PNG bytes, or NULL */
 
 /* ---- cart.c ---- */
 bool cart_load(const char *nameOrPath, char *err, int errlen);
@@ -447,6 +449,8 @@ void tiles_select(int tile, int w, int h);  /* select a picked w x h block in th
 bool tiles_import(const char *path, const char *name, char *msg, int msglen);   /* IMPORT file.png: a PNG into tiles/NAME */
 /* ---- png.c: reading PNGs ---- */
 uint8_t *png_read_rgba(const char *path, int *w, int *h, char *err, int errlen);   /* malloc'd w*h*4 RGBA, NULL on error */
+uint8_t *png_decode_rgba(const uint8_t *png, size_t n, const char *name, int *w, int *h, char *err, int errlen);   /* the same, from bytes in memory */
+int png_color(const uint8_t *rgba, bool *exact);   /* the palette color nearest an RGBA pixel; CLEAR if it's mostly see-through */
 bool png_to_tileset(const char *path, Tileset *ts, char *msg, int msglen);  /* msg: what came in, or the error */
 void map_frame(void);
 void sound_frame(void);

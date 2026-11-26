@@ -585,6 +585,7 @@ int platform_frame_load(void) {
 }
 
 static char clip_mem[1 << 16];      /* headless stand-in for the system clipboard */
+static bool clip_png_gone;          /* headless: something was copied since the start */
 
 char *clipboard_get(void) {
     if (!opt.headless && SDL_HasClipboardText()) {
@@ -597,6 +598,26 @@ char *clipboard_get(void) {
 }
 
 void clipboard_set(const char *text) {
-    if (opt.headless) snprintf(clip_mem, sizeof clip_mem, "%s", text);
+    if (opt.headless) { snprintf(clip_mem, sizeof clip_mem, "%s", text); clip_png_gone = true; }
     else SDL_SetClipboardText(text);
+}
+
+/* a picture another program copied, as PNG bytes (malloc'd), or NULL. Headless,
+ * the file $GOOBERENGINE_CLIPBOARD_PNG stands in for one, until something is copied */
+uint8_t *clip_image_png(SDL_Window *own, size_t *n);
+uint8_t *clipboard_get_png(size_t *n) {
+    if (!opt.headless) return clip_image_png(win, n);
+    const char *path = getenv("GOOBERENGINE_CLIPBOARD_PNG");
+    if (clip_png_gone || !path || !*path) return NULL;
+    FILE *f = fopen(path, "rb");
+    if (!f) return NULL;
+    uint8_t *buf = NULL;
+    long len = fseek(f, 0, SEEK_END) == 0 ? ftell(f) : -1;
+    if (len > 0 && fseek(f, 0, SEEK_SET) == 0 && (buf = malloc((size_t)len)) && fread(buf, 1, (size_t)len, f) != (size_t)len) {
+        free(buf);
+        buf = NULL;
+    }
+    fclose(f);
+    if (buf) *n = (size_t)len;
+    return buf;
 }

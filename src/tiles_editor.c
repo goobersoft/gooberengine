@@ -25,7 +25,11 @@
  * the mouse up into A (an eyedropper), or, with the "right click" setting on
  * "color B", draws with color B (transparent at first, so it erases). A
  * middle click (without dragging) picks a color up too. Edits go straight into the open tileset, so Ctrl+R runs
- * them without saving; Ctrl+S writes tiles/NAME.g64. */
+ * them without saving; Ctrl+S writes tiles/NAME.g64.
+ *
+ * Ctrl+V pastes a picture another program copied (Aseprite, GIMP, ...) when
+ * there's one on the system clipboard (clipimg.c fetches it as PNG); Ctrl+C
+ * here puts text there, so after it Ctrl+V pastes the tiles copied here. */
 #include "engine.h"
 #include <SDL2/SDL_scancode.h>
 #include <ctype.h>
@@ -384,6 +388,9 @@ static void copy_block(bool cut) {
     for (int y = 0; y < h; y++) for (int x = 0; x < w; x++) T.clip[y * w + x] = (uint8_t)bget(x, y);
     T.clip_w = T.bw;
     T.clip_h = T.bh;
+    char what[64];                       /* so a picture another program copied before this isn't what Ctrl+V pastes */
+    snprintf(what, sizeof what, "GooberEngine tiles %dx%d", T.bw, T.bh);
+    clipboard_set(what);
     if (cut) {
         before_change();
         brect(0, 0, w - 1, h - 1, CLEAR, true);
@@ -391,8 +398,43 @@ static void copy_block(bool cut) {
     status(COL_GREY, "%s %dx%d tile%s", cut ? "cut" : "copied", T.bw, T.bh, T.bw * T.bh > 1 ? "s" : "");
 }
 
+/* a picture another program (Aseprite, ...) copied goes in pixel for pixel with its top-left at the
+ * selection's, its colors matched to the palette, and the tiles it covers become the selection */
+static bool paste_picture(void) {
+    size_t n;
+    uint8_t *png = clipboard_get_png(&n);
+    if (!png) return false;
+    char err[256];
+    int w, h;
+    uint8_t *px = png_decode_rgba(png, n, "the copied picture", &w, &h, err, sizeof err);
+    free(png);
+    if (!px) { status(COL_RED, "%s", err); return true; }
+    before_change();
+    int col = T.sel % SHEET_COLS, row = T.sel / SHEET_COLS, x0 = col * TILE, y0 = row * TILE;
+    int inexact = 0;
+    for (int y = 0; y < h && y0 + y < SHEET_H; y++)
+        for (int x = 0; x < w && x0 + x < SHEET_W; x++) {
+            bool exact;
+            int c = png_color(px + ((size_t)y * w + x) * 4, &exact), sx = x0 + x, sy = y0 + y;
+            if (!exact) inexact++;
+            TS->t[(sy / TILE) * SHEET_COLS + sx / TILE][(sy % TILE) * TILE + sx % TILE] = (uint8_t)c;
+        }
+    free(px);
+    T.bw = (w + TILE - 1) / TILE;
+    T.bh = (h + TILE - 1) / TILE;
+    if (T.bw > SHEET_COLS - col) T.bw = SHEET_COLS - col;
+    if (T.bh > SHEET_ROWS - row) T.bh = SHEET_ROWS - row;
+    clamp_sel();
+    bool cut = x0 + w > SHEET_W || y0 + h > SHEET_H;
+    if (inexact) status(COL_YELLOW, "pasted a %dx%d picture%s: %d pixel%s matched to the nearest color", w, h,
+                        cut ? " (cut at the sheet's edge)" : "", inexact, inexact == 1 ? "" : "s");
+    else status(COL_GREY, "pasted a %dx%d picture%s", w, h, cut ? " (cut at the sheet's edge)" : "");
+    return true;
+}
+
 /* the copied tiles go in with their top-left at the selection's; what would be off the sheet is left out */
 static void paste_block(void) {
+    if (paste_picture()) return;
     if (!T.clip_w) { status(COL_GREY, "nothing copied yet"); return; }
     before_change();
     int w = T.clip_w * TILE, h = T.clip_h * TILE;
@@ -466,6 +508,12 @@ static void key(const KeyEvent *ev) {
             case SDL_SCANCODE_C: copy_block(false); return;
             case SDL_SCANCODE_X: copy_block(true); return;
             case SDL_SCANCODE_V: paste_block(); return;
+            case SDL_SCANCODE_A:             /* the whole tileset: copy it, clear it, flip it, paste over it */
+                T.sel = 0;
+                T.bw = SHEET_COLS;
+                T.bh = SHEET_ROWS;
+                status(COL_GREY, "selected all %d tiles", NTILES);
+                return;
             default: return;
         }
     }

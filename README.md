@@ -272,6 +272,8 @@ The colors mark keywords, console and core commands, type names, constants, numb
 | X | swap colors A and B |
 | G | grid on/off |
 | Ctrl+C / X / V | copy, cut, paste the block |
+| Ctrl+A | select the whole tileset |
+| Ctrl+V (a picture copied in another program, such as Aseprite) | paste it pixel for pixel at the selection's top-left, colors matched to the palette; the tiles it covers become the selection |
 | Ctrl+Z / Ctrl+Y | undo / redo (64 steps) |
 | Ctrl+S, Ctrl+R, Esc | save `tiles/NAME.g64`, run, back to the shell |
 
@@ -547,6 +549,7 @@ These use the tileset and map in use: the one swapped in last (slot 0 to start w
 | Command | |
 |---|---|
 | `sprite(n, x, y [, w, h, flags])` | draw tile `n` (0–959), or a w×h block of tiles from the sheet (40 per row). Flags: `FLIP_X`, `FLIP_Y` |
+| `sprite_ex(n, x, y, tw, th, dw, dh [, flags])` | a tw×th block of tiles stretched to dw×dh pixels (nearest pixel). Flags as for `sprite` |
 | `tile_pget(n, x, y)` / `tile_plot(n, x, y, c)` | read / write a tile pixel (−1 = transparent) |
 | `map_draw([mx, my, sx, sy, w, h])` | draw map cells `mx,my` .. `+w,+h` at screen `sx,sy`. Empty cells are not drawn |
 | `map_get(x, y)` / `map_set(x, y, t)` | read / change a map cell. An empty cell, or one outside the map, reads as −1; `map_set(x, y, -1)` empties a cell |
@@ -665,7 +668,9 @@ Up to 8 players share one game: one **hosts** (player 0) and the others **join**
 
 - **The host owns the slots.** Anyone may `net_set` any slot. Your own copy changes at once. A client's change goes to the host, which applies it and passes it on to everyone. If two players write the same slot, whoever reaches the host last wins, so it is simplest to give each player slots of their own (`net_id() * 4` and up) and leave the shared ones, like a ball or the score, to the host.
 - **Only changes travel.** A slot is sent when it changes and isn't resent once the other side has it, so setting every slot every frame costs nothing when the values don't change.
-- **Messages** arrive in order, exactly once, over both TCP and UDP. They are for events: "I fired", "round over", chat.
+- **Messages** arrive in order and are never repeated, over both TCP and UDP. They are for events: "I fired", "round over", chat. Up to 64 can wait to go out to each player; when that is full `net_send` returns 0 (a host sending to everyone needs room for every player). Over UDP a message waits until the other side has it, so about 64 per round trip can be on the way. Two cases lose one without saying so:
+  - **Your inbox holds 256.** When it is full, a new message pushes out the oldest, so read them all every frame: `while net_messages() > 0 ... net_recv() ...`.
+  - **A message from one player to another goes through the host.** If the host's queue to that other player is full, that player misses it, even though the sender's `net_send` gave 1.
 - **TCP or UDP?** Both give the same result. TCP is simplest and works everywhere. Over UDP a lost packet doesn't hold up the ones behind it: the missing slots just go again in the next packet, so on a bad connection the game stays smooth. Host and players must pick the same one.
 - **Timing:** packets go out at most once a frame, plus a keepalive five times a second. A player the host hasn't heard from for 5 seconds is dropped. Joining gives up after 5 seconds.
 - **Where:** players on the same network join the host's local address (e.g. `192.168.1.20`). Over the internet the host has to forward the port on their router. `127.0.0.1` is the same machine: run two GooberEngines to try a game alone. IPv4 only.

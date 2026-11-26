@@ -222,6 +222,15 @@ static Value a_sprite(VM *vm, int argc, Value *args) {
     RET_VOID;
 }
 
+/* sprite_ex(n, x, y, tw, th, dw, dh [, flags]): a tw x th block of tiles
+ * stretched to dw x dh pixels */
+static Value a_sprite_ex(VM *vm, int argc, Value *args) {
+    UNUSED;
+    need_tile(vm, "sprite_ex", ARG_I(0));
+    draw_sprite_ex(ARG_I(0), ARG_I(1), ARG_I(2), ARG_I(3), ARG_I(4), ARG_I(5), ARG_I(6), OPT_I(7, 0));
+    RET_VOID;
+}
+
 static Tileset *need_tileset(VM *vm, const char *what) {
     if (!cur_tiles) vm_error(vm, "%s: tileset slot %d is empty (load_tileset(%d, \"name\") first)", what, rt_current(RES_TILES), rt_current(RES_TILES));
     return cur_tiles;
@@ -491,6 +500,7 @@ NativeDef gb_gfx_natives[] = {
     {"tex_quad_3d", 'v', "iiiiiiiiiiiiiii", a_tex_quad_3d},
 
     {"sprite", 'v', "iii|iii", a_sprite},
+    {"sprite_ex", 'v', "iiiiiii|i", a_sprite_ex},
     {"tile_pget", 'i', "iii", a_tile_pget},
     {"tile_plot", 'v', "iiii", a_tile_plot},
     {"map_draw", 'v', "|iiiiii", a_map_draw},
